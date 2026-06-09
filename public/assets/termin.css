@@ -1,0 +1,111 @@
+/* =========================================================
+   NEST BildungsBar – Terminbuchung (Schüler:innen)
+   Nutzt die Design-Variablen aus styles.css (:root).
+   ========================================================= */
+
+.termin-wrap { max-width: 920px; margin: 0 auto; }
+
+/* Schritt-Block */
+.tb-step { margin-bottom: 30px; }
+.tb-step-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.tb-step-n {
+  width: 30px; height: 30px; flex-shrink: 0; border-radius: 9999px;
+  background: var(--navy); color: #fff; font-weight: 800; font-size: 14px;
+  display: grid; place-items: center;
+}
+.tb-step.done .tb-step-n { background: var(--gold); color: var(--navy); }
+.tb-step-head h3 { font-size: 18px; font-weight: 800; color: var(--navy); margin: 0; }
+.tb-step-head .tb-hint { margin-left: auto; font-size: 13px; color: var(--text-mute); font-weight: 600; }
+
+/* Auswahl-Kacheln allgemein */
+.tb-choices { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Standort */
+.tb-ort {
+  flex: 1; min-width: 220px; text-align: left; cursor: pointer;
+  background: #fff; border: 2px solid var(--line); border-radius: 14px;
+  padding: 18px 20px; transition: border-color .18s, box-shadow .18s, transform .12s;
+  font-family: var(--font);
+}
+.tb-ort:hover { border-color: rgba(239,165,0,0.5); transform: translateY(-2px); }
+.tb-ort.active { border-color: var(--gold); box-shadow: 0 6px 20px rgba(239,165,0,0.16); }
+.tb-ort .o-city { font-size: 18px; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 10px; }
+.tb-ort .o-city::before { content: ""; width: 6px; height: 22px; border-radius: 3px; background: var(--gold); display: inline-block; }
+.tb-ort .o-adr { font-size: 13px; color: var(--text-soft); margin-top: 8px; padding-left: 16px; }
+.tb-ort .o-check { float: right; font-weight: 800; color: var(--gold-dark); opacity: 0; transition: opacity .18s; }
+.tb-ort.active .o-check { opacity: 1; }
+
+/* Datum */
+.tb-dates { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+.tb-date {
+  cursor: pointer; background: #fff; border: 2px solid var(--line); border-radius: 12px;
+  padding: 14px 10px; text-align: center; transition: border-color .15s, transform .12s; font-family: var(--font);
+}
+.tb-date:hover { border-color: rgba(239,165,0,0.5); transform: translateY(-2px); }
+.tb-date.active { border-color: var(--gold); background: var(--navy); }
+.tb-date .d-wday { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--gold-dark); }
+.tb-date.active .d-wday { color: var(--gold); }
+.tb-date .d-day { font-size: 24px; font-weight: 900; color: var(--navy); line-height: 1.1; margin: 2px 0; }
+.tb-date.active .d-day { color: #fff; }
+.tb-date .d-mon { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-mute); }
+.tb-date.active .d-mon { color: rgba(255,255,255,0.7); }
+
+/* Uhrzeit */
+.tb-times { display: flex; flex-wrap: wrap; gap: 10px; }
+.tb-time {
+  cursor: pointer; background: #fff; border: 2px solid var(--line); border-radius: 9999px;
+  padding: 11px 20px; font-weight: 700; font-size: 14px; color: var(--navy);
+  transition: border-color .15s, background .15s, color .15s; font-family: var(--font);
+}
+.tb-time:hover { border-color: rgba(239,165,0,0.5); }
+.tb-time.active { border-color: var(--gold); background: var(--navy); color: #fff; }
+
+/* Hinweis, wenn vorgelagerter Schritt fehlt */
+.tb-locked { opacity: .45; pointer-events: none; }
+.tb-need { font-size: 13px; color: var(--text-mute); font-style: italic; }
+
+/* Formular */
+.tb-form { margin-top: 6px; }
+.tb-form .field { margin-bottom: 16px; }
+.tb-form .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.tb-form label { display: block; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.tb-form input, .tb-form textarea {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 10px;
+  font-family: var(--font); font-size: 15px; background: #fff; color: var(--text);
+}
+.tb-form input:focus, .tb-form textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(239,165,0,0.15); }
+.tb-form textarea { min-height: 90px; resize: vertical; }
+.tb-check { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); }
+.tb-check input { width: auto; margin-top: 3px; }
+
+/* Zusammenfassung / sticky */
+.tb-summary {
+  background: var(--navy); color: #fff; border-radius: 16px; padding: 22px 24px;
+  position: sticky; top: 90px;
+}
+.tb-summary h4 { color: #fff; font-size: 16px; font-weight: 800; margin: 0 0 14px; }
+.tb-sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.12); font-size: 14px; }
+.tb-sum-row:last-of-type { border-bottom: none; }
+.tb-sum-row .k { color: rgba(255,255,255,0.6); }
+.tb-sum-row .v { font-weight: 700; text-align: right; }
+.tb-sum-row .v.empty { color: rgba(255,255,255,0.35); font-weight: 500; font-style: italic; }
+.tb-summary .btn { width: 100%; justify-content: center; margin-top: 18px; }
+.tb-summary .btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+/* Layout */
+.tb-grid { display: grid; grid-template-columns: 1fr 320px; gap: 36px; align-items: start; }
+@media (max-width: 880px) {
+  .tb-grid { grid-template-columns: 1fr; }
+  .tb-summary { position: static; }
+  .tb-form .row2 { grid-template-columns: 1fr; }
+}
+
+/* Erfolgs-Box */
+.tb-success { display: none; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 16px; padding: 30px; box-shadow: 0 6px 24px rgba(15,33,69,0.08); }
+.tb-success.show { display: block; }
+.tb-success h3 { font-size: 22px; font-weight: 800; color: var(--navy); margin: 0 0 8px; }
+.tb-success p { color: var(--text-soft); line-height: 1.7; margin: 0 0 14px; }
+.tb-success .tb-recap { background: var(--bg-light); border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.tb-success .tb-recap div { font-size: 14px; padding: 4px 0; color: var(--navy); }
+.tb-success .tb-recap b { color: var(--gold-dark); }
+.tb-success .tb-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }

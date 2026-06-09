@@ -2,7 +2,16 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabaseClient";
 
+const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "" };
+const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", beschreibung: "" };
+const POST_LEER = { slug: "", titel: "", excerpt: "", inhalt: "", bild_url: "", published: true };
+
+function slugify(s) {
+  return String(s).toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
 
 export default function PartnerPortal() {
   const [session, setSession] = useState(null);
@@ -15,7 +24,16 @@ export default function PartnerPortal() {
   const [form, setForm] = useState(LEER);
   const [msg, setMsg] = useState("");
 
-  // Session beobachten
+  // Admin
+  const [adminEvents, setAdminEvents] = useState([]);
+  const [adminPosts, setAdminPosts] = useState([]);
+  const [evForm, setEvForm] = useState(EVENT_LEER);
+  const [evMsg, setEvMsg] = useState("");
+  const [poForm, setPoForm] = useState(POST_LEER);
+  const [poMsg, setPoMsg] = useState("");
+
+  const isAdmin = session?.user?.email === ADMIN_EMAIL;
+
   useEffect(() => {
     if (!supabase) { setLoading(false); return; }
     supabase.auth.getSession().then(({ data }) => { setSession(data.session); setLoading(false); });
@@ -39,19 +57,26 @@ export default function PartnerPortal() {
     setEvents(ev || []);
   }, [session]); // eslint-disable-line
 
+  const ladeAdmin = useCallback(async () => {
+    if (!supabase || !isAdmin) return;
+    const { data: ev } = await supabase.from("veranstaltungen").select("*").order("datum", { ascending: true });
+    setAdminEvents(ev || []);
+    const { data: po } = await supabase.from("posts").select("*").order("veroeffentlicht_am", { ascending: false });
+    setAdminPosts(po || []);
+  }, [isAdmin]); // eslint-disable-line
+
   useEffect(() => { if (session) ladeDaten(); }, [session, ladeDaten]);
+  useEffect(() => { if (isAdmin) ladeAdmin(); }, [isAdmin, ladeAdmin]);
 
   async function login(e) {
-    e.preventDefault();
-    setAuthErr("");
+    e.preventDefault(); setAuthErr("");
     const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
     if (error) setAuthErr("Login fehlgeschlagen: " + error.message);
   }
-  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); }
+  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); }
 
   async function speichern(e) {
-    e.preventDefault();
-    setMsg("");
+    e.preventDefault(); setMsg("");
     const eintrag = { ...form, partner_id: session.user.id, aktiviert_am: new Date().toISOString().slice(0, 10) };
     const { error } = await supabase.from("stellen").insert(eintrag);
     if (error) { setMsg("Fehler: " + error.message); return; }
@@ -59,12 +84,37 @@ export default function PartnerPortal() {
     setMsg("Stelle veröffentlicht ✅ (30 Tage sichtbar)");
     ladeDaten();
   }
-  async function loeschen(id) {
-    await supabase.from("stellen").delete().eq("id", id);
-    ladeDaten();
+  async function loeschen(id) { await supabase.from("stellen").delete().eq("id", id); ladeDaten(); }
+
+  // ---- Admin: Veranstaltungen ----
+  async function eventSpeichern(e) {
+    e.preventDefault(); setEvMsg("");
+    if (!evForm.titel || !evForm.datum) { setEvMsg("Titel und Datum sind Pflicht."); return; }
+    const { error } = await supabase.from("veranstaltungen").insert(evForm);
+    if (error) { setEvMsg("Fehler: " + error.message); return; }
+    setEvForm(EVENT_LEER);
+    setEvMsg("Veranstaltung gespeichert ✅");
+    ladeAdmin(); ladeDaten();
   }
+  async function eventLoeschen(id) { await supabase.from("veranstaltungen").delete().eq("id", id); ladeAdmin(); ladeDaten(); }
+
+  // ---- Admin: Blog ----
+  async function postSpeichern(e) {
+    e.preventDefault(); setPoMsg("");
+    if (!poForm.titel) { setPoMsg("Titel ist Pflicht."); return; }
+    const slug = poForm.slug ? slugify(poForm.slug) : slugify(poForm.titel);
+    const eintrag = { ...poForm, slug, veroeffentlicht_am: new Date().toISOString().slice(0, 10) };
+    const { error } = await supabase.from("posts").insert(eintrag);
+    if (error) { setPoMsg("Fehler: " + error.message); return; }
+    setPoForm(POST_LEER);
+    setPoMsg("Beitrag gespeichert ✅");
+    ladeAdmin();
+  }
+  async function postLoeschen(id) { await supabase.from("posts").delete().eq("id", id); ladeAdmin(); }
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const setEv = (k) => (e) => setEvForm((f) => ({ ...f, [k]: e.target.value }));
+  const setPo = (k) => (e) => setPoForm((f) => ({ ...f, [k]: k === "published" ? e.target.checked : e.target.value }));
 
   return (
     <div>
@@ -86,10 +136,9 @@ export default function PartnerPortal() {
           ) : loading ? (
             <p>Lädt …</p>
           ) : !session ? (
-            /* ---------- Login ---------- */
             <div className="card" style={{ maxWidth: "440px", margin: "0 auto" }}>
               <span className="section-label">Anmeldung</span>
-              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>Partner-Login</h2>
+              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>Login</h2>
               <form onSubmit={login} className="tb-form">
                 <div className="field"><label>E-Mail</label><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
                 <div className="field"><label>Passwort</label><input type="password" value={pass} onChange={(e) => setPass(e.target.value)} required /></div>
@@ -101,10 +150,12 @@ export default function PartnerPortal() {
               </p>
             </div>
           ) : (
-            /* ---------- Eingeloggt ---------- */
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "22px", flexWrap: "wrap", gap: "12px" }}>
-                <div><span className="section-label">Eingeloggt</span><strong style={{ color: "var(--navy)", fontSize: "18px" }}>{session.user.email}</strong></div>
+                <div>
+                  <span className="section-label">Eingeloggt{isAdmin ? " · Admin" : ""}</span>
+                  <strong style={{ color: "var(--navy)", fontSize: "18px" }}>{session.user.email}</strong>
+                </div>
                 <button className="btn btn-ghost" onClick={logout}>Abmelden</button>
               </div>
 
@@ -119,9 +170,7 @@ export default function PartnerPortal() {
                   </div>
                   <div className="row2">
                     <div className="field"><label>Art</label>
-                      <select value={form.art} onChange={set("art")}>
-                        <option>Ausbildung</option><option>Duales Studium</option><option>Praktikum</option>
-                      </select>
+                      <select value={form.art} onChange={set("art")}><option>Ausbildung</option><option>Duales Studium</option><option>Praktikum</option></select>
                     </div>
                     <div className="field"><label>Standort</label>
                       <select value={form.ort} onChange={set("ort")}><option>Wuppertal</option><option>Essen</option></select>
@@ -152,7 +201,7 @@ export default function PartnerPortal() {
                 </div>
               ) : <p style={{ color: "var(--text-soft)", marginBottom: "28px" }}>Du hast noch keine Stellen veröffentlicht.</p>}
 
-              {/* Veranstaltungen */}
+              {/* Kommende Veranstaltungen (für alle) */}
               <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Kommende Veranstaltungen</h3>
               {events.length ? (
                 <div className="card-grid cols-2">
@@ -166,6 +215,84 @@ export default function PartnerPortal() {
                   ))}
                 </div>
               ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Veranstaltungen eingetragen.</p>}
+
+              {/* =================== ADMIN-BEREICH =================== */}
+              {isAdmin && (
+                <div style={{ marginTop: "44px", borderTop: "2px solid var(--line)", paddingTop: "32px" }}>
+                  <span className="section-label">Nur für Admins</span>
+                  <h2 style={{ fontSize: "26px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 22px" }}>Admin-Bereich</h2>
+
+                  {/* Veranstaltung anlegen */}
+                  <div className="card" style={{ marginBottom: "24px" }}>
+                    <h3>Veranstaltung anlegen</h3>
+                    <form onSubmit={eventSpeichern} className="tb-form">
+                      <div className="row2">
+                        <div className="field"><label>Titel *</label><input value={evForm.titel} onChange={setEv("titel")} placeholder="z. B. OpenHouse Wuppertal" required /></div>
+                        <div className="field"><label>Datum *</label><input type="date" value={evForm.datum} onChange={setEv("datum")} required /></div>
+                      </div>
+                      <div className="row2">
+                        <div className="field"><label>Uhrzeit</label><input value={evForm.uhrzeit} onChange={setEv("uhrzeit")} placeholder="z. B. 17:00–19:00" /></div>
+                        <div className="field"><label>Ort</label>
+                          <select value={evForm.ort} onChange={setEv("ort")}><option>Wuppertal</option><option>Essen</option><option>Online</option></select>
+                        </div>
+                      </div>
+                      <div className="field"><label>Beschreibung</label><textarea value={evForm.beschreibung} onChange={setEv("beschreibung")} placeholder="Kurzbeschreibung (optional)"></textarea></div>
+                      {evMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{evMsg}</p> : null}
+                      <button className="btn btn-primary" type="submit">Veranstaltung speichern</button>
+                    </form>
+                  </div>
+
+                  {/* Alle Veranstaltungen verwalten */}
+                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 12px" }}>Alle Veranstaltungen ({adminEvents.length})</h3>
+                  {adminEvents.length ? (
+                    <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
+                      {adminEvents.map((v) => (
+                        <div className="card" key={v.id}>
+                          <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
+                          <h3>{v.titel}</h3>
+                          <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
+                          <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => eventLoeschen(v.id)}>Löschen</button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Veranstaltungen.</p>}
+
+                  {/* Blogbeitrag anlegen */}
+                  <div className="card" style={{ marginBottom: "24px" }}>
+                    <h3>Blogbeitrag anlegen</h3>
+                    <form onSubmit={postSpeichern} className="tb-form">
+                      <div className="row2">
+                        <div className="field"><label>Titel *</label><input value={poForm.titel} onChange={setPo("titel")} required /></div>
+                        <div className="field"><label>Slug (URL)</label><input value={poForm.slug} onChange={setPo("slug")} placeholder="leer = automatisch aus Titel" /></div>
+                      </div>
+                      <div className="field"><label>Kurztext (Teaser)</label><input value={poForm.excerpt} onChange={setPo("excerpt")} placeholder="1–2 Sätze für die Übersicht" /></div>
+                      <div className="field"><label>Bild-URL</label><input value={poForm.bild_url} onChange={setPo("bild_url")} placeholder="https://… (optional)" /></div>
+                      <div className="field"><label>Inhalt (HTML)</label><textarea value={poForm.inhalt} onChange={setPo("inhalt")} placeholder="<p>Dein Beitrag …</p>" style={{ minHeight: "140px" }}></textarea></div>
+                      <label className="tb-check"><input type="checkbox" checked={poForm.published} onChange={setPo("published")} /> Sofort veröffentlichen</label>
+                      {poMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{poMsg}</p> : null}
+                      <button className="btn btn-primary" type="submit">Beitrag speichern</button>
+                    </form>
+                  </div>
+
+                  {/* Alle Beiträge verwalten */}
+                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 12px" }}>Alle Beiträge ({adminPosts.length})</h3>
+                  {adminPosts.length ? (
+                    <div className="card-grid cols-2">
+                      {adminPosts.map((p) => (
+                        <div className="card" key={p.id}>
+                          <span className="num-label">{p.veroeffentlicht_am} · {p.published ? "veröffentlicht" : "Entwurf"}</span>
+                          <h3>{p.titel}</h3>
+                          <p style={{ color: "var(--text-soft)", fontSize: "13px" }}>/blog/{p.slug}</p>
+                          <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                            <a className="btn btn-outline" href={`/blog/${p.slug}`} target="_blank" rel="noopener">Ansehen</a>
+                            <button className="btn btn-ghost" onClick={() => postLoeschen(p.id)}>Löschen</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : <p style={{ color: "var(--text-soft)" }}>Noch keine Beiträge.</p>}
+                </div>
+              )}
             </div>
           )}
         </div>

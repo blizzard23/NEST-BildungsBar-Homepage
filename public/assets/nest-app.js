@@ -1390,7 +1390,7 @@ document.addEventListener("DOMContentLoaded", function () {
     kapazitaet = KAPAZITAET[ort] || 0;
     var api = window.NEST_VERFUEGBARKEIT_API;
     if (!api || !window.fetch) { if (cb) cb(); return; }
-    fetch(api + "?standort=" + encodeURIComponent(ort))
+    fetch(api + "?standort=" + encodeURIComponent(ort) + "&t=" + Date.now(), { cache: "no-store" })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (d && d.belegung) belegung = d.belegung;
@@ -1547,6 +1547,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (res.ok) {
           if (statusP) statusP.textContent = "Dein Termin ist gebucht ✅ – du bekommst gleich eine Bestätigung per E-Mail. Am Tag vorher erinnern wir dich nochmal.";
           if (sendBtn) sendBtn.style.display = "none";
+          if (state.datum) { belegung[state.datum] = (belegung[state.datum] || 0) + 1; renderDates(); }
         } else {
           if (statusP) statusP.textContent = "Fast geschafft! Schick uns deine Buchung mit einem Klick – wir bestätigen dir den Termin per E-Mail.";
           if (sendBtn) sendBtn.style.display = "";

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 /* Terminbuchung: speichert die Anfrage in Supabase (Tabelle "buchungen")
    UND verschickt eine E-Mail über SMTP (lima-city).
@@ -34,16 +35,26 @@ export async function POST(req) {
   const KAPAZITAET = { Wuppertal: 4, Essen: 2 };
   const cap = KAPAZITAET[buchung.standort] || 0;
   const sb = supabaseServer();
+  const admin = supabaseAdmin();
 
   // 0) Kapazität prüfen (max. 4 in Wuppertal, 2 in Essen pro Tag)
-  if (sb && cap && buchung.datum) {
-    const { data, error } = await sb.rpc("termin_belegung", { p_standort: buchung.standort });
-    if (!error && Array.isArray(data)) {
-      const row = data.find((r) => r.datum === buchung.datum);
-      const anzahl = row ? Number(row.anzahl) || 0 : 0;
-      if (anzahl >= cap) {
-        return NextResponse.json({ ok: false, error: "ausgebucht" }, { status: 409 });
+  if (cap && buchung.datum) {
+    let anzahl = 0, gezaehlt = false;
+    if (admin) {
+      const { count, error } = await admin
+        .from("buchungen").select("*", { count: "exact", head: true })
+        .eq("standort", buchung.standort).eq("datum", buchung.datum);
+      if (!error) { anzahl = count || 0; gezaehlt = true; }
+    }
+    if (!gezaehlt && sb) {
+      const { data, error } = await sb.rpc("termin_belegung", { p_standort: buchung.standort });
+      if (!error && Array.isArray(data)) {
+        const row = data.find((r) => String(r.datum).slice(0, 10) === buchung.datum);
+        anzahl = row ? Number(row.anzahl) || 0 : 0; gezaehlt = true;
       }
+    }
+    if (gezaehlt && anzahl >= cap) {
+      return NextResponse.json({ ok: false, error: "ausgebucht" }, { status: 409 });
     }
   }
 

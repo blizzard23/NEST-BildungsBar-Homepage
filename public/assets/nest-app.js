@@ -1308,7 +1308,11 @@ document.addEventListener("DOMContentLoaded", function () {
   var WDAYS = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
   var MONS  = ["Jan", "Feb", "März", "Apr", "Mai", "Juni", "Juli", "Aug", "Sept", "Okt", "Nov", "Dez"];
   var MONS_LANG = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
-  var ZEITEN = ["17:00 – 17:30", "17:30 – 18:00", "18:00 – 18:30", "18:30 – 19:00"];
+  // Termine ab 17:00 Uhr – Wuppertal max. 4 Slots, Essen 2 Slots
+  var ZEITEN_NACH_ORT = {
+    "Wuppertal": ["17:00 – 17:30", "17:30 – 18:00", "18:00 – 18:30", "18:30 – 19:00"],
+    "Essen": ["17:00 – 17:30", "17:30 – 18:00"]
+  };
   var ANZAHL = 8; // wie viele Termine angeboten werden (Di + Do)
 
   var state = { ort: "", adr: "", datum: null, datumText: "", zeit: "" };
@@ -1356,21 +1360,26 @@ document.addEventListener("DOMContentLoaded", function () {
     dateList.appendChild(b);
   });
 
-  /* ---------- Uhrzeit-Kacheln rendern ---------- */
+  /* ---------- Uhrzeit-Kacheln (abhängig vom Standort) ---------- */
   var timeList = document.getElementById("tb-time-list");
-  ZEITEN.forEach(function (z) {
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "tb-time";
-    b.textContent = z;
-    b.addEventListener("click", function () {
-      timeList.querySelectorAll(".tb-time").forEach(function (x) { x.classList.remove("active"); });
-      b.classList.add("active");
-      state.zeit = z;
-      update();
+  function renderZeiten() {
+    timeList.innerHTML = "";
+    state.zeit = "";
+    var slots = ZEITEN_NACH_ORT[state.ort] || [];
+    slots.forEach(function (z) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "tb-time";
+      b.textContent = z;
+      b.addEventListener("click", function () {
+        timeList.querySelectorAll(".tb-time").forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active");
+        state.zeit = z;
+        update();
+      });
+      timeList.appendChild(b);
     });
-    timeList.appendChild(b);
-  });
+  }
 
   /* ---------- Standort ---------- */
   app.querySelectorAll(".tb-ort").forEach(function (btn) {
@@ -1379,6 +1388,7 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.classList.add("active");
       state.ort = btn.getAttribute("data-ort");
       state.adr = btn.getAttribute("data-adr") || "";
+      renderZeiten();
       update();
     });
   });
@@ -1453,6 +1463,24 @@ document.addEventListener("DOMContentLoaded", function () {
   function mailtoVon(d) {
     return "mailto:" + EMPFAENGER + "?subject=" + encodeURIComponent(d.subject) + "&body=" + encodeURIComponent(d.text);
   }
+  /* Buchung strukturiert an /api/buchung (speichert in Supabase + mailt) */
+  function baueBuchung() {
+    return {
+      standort: state.ort, adresse: state.adr,
+      datum: state.datum, datumText: state.datumText, uhrzeit: state.zeit,
+      name: fName ? fName.value.trim() : "",
+      email: fMail ? fMail.value.trim() : "",
+      telefon: fPhone ? fPhone.value.trim() : "",
+      schule: fSchule ? fSchule.value.trim() : "",
+      nachricht: fMsg ? fMsg.value.trim() : ""
+    };
+  }
+  function sendBuchung(payload) {
+    var api = window.NEST_BUCHUNG_API;
+    if (!api || !window.fetch) return Promise.resolve(false);
+    return fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.ok; }).catch(function () { return false; });
+  }
 
   var form = document.getElementById("termin-form");
   if (form) {
@@ -1480,9 +1508,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (box) box.scrollIntoView({ behavior: "smooth", block: "start" });
 
       var statusP = box ? box.querySelector("p") : null;
-      nestSendMail(d).then(function (ok) {
+      sendBuchung(baueBuchung()).then(function (ok) {
         if (ok) {
-          if (statusP) statusP.textContent = "Deine Terminanfrage wurde direkt an uns gesendet – wir bestätigen dir den Termin per E-Mail. ✅";
+          if (statusP) statusP.textContent = "Deine Terminanfrage wurde gespeichert und an uns gesendet – wir bestätigen dir den Termin per E-Mail. ✅";
           if (sendBtn) sendBtn.style.display = "none";
         } else {
           if (statusP) statusP.textContent = "Fast geschafft! Schick uns deine Anfrage mit einem Klick – wir bestätigen dir den Termin per E-Mail.";

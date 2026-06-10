@@ -61,10 +61,11 @@ git push -u origin main
 
 1. Auf [supabase.com](https://supabase.com) ein Projekt anlegen.
 2. **SQL Editor** öffnen → Inhalt von `supabase/schema.sql` einfügen → **Run**.
-   (Legt Tabellen `stellen`, `veranstaltungen`, `posts` + Sicherheitsregeln + Beispieldaten an.)
+   (Legt Tabellen `stellen`, `veranstaltungen`, `posts`, `buchungen` + Sicherheitsregeln + Beispieldaten an.)
    - Danach `supabase/storage.sql` ausführen → legt den öffentlichen Bucket **`blog`**
      für Beitragsbilder an (Upload nur für den Admin).
-   - *(Falls `schema.sql` schon vorher ohne Admin-Rechte lief: zusätzlich `supabase/admin-policies.sql` ausführen.)*
+   - *(Falls `schema.sql` schon vorher lief: zusätzlich `supabase/admin-policies.sql` und
+     `supabase/buchungen.sql` ausführen, um Admin-Rechte und die Buchungstabelle nachzurüsten.)*
 3. **Project Settings → API** → kopiere:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` Key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -115,11 +116,14 @@ Jeder weitere `git push` deployt automatisch neu.
 
 - **Stellen:** Partner legen sie selbst im Portal an (oder du im Supabase-Table-Editor).
 - **Blog:** Tabelle `posts` → Zeile anlegen, `published = true`. `inhalt` ist HTML.
-- **Veranstaltungen:** Tabelle `veranstaltungen`.
+- **Veranstaltungen & Blog:** im Partner-Portal → Admin-Bereich (Login als `info@nest-bildungsbar.de`).
+- **Terminbuchungen:** werden über `/api/buchung` in der Tabelle `buchungen` gespeichert
+  **und** per SMTP gemailt. Sichtbar/löschbar im Admin-Bereich. Buchbare Zeiten **ab 17:00**:
+  Wuppertal 4 Slots (bis 19:00), Essen 2 Slots (bis 18:00) – einstellbar in `nest-app.js`
+  (`ZEITEN_NACH_ORT`).
+- **Kontakt / Sonderanfrage:** werden per SMTP (`/api/kontakt`) gemailt, mit mailto-Fallback.
 - **Berufe / Texte / Bilder:** in `public/assets/` (`berufe-data` & Co. stecken im
   Bundle `nest-app.js`; Bilder unter `public/assets/img/berufe/`).
-- **Terminanfragen / Kontakt:** erzeugen eine vorausgefüllte E-Mail an `NEXT_PUBLIC_TERMIN_MAIL`.
-  Für serverseitigen Versand könnte man später eine API-Route + Mailservice (z. B. Resend) ergänzen.
 
 ---
 

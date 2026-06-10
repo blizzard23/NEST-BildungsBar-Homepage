@@ -79,7 +79,7 @@ const html = `
 
                 <!-- Schritt 3: Uhrzeit -->
                 <div class="tb-step tb-locked" id="step-time">
-                  <div class="tb-step-head"><span class="tb-step-n">3</span><h3>Welche Uhrzeit?</h3><span class="tb-hint">17–19 Uhr</span></div>
+                  <div class="tb-step-head"><span class="tb-step-n">3</span><h3>Welche Uhrzeit?</h3><span class="tb-hint">ab 17 Uhr</span></div>
                   <div class="tb-times" id="tb-time-list"></div>
                 </div>
 

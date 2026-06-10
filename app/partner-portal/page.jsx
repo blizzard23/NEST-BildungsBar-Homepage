@@ -27,6 +27,7 @@ export default function PartnerPortal() {
   // Admin
   const [adminEvents, setAdminEvents] = useState([]);
   const [adminPosts, setAdminPosts] = useState([]);
+  const [buchungen, setBuchungen] = useState([]);
   const [evForm, setEvForm] = useState(EVENT_LEER);
   const [evMsg, setEvMsg] = useState("");
   const [poForm, setPoForm] = useState(POST_LEER);
@@ -64,6 +65,8 @@ export default function PartnerPortal() {
     setAdminEvents(ev || []);
     const { data: po } = await supabase.from("posts").select("*").order("veroeffentlicht_am", { ascending: false });
     setAdminPosts(po || []);
+    const { data: bu } = await supabase.from("buchungen").select("*").order("created_at", { ascending: false });
+    setBuchungen(bu || []);
   }, [isAdmin]); // eslint-disable-line
 
   useEffect(() => { if (session) ladeDaten(); }, [session, ladeDaten]);
@@ -74,7 +77,9 @@ export default function PartnerPortal() {
     const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
     if (error) setAuthErr("Login fehlgeschlagen: " + error.message);
   }
-  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); }
+  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); }
+
+  async function buchungLoeschen(id) { await supabase.from("buchungen").delete().eq("id", id); ladeAdmin(); }
 
   async function speichern(e) {
     e.preventDefault(); setMsg("");
@@ -237,6 +242,27 @@ export default function PartnerPortal() {
                 <div style={{ marginTop: "44px", borderTop: "2px solid var(--line)", paddingTop: "32px" }}>
                   <span className="section-label">Nur für Admins</span>
                   <h2 style={{ fontSize: "26px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 22px" }}>Admin-Bereich</h2>
+
+                  {/* Terminbuchungen */}
+                  <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Terminbuchungen ({buchungen.length})</h3>
+                  {buchungen.length ? (
+                    <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
+                      {buchungen.map((bu) => (
+                        <div className="card" key={bu.id}>
+                          <span className="badge">{bu.standort} · {bu.uhrzeit}</span>
+                          <h3 style={{ marginTop: "10px" }}>{bu.datum_text || bu.datum}</h3>
+                          <p style={{ color: "var(--navy)", fontWeight: 700, margin: "2px 0" }}>{bu.name}</p>
+                          <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "0 0 4px" }}>
+                            {bu.email ? <a href={`mailto:${bu.email}`}>{bu.email}</a> : null}
+                            {bu.telefon ? " · " + bu.telefon : ""}
+                          </p>
+                          {bu.schule ? <p style={{ fontSize: "13px", color: "var(--text-mute)", margin: 0 }}>{bu.schule}</p> : null}
+                          {bu.nachricht ? <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "6px" }}>„{bu.nachricht}"</p> : null}
+                          <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => buchungLoeschen(bu.id)}>Löschen</button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Terminbuchungen.</p>}
 
                   {/* Veranstaltung anlegen */}
                   <div className="card" style={{ marginBottom: "24px" }}>

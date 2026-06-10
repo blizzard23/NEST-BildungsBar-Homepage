@@ -669,11 +669,15 @@ section { padding: 90px 0; }
   display: block; width: 234px; max-width: 66vw; margin: 14px auto; position: relative; z-index: 1;
   background: linear-gradient(155deg, #1d2f4a 0%, #0b1626 58%);
   border: 1px solid rgba(255,255,255,0.14); border-radius: 38px; padding: 10px;
-  box-shadow: 0 34px 64px rgba(0,0,0,0.55), 0 8px 22px rgba(239,165,0,0.16), inset 0 0 0 2px rgba(255,255,255,0.05);
-  transform: rotate(-7deg); transform-origin: center;
-  transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s ease; text-decoration: none;
+  box-shadow: 26px 40px 70px rgba(0,0,0,0.55), 0 8px 22px rgba(239,165,0,0.16), inset 0 0 0 2px rgba(255,255,255,0.05);
+  transform: perspective(1100px) rotateY(-24deg) rotateX(8deg) rotate(1deg);
+  transform-origin: center; transform-style: preserve-3d; will-change: transform;
+  transition: transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s ease; text-decoration: none;
 }
-.hero-phone:hover { transform: rotate(0deg) translateY(-6px); box-shadow: 0 44px 84px rgba(0,0,0,0.6), 0 12px 30px rgba(239,165,0,0.26); }
+.hero-phone:hover {
+  transform: perspective(1100px) rotateY(-8deg) rotateX(3deg) translateY(-6px);
+  box-shadow: 18px 46px 84px rgba(0,0,0,0.6), 0 12px 30px rgba(239,165,0,0.26);
+}
 /* Seitentaste */
 .hero-phone::after { content: ""; position: absolute; right: -2px; top: 86px; width: 2.5px; height: 44px; border-radius: 3px; background: rgba(255,255,255,0.18); }
 .hero-phone .hp-notch { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 64px; height: 16px; background: #0b1626; border: 1px solid rgba(255,255,255,0.06); border-radius: 9999px; z-index: 3; }

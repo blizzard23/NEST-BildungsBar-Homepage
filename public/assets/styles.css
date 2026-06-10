@@ -656,3 +656,25 @@ section { padding: 90px 0; }
 .blog-content img { max-width: 100%; border-radius: 12px; margin: 1.2em 0; }
 .blog-content ul, .blog-content ol { margin: 0 0 1.1em 1.3em; }
 .blog-content li { margin-bottom: .4em; }
+
+/* ---------- Hero: Phone-Mockup (Deine Zukunft) ---------- */
+.hero-visual--phone { background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; width: auto; }
+.hero-phone {
+  display: block; width: 300px; max-width: 80vw; margin: 0 auto; position: relative;
+  background: #0b1626; border: 1px solid rgba(255,255,255,0.12); border-radius: 42px; padding: 14px;
+  box-shadow: 0 36px 72px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.04);
+  transition: transform .25s ease; text-decoration: none;
+}
+.hero-phone:hover { transform: translateY(-5px); }
+.hero-phone .hp-notch { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); width: 78px; height: 18px; background: #0b1626; border-radius: 9999px; z-index: 3; }
+.hero-phone .hp-screen { background: var(--bg-light); border-radius: 30px; padding: 30px 14px 16px; overflow: hidden; display: flex; flex-direction: column; gap: 11px; }
+.hero-phone .hp-badge { align-self: flex-start; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); background: var(--gold-soft); padding: 3px 9px; border-radius: 9999px; }
+.hero-phone .hp-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-top: 6px; line-height: 1.2; }
+.hero-phone .hp-search { background: #fff; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; font-size: 11px; color: var(--text-mute); }
+.hero-phone .hp-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.hero-phone .hp-chip { font-size: 10px; font-weight: 700; color: var(--navy); background: #fff; border: 1px solid var(--line); border-radius: 9999px; padding: 4px 9px; }
+.hero-phone .hp-chip--on { background: var(--navy); color: #fff; border-color: var(--navy); }
+.hero-phone .hp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.hero-phone .hp-card { background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 9px; overflow: hidden; }
+.hero-phone .hp-card img { width: 100%; height: 46px; object-fit: cover; object-position: center top; display: block; }
+.hero-phone .hp-name { display: block; font-size: 10px; font-weight: 700; color: var(--navy); padding: 5px 7px; line-height: 1.2; }

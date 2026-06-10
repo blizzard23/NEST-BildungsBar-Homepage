@@ -18,12 +18,29 @@ const html = `
             <div class="stat"><strong>2</strong><span>Standorte</span></div>
           </div>
         </div>
-        <div class="hero-visual">
-          <div class="mock-bar"><i></i><i></i><i></i></div>
-          <div class="mock-row"><span class="ic" data-icon="compass" data-icon-size="20"></span><span class="tx"><b>Berufsorientierung</b><small>Was passt zu mir?</small></span></div>
-          <div class="mock-row"><span class="ic" data-icon="briefcase" data-icon-size="20"></span><span class="tx"><b>Bewerbungshilfe</b><small>Überzeugende Unterlagen</small></span></div>
-          <div class="mock-row"><span class="ic" data-icon="people" data-icon-size="20"></span><span class="tx"><b>Interview-Training</b><small>Sicher ins Gespräch</small></span></div>
-          <div class="mock-row"><span class="ic" data-icon="heart" data-icon-size="20"></span><span class="tx"><b>Passende Unternehmen</b><small>Direkt vermittelt</small></span></div>
+        <div class="hero-visual hero-visual--phone">
+          <a class="hero-phone" href="/deine-zukunft" aria-label="Deine Zukunft – alle Ausbildungsberufe entdecken">
+            <span class="hp-notch"></span>
+            <div class="hp-screen">
+              <span class="hp-badge">Deine Zukunft</span>
+              <div class="hp-title">Finde deinen Beruf</div>
+              <div class="hp-search">Beruf oder Berufsfeld suchen …</div>
+              <div class="hp-chips">
+                <span class="hp-chip hp-chip--on">Alle</span>
+                <span class="hp-chip">Handwerk</span>
+                <span class="hp-chip">IT</span>
+                <span class="hp-chip">Gesundheit</span>
+              </div>
+              <div class="hp-grid">
+                <div class="hp-card"><img src="/assets/img/berufe/anlagenmechaniker-rohrsystemtechnik.webp" alt="" loading="lazy"><span class="hp-name">Anlagenmechaniker:in</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/augenoptiker.png" alt="" loading="lazy"><span class="hp-name">Augenoptiker:in</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/automobilkaufleute.png" alt="" loading="lazy"><span class="hp-name">Automobilkaufleute</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/anaesthesietechnische-assistent.png" alt="" loading="lazy"><span class="hp-name">ATA</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/baecker.png" alt="" loading="lazy"><span class="hp-name">Bäcker:in</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/baeckereifachverkaeufer.png" alt="" loading="lazy"><span class="hp-name">Fachverkäufer:in</span></div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>

@@ -96,6 +96,9 @@ a { text-decoration: none; color: var(--gold-dark); }
 .nav-toggle { display: none; background: none; border: 0; width: 44px; height: 44px; cursor: pointer; flex-direction: column; justify-content: center; gap: 5px; }
 .nav-toggle span { display: block; height: 2.5px; width: 24px; background: #fff; border-radius: 2px; }
 
+/* Termin-Button nur auf Mobile im Hamburger-Menü sichtbar */
+.nav-li-termin { display: none; }
+
 @media (max-width: 1000px) {
   .nav-toggle { display: flex; }
   .nav-links, .nav-cta .btn { display: none; }
@@ -106,6 +109,8 @@ a { text-decoration: none; color: var(--gold-dark); }
     padding: 1rem 24px 1.4rem; gap: .15rem; border-bottom: 1px solid rgba(255,255,255,0.08);
   }
   .nav-links.open a { padding: .8rem .6rem; font-size: 1rem; }
+  .nav-li-termin { display: block; margin-top: 10px; }
+  .nav-li-termin-a { display: block; text-align: center; padding: 13px 22px !important; font-size: 1rem !important; border-radius: 12px; }
 }
 
 /* ---------- HERO (navy + gold clip-path edge) ---------- */

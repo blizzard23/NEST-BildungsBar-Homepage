@@ -658,16 +658,28 @@ section { padding: 90px 0; }
 .blog-content li { margin-bottom: .4em; }
 
 /* ---------- Hero: Phone-Mockup (Deine Zukunft) ---------- */
-.hero-visual--phone { background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; width: auto; }
-.hero-phone {
-  display: block; width: 300px; max-width: 80vw; margin: 0 auto; position: relative;
-  background: #0b1626; border: 1px solid rgba(255,255,255,0.12); border-radius: 42px; padding: 14px;
-  box-shadow: 0 36px 72px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.04);
-  transition: transform .25s ease; text-decoration: none;
+.hero-visual--phone { background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; width: auto; position: relative; }
+/* ambienter Gold-Schein hinter dem Phone */
+.hero-visual--phone::before {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 128%; height: 82%;
+  transform: translate(-50%, -50%); z-index: 0; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(239,165,0,0.20), rgba(239,165,0,0) 72%); filter: blur(8px);
 }
-.hero-phone:hover { transform: translateY(-5px); }
-.hero-phone .hp-notch { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); width: 78px; height: 18px; background: #0b1626; border-radius: 9999px; z-index: 3; }
-.hero-phone .hp-screen { background: var(--bg-light); border-radius: 30px; padding: 30px 14px 16px; overflow: hidden; display: flex; flex-direction: column; gap: 11px; }
+.hero-phone {
+  display: block; width: 234px; max-width: 66vw; margin: 14px auto; position: relative; z-index: 1;
+  background: linear-gradient(155deg, #1d2f4a 0%, #0b1626 58%);
+  border: 1px solid rgba(255,255,255,0.14); border-radius: 38px; padding: 10px;
+  box-shadow: 0 34px 64px rgba(0,0,0,0.55), 0 8px 22px rgba(239,165,0,0.16), inset 0 0 0 2px rgba(255,255,255,0.05);
+  transform: rotate(-7deg); transform-origin: center;
+  transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s ease; text-decoration: none;
+}
+.hero-phone:hover { transform: rotate(0deg) translateY(-6px); box-shadow: 0 44px 84px rgba(0,0,0,0.6), 0 12px 30px rgba(239,165,0,0.26); }
+/* Seitentaste */
+.hero-phone::after { content: ""; position: absolute; right: -2px; top: 86px; width: 2.5px; height: 44px; border-radius: 3px; background: rgba(255,255,255,0.18); }
+.hero-phone .hp-notch { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 64px; height: 16px; background: #0b1626; border: 1px solid rgba(255,255,255,0.06); border-radius: 9999px; z-index: 3; }
+.hero-phone .hp-screen { position: relative; background: var(--bg-light); border-radius: 30px; padding: 28px 13px 15px; overflow: hidden; display: flex; flex-direction: column; gap: 10px; }
+/* Glas-Sheen über dem Screen */
+.hero-phone .hp-screen::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 30%); }
 .hero-phone .hp-badge { align-self: flex-start; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); background: var(--gold-soft); padding: 3px 9px; border-radius: 9999px; }
 .hero-phone .hp-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-top: 6px; line-height: 1.2; }
 .hero-phone .hp-search { background: #fff; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; font-size: 11px; color: var(--text-mute); }

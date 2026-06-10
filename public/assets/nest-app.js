@@ -14,6 +14,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* Aktive Seite im Menü markieren */
+  var navPath = window.location.pathname.replace(/\/$/, '') || '/';
+  document.querySelectorAll('.nav-links a:not(.btn)').forEach(function (a) {
+    var href = (a.getAttribute('href') || '').replace(/\/$/, '') || '/';
+    if (href.charAt(0) !== '/') return; // externe Links / Anker ignorieren
+    if (href === navPath || (href !== '/' && navPath.indexOf(href) === 0)) {
+      a.classList.add('active');
+    }
+  });
+
   /* FAQ Akkordeon – togglet .active auf .faq-item */
   document.querySelectorAll('.faq-question').forEach(function (q) {
     q.addEventListener('click', function () {

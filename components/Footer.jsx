@@ -1,49 +1,61 @@
 export default function Footer() {
   return (
-    <footer className="site-footer">
-      <div className="container">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <a className="brand" href="/"><span className="logo-mark">N</span><span>NEST <small>BildungsBar</small></span></a>
-            <p>Kostenfreie Berufsorientierung in lockerer Atmosphäre. Teil des NEST Ökosystems.</p>
-            <div className="socials">
-              <a href="https://www.instagram.com/nest_bildungsbar.wuppertal" aria-label="Instagram">IG</a>
-              <a href="https://www.facebook.com/BildungsBar" aria-label="Facebook">f</a>
-              <a href="https://www.linkedin.com/company/89189682/" aria-label="LinkedIn">in</a>
-            </div>
-          </div>
-          <div>
-            <h4>Angebot</h4>
-            <ul>
-              <li><a href="/berufswelt">Berufswelt</a></li>
-              <li><a href="/fuer-schulen">Für Schulen</a></li>
-              <li><a href="/kooperation">Für Unternehmen</a></li>
-              <li><a href="/referenzen">Referenzen</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>NEST</h4>
-            <ul>
-              <li><a href="/ueber-uns">Über uns</a></li>
-              <li><a href="/terminbuchung">Termin buchen</a></li>
-              <li><a href="/blog">Blog</a></li>
-              <li><a href="/kontakt">Kontakt</a></li>
-              <li><a href="/partner-portal">Partner-Login</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4>Kontakt</h4>
-            <ul>
-              <li><a href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a></li>
-              <li><a href="tel:017641933496">0176 419 334 96</a></li>
-              <li>Hochstraße 65, 42105 Wuppertal</li>
-              <li>Kopstadtplatz 12, 45127 Essen</li>
-            </ul>
+    <footer className="nest-footer">
+      <div className="nest-footer__inner">
+        <div>
+          <a className="nest-footer__logo brand" href="/">
+            <span className="logo-mark">N</span>
+            <span>NEST <small>BildungsBar</small></span>
+          </a>
+          <p className="nest-footer__desc">
+            Kostenfreie Berufsorientierung in lockerer Atmosphäre – über 150 Ausbildungsberufe,
+            persönliche Beratung in Wuppertal &amp; Essen. Teil des NEST Ökosystems.
+          </p>
+          <div className="nest-footer__social">
+            <a href="https://www.linkedin.com/company/89189682/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="https://www.instagram.com/nest_bildungsbar.wuppertal" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="mailto:info@nest-bildungsbar.de" title="E-Mail" aria-label="E-Mail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            </a>
           </div>
         </div>
-        <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} NEST GmbH · NEST BildungsBar</span>
-          <span><a href="#">Datenschutz</a> · <a href="#">Impressum</a></span>
+        <div>
+          <h4>Angebot</h4>
+          <ul className="nest-footer__links">
+            <li><a href="/berufswelt">Berufswelt</a></li>
+            <li><a href="/fuer-schulen">Für Schulen</a></li>
+            <li><a href="/kooperation">Für Unternehmen</a></li>
+            <li><a href="/referenzen">Referenzen</a></li>
+            <li><a href="/terminbuchung">Termin buchen</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>NEST Ökosystem</h4>
+          <ul className="nest-footer__links">
+            <li><a href="https://nest-messe.de" target="_blank" rel="noopener">NEST Messe</a></li>
+            <li><a href="https://nest-azubiconnect.de" target="_blank" rel="noopener">NEST Azubiconnect</a></li>
+            <li><a href="/ueber-uns">Über uns</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/partner-portal">Partner-Login</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Kontakt</h4>
+          <div className="nest-footer__contact-line"><p>NEST GmbH<br />Hochstraße 65<br />42105 Wuppertal</p></div>
+          <div className="nest-footer__contact-line"><a href="tel:017641933496">0176 419 334 96</a></div>
+          <div className="nest-footer__contact-line"><a href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a></div>
+        </div>
+      </div>
+      <div className="nest-footer__bottom">
+        <p>© {new Date().getFullYear()} NEST GmbH · Alle Rechte vorbehalten.</p>
+        <span className="nest-footer__badge">Made in Wuppertal</span>
+        <div className="nest-footer__bottom-links">
+          <a href="#">Datenschutz</a>
+          <a href="#">Impressum</a>
         </div>
       </div>
     </footer>

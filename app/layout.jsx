@@ -1,4 +1,5 @@
 import Script from "next/script";
+import EcosystemBar from "@/components/EcosystemBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }) {
         <Script id="nest-config" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: CONFIG }} />
       </head>
       <body>
+        <EcosystemBar />
         <Header />
         {children}
         <Footer />

@@ -1192,6 +1192,20 @@ document.addEventListener("DOMContentLoaded", function () {
   renderBerufDetail();
 });
 
+/* ===== stellen-data (Demo-Fallback) ===== */
+if (!window.STELLEN || !window.STELLEN.length) {
+  window.STELLEN = [
+    { beruf: "Mechatroniker:in", firma: "Vorwerk", ort: "Wuppertal", aktiviertAm: "2026-05-28", url: "/berufswelt" },
+    { beruf: "Fachinformatiker:in Systemintegration", firma: "Wiesemann & Theis", ort: "Wuppertal", aktiviertAm: "2026-06-01", url: "/berufswelt" },
+    { beruf: "Kaufleute für Büromanagement", firma: "Stadtsparkasse Wuppertal", ort: "Wuppertal", aktiviertAm: "2026-06-03", url: "/berufswelt" },
+    { beruf: "Elektroniker:in Betriebstechnik", firma: "Wuppertaler Stadtwerke", ort: "Wuppertal", aktiviertAm: "2026-06-05", url: "/berufswelt" },
+    { beruf: "Pflegefachkraft", firma: "Helios Kliniken Wuppertal", ort: "Wuppertal", aktiviertAm: "2026-06-07", url: "/berufswelt" },
+    { beruf: "Industriekaufleute", firma: "Knipex", ort: "Wuppertal", aktiviertAm: "2026-06-09", url: "/berufswelt" },
+    { beruf: "Anlagenmechaniker:in", firma: "Vaillant", ort: "Essen", aktiviertAm: "2026-06-02", url: "/berufswelt" },
+    { beruf: "Kaufleute für IT-System-Management", firma: "E/D/E", ort: "Essen", aktiviertAm: "2026-06-06", url: "/berufswelt" },
+  ];
+}
+
 /* ===== stellen-ui.js ===== */
 /* =========================================================
    NEST BildungsBar – Aktuelle Stellen (UI, horizontale Leiste)
@@ -1429,9 +1443,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
       var voll = kapazitaet > 0 && frei <= 0;
-      if (voll) { cls += " tb-cal-day--full"; }
-      else if (frei === 1) { cls += " tb-cal-day--knapp"; inner += '<span class="dido-rest">1 Platz</span>'; }
-      else { cls += " tb-cal-day--available"; }
+      if (voll) {
+        cls += " tb-cal-day--full";
+        inner += '<span class="dido-rest dido-rest--full">Ausgebucht</span>';
+      } else if (frei === 1) {
+        cls += " tb-cal-day--knapp";
+        inner += '<span class="dido-rest">1 Platz</span>';
+      } else {
+        cls += " tb-cal-day--available";
+        inner += '<span class="dido-rest">' + (frei < 0 ? 'Frei' : frei + ' Plätze') + '</span>';
+      }
       if (state.datum === key) cls += " tb-cal-day--selected";
       return '<div class="' + cls + '" data-key="' + key + '" data-d="' + d.getTime() + '" ' + (voll ? 'data-nok="1"' : '') + '>' + inner + '</div>';
     }
@@ -1472,6 +1493,8 @@ document.addEventListener("DOMContentLoaded", function () {
     calMonat++; if (calMonat > 11) { calMonat = 0; calJahr++; }
     renderKalender();
   });
+
+  renderKalender(); // Kalender sofort beim Laden anzeigen
 
   /* ---------- Datums-Kacheln (inkl. „ausgebucht") ---------- */
   var dateList = document.getElementById("tb-date-list");
@@ -1543,7 +1566,7 @@ document.addEventListener("DOMContentLoaded", function () {
       state.adr = btn.getAttribute("data-adr") || "";
       state.datum = null; state.datumText = "";
       renderZeit();
-      ladeVerfuegbarkeit(state.ort, function () { renderDates(); update(); });
+      ladeVerfuegbarkeit(state.ort, function () { renderDates(); renderKalender(); update(); });
       update();
     });
   });

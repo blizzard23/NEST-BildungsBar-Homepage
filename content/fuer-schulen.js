@@ -138,8 +138,8 @@ const html = `
           </ul>
           <a class="btn btn-navy mt-2" href="/kontakt#termin">Schultermin anfragen →</a>
         </div>
-        <div class="split-media" style="background:none;">
-          <div class="wf-laptop-outer" style="transform:perspective(1200px) rotateY(8deg);">
+        <div class="split-media" style="background:none; overflow:visible; border-radius:0; min-height:0; box-shadow:none;">
+          <div class="wf-laptop-outer" style="width:100%; transform:perspective(1200px) rotateY(8deg);">
             <div class="wf-laptop" style="transform:none;">
               <div class="wf-lap-screen">
                 <div class="br-bar">

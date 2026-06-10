@@ -92,6 +92,20 @@ a { text-decoration: none; color: var(--gold-dark); }
 .nav-links a.active { color: var(--gold); }
 .nav-cta { display: flex; align-items: center; gap: .6rem; }
 .nav-cta .btn { padding: 11px 22px; font-size: 14px; }
+/* Partner-Login icon button */
+.nav-portal-icon {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  display: grid; place-items: center; position: relative;
+  color: rgba(255,255,255,0.7); border: 1.5px solid rgba(255,255,255,0.18);
+  transition: background .18s, color .18s, border-color .18s;
+}
+.nav-portal-icon:hover { background: rgba(255,255,255,0.09); color: #fff; border-color: rgba(255,255,255,0.3); }
+.nav-portal-icon.is-eingeloggt { color: var(--gold); border-color: rgba(239,165,0,0.4); }
+.nav-portal-icon.is-eingeloggt:hover { background: rgba(239,165,0,0.08); border-color: rgba(239,165,0,0.6); }
+.portal-dot {
+  position: absolute; top: 6px; right: 6px; width: 7px; height: 7px;
+  border-radius: 50%; background: var(--gold); border: 1.5px solid #0c1829;
+}
 
 .nav-toggle { display: none; background: none; border: 0; width: 44px; height: 44px; cursor: pointer; flex-direction: column; justify-content: center; gap: 5px; }
 .nav-toggle span { display: block; height: 2.5px; width: 24px; background: #fff; border-radius: 2px; }
@@ -102,7 +116,7 @@ a { text-decoration: none; color: var(--gold-dark); }
 @media (max-width: 1000px) {
   .nav-toggle { display: flex; }
   .nav-links, .nav-cta .btn { display: none; }
-  .nav-cta .nav-portal { display: inline-flex !important; padding: 8px 14px; font-size: 13px; }
+  .nav-portal-icon { display: grid !important; }
   .nav-links.open {
     display: flex; position: absolute; top: 74px; left: 0; right: 0;
     flex-direction: column; align-items: stretch; background: var(--navy-deep);
@@ -118,6 +132,7 @@ a { text-decoration: none; color: var(--gold-dark); }
   background: var(--navy-deep);
   position: relative; overflow: hidden;
   padding: 80px 0 130px;
+  min-height: 620px;
 }
 .hero::after {
   content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 70px;
@@ -686,7 +701,7 @@ section { padding: 90px 0; }
 /* Seitentaste */
 .hero-phone::after { content: ""; position: absolute; right: -2px; top: 86px; width: 2.5px; height: 44px; border-radius: 3px; background: rgba(255,255,255,0.18); }
 .hero-phone .hp-notch { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 64px; height: 16px; background: #0b1626; border: 1px solid rgba(255,255,255,0.06); border-radius: 9999px; z-index: 3; }
-.hero-phone .hp-screen { position: relative; background: var(--bg-light); border-radius: 30px; padding: 28px 13px 15px; overflow: hidden; display: flex; flex-direction: column; gap: 10px; }
+.hero-phone .hp-screen { position: relative; background: var(--bg-light); border-radius: 30px; padding: 28px 13px 15px; overflow: hidden; display: flex; flex-direction: column; gap: 10px; min-height: 430px; }
 /* Glas-Sheen über dem Screen */
 .hero-phone .hp-screen::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 30%); }
 .hero-phone .hp-badge { align-self: flex-start; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); background: var(--gold-soft); padding: 3px 9px; border-radius: 9999px; }
@@ -918,6 +933,7 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .dido-n { font-size: 26px; font-weight: 900; line-height: 1; color: inherit; }
 .dido-mon { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: inherit; opacity: 0.65; margin-top: 2px; }
 .dido-rest { font-size: 9.5px; font-weight: 800; margin-top: 5px; padding: 2px 7px; border-radius: 20px; background: rgba(255,255,255,0.35); color: inherit; }
+.dido-rest--full { background: rgba(194,65,90,0.2); }
 .tb-cal-day--empty { background: none; border: none; cursor: default; min-height: 76px; }
 .tb-cal-day--past { background: #f4f5f7; border-color: transparent; color: #c8ccd6; cursor: not-allowed; }
 .tb-cal-day--available { background: #e6f7ef; border-color: #a8dfc0; color: #1a8550; }

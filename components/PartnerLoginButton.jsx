@@ -14,10 +14,17 @@ export default function PartnerLoginButton() {
   }, []);
 
   return (
-    <a className={"btn btn-ghost nav-portal" + (eingeloggt ? " is-eingeloggt" : "")} href="/partner-portal">
-      {eingeloggt ? (
-        <><span className="login-dot" aria-hidden="true"></span>Eingeloggt</>
-      ) : "Partner-Login"}
+    <a
+      className={"nav-portal-icon" + (eingeloggt ? " is-eingeloggt" : "")}
+      href="/partner-portal"
+      aria-label={eingeloggt ? "Partner-Portal – eingeloggt" : "Partner-Login"}
+      title={eingeloggt ? "Partner-Portal (eingeloggt)" : "Partner-Login"}
+    >
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      {eingeloggt && <span className="portal-dot" aria-hidden="true" />}
     </a>
   );
 }

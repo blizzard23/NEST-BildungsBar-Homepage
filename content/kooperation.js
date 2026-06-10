@@ -1,16 +1,5 @@
 const html = `
 
-  <!-- STATS BAR -->
-  <div class="stats-bar">
-    <div class="container">
-      <div class="stats-bar-inner">
-        <div><div class="num">70+</div><div class="lbl">Unternehmen im Netzwerk</div></div>
-        <div><div class="num">500+</div><div class="lbl">junge Menschen pro Jahr</div></div>
-        <div><div class="num">2</div><div class="lbl">Standorte: Wuppertal &amp; Essen</div></div>
-      </div>
-    </div>
-  </div>
-
   <!-- BAUSTEINE (dunkle wf-Sektion) -->
   <section class="wf">
     <div class="wf-inner">

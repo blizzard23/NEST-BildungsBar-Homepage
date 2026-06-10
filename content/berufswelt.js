@@ -6,7 +6,7 @@ const html = `
       <div class="hero-inner">
         <div class="hero-text">
           <span class="hero-badge">Berufswelt</span>
-          <h1>Über 200 Wege<br /><em>in deine Ausbildung</em></h1>
+          <h1>Über 150 Wege<br /><em>in deine Ausbildung</em></h1>
           <p class="lead">Von Gesundheit über Handwerk bis IT: Wir helfen dir, die Ausbildung oder das duale Studium zu finden, das wirklich zu dir passt.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="/terminbuchung">Beratung buchen →</a>
@@ -29,11 +29,11 @@ const html = `
       <div class="section-head centered reveal">
         <span class="section-label">Orientierung leicht gemacht</span>
         <h2>Finde heraus, was zu dir passt</h2>
-        <p>Die Auswahl ist riesig – über 200 Ausbildungsberufe und zahlreiche duale Studiengänge. Wir helfen dir, den Überblick zu behalten und den richtigen Weg einzuschlagen.</p>
+        <p>Die Auswahl ist riesig – über 150 Ausbildungsberufe und zahlreiche duale Studiengänge. Wir helfen dir, den Überblick zu behalten und den richtigen Weg einzuschlagen.</p>
       </div>
       <div class="card-grid cols-3">
         <div class="card reveal"><div class="icon" data-icon="compass" data-icon-size="26"></div><h3>Was passt zu mir?</h3><p>Wähl im Berufsfinder einfach aus, worauf du Lust hast – wir zeigen dir passende Berufe.</p><a class="badge link" href="#felder">Jetzt ausprobieren →</a></div>
-        <div class="card reveal"><div class="icon" data-icon="grid" data-icon-size="26"></div><h3>200+ Berufe</h3><p>Eine umfassende Datenbank über alle Branchen hinweg – von A wie Anlagenmechaniker bis Z.</p></div>
+        <div class="card reveal"><div class="icon" data-icon="grid" data-icon-size="26"></div><h3>150+ Berufe</h3><p>Eine umfassende Datenbank über alle Branchen hinweg – von A wie Anlagenmechaniker bis Z.</p></div>
         <div class="card reveal"><div class="icon" data-icon="cap" data-icon-size="26"></div><h3>Duales Studium</h3><p>Zahlreiche Bachelor-Optionen, die Theorie und Praxis im Betrieb verbinden.</p></div>
       </div>
     </div>
@@ -66,11 +66,11 @@ const html = `
         <div class="split-text reveal">
           <span class="section-label">Dein nächster Schritt</span>
           <h2>Wir begleiten dich persönlich</h2>
-          <p>Eine Datenbank ist gut – persönliche Beratung ist besser. Bei der BildungsBar besprechen wir gemeinsam, welche Berufe zu dir passen und vermitteln dich direkt an passende Unternehmen.</p>
+          <p>Eine Datenbank ist gut – persönliche Beratung ist besser. Bei der BildungsBar besprechen wir gemeinsam, welche Berufe zu dir passen und vernetzen dich direkt mit passenden Unternehmen.</p>
           <ul class="list-check">
             <li>Individuelle Berufsberatung auf Augenhöhe</li>
             <li>Bewerbungstraining „Fit für die Jobsuche“</li>
-            <li>Direkte Vermittlung zu über 70 Unternehmen</li>
+            <li>Direkte Vernetzung zu über 70 Unternehmen</li>
           </ul>
           <a class="btn btn-navy mt-2" href="/terminbuchung">Jetzt Termin buchen →</a>
         </div>
@@ -84,7 +84,7 @@ const html = `
       <div class="cta-inner">
         <span class="section-label" style="display:flex;justify-content:center;">Noch unsicher?</span>
         <h2>Welcher Beruf passt zu <em>dir?</em></h2>
-        <p>Kein Problem – genau dafür sind wir da. Buch dir einen kostenlosen Termin und wir finden es gemeinsam heraus.</p>
+        <p>Kein Problem – genau dafür sind wir da. Buch dir einen kostenfreien Termin und wir finden es gemeinsam heraus.</p>
         <div class="cta-actions">
           <a class="btn btn-primary" href="/terminbuchung">Termin buchen</a>
           <a class="btn btn-ghost" href="/fuer-schulen">Für Schulen</a>

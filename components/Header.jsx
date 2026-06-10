@@ -1,3 +1,5 @@
+import PartnerLoginButton from "@/components/PartnerLoginButton";
+
 export default function Header() {
   return (
     <header className="site-header">
@@ -11,15 +13,14 @@ export default function Header() {
             <li><a href="/">Home</a></li>
             <li><a href="/ueber-uns">Über uns</a></li>
             <li><a href="/berufswelt">Berufswelt</a></li>
-            <li><a href="/terminbuchung">Termine</a></li>
-            <li><a href="/fuer-schulen">Für Schulen</a></li>
-            <li><a href="/kooperation">Für Unternehmen</a></li>
+            <li><a href="/fuer-schulen">Schulen</a></li>
+            <li><a href="/kooperation">Unternehmen</a></li>
             <li><a href="/referenzen">Referenzen</a></li>
             <li><a href="/blog">Blog</a></li>
             <li><a href="/kontakt">Kontakt</a></li>
           </ul>
           <div className="nav-cta">
-            <a className="btn btn-ghost nav-portal" href="/partner-portal">Partner-Login</a>
+            <PartnerLoginButton />
             <a className="btn btn-primary" href="/terminbuchung">Termin buchen</a>
           </div>
           <button className="nav-toggle" aria-label="Menü öffnen"><span></span><span></span><span></span></button>

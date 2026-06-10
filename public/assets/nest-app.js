@@ -973,7 +973,7 @@ function renderBerufDetail() {
     '<span class="hero-badge">' + escHtml(beruf.typ) + "</span>" +
     "<h1>" + escHtml(beruf.name) + "</h1>" +
     '<p class="lead">' + escHtml(beruf.kategorie) +
-    " – wir beraten dich kostenlos und vermitteln dich an passende Betriebe.</p>" +
+    " – wir beraten dich kostenfrei und vernetzen dich mit passenden Betrieben.</p>" +
     '<div class="hero-actions"><a class="btn btn-primary" href="' + linkKontaktTermin() + '">Beratung buchen</a>' +
     '<button class="btn btn-ghost detail-merk">' + ic("heart", 16) + "<span>" + (gem ? "Gemerkt" : "Merken") + "</span></button></div>" +
     "</div></div></div></section>";
@@ -997,7 +997,7 @@ function renderBerufDetail() {
         }).join("") + "</div>"
       : "") +
     "<h2>So unterstützt dich die BildungsBar</h2><p>Wir helfen dir, herauszufinden, ob „" +
-    escHtml(beruf.name) + "“ zu dir passt, bereiten dich auf die Bewerbung vor und stellen den Kontakt zu passenden Unternehmen aus unserem Netzwerk her – alles kostenlos und auf Augenhöhe.</p>" +
+    escHtml(beruf.name) + "“ zu dir passt, bereiten dich auf die Bewerbung vor und stellen den Kontakt zu passenden Unternehmen aus unserem Netzwerk her – alles kostenfrei und auf Augenhöhe.</p>" +
     "</div>" +
     '<aside><div class="steckbrief"><h3>Steckbrief</h3>' +
     sbRow("cap", "Art", beruf.typ) +
@@ -1013,7 +1013,7 @@ function renderBerufDetail() {
     '<section class="cta-section on-white"><div class="container"><div class="cta-inner">' +
     '<span class="section-label" style="display:flex;justify-content:center;">Interesse geweckt?</span>' +
     "<h2>Starte mit „<em>" + escHtml(beruf.name) + "</em>“</h2>" +
-    "<p>Buch dir einen kostenlosen Termin an der BildungsBar – wir finden gemeinsam heraus, ob dieser Weg zu dir passt.</p>" +
+    "<p>Buch dir einen kostenfreien Termin in der BildungsBar – wir finden gemeinsam heraus, ob dieser Weg zu dir passt.</p>" +
     '<div class="cta-actions"><a class="btn btn-primary" href="' + linkKontaktTermin() + '">Termin buchen</a>' +
     '<a class="btn btn-ghost" href="' + linkZukunft() + '">Weitere Berufe</a></div>' +
     "</div></div></section>";

@@ -6,7 +6,7 @@ const html = `
       <div class="hero-text">
         <span class="hero-badge">Termin buchen</span>
         <h1>Sichere dir deinen<br /><em>Beratungstermin</em></h1>
-        <p class="lead">Kostenlos, locker und auf Augenhöhe – wähl einfach Standort, Tag und Uhrzeit. Wir beraten dich dienstags &amp; donnerstags von 17 bis 19 Uhr in Wuppertal und Essen.</p>
+        <p class="lead">Kostenfrei, locker und auf Augenhöhe – wähl einfach Standort, Tag und Uhrzeit. Wir beraten dich dienstags &amp; donnerstags von 17 bis 19 Uhr in Wuppertal und Essen.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#buchen">Jetzt Termin wählen →</a>
           <a class="btn btn-ghost" href="#anfrage">Lieber anfragen</a>
@@ -14,7 +14,7 @@ const html = `
       </div>
       <div class="hero-visual">
         <div class="mock-bar"><i></i><i></i><i></i></div>
-        <div class="mock-row"><span class="ic"></span><span class="tx"><b>Kostenlos &amp; unverbindlich</b><small>kein Haken, versprochen</small></span></div>
+        <div class="mock-row"><span class="ic"></span><span class="tx"><b>Kostenfrei &amp; unverbindlich</b><small>kein Haken, versprochen</small></span></div>
         <div class="mock-row"><span class="ic"></span><span class="tx"><b>Di &amp; Do · 17–19 Uhr</b><small>Wuppertal &amp; Essen</small></span></div>
         <div class="mock-row"><span class="ic"></span><span class="tx"><b>In 4 Schritten gebucht</b><small>dauert keine 2 Minuten</small></span></div>
       </div>
@@ -161,7 +161,7 @@ const html = `
           <div class="contact-info-card">
             <h3>Gut zu wissen</h3>
             <div class="row"><div class="ic"></div><div><b>Wann?</b><span>Di &amp; Do · 17–19 Uhr</span></div></div>
-            <div class="row"><div class="ic"></div><div><b>Kosten</b><span>0 € – komplett kostenlos</span></div></div>
+            <div class="row"><div class="ic"></div><div><b>Kosten</b><span>0 € – komplett kostenfrei</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Mitbringen</b><span>nur dich – Unterlagen sind optional</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Telefon</b><a href="tel:017641933496">0176 419 334 96</a></div></div>
             <div class="row"><div class="ic"></div><div><b>WhatsApp</b><a href="tel:015753934038">01575 393 4038</a></div></div>

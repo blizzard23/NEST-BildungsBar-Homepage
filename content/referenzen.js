@@ -28,7 +28,7 @@ const html = `
         <p>Mit den folgenden Kooperationspartnern verbindet uns eine vertrauensvolle und langfristige Zusammenarbeit. Die Herausforderungen der modernen Ausbildung und Ausbildungssuche bewältigen wir am besten gemeinsam.</p>
       </div>
       <div class="card-grid cols-3" id="partner">
-        <div class="card reveal"><div class="icon" data-icon="briefcase" data-icon-size="26"></div><h3>Unternehmen</h3><p>Regionale Betriebe aus Handwerk, Technik, Wirtschaft und mehr – unsere Basis für passgenaue Vermittlung.</p></div>
+        <div class="card reveal"><div class="icon" data-icon="briefcase" data-icon-size="26"></div><h3>Unternehmen</h3><p>Regionale Betriebe aus Handwerk, Technik, Wirtschaft und mehr – unsere Basis für passgenaue Vernetzung.</p></div>
         <div class="card reveal"><div class="icon" data-icon="building" data-icon-size="26"></div><h3>Einrichtungen</h3><p>Bildungs- und soziale Einrichtungen, mit denen wir Hand in Hand junge Menschen begleiten.</p></div>
         <div class="card reveal"><div class="icon" data-icon="health" data-icon-size="26"></div><h3>Gesundheitspartner</h3><p>Partner aus Pflege und Medizin, die jungen Menschen Perspektiven im Gesundheitswesen eröffnen.</p></div>
       </div>

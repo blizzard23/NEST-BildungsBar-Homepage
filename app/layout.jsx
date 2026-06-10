@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "NEST BildungsBar – Kostenlose Berufsorientierung",
+  title: "NEST BildungsBar – Kostenfreie Berufsorientierung",
   description:
-    "Kostenlose, lockere Berufsorientierung auf Augenhöhe. Über 200 Ausbildungsberufe, Beratung in Wuppertal & Essen. Teil des NEST Ökosystems.",
+    "Kostenfreie, lockere Berufsorientierung auf Augenhöhe. Über 150 Ausbildungsberufe, Beratung in Wuppertal & Essen. Teil des NEST Ökosystems.",
 };
 
 export const viewport = { width: "device-width", initialScale: 1 };

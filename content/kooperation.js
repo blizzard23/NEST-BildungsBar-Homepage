@@ -28,7 +28,7 @@ const html = `
     <div class="container">
       <div class="stats-bar-inner">
         <div><div class="num">70+</div><div class="lbl">Unternehmen im Netzwerk</div></div>
-        <div><div class="num">400+</div><div class="lbl">junge Menschen pro Jahr</div></div>
+        <div><div class="num">500+</div><div class="lbl">junge Menschen pro Jahr</div></div>
         <div><div class="num">2</div><div class="lbl">Standorte: Wuppertal &amp; Essen</div></div>
       </div>
     </div>
@@ -41,7 +41,7 @@ const html = `
       <div class="wf-header">
         <div class="wf-eyebrow"><div class="wf-eyebrow-line"></div>Die Bausteine<div class="wf-eyebrow-line"></div></div>
         <h2 class="wf-h1">So sieht eure <em>Kooperation</em> aus</h2>
-        <p class="wf-lead">Von der Sichtbarkeit über die Vermittlung bis zur Begleitung – das sind die einzelnen Bausteine, mit denen wir euch unterstützen.</p>
+        <p class="wf-lead">Von der Sichtbarkeit über die Vernetzung bis zur Begleitung – das sind die einzelnen Bausteine, mit denen wir euch unterstützen.</p>
       </div>
 
       <!-- PHASE 1 -->
@@ -146,8 +146,8 @@ const html = `
           <div class="wf-card">
             <div class="wf-card-bg-num">06</div>
             <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">06</div></div><div class="wf-step-badge">passgenau</div><div class="wf-step-icon">🎯</div></div>
-            <div class="wf-card-title">Bewerbervermittlung</div>
-            <div class="wf-card-body">Wir begleiten junge Menschen bis zum Vorstellungsgespräch und <b>vermitteln euch passende, motivierte Talente</b>.</div>
+            <div class="wf-card-title">Bewerbervernetzung</div>
+            <div class="wf-card-body">Wir begleiten junge Menschen bis zum Vorstellungsgespräch und <b>vernetzen euch mit passenden, motivierten Talenten</b>.</div>
           </div>
           <div class="wf-card">
             <div class="wf-card-bg-num">07</div>
@@ -179,14 +179,14 @@ const html = `
         <div class="wf-result-icon">✅</div>
         <div>
           <div class="wf-result-h">Alle Bausteine aus einer Hand</div>
-          <p class="wf-result-p">Ihr wählt das passende Paket – <b>wir kümmern uns um Sichtbarkeit, Vermittlung und Begleitung</b>. Gemeinsam für die Ausbildung.</p>
+          <p class="wf-result-p">Ihr wählt das passende Paket – <b>wir kümmern uns um Sichtbarkeit, Vernetzung und Begleitung</b>. Gemeinsam für die Ausbildung.</p>
         </div>
       </div>
 
       <!-- STATS -->
       <div class="wf-stats">
         <div class="wf-stat"><div class="wf-stat-n">70+</div><div class="wf-stat-l">Unternehmen<br>im Netzwerk</div></div>
-        <div class="wf-stat"><div class="wf-stat-n">400+</div><div class="wf-stat-l">junge Menschen<br>pro Jahr</div></div>
+        <div class="wf-stat"><div class="wf-stat-n">500+</div><div class="wf-stat-l">junge Menschen<br>pro Jahr</div></div>
         <div class="wf-stat"><div class="wf-stat-n">2</div><div class="wf-stat-l">Standorte<br>Wuppertal &amp; Essen</div></div>
       </div>
 
@@ -216,7 +216,7 @@ const html = `
         <div class="how-step reveal">
           <div class="how-step-num">3</div>
           <h3>Talente finden</h3>
-          <p>Wir vermitteln motivierte junge Menschen direkt an euch – für Praktikum und Ausbildung.</p>
+          <p>Wir vernetzen motivierte junge Menschen direkt mit euch – für Praktikum und Ausbildung.</p>
           <span class="how-step-time">passgenau</span>
         </div>
       </div>
@@ -261,7 +261,7 @@ const html = `
           <div class="who">ab 11 Auszubildende</div>
           <ul class="list-check">
             <li>Alle Leistungen der Mittleren</li>
-            <li>Priorisierte Vermittlung</li>
+            <li>Priorisierte Vernetzung</li>
             <li>On- &amp; Offboarding-Support</li>
           </ul>
           <a class="btn btn-outline mt-2" href="/kontakt#termin">Anfragen</a>
@@ -308,7 +308,7 @@ const html = `
       </div>
       <div class="faq-list">
         <div class="faq-item"><button class="faq-question"><span>Was kostet eine Kooperation?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Die Kooperation startet ab 79,90 € pro Monat (bis 5 Auszubildende). Für größere Betriebe gibt es die Pakete für 139,90 € und 199,90 € pro Monat.</div></div></div>
-        <div class="faq-item"><button class="faq-question"><span>An welche Talente werden wir vermittelt?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Wir begleiten junge Menschen von der Berufsorientierung bis zum Vorstellungsgespräch und vermitteln passende, motivierte Kandidat:innen direkt an euch.</div></div></div>
+        <div class="faq-item"><button class="faq-question"><span>Mit welchen Talenten werden wir vernetzt?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Wir begleiten junge Menschen von der Berufsorientierung bis zum Vorstellungsgespräch und vernetzen passende, motivierte Kandidat:innen direkt mit euch.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Was ist NESTplay?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">NESTplay ist unser spielerisches Format, mit dem ihr euren Betrieb direkt in Schulen präsentiert – modern, interaktiv und einprägsam.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Wie werden wir Teil des Netzwerks?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Am besten in einem unverbindlichen Kennenlerngespräch. Meldet euch über das Kontaktformular oder telefonisch – wir finden gemeinsam das passende Paket.</div></div></div>
       </div>

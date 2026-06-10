@@ -27,6 +27,10 @@ window.NEST_LINKS = {
   termin: "/terminbuchung"
 };`;
 
+// Cache-Busting: ändert sich bei jedem Vercel-Deploy automatisch (Commit-SHA),
+// damit Browser nie eine veraltete CSS-/JS-Version weiterverwenden.
+const V = (process.env.VERCEL_GIT_COMMIT_SHA || "dev").slice(0, 8);
+
 export default function RootLayout({ children }) {
   return (
     <html lang="de">
@@ -37,16 +41,16 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;900&display=swap"
           rel="stylesheet"
         />
-        <link rel="stylesheet" href="/assets/styles.css" />
-        <link rel="stylesheet" href="/assets/ablauf.css" />
-        <link rel="stylesheet" href="/assets/termin.css" />
+        <link rel="stylesheet" href={`/assets/styles.css?v=${V}`} />
+        <link rel="stylesheet" href={`/assets/ablauf.css?v=${V}`} />
+        <link rel="stylesheet" href={`/assets/termin.css?v=${V}`} />
         <Script id="nest-config" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: CONFIG }} />
       </head>
       <body>
         <Header />
         {children}
         <Footer />
-        <Script src="/assets/nest-app.js" strategy="afterInteractive" />
+        <Script src={`/assets/nest-app.js?v=${V}`} strategy="afterInteractive" />
       </body>
     </html>
   );

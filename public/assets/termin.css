@@ -118,3 +118,13 @@
 .tb-success .tb-recap div { font-size: 14px; padding: 4px 0; color: var(--navy); }
 .tb-success .tb-recap b { color: var(--gold-dark); }
 .tb-success .tb-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+
+/* Schritt-Icon (SVG statt Ziffer) */
+.tb-step-n.step-icon {
+  font-size: 0 !important;
+  display: grid; place-items: center;
+  background: var(--navy);
+}
+.tb-step-n.step-icon svg { width: 16px; height: 16px; color: #fff; }
+.tb-step.done .tb-step-n.step-icon { background: var(--gold); }
+.tb-step.done .tb-step-n.step-icon svg { color: var(--navy); }

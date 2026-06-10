@@ -1,3 +1,9 @@
+const IC = {
+  compass: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
+  grid: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
+  cap: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`,
+};
+
 const html = `
 
   <!-- HERO -->
@@ -13,11 +19,37 @@ const html = `
             <a class="btn btn-ghost" href="#felder">Berufsfelder ansehen</a>
           </div>
         </div>
-        <div class="hero-visual">
-          <div class="mock-bar"><i></i><i></i><i></i></div>
-          <div class="mock-row"><span class="ic" data-icon="health" data-icon-size="20"></span><span class="tx"><b>Gesundheit &amp; Soziales</b><small>Pflege, Erziehung, MFA …</small></span></div>
-          <div class="mock-row"><span class="ic" data-icon="tools" data-icon-size="20"></span><span class="tx"><b>Handwerk &amp; Technik</b><small>Elektro, Anlagen, Mechanik …</small></span></div>
-          <div class="mock-row"><span class="ic" data-icon="monitor" data-icon-size="20"></span><span class="tx"><b>IT &amp; Digitalisierung</b><small>Fachinformatik, Systeme …</small></span></div>
+        <div class="hero-visual hero-visual--phone">
+          <a class="hero-phone" href="#felder" aria-label="Berufswelt – Stellenangebote entdecken">
+            <span class="hp-notch"></span>
+            <div class="hp-screen hp-screen--jobs">
+              <div class="hp-jobs-topbar">
+                <div class="hp-jobs-label">Jobbörse</div>
+                <div class="hp-jobs-title">Aktuelle Stellen</div>
+                <div class="hp-jobs-sub">Wuppertal &amp; Essen</div>
+              </div>
+              <div class="hp-job-list">
+                <div class="hp-job-card">
+                  <div class="hp-job-badge hp-job-badge--neu">Neu</div>
+                  <div class="hp-job-title">Mechatroniker:in</div>
+                  <div class="hp-job-firm">Maier &amp; Söhne · Wuppertal</div>
+                  <div class="hp-job-type">Ausbildung · ab 09/2026</div>
+                </div>
+                <div class="hp-job-card">
+                  <div class="hp-job-badge hp-job-badge--dual">Dual</div>
+                  <div class="hp-job-title">BWL Industrie</div>
+                  <div class="hp-job-firm">Rhenag · Essen</div>
+                  <div class="hp-job-type">Duales Studium · B.A.</div>
+                </div>
+                <div class="hp-job-card">
+                  <div class="hp-job-badge hp-job-badge--frei">2 Plätze</div>
+                  <div class="hp-job-title">Fachinformatiker:in</div>
+                  <div class="hp-job-firm">DigiSystems · Essen</div>
+                  <div class="hp-job-type">Ausbildung · ab 08/2026</div>
+                </div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>
@@ -32,9 +64,9 @@ const html = `
         <p>Die Auswahl ist riesig – über 150 Ausbildungsberufe und zahlreiche duale Studiengänge. Wir helfen dir, den Überblick zu behalten und den richtigen Weg einzuschlagen.</p>
       </div>
       <div class="card-grid cols-3">
-        <div class="card reveal"><div class="icon" data-icon="compass" data-icon-size="26"></div><h3>Was passt zu mir?</h3><p>Wähl im Berufsfinder einfach aus, worauf du Lust hast – wir zeigen dir passende Berufe.</p><a class="badge link" href="#felder">Jetzt ausprobieren →</a></div>
-        <div class="card reveal"><div class="icon" data-icon="grid" data-icon-size="26"></div><h3>150+ Berufe</h3><p>Eine umfassende Datenbank über alle Branchen hinweg – von A wie Anlagenmechaniker bis Z.</p></div>
-        <div class="card reveal"><div class="icon" data-icon="cap" data-icon-size="26"></div><h3>Duales Studium</h3><p>Zahlreiche Bachelor-Optionen, die Theorie und Praxis im Betrieb verbinden.</p></div>
+        <div class="card reveal"><div class="icon icon-svg">${IC.compass}</div><h3>Was passt zu mir?</h3><p>Wähl im Berufsfinder einfach aus, worauf du Lust hast – wir zeigen dir passende Berufe.</p><a class="badge link" href="#felder">Jetzt ausprobieren →</a></div>
+        <div class="card reveal"><div class="icon icon-svg">${IC.grid}</div><h3>150+ Berufe</h3><p>Eine umfassende Datenbank über alle Branchen hinweg – von A wie Anlagenmechaniker bis Z.</p></div>
+        <div class="card reveal"><div class="icon icon-svg">${IC.cap}</div><h3>Duales Studium</h3><p>Zahlreiche Bachelor-Optionen, die Theorie und Praxis im Betrieb verbinden.</p></div>
       </div>
     </div>
   </section>
@@ -62,14 +94,25 @@ const html = `
   <section class="bg-light">
     <div class="container">
       <div class="split rev">
-        <div class="split-media"><span class="ph-emoji" data-icon="compass" data-icon-size="64"></span></div>
+        <div class="split-media split-locs">
+          <div class="loc-img-pair">
+            <div class="loc-img">
+              <img src="/assets/img/team/bildungsbar-aussen.jpg" alt="BildungsBar Wuppertal" loading="lazy">
+              <span class="loc-label">Wuppertal</span>
+            </div>
+            <div class="loc-img">
+              <div class="loc-img-placeholder"><span class="loc-img-city">Essen</span></div>
+              <span class="loc-label">Essen</span>
+            </div>
+          </div>
+        </div>
         <div class="split-text reveal">
           <span class="section-label">Dein nächster Schritt</span>
           <h2>Wir begleiten dich persönlich</h2>
-          <p>Eine Datenbank ist gut – persönliche Beratung ist besser. Bei der BildungsBar besprechen wir gemeinsam, welche Berufe zu dir passen und vernetzen dich direkt mit passenden Unternehmen.</p>
+          <p>Eine Datenbank ist gut – persönliche Beratung ist besser. In der BildungsBar besprechen wir gemeinsam, welche Berufe zu dir passen und vernetzen dich direkt mit passenden Unternehmen.</p>
           <ul class="list-check">
             <li>Individuelle Berufsberatung auf Augenhöhe</li>
-            <li>Bewerbungstraining „Fit für die Jobsuche“</li>
+            <li>Bewerbungstraining „Fit für die Jobsuche"</li>
             <li>Direkte Vernetzung zu über 70 Unternehmen</li>
           </ul>
           <a class="btn btn-navy mt-2" href="/terminbuchung">Jetzt Termin buchen →</a>
@@ -77,6 +120,9 @@ const html = `
       </div>
     </div>
   </section>
+
+  <!-- Merkliste share toast (hidden, shown by JS) -->
+  <div class="merk-share-toast" id="merk-share-toast">Link kopiert – teile deine Merkliste!</div>
 
   <!-- CTA -->
   <section class="cta-section on-light">

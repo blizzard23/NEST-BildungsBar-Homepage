@@ -1,28 +1,5 @@
 const html = `
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-inner">
-        <div class="hero-text">
-          <span class="hero-badge">Für Unternehmen</span>
-          <h1>Talente treffen<br /><em>engagierte Unternehmen</em></h1>
-          <p class="lead">Wir verknüpfen Talente mit sozial engagierten Unternehmen und fördern so gemeinsam die Ausbildung – von der Berufsorientierung bis zum erfolgreichen Vorstellungsgespräch.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#preise">Pakete ansehen →</a>
-            <a class="btn btn-ghost" href="/kontakt#termin">Gespräch vereinbaren</a>
-          </div>
-        </div>
-        <div class="hero-visual">
-          <div class="mock-bar"><i></i><i></i><i></i></div>
-          <div class="mock-row"><span class="ic">🎤</span><span class="tx"><b>Workshops &amp; OpenHouse</b><small>Berufsorientierung erlebbar</small></span></div>
-          <div class="mock-row"><span class="ic">📱</span><span class="tx"><b>Social Media &amp; Stellenseite</b><small>Reichweite für eure Ausbildung</small></span></div>
-          <div class="mock-row"><span class="ic">🎮</span><span class="tx"><b>NESTplay</b><small>spielerisch in Schulen</small></span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- STATS BAR -->
   <div class="stats-bar">
     <div class="container">
@@ -162,14 +139,21 @@ const html = `
 
       <!-- PHASE 3 -->
       <div class="wf-phase">
-        <div class="wf-phase-head"><div class="wf-phase-label"><div class="wf-phase-n">3</div>Begleiten</div><div class="wf-phase-hr"></div></div>
-        <div class="wf-grid wf-grid--1" style="max-width:600px;">
+        <div class="wf-phase-head"><div class="wf-phase-label"><div class="wf-phase-n">3</div>Begleiten &amp; Wirken</div><div class="wf-phase-hr"></div></div>
+        <div class="wf-grid wf-grid--2">
           <div class="wf-card">
             <div class="wf-card-bg-num">08</div>
-            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">08</div></div><div class="wf-step-badge">dauerhaft</div><div class="wf-step-icon">🚀</div></div>
-            <div class="wf-card-title">On- &amp; Offboarding</div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">08</div></div><div class="wf-step-badge">dauerhaft</div></div>
+            <div class="wf-card-title">Onboarding &amp; Offboarding</div>
             <div class="wf-card-body">Motivational Support für eure Auszubildenden vom ersten Tag bis zum Abschluss – <b>für weniger Abbrüche und mehr Bindung</b>.</div>
             <div class="wf-card-foot"><div class="wf-tag">Weniger Abbruch</div><div class="wf-tag">Mehr Bindung</div></div>
+          </div>
+          <div class="wf-card">
+            <div class="wf-card-bg-num">09</div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">09</div></div><div class="wf-step-badge">gesellschaftlich</div></div>
+            <div class="wf-card-title">Gemeinwohl &amp; Verantwortung</div>
+            <div class="wf-card-body">Eure Kooperation ist mehr als Marketing – <b>ihr gestaltet aktiv die Ausbildungskultur in der Region</b> und übernehmt gesellschaftliche Verantwortung.</div>
+            <div class="wf-card-foot"><div class="wf-tag">CSR</div><div class="wf-tag">Regionalwirtschaft</div></div>
           </div>
         </div>
       </div>

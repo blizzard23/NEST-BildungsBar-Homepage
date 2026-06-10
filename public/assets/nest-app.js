@@ -811,6 +811,9 @@ function renderBerufeUebersicht() {
         '<div class="berufe-search">' + ic("search", 18, "search-ic") +
           '<input type="text" id="beruf-suche" placeholder="Beruf suchen, z. B. Mechatroniker, Pflege, Informatik" autocomplete="off"></div>' +
         '<button class="merk-toggle" id="merk-toggle">' + ic("heart", 17) + '<span>Merkliste</span><b id="merk-count">0</b></button>' +
+        '<button class="merk-share-btn" id="merk-share" title="Merkliste teilen" style="display:none;">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+          'Teilen</button>' +
       "</div>" +
       '<div class="berufe-interests" id="berufe-interests">' + interestTags + "</div>" +
       '<div class="bt-filterrow">' +
@@ -826,9 +829,11 @@ function renderBerufeUebersicht() {
   function aktualisiereMerkToggle() {
     var n = ladeMerkliste().length;
     var btn = document.getElementById("merk-toggle");
+    var shareBtn = document.getElementById("merk-share");
     document.getElementById("merk-count").textContent = n;
     btn.classList.toggle("active", state.nurMerk);
     btn.classList.toggle("has", n > 0);
+    if (shareBtn) shareBtn.style.display = n > 0 ? "" : "none";
   }
   function filterAktiv() {
     return state.q || state.cat !== "*" || state.typ !== "*" || state.ort !== "*" || state.interest || state.nurMerk;
@@ -935,6 +940,45 @@ function renderBerufeUebersicht() {
     aktualisiereMerkToggle();
     if (state.nurMerk && !jetzt) draw();
   });
+
+  var shareBtn = document.getElementById("merk-share");
+  if (shareBtn) {
+    shareBtn.addEventListener("click", function () {
+      var slugs = ladeMerkliste();
+      if (!slugs.length) return;
+      var url = window.location.origin + "/berufswelt?ml=" + slugs.join(",");
+      var toast = document.getElementById("merk-share-toast");
+      try {
+        navigator.clipboard.writeText(url).then(function () {
+          if (toast) { toast.classList.add("show"); setTimeout(function () { toast.classList.remove("show"); }, 2800); }
+        });
+      } catch (err) {
+        // Fallback: select
+        var ta = document.createElement("textarea");
+        ta.value = url; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (toast) { toast.classList.add("show"); setTimeout(function () { toast.classList.remove("show"); }, 2800); }
+      }
+    });
+  }
+
+  // Load shared Merkliste from URL ?ml=slug1,slug2
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var ml = params.get("ml");
+    if (!ml) return;
+    var slugs = ml.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    if (!slugs.length) return;
+    var existing = ladeMerkliste();
+    slugs.forEach(function (s) { if (existing.indexOf(s) < 0) existing.push(s); });
+    speichereMerkliste(existing);
+    // Remove ml param from URL without reload
+    params.delete("ml");
+    var newUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "");
+    history.replaceState(null, "", newUrl);
+  })();
 
   aktualisiereMerkToggle();
   draw();
@@ -1338,6 +1382,91 @@ document.addEventListener("DOMContentLoaded", function () {
     return WDAYS[d.getDay()] + ", " + d.getDate() + ". " + MONS_LANG[d.getMonth()] + " " + d.getFullYear();
   }
   var TERMINE = naechsteTermine(ANZAHL);
+
+  /* ---------- Monatskalender ---------- */
+  var calWochen = document.getElementById("tb-cal-weeks");
+  var calLabel = document.getElementById("tb-cal-month-label") || document.getElementById("tb-cal-label");
+  var calPrev = document.getElementById("tb-cal-prev");
+  var calNext = document.getElementById("tb-cal-next");
+  var MONATE = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+
+  var calJahr = new Date().getFullYear();
+  var calMonat = new Date().getMonth(); // 0-basiert
+
+  function renderKalender() {
+    if (!calWochen) return;
+    if (calLabel) calLabel.textContent = MONATE[calMonat] + " " + calJahr;
+
+    var heute = new Date(); heute.setHours(0,0,0,0);
+    // 1. Tag des Monats
+    var erster = new Date(calJahr, calMonat, 1);
+    // Wochentag des 1. (0=So -> Mo=1, Di=2, ...) ISO-Montag-basiert
+    var startWt = erster.getDay(); if (startWt === 0) startWt = 7; // So = 7
+    var anzTage = new Date(calJahr, calMonat + 1, 0).getDate();
+
+    var html = '<div class="tb-cal-week">';
+    var zelle = 0;
+    // Leere Zellen vor dem 1.
+    for (var v = 1; v < startWt; v++) {
+      html += '<div class="tb-cal-day tb-cal-day--empty"></div>';
+      zelle++;
+    }
+    for (var t = 1; t <= anzTage; t++) {
+      var d = new Date(calJahr, calMonat, t);
+      var wt = d.getDay(); // 0=So, 2=Di, 4=Do
+      var key = iso(d);
+      var vergangen = d < heute;
+      var istDiDo = (wt === 2 || wt === 4);
+      var cls = "tb-cal-day";
+      var anklickbar = false;
+      if (!istDiDo || vergangen) {
+        cls += " tb-cal-day--past";
+      } else {
+        var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
+        var voll = kapazitaet > 0 && frei <= 0;
+        if (voll) { cls += " tb-cal-day--full"; }
+        else if (frei === 1) { cls += " tb-cal-day--knapp"; anklickbar = true; }
+        else { cls += " tb-cal-day--available"; anklickbar = true; }
+        if (state.datum === key) cls += " tb-cal-day--selected";
+      }
+      html += '<div class="' + cls + '" data-key="' + key + '" data-d="' + d.getTime() + '" ' + (anklickbar ? '' : 'data-nok="1"') + '>' + t + '</div>';
+      zelle++;
+      if (zelle % 7 === 0 && t < anzTage) html += '</div><div class="tb-cal-week">';
+    }
+    // Auffüllen bis Zeilenende
+    var rest = zelle % 7;
+    if (rest > 0) { for (var r = rest; r < 7; r++) html += '<div class="tb-cal-day tb-cal-day--empty"></div>'; }
+    html += '</div>';
+    calWochen.innerHTML = html;
+
+    // Click-Events
+    calWochen.querySelectorAll('.tb-cal-day[data-key]:not([data-nok])').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var k = el.getAttribute('data-key');
+        var ms = parseInt(el.getAttribute('data-d'));
+        var dd = new Date(ms);
+        // Alle vorherigen Markierungen löschen
+        calWochen.querySelectorAll('.tb-cal-day--selected').forEach(function(x){ x.classList.remove('tb-cal-day--selected'); });
+        el.classList.add('tb-cal-day--selected');
+        state.datum = k;
+        state.datumText = langText(dd);
+        update();
+        // Zum Zeitschritt scrollen (optional)
+        var stepTime = document.getElementById('step-time');
+        if (stepTime) { stepTime.classList.remove('tb-locked'); }
+        renderZeit();
+      });
+    });
+  }
+
+  if (calPrev) calPrev.addEventListener('click', function() {
+    calMonat--; if (calMonat < 0) { calMonat = 11; calJahr--; }
+    renderKalender();
+  });
+  if (calNext) calNext.addEventListener('click', function() {
+    calMonat++; if (calMonat > 11) { calMonat = 0; calJahr++; }
+    renderKalender();
+  });
 
   /* ---------- Datums-Kacheln (inkl. „ausgebucht") ---------- */
   var dateList = document.getElementById("tb-date-list");

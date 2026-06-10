@@ -699,3 +699,210 @@ section { padding: 90px 0; }
 .nav-portal.is-eingeloggt { border-color: #1f9d63; color: #1f9d63; }
 .login-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #1f9d63; margin-right: 7px; box-shadow: 0 0 0 0 rgba(31,157,99,0.5); animation: nestPulse 2s infinite; }
 @keyframes nestPulse { 0% { box-shadow: 0 0 0 0 rgba(31,157,99,0.45); } 70% { box-shadow: 0 0 0 6px rgba(31,157,99,0); } 100% { box-shadow: 0 0 0 0 rgba(31,157,99,0); } }
+
+/* =========================================================
+   ERWEITERUNGEN – Icons, Mockups, Standortbilder, Carousel
+   ========================================================= */
+
+/* --- Keine automatischen Trennungen in Überschriften --- */
+h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
+
+/* --- Icon-SVG in Karten (ersetzt Counter 01/02/03) --- */
+.card .icon.icon-svg {
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  width: 52px !important; height: 52px !important;
+  background: rgba(239,165,0,0.12) !important;
+  border-radius: 14px !important; margin-bottom: 14px; color: var(--gold-dark);
+}
+.card .icon.icon-svg::before { content: none !important; }
+.card .icon.icon-svg svg { width: 26px; height: 26px; flex-shrink: 0; }
+
+/* --- Schritt-Icons (how-step-num mit SVG statt Ziffer) --- */
+.how-step-num.step-icon {
+  font-size: 0 !important;
+  display: flex; align-items: center; justify-content: center;
+}
+.how-step-num.step-icon svg { width: 26px; height: 26px; color: var(--gold); }
+
+/* --- Standort-Bilder-Paar im Split-Bereich --- */
+.split-locs { display: flex; flex-direction: column; gap: 12px; }
+.loc-img-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.loc-img { border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1/1; background: var(--navy); }
+.loc-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.loc-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--navy-2), var(--navy)); }
+.loc-img-city { font-size: 18px; font-weight: 900; color: rgba(255,255,255,0.2); letter-spacing: 2px; }
+.loc-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(15,33,69,0.88), transparent);
+  color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 18px 10px 8px; text-align: center;
+}
+
+/* --- WhatsApp Chat Phone Screen --- */
+.hp-screen--wa { padding: 0 !important; gap: 0 !important; display: flex !important; flex-direction: column !important; overflow: hidden; }
+.hp-wa-header { background: #075e54; padding: 8px 10px; display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.hp-wa-avatar { width: 28px; height: 28px; border-radius: 50%; background: #25d366; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; color: #fff; flex-shrink: 0; }
+.hp-wa-info { flex: 1; }
+.hp-wa-name { font-size: 10px; font-weight: 800; color: #fff; line-height: 1.2; }
+.hp-wa-status { font-size: 8px; color: rgba(255,255,255,0.75); }
+.hp-wa-body { flex: 1; background: #e5ddd5; padding: 8px 8px; display: flex; flex-direction: column; gap: 5px; overflow: hidden; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23c0b8ad' stroke-width='0.5' opacity='0.3'%3E%3Ccircle cx='30' cy='30' r='15'/%3E%3C/g%3E%3C/svg%3E"); }
+.hp-wa-msg { max-width: 88%; border-radius: 7px; padding: 5px 8px; font-size: 9.5px; line-height: 1.4; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
+.hp-wa-msg-in { background: #fff; align-self: flex-start; border-radius: 0 7px 7px 7px; }
+.hp-wa-msg-out { background: #dcf8c6; align-self: flex-end; border-radius: 7px 0 7px 7px; }
+.hp-wa-msg-time { font-size: 7.5px; color: #999; text-align: right; margin-top: 1px; }
+.hp-wa-input-row { background: #f0f0f0; padding: 5px 8px; display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.hp-wa-input-box { flex: 1; background: #fff; border-radius: 20px; padding: 4px 9px; font-size: 9px; color: #999; }
+
+/* --- Calendar Phone Screen --- */
+.hp-screen--cal { padding: 0 !important; gap: 0 !important; display: flex !important; flex-direction: column !important; overflow: hidden; background: #f5f5f5 !important; }
+.hp-cal-topbar { background: var(--navy); padding: 8px 10px 6px; text-align: center; }
+.hp-cal-app-name { font-size: 10px; font-weight: 800; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; }
+.hp-cal-monthrow { display: flex; align-items: center; justify-content: space-between; background: var(--navy-2); padding: 6px 10px; }
+.hp-cal-mname { font-size: 11px; font-weight: 800; color: #fff; }
+.hp-cal-wd-row { display: grid; grid-template-columns: repeat(7,1fr); background: rgba(15,33,69,0.06); padding: 4px 8px; }
+.hp-cal-wd { font-size: 7.5px; font-weight: 800; text-align: center; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.3px; }
+.hp-cal-body { padding: 4px 8px 8px; flex: 1; }
+.hp-cal-week { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 2px; }
+.hp-cal-d { width: 100%; aspect-ratio: 1/1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8.5px; font-weight: 600; color: var(--text); }
+.hp-cal-d--empty { background: none; }
+.hp-cal-d--past { color: #ccc; }
+.hp-cal-d--open { background: rgba(31,157,99,0.18); color: #1f9d63; font-weight: 800; cursor: pointer; }
+.hp-cal-d--knapp { background: rgba(212,146,10,0.2); color: var(--gold-dark); font-weight: 800; }
+.hp-cal-d--full { background: rgba(194,65,90,0.15); color: #c2415a; font-weight: 700; }
+.hp-cal-legend { display: flex; gap: 8px; padding: 6px 8px; background: #fff; }
+.hp-cal-legend-item { display: flex; align-items: center; gap: 3px; font-size: 7.5px; color: var(--text-mute); }
+.hp-cal-legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* --- Job Listing Phone Screen --- */
+.hp-screen--jobs { padding: 0 !important; gap: 0 !important; display: flex !important; flex-direction: column !important; overflow: hidden; background: #f0f4fa !important; }
+.hp-jobs-topbar { background: var(--navy); padding: 8px 10px 6px; }
+.hp-jobs-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+.hp-jobs-title { font-size: 12px; font-weight: 900; color: #fff; line-height: 1.2; }
+.hp-jobs-sub { font-size: 8.5px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+.hp-job-list { display: flex; flex-direction: column; gap: 7px; padding: 10px 8px; flex: 1; overflow: hidden; }
+.hp-job-card { background: #fff; border-radius: 10px; padding: 8px 10px; box-shadow: 0 1px 6px rgba(15,33,69,0.08); border-left: 3px solid var(--gold); }
+.hp-job-badge { display: inline-block; font-size: 7.5px; font-weight: 800; padding: 2px 6px; border-radius: 9999px; margin-bottom: 3px; }
+.hp-job-badge--neu { background: rgba(31,157,99,0.15); color: #1f9d63; }
+.hp-job-badge--dual { background: rgba(47,95,214,0.12); color: #2f5fd6; }
+.hp-job-badge--frei { background: var(--gold-soft); color: var(--gold-dark); }
+.hp-job-title { font-size: 11px; font-weight: 800; color: var(--navy); line-height: 1.2; }
+.hp-job-firm { font-size: 9px; color: var(--text-soft); margin-top: 1px; }
+.hp-job-type { font-size: 8.5px; color: var(--text-mute); margin-top: 3px; }
+
+/* --- Partner Logos Phone Screen --- */
+.hp-screen--partner { padding: 0 !important; gap: 0 !important; display: flex !important; flex-direction: column !important; overflow: hidden; background: #f3f7f7 !important; }
+.hp-partner-topbar { background: var(--navy); padding: 8px 10px 10px; }
+.hp-partner-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+.hp-partner-title { font-size: 13px; font-weight: 900; color: #fff; }
+.hp-partner-sub { font-size: 9px; color: rgba(255,255,255,0.6); margin-top: 1px; }
+.hp-partner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px 8px; flex: 1; overflow: hidden; }
+.hp-partner-chip { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 8px 6px; text-align: center; font-size: 8.5px; font-weight: 700; color: var(--navy); display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(15,33,69,0.06); }
+.hp-partner-chip--wide { grid-column: span 2; font-size: 9px; }
+
+/* --- Job Carousel Auto-Scroll --- */
+.stellen-strip {
+  animation: stellenScroll 30s linear infinite;
+}
+.stellen-strip:hover { animation-play-state: paused; }
+@keyframes stellenScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.stellen-strip--wrap {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+/* --- Merkliste teilen Button --- */
+.merk-share-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; background: var(--navy); color: #fff;
+  border-radius: 9999px; font-size: 13px; font-weight: 700;
+  border: none; cursor: pointer; transition: background 0.2s;
+  margin-top: 12px;
+}
+.merk-share-btn:hover { background: var(--navy-2); }
+.merk-share-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--navy); color: #fff; padding: 10px 20px; border-radius: 9999px;
+  font-size: 14px; font-weight: 600; opacity: 0; transition: opacity 0.3s, transform 0.3s;
+  z-index: 999; pointer-events: none;
+}
+.merk-share-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* --- Partner Portal: Ansprechpartner --- */
+.ap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px; }
+@media (max-width: 760px) { .ap-grid { grid-template-columns: 1fr; } }
+.ap-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(15,33,69,0.06); }
+.ap-photo { width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: top center; display: block; }
+.ap-body { padding: 16px 18px 18px; }
+.ap-topic { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 4px; }
+.ap-name { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+.ap-contacts { display: flex; flex-direction: column; gap: 5px; }
+.ap-contact { font-size: 12.5px; color: var(--text-soft); display: flex; align-items: center; gap: 6px; }
+.ap-contact a { color: var(--text-soft); text-decoration: none; }
+.ap-contact a:hover { color: var(--gold-dark); }
+
+/* --- Partner Portal: NESTplay Mockup Block --- */
+.np-promo { background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-2) 100%); border-radius: 18px; padding: 32px; display: flex; align-items: center; gap: 32px; margin-bottom: 28px; }
+@media (max-width: 760px) { .np-promo { flex-direction: column; gap: 18px; padding: 22px; } }
+.np-promo-text { flex: 1; }
+.np-promo-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; display: block; }
+.np-promo-h { font-size: 22px; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 10px; }
+.np-promo-h em { font-style: normal; color: var(--gold); }
+.np-promo-p { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 16px; }
+.np-promo-phone { width: 160px; flex-shrink: 0; }
+.np-mini-phone { width: 140px; background: #0a0b10; border: 1.5px solid rgba(255,255,255,0.18); border-radius: 28px; padding: 8px; box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
+.np-phone-screen { background: #EAF0FB; border-radius: 22px; overflow: hidden; }
+.np-phone-head { background: var(--navy); padding: 20px 10px 10px; }
+.np-phone-pl { font-size: 7px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+.np-phone-h4 { font-size: 11px; font-weight: 900; color: #fff; margin: 0; }
+.np-phone-body { padding: 9px; }
+.np-phone-q { background: #fff; border-radius: 8px; padding: 7px 9px; font-size: 8.5px; font-weight: 700; color: #0c1829; line-height: 1.35; margin-bottom: 6px; }
+.np-phone-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.np-phone-opt { border-radius: 7px; padding: 8px 5px; text-align: center; font-size: 7.5px; font-weight: 800; color: #fff; }
+.np-o-a { background: #e63946; } .np-o-b { background: var(--gold); color: var(--navy); } .np-o-c { background: #0096c7; } .np-o-d { background: #6d28d9; }
+
+/* --- Filterbarer Info-Bereich (Partner Portal) --- */
+.info-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.info-filter-btn { padding: 7px 16px; border-radius: 9999px; border: 1.5px solid var(--line); background: #fff; font-size: 13px; font-weight: 600; color: var(--navy); cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s; font-family: var(--font); }
+.info-filter-btn:hover { border-color: var(--gold); color: var(--gold-dark); }
+.info-filter-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.info-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.info-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px; box-shadow: 0 1px 6px rgba(15,33,69,0.05); transition: box-shadow 0.2s; }
+.info-card:hover { box-shadow: 0 4px 16px rgba(15,33,69,0.1); }
+.info-card[hidden] { display: none; }
+.info-card-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; display: block; }
+.info-card-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 8px; line-height: 1.3; }
+.info-card-body { font-size: 13px; color: var(--text-soft); line-height: 1.7; }
+
+/* --- Terminbuchung Monatskalender --- */
+.tb-cal-wrap { margin-bottom: 20px; }
+.tb-cal-nav { display: flex; align-items: center; justify-content: space-between; background: var(--navy); border-radius: 12px 12px 0 0; padding: 11px 14px; }
+.tb-cal-month-label { font-size: 14px; font-weight: 800; color: #fff; }
+.tb-cal-btn { background: rgba(255,255,255,0.1); border: none; border-radius: 8px; width: 30px; height: 30px; cursor: pointer; color: #fff; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background 0.2s; font-family: var(--font); }
+.tb-cal-btn:hover { background: rgba(239,165,0,0.3); }
+.tb-cal-body { background: #fff; border: 1px solid var(--line); border-top: none; border-radius: 0 0 12px 12px; padding: 10px 10px 12px; }
+.tb-cal-wd-row { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px; }
+.tb-cal-wd { text-align: center; font-size: 11px; font-weight: 800; color: var(--text-mute); text-transform: uppercase; padding: 4px 0; letter-spacing: 0.3px; }
+.tb-cal-weeks { display: flex; flex-direction: column; gap: 3px; }
+.tb-cal-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.tb-cal-day {
+  aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; border-radius: 8px; transition: background 0.15s;
+}
+.tb-cal-day--empty { background: none; }
+.tb-cal-day--past { color: #ccc; }
+.tb-cal-day--available { background: rgba(31,157,99,0.12); color: #1f9d63; font-weight: 800; cursor: pointer; }
+.tb-cal-day--available:hover { background: rgba(31,157,99,0.25); }
+.tb-cal-day--knapp { background: rgba(212,146,10,0.14); color: var(--gold-dark); font-weight: 800; cursor: pointer; }
+.tb-cal-day--knapp:hover { background: rgba(212,146,10,0.28); }
+.tb-cal-day--full { background: rgba(194,65,90,0.1); color: #c2415a; font-weight: 700; cursor: not-allowed; }
+.tb-cal-day--selected { background: var(--navy) !important; color: var(--gold) !important; }
+.tb-cal-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.tb-cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-mute); font-weight: 600; }
+.tb-cal-legend-dot { width: 10px; height: 10px; border-radius: 4px; }
+.tb-cal-legend-dot--free { background: rgba(31,157,99,0.2); border: 1.5px solid #1f9d63; }
+.tb-cal-legend-dot--knapp { background: rgba(212,146,10,0.2); border: 1.5px solid var(--gold-dark); }
+.tb-cal-legend-dot--full { background: rgba(194,65,90,0.15); border: 1.5px solid #c2415a; }

@@ -49,8 +49,24 @@ export default function PartnerPortal() {
   const [poForm, setPoForm] = useState(POST_LEER);
   const [poMsg, setPoMsg] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [infoFilter, setInfoFilter] = useState("Alle");
 
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
+
+  const INFO_CARDS = [
+    { kat: "Kooperation", titel: "Wie die Kooperation funktioniert", text: "Als NEST-Partner erhältst du Zugang zu allen Formaten: Workshops an Schulen, Messeauftritt, NESTplay-Einsatz und regelmäßige Netzwerktreffen – alles aus einer Hand." },
+    { kat: "Kooperation", titel: "Onboarding & Offboarding", text: "Wir begleiten dich vom ersten Gespräch bis zum laufenden Betrieb. Onboarding-Termin, Materialien und persönlicher Ansprechpartner inklusive." },
+    { kat: "Kooperation", titel: "Ausbildungsdialog", text: "Einmal pro Saison treffen sich alle Partner zum Ausbildungsdialog – für Austausch, Feedback und gemeinsame Weiterentwicklung der NEST-Formate." },
+    { kat: "Kooperation", titel: "Stellenpool & Berufswelt", text: "Veröffentliche deine Ausbildungsstellen direkt auf der NEST-Berufswelt-Seite. Schüler:innen können Stellen speichern und mit einem Link teilen." },
+    { kat: "NESTplay", titel: "NESTplay für Unternehmen", text: "Präsentiere deinen Betrieb im Unterricht als interaktives Live-Quiz. Schüler:innen spielen in Echtzeit und merken sich deinen Betrieb nachhaltig." },
+    { kat: "NESTplay", titel: "Quiz-Inhalte erstellen", text: "Du lieferst 5 Fragen zu deinem Unternehmen und Ausbildungsberuf – unser Team kümmert sich um die technische Umsetzung und den Einsatz in der Klasse." },
+    { kat: "NESTplay", titel: "Ablauf eines NESTplay-Workshops", text: "45–90 Minuten direkt in der Schule. Unternehmensvorstellung, Live-Quiz-Runde, Ergebnisdiskussion und Kontaktmöglichkeit – alles in einem Format." },
+    { kat: "Messe", titel: "NEST Ausbildungsmesse", text: "Das zentrale Format für direkte Begegnungen: Schüler:innen, Schulklassen und Jugendliche treffen regionale Ausbildungsunternehmen an einem Ort." },
+    { kat: "Messe", titel: "Aussteller-Infos", text: "Als Aussteller erhältst du einen eigenen Stand, Besucherführung durch Schulklassen und die Möglichkeit, interaktive Elemente einzusetzen." },
+    { kat: "Messe", titel: "Messetermin & Anmeldung", text: "Die NEST Messe findet einmal jährlich statt. Schulen buchen Zeitfenster vorab – du kannst deinen Auftritt gezielt auf Klassen und Schulformen abstimmen." },
+    { kat: "Netzwerk", titel: "Netzwerktreffen", text: "Regelmäßige Treffen mit anderen NEST-Partnern: Austausch über Ausbildungstrends, gemeinsame Aktionen und direkte Kommunikation mit dem NEST-Team." },
+    { kat: "Netzwerk", titel: "Gemeinwohl & Verantwortung", text: "Dein Engagement als NEST-Partner stärkt die Region: Du investierst in den Ausbildungsnachwuchs und trägst zur Jugendberufsorientierung vor Ort bei." },
+  ];
 
   useEffect(() => {
     if (!supabase) { setLoading(false); return; }
@@ -196,6 +212,41 @@ export default function PartnerPortal() {
                 <button className="btn btn-ghost" onClick={logout}>Abmelden</button>
               </div>
 
+              {/* Eure Ansprechpartner */}
+              <div style={{ marginBottom: "36px" }}>
+                <span className="section-label">Euer Team</span>
+                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>Eure Ansprechpartner</h3>
+                <div className="ap-grid">
+                  {[
+                    { foto: "/assets/img/team/mike.jpg", name: "Mike Schrott", thema: "Netzwerk & Partnerschaften", web: "nest-bildungsbar.de", mail: "mike@nest-bildungsbar.de", tel: "+49 151 12345678" },
+                    { foto: "/assets/img/team/patrick.jpg", name: "Patrick Müller", thema: "Kooperation & Unternehmen", web: "nest-bildungsbar.de", mail: "patrick@nest-bildungsbar.de", tel: "+49 151 23456789" },
+                    { foto: "/assets/img/team/sarah.jpg", name: "Sarah Bauer", thema: "Berufsorientierung & Schulen", web: "nest-bildungsbar.de", mail: "sarah@nest-bildungsbar.de", tel: "+49 151 34567890" },
+                  ].map((ap) => (
+                    <div className="ap-card" key={ap.mail}>
+                      <img className="ap-photo" src={ap.foto} alt={ap.name} />
+                      <div className="ap-body">
+                        <div className="ap-topic">{ap.thema}</div>
+                        <div className="ap-name">{ap.name}</div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                          <a href={`https://${ap.web}`} target="_blank" rel="noopener" style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            {ap.web}
+                          </a>
+                          <a href={`mailto:${ap.mail}`} style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            {ap.mail}
+                          </a>
+                          <a href={`tel:${ap.tel.replace(/\s/g, "")}`} style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.63a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            {ap.tel}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Neue Stelle */}
               <div className="card" style={{ marginBottom: "28px" }}>
                 <h3>Neue Ausbildungsstelle veröffentlichen</h3>
@@ -252,6 +303,61 @@ export default function PartnerPortal() {
                   ))}
                 </div>
               ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Veranstaltungen eingetragen.</p>}
+
+              {/* NESTplay Promo für Partner */}
+              {!isAdmin && (
+                <div className="np-promo" style={{ marginTop: "28px" }}>
+                  <div className="np-promo-text">
+                    <span className="np-promo-label">Für Unternehmen</span>
+                    <div className="np-promo-h">NESTplay. – dein Betrieb<br /><em>im Unterricht</em></div>
+                    <p className="np-promo-p">Präsentiere deinen Betrieb direkt in der Klasse als interaktives Live-Quiz. Schüler:innen spielen in Echtzeit – und erinnern sich nachhaltig an dein Unternehmen.</p>
+                    <a href="https://nestplay.de" target="_blank" rel="noopener" className="btn btn-primary" style={{ display: "inline-flex" }}>Zu NESTplay. →</a>
+                  </div>
+                  <div className="np-promo-phone">
+                    <div className="np-mini-phone">
+                      <div className="np-phone-screen">
+                        <div className="np-phone-head" style={{ padding: "22px 12px 12px" }}>
+                          <div className="np-phone-pl">NESTplay · Frage 3/5</div>
+                          <div className="np-phone-h4">Dein Unternehmen</div>
+                        </div>
+                        <div className="np-phone-body" style={{ padding: "10px" }}>
+                          <div className="np-phone-q">Wie viele Azubis startet euer Betrieb pro Jahr?</div>
+                          <div className="np-phone-opts">
+                            <div className="np-phone-opt np-o-a">2–3</div>
+                            <div className="np-phone-opt np-o-b">5–8</div>
+                            <div className="np-phone-opt np-o-c">10–15</div>
+                            <div className="np-phone-opt np-o-d">20+</div>
+                          </div>
+                          <div style={{ background: "var(--navy)", padding: "8px 10px", display: "flex", justifyContent: "space-between", marginTop: "8px", borderRadius: "6px" }}>
+                            <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)" }}>Team Adler</span>
+                            <b style={{ fontSize: "11px", color: "#EFA500", fontWeight: 900 }}>40 Pkt.</b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Filterbarer Info-Bereich */}
+              <div style={{ marginTop: "36px", marginBottom: "12px" }}>
+                <span className="section-label">Infos für Partner</span>
+                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 16px" }}>Alles auf einen Blick</h3>
+                <div className="info-filter-row">
+                  {["Alle", "Kooperation", "NESTplay", "Messe", "Netzwerk"].map((f) => (
+                    <button key={f} className={"info-filter-btn" + (infoFilter === f ? " active" : "")} onClick={() => setInfoFilter(f)}>{f}</button>
+                  ))}
+                </div>
+                <div className="info-card-grid">
+                  {INFO_CARDS.filter((c) => infoFilter === "Alle" || c.kat === infoFilter).map((c) => (
+                    <div className="info-card" key={c.titel}>
+                      <span className="info-card-tag">{c.kat}</span>
+                      <h4 style={{ fontSize: "15px", fontWeight: 800, color: "var(--navy)", margin: "0 0 8px" }}>{c.titel}</h4>
+                      <p style={{ fontSize: "13px", color: "var(--text-soft)", margin: 0, lineHeight: 1.6 }}>{c.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* =================== ADMIN-BEREICH =================== */}
               {isAdmin && (

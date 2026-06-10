@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <a className="brand" href="/"><span className="logo-mark">N</span><span>NEST <small>BildungsBar</small></span></a>
-            <p>Kostenlose Berufsorientierung in lockerer Atmosphäre. Teil des NEST Ökosystems.</p>
+            <p>Kostenfreie Berufsorientierung in lockerer Atmosphäre. Teil des NEST Ökosystems.</p>
             <div className="socials">
               <a href="https://www.instagram.com/nest_bildungsbar.wuppertal" aria-label="Instagram">IG</a>
               <a href="https://www.facebook.com/BildungsBar" aria-label="Facebook">f</a>

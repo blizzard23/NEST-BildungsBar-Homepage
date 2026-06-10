@@ -18,7 +18,7 @@ const html = `
 }
 
 /* HERO */
-.nest-about .about-hero { background: #0F2145; padding: 110px 40px 140px; position: relative; overflow: hidden; color: #fff; }
+.nest-about .about-hero { background: linear-gradient(135deg, #0c1829 0%, #162d5e 100%); padding: 110px 40px 140px; position: relative; overflow: hidden; color: #fff; }
 .nest-about .about-hero::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 70px; background: #fff; clip-path: polygon(0 100%, 100% 30%, 100% 100%); }
 .nest-about .about-hero::before { content: ''; position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; border-radius: 50%; background: rgba(239,165,0,0.05); pointer-events: none; }
 .nest-about .about-hero-inner { max-width: 860px; margin: 0 auto; }
@@ -55,7 +55,7 @@ const html = `
 .nest-about .founders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
 .nest-about .founder-card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 20px rgba(15,33,69,0.08); transition: box-shadow 0.25s ease, transform 0.25s ease; }
 .nest-about .founder-card:hover { box-shadow: 0 8px 32px rgba(15,33,69,0.14); transform: translateY(-4px); }
-.nest-about .founder-photo { width: 100%; height: 300px; object-fit: cover; object-position: top center; display: block; transition: transform 0.4s ease; }
+.nest-about .founder-photo { width: 100%; aspect-ratio: 1/1; height: auto; object-fit: cover; object-position: top center; display: block; transition: transform 0.4s ease; }
 .nest-about .founder-card:hover .founder-photo { transform: scale(1.03); }
 .nest-about .founder-info { padding: 28px 28px 32px; }
 .nest-about .founder-role { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #EFA500; display: block; margin-bottom: 8px; }
@@ -101,7 +101,7 @@ const html = `
 .nest-about .team-member-item.active .tm-role { color: #EFA500; font-weight: 600; }
 .nest-about .team-photo-col { position: sticky; top: 40px; }
 .nest-about .team-photo-display { border-radius: 14px; overflow: hidden; background: #dce4f0; box-shadow: 0 8px 32px rgba(15,33,69,0.13); position: relative; }
-.nest-about .team-photo-display img { width: 100%; height: 460px; object-fit: cover; object-position: top center; display: block; transition: opacity 0.25s ease; }
+.nest-about .team-photo-display img { width: 100%; aspect-ratio: 1/1; height: auto; object-fit: cover; object-position: top center; display: block; transition: opacity 0.25s ease; }
 .nest-about .team-photo-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 28px 24px; background: linear-gradient(to top, rgba(15,33,69,0.88) 0%, transparent 100%); }
 .nest-about .team-overlay-name { font-size: 20px; font-weight: 800; color: #fff; display: block; margin-bottom: 4px; transition: opacity 0.25s ease; }
 .nest-about .team-overlay-role { font-size: 13px; font-weight: 600; color: #EFA500; letter-spacing: 0.5px; display: block; transition: opacity 0.25s ease; }

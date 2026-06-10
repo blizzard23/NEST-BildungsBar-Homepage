@@ -1345,15 +1345,19 @@ document.addEventListener("DOMContentLoaded", function () {
     dateList.innerHTML = "";
     TERMINE.forEach(function (d) {
       var key = iso(d);
-      var voll = kapazitaet > 0 && (belegung[key] || 0) >= kapazitaet;
+      var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
+      var voll = kapazitaet > 0 && frei <= 0;
       var b = document.createElement("button");
       b.type = "button";
       b.className = "tb-date" + (voll ? " tb-date--full" : "") + (state.datum === key ? " active" : "");
       b.disabled = voll;
+      var restHtml = voll
+        ? '<div class="d-full">ausgebucht</div>'
+        : (frei >= 0 ? '<div class="d-rest' + (frei === 1 ? ' d-rest--knapp' : '') + '">' + (frei === 1 ? "1 Platz frei" : frei + " Plätze frei") + '</div>' : '');
       b.innerHTML = '<div class="d-wday">' + WDAYS[d.getDay()] + '</div>' +
                     '<div class="d-day">' + d.getDate() + '</div>' +
                     '<div class="d-mon">' + MONS[d.getMonth()] + '</div>' +
-                    (voll ? '<div class="d-full">ausgebucht</div>' : '');
+                    restHtml;
       if (!voll) {
         b.addEventListener("click", function () {
           dateList.querySelectorAll(".tb-date").forEach(function (x) { x.classList.remove("active"); });

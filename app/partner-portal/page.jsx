@@ -31,6 +31,7 @@ export default function PartnerPortal() {
   const [evMsg, setEvMsg] = useState("");
   const [poForm, setPoForm] = useState(POST_LEER);
   const [poMsg, setPoMsg] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
 
@@ -111,6 +112,21 @@ export default function PartnerPortal() {
     ladeAdmin();
   }
   async function postLoeschen(id) { await supabase.from("posts").delete().eq("id", id); ladeAdmin(); }
+
+  // ---- Admin: Bild-Upload (Supabase Storage, Bucket "blog") ----
+  async function bildUpload(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setUploading(true); setPoMsg("");
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const pfad = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabase.storage.from("blog").upload(pfad, file, { cacheControl: "3600", upsert: false });
+    if (error) { setPoMsg("Upload-Fehler: " + error.message); setUploading(false); return; }
+    const { data } = supabase.storage.from("blog").getPublicUrl(pfad);
+    setPoForm((f) => ({ ...f, bild_url: data.publicUrl }));
+    setUploading(false);
+    setPoMsg("Bild hochgeladen ✅");
+  }
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const setEv = (k) => (e) => setEvForm((f) => ({ ...f, [k]: e.target.value }));
@@ -266,7 +282,15 @@ export default function PartnerPortal() {
                         <div className="field"><label>Slug (URL)</label><input value={poForm.slug} onChange={setPo("slug")} placeholder="leer = automatisch aus Titel" /></div>
                       </div>
                       <div className="field"><label>Kurztext (Teaser)</label><input value={poForm.excerpt} onChange={setPo("excerpt")} placeholder="1–2 Sätze für die Übersicht" /></div>
-                      <div className="field"><label>Bild-URL</label><input value={poForm.bild_url} onChange={setPo("bild_url")} placeholder="https://… (optional)" /></div>
+                      <div className="field">
+                        <label>Beitragsbild</label>
+                        <input type="file" accept="image/*" onChange={bildUpload} disabled={uploading} />
+                        {uploading ? <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "6px" }}>Lädt hoch …</p> : null}
+                        {poForm.bild_url ? (
+                          <img src={poForm.bild_url} alt="Vorschau" style={{ width: "100%", maxWidth: "260px", borderRadius: "10px", marginTop: "10px", display: "block" }} />
+                        ) : null}
+                        <input value={poForm.bild_url} onChange={setPo("bild_url")} placeholder="…oder Bild-URL einfügen" style={{ marginTop: "8px" }} />
+                      </div>
                       <div className="field"><label>Inhalt (HTML)</label><textarea value={poForm.inhalt} onChange={setPo("inhalt")} placeholder="<p>Dein Beitrag …</p>" style={{ minHeight: "140px" }}></textarea></div>
                       <label className="tb-check"><input type="checkbox" checked={poForm.published} onChange={setPo("published")} /> Sofort veröffentlichen</label>
                       {poMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{poMsg}</p> : null}

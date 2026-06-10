@@ -26,9 +26,30 @@ document.addEventListener('DOMContentLoaded', function () {
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      var v = function (id) { var el = form.querySelector('#' + id); return el ? el.value.trim() : ''; };
+      var empf = window.NEST_TERMIN_MAIL || 'info@nest-bildungsbar.de';
+      var subject = 'Kontakt über die Website' + (v('subject') ? ' – ' + v('subject') : '');
+      var text = [
+        'Neue Kontaktanfrage über die Website:', '',
+        'Name: ' + v('name'),
+        'E-Mail: ' + v('email'),
+        'Telefon: ' + (v('phone') || '—'),
+        'Wunschstandort: ' + (v('standort') || '—'),
+        'Betreff: ' + (v('subject') || '—'), '',
+        'Nachricht:', (v('message') || '—')
+      ].join('\n');
+      var mailto = 'mailto:' + empf + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
       var note = form.querySelector('.form-note');
-      if (note) { note.hidden = false; }
-      form.reset();
+      var api = window.NEST_MAIL_API;
+      function fertig(ok) {
+        if (note) { note.hidden = false; if (!ok) note.innerHTML = 'Dein Mail-Programm öffnet sich – bitte sende die Nachricht ab. ✅'; }
+        if (ok) form.reset();
+      }
+      if (api && window.fetch) {
+        fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subject: subject, text: text, replyTo: v('email') }) })
+          .then(function (r) { if (r.ok) { fertig(true); } else { window.location.href = mailto; fertig(false); } })
+          .catch(function () { window.location.href = mailto; fertig(false); });
+      } else { window.location.href = mailto; fertig(false); }
     });
   }
 
@@ -1402,28 +1423,30 @@ document.addEventListener("DOMContentLoaded", function () {
     return ready;
   }
 
-  /* ---------- Absenden -> vorab ausgefüllte E-Mail ---------- */
-  function baueMailto() {
+  /* ---------- Absenden -> SMTP-Versand (mit mailto-Fallback) ---------- */
+  function nestSendMail(payload) {
+    var api = window.NEST_MAIL_API;
+    if (!api || !window.fetch) return Promise.resolve(false);
+    return fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.ok; }).catch(function () { return false; });
+  }
+  function baueDaten() {
     var betreff = "Terminanfrage BildungsBar – " + state.ort + " · " + state.datumText + " · " + state.zeit;
-    var z = [
-      "Hallo NEST-Team,",
-      "",
-      "ich möchte gerne einen kostenlosen Beratungstermin buchen:",
-      "",
+    var text = [
+      "Neue Terminanfrage über die Website:", "",
       "Standort: " + state.ort + (state.adr ? " (" + state.adr + ")" : ""),
       "Datum: " + state.datumText,
-      "Uhrzeit: " + state.zeit,
-      "",
+      "Uhrzeit: " + state.zeit, "",
       "Name: " + (fName ? fName.value.trim() : ""),
       "E-Mail: " + (fMail ? fMail.value.trim() : ""),
       "Telefon: " + (fPhone && fPhone.value.trim() ? fPhone.value.trim() : "—"),
-      "Schule/Klasse: " + (fSchule && fSchule.value.trim() ? fSchule.value.trim() : "—"),
-      "",
-      "Nachricht: " + (fMsg && fMsg.value.trim() ? fMsg.value.trim() : "—"),
-      "",
-      "Viele Grüße"
-    ].join("\r\n");
-    return "mailto:" + EMPFAENGER + "?subject=" + encodeURIComponent(betreff) + "&body=" + encodeURIComponent(z);
+      "Schule/Klasse: " + (fSchule && fSchule.value.trim() ? fSchule.value.trim() : "—"), "",
+      "Nachricht: " + (fMsg && fMsg.value.trim() ? fMsg.value.trim() : "—")
+    ].join("\n");
+    return { subject: betreff, text: text, replyTo: (fMail ? fMail.value.trim() : "") };
+  }
+  function mailtoVon(d) {
+    return "mailto:" + EMPFAENGER + "?subject=" + encodeURIComponent(d.subject) + "&body=" + encodeURIComponent(d.text);
   }
 
   var form = document.getElementById("termin-form");
@@ -1431,9 +1454,9 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!update()) return;
-      var mailto = baueMailto();
+      var d = baueDaten();
+      var mailto = mailtoVon(d);
 
-      // Erfolgs-/Sende-Box füllen
       var recap = document.getElementById("tb-recap");
       if (recap) {
         recap.innerHTML =
@@ -1449,11 +1472,17 @@ document.addEventListener("DOMContentLoaded", function () {
       var formCard = document.getElementById("tb-formcard");
       if (box) box.classList.add("show");
       if (formCard) formCard.style.display = "none";
-
-      // Mail-Programm öffnen (best effort)
-      window.location.href = mailto;
-
       if (box) box.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      var statusP = box ? box.querySelector("p") : null;
+      nestSendMail(d).then(function (ok) {
+        if (ok) {
+          if (statusP) statusP.textContent = "Deine Terminanfrage wurde direkt an uns gesendet – wir bestätigen dir den Termin per E-Mail. ✅";
+          if (sendBtn) sendBtn.style.display = "none";
+        } else {
+          if (statusP) statusP.textContent = "Fast geschafft! Schick uns deine Anfrage mit einem Klick – wir bestätigen dir den Termin per E-Mail.";
+        }
+      });
     });
   }
 
@@ -1463,22 +1492,31 @@ document.addEventListener("DOMContentLoaded", function () {
     anfrage.addEventListener("submit", function (e) {
       e.preventDefault();
       var g = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; };
-      var betreff = "Anfrage BildungsBar – " + (g("an-name") || "Schüler:in");
-      var body = [
-        "Hallo NEST-Team,", "",
-        g("an-msg") || "(keine Nachricht)", "",
-        "Name: " + g("an-name"),
-        "E-Mail: " + g("an-email"),
-        "Telefon: " + (g("an-phone") || "—"),
-        "Wunschstandort: " + (g("an-ort") || "—"), "",
-        "Viele Grüße"
-      ].join("\r\n");
-      var mailto = "mailto:" + EMPFAENGER + "?subject=" + encodeURIComponent(betreff) + "&body=" + encodeURIComponent(body);
+      var d = {
+        subject: "Anfrage BildungsBar – " + (g("an-name") || "Schüler:in"),
+        text: [
+          "Neue Anfrage über die Website:", "",
+          g("an-msg") || "(keine Nachricht)", "",
+          "Name: " + g("an-name"),
+          "E-Mail: " + g("an-email"),
+          "Telefon: " + (g("an-phone") || "—"),
+          "Wunschstandort: " + (g("an-ort") || "—")
+        ].join("\n"),
+        replyTo: g("an-email")
+      };
+      var mailto = mailtoVon(d);
       var note = anfrage.querySelector(".form-note");
       var sb = document.getElementById("an-send-mail");
       if (sb) sb.setAttribute("href", mailto);
       if (note) note.hidden = false;
-      window.location.href = mailto;
+      nestSendMail(d).then(function (ok) {
+        if (ok) {
+          if (note) note.innerHTML = "Danke! Deine Anfrage wurde gesendet – wir melden uns zeitnah bei dir. ✅";
+          anfrage.reset();
+        } else {
+          window.location.href = mailto;
+        }
+      });
     });
   }
 

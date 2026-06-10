@@ -15,6 +15,7 @@ const TERMIN_MAIL = process.env.NEXT_PUBLIC_TERMIN_MAIL || "info@nest-bildungsba
 const CONFIG = `
 window.NEST_ASSETS = "/";
 window.NEST_STELLEN_API = "/api/stellen";
+window.NEST_MAIL_API = "/api/kontakt";
 window.NEST_TERMIN_MAIL = "${TERMIN_MAIL}";
 window.NEST_LINKS = {
   beruf: "/beruf",

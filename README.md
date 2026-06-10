@@ -62,11 +62,16 @@ git push -u origin main
 1. Auf [supabase.com](https://supabase.com) ein Projekt anlegen.
 2. **SQL Editor** öffnen → Inhalt von `supabase/schema.sql` einfügen → **Run**.
    (Legt Tabellen `stellen`, `veranstaltungen`, `posts` + Sicherheitsregeln + Beispieldaten an.)
+   - Danach `supabase/storage.sql` ausführen → legt den öffentlichen Bucket **`blog`**
+     für Beitragsbilder an (Upload nur für den Admin).
+   - *(Falls `schema.sql` schon vorher ohne Admin-Rechte lief: zusätzlich `supabase/admin-policies.sql` ausführen.)*
 3. **Project Settings → API** → kopiere:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` Key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. **Partner-Accounts:** Authentication → Users → **Add user** (E-Mail + Passwort).
-   Damit loggen sich Partner unter `/partner-portal` ein.
+4. **Admin- & Partner-Accounts:** Authentication → Users → **Add user** (E-Mail + Passwort).
+   - **Admin:** `info@nest-bildungsbar.de` → sieht im Portal den **Admin-Bereich**
+     (Veranstaltungen & Blogbeiträge anlegen/löschen, Bild-Upload).
+   - **Partner:** beliebige E-Mail → kann eigene Stellen verwalten.
 
 ---
 
@@ -79,9 +84,28 @@ git push -u origin main
    |------|------|
    | `NEXT_PUBLIC_SUPABASE_URL` | deine Supabase Project URL |
    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | dein anon public Key |
-   | `NEXT_PUBLIC_TERMIN_MAIL` *(optional)* | info@nest-bildungsbar.de |
+   | `SMTP_HOST` | `smtp.lima-city.de` |
+   | `SMTP_PORT` | `465` |
+   | `SMTP_SECURE` | `true` |
+   | `SMTP_USER` | dein lima-city Postfach (E-Mail) |
+   | `SMTP_PASS` | Postfach-Passwort |
+   | `MAIL_TO` | `info@nest-bildungsbar.de` |
+   | `MAIL_FROM` | dein lima-city Postfach (E-Mail) |
+   | `NEXT_PUBLIC_TERMIN_MAIL` *(optional)* | `info@nest-bildungsbar.de` |
 4. **Deploy** klicken. Fertig – Vercel gibt dir eine `…vercel.app`-URL.
    Eigene Domain unter **Settings → Domains** verbinden.
+
+### Mailversand (lima-city SMTP)
+
+Termin-, Kontakt- und Sonderanfragen werden serverseitig über die API-Route
+`/api/kontakt` mit **nodemailer** verschickt – über dein lima-city-Postfach.
+
+- **Server:** `smtp.lima-city.de` · **Port 465** (SSL, `SMTP_SECURE=true`) oder
+  **Port 587** (STARTTLS, `SMTP_SECURE=false`).
+- `SMTP_USER`/`SMTP_PASS` = Zugangsdaten deines lima-city-**Postfachs** (nicht der Login fürs Kundenkonto).
+- `MAIL_FROM` muss zu diesem Postfach passen (sonst lehnt der Server den Versand ab).
+- Sind die SMTP-Variablen **nicht** gesetzt, fallen die Formulare automatisch auf die
+  bisherige **mailto-Variante** zurück (öffnen das Mailprogramm) – nichts geht verloren.
 
 Jeder weitere `git push` deployt automatisch neu.
 

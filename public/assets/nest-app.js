@@ -472,6 +472,8 @@ window.BERUFE_KATEGORIEN = [
       { name: "Anlagenmechaniker:in für Sanitär-, Heizungs- und Klimatechnik", dauer: "3,5 Jahre", info: "Als Anlagenmechaniker:in SHK installierst, wartest und reparierst du moderne Anlagen und sorgst für warmes Wasser, funktionierende Heizungen und angenehme Raumtemperatur. Du verlegst Rohrleitungen und montierst Heizkörper und sanitäre Einrichtungen – zunehmend digital unterstützt.", partner: ["Peter Barth GmbH", "Stadt Wuppertal", "Alex & Greiff GmbH"] },
       { name: "Anlagenmechaniker:in Rohrsystemtechnik", dauer: "3,5 Jahre", info: "In der Rohrsystemtechnik lernst du, Rohre zu verlegen, zu montieren und zu verschweißen sowie Anlagen zu prüfen und instand zu halten – in Heizungs-, Sanitär- und industriellen Anlagen.", partner: ["Wuppertaler Stadtwerke"] },
       { name: "Bäcker:in", dauer: "3 Jahre", info: "Als Bäcker:in stellst du Brot, Brötchen, Kuchen und andere Backwaren her: Du wiegst und mischst Zutaten, knetest den Teig, formst ihn und überwachst den Backprozess für die richtige Kruste – oft schon früh am Morgen.", partner: ["Policks Backstube"] },
+      { name: "Koch / Köchin", dauer: "3 Jahre", info: "Köch:innen bereiten Speisen in der Gastronomie zu, planen Speisepläne, kaufen Zutaten ein und richten Gerichte an: Du beachtest Hygienevorschriften und arbeitest unter Zeitdruck im Team.", partner: ["Stadt Wuppertal", "Barmenia Versicherungen", "Culinaria"] },
+      { name: "Forstwirt:in", dauer: "3 Jahre", info: "Als Forstwirt:in pflegst und bewirtschaftest du Wälder: Bäume pflanzen und ernten, Wege anlegen und Naturschutz betreiben. Die Ausbildung dauert drei Jahre und wird dual durchgeführt.", partner: ["Stadt Wuppertal", "Wupperverband", "Stadt Remscheid"] },
       { name: "Bäckereifachverkäufer:in", dauer: "3 Jahre", info: "Als Bäckereifachverkäufer:in verkaufst du frische Backwaren: Du berätst Kund:innen, nimmst Bestellungen entgegen, kassierst, präsentierst die Ware ansprechend und sorgst für eine saubere Verkaufsfläche.", partner: ["Policks Backstube"] },
       { name: "Bauzeichner:in", dauer: "3,5 Jahre", info: "Bauzeichner:innen erstellen präzise Baupläne nach den Entwürfen von Architekt:innen und Ingenieur:innen. Die Ausbildung umfasst technisches Zeichnen, baurechtliche Vorschriften und Kenntnisse über Baustoffe.", partner: ["Wupperverband", "Stadt Remscheid"] },
       { name: "Dachdecker:in", dauer: "3 Jahre", info: "Als Dachdecker:in bist du für die Bedeckung und Instandhaltung von Dächern, Fassaden und Dachkonstruktionen zuständig. Du arbeitest mit Materialien wie Ziegeln, Schiefer, Metall und Kunststoff – oft im Freien und in der Höhe.", partner: ["Mager Bedachungen"] },
@@ -535,6 +537,7 @@ window.BERUFE_KATEGORIEN = [
       { name: "Duales Studium Wirtschafts- und Industrieinformatik", dauer: "3–4 Jahre", info: "Im dualen Studium lernst du, betriebswirtschaftliche Prozesse mit IT-Systemen zu optimieren und IT-Lösungen in Unternehmen zu integrieren. Danach folgen Karrieren als IT-Consultant, Business Analyst oder Projektmanager:in.", partner: ["Schmersal"] },
       { name: "Duales Studium Wirtschaftsinformatik", dauer: "3–4 Jahre", info: "Das duale Studium verbindet Wirtschaft und Informatik: Du entwickelst Softwarelösungen, die Unternehmen helfen, ihre Geschäftsprozesse effizienter zu gestalten – und arbeitest später z. B. als IT-Consultant, Softwareentwickler:in oder Projektmanager:in.", partner: ["Vaillant", "E/D/E"] },
       { name: "Energieelektroniker:in", dauer: "3,5 Jahre", info: "Energieelektroniker:innen spezialisieren sich auf Installation, Wartung und Reparatur elektrischer Anlagen der Energieverteilung und -steuerung. Du arbeitest mit Hoch- und Niederspannungsanlagen sowie erneuerbaren Energiesystemen.", partner: ["Muckenhaupt & Nusselt"] },
+      { name: "Fachkraft für Veranstaltungstechnik", dauer: "3 Jahre", info: "Als Veranstaltungstechniker:in planst, baust und betreust du die Technik von Events: Du installierst und steuerst Licht-, Ton- und Videotechnik und sorgst für die Sicherheit aller Beteiligten.", partner: ["Stadt Remscheid"] },
       { name: "Fachinformatiker:in Anwendungsentwicklung", dauer: "3 Jahre", info: "Als Fachinformatiker:in für Anwendungsentwicklung entwickelst du Software nach Kundenvorgaben: Du programmierst, testest und optimierst Lösungen, bleibst über aktuelle Technologien informiert und unterstützt Unternehmen bei der Prozessoptimierung.", partner: ["Vorwerk", "Stadt Wuppertal", "Barmenia Versicherungen", "Wuppertaler Stadtwerke", "WASI", "E/D/E"] },
       { name: "Fachinformatiker:in Daten- und Prozessanalyse", dauer: "3 Jahre", info: "Als Fachinformatiker:in für Daten- und Prozessanalyse untersuchst du Geschäftsprozesse und Datenquellen: Du entwickelst datengestützte Lösungen für digitale Prozesse und hilfst Unternehmen, ihre Abläufe zu optimieren.", partner: ["Knipex", "Schmersal"] },
       { name: "Fachinformatiker:in Systemintegration", dauer: "3 Jahre", info: "Als Fachinformatiker:in für Systemintegration installierst du Hard- und Software, vernetzt Computer und sorgst dafür, dass alle Systeme reibungslos laufen. Du bist Ansprechpartner:in bei IT-Problemen und schulst Mitarbeitende.", partner: ["Stadt Wuppertal", "Wupperverband", "Erfurt", "WKW Group", "WASI", "BUCS-IT", "Knipex", "Radprax", "Barmenia Versicherungen", "Stadt Remscheid", "Conmetall Meister", "Wuppertaler Stadtwerke", "Beuthel", "Wiesemann & Theis", "Stadtwerke Remscheid", "GEPA", "E/D/E"] },
@@ -584,6 +587,7 @@ window.BERUFE_KATEGORIEN = [
       { name: "Fachverkäufer:in Lebensmittelhandwerk", dauer: "3 Jahre", info: "Als Fachverkäufer:in im Lebensmittelhandwerk verkaufst du in Bäckereien, Fleischereien oder Konditoreien: Du berätst Kund:innen zu Produkten und deren Zubereitung und wickelst den Verkauf ab.", partner: ["Akzenta"] },
       { name: "Handelsfachwirt:in", dauer: "ca. 3 Jahre", info: "Als Handelsfachwirt:in arbeitest du auf der mittleren Führungsebene im Handel: Du übernimmst kaufmännische Aufgaben wie Marketingplanung und Personalwesen sowie Verkauf und Kundenberatung – mit guten Chancen auf eine leitende Position.", partner: ["Akzenta"] },
       { name: "Hotelfachleute", dauer: "3 Jahre", info: "Die Ausbildung zu Hotelfachleuten vermittelt vielseitige Fähigkeiten für den Hotelbetrieb: Gästebetreuung, Restaurant- und Veranstaltungsmanagement sowie Zimmerwirtschaft.", partner: ["Wuppertaler Stadtwerke", "Culinaria"] },
+      { name: "Fachkraft für Restaurant und Veranstaltungsgastronomie", dauer: "3 Jahre", info: "Du sorgst dafür, dass sich Gäste in Restaurants und bei Veranstaltungen wohlfühlen: Tische eindecken, Gläser polieren, Dekoration und Gästebetreuung gehören zu deinen Aufgaben.", partner: ["Barmenia Versicherungen", "Culinaria"] },
       { name: "Kaufleute für IT-Systemmanagement", dauer: "3 Jahre", info: "Als Kaufmann/-frau für IT-System-Management planst und betreust du IT-Systeme, analysierst Unternehmensanforderungen und entwickelst effiziente Lösungen – eine Kombination aus technischer Expertise und wirtschaftlichem Know-how.", partner: ["Stahlwille", "Stadt Wuppertal", "Wiesemann & Theis"] },
       { name: "Kaufleute im E-Commerce", dauer: "3 Jahre", info: "Als Kaufmann/-frau im E-Commerce baust und verwaltest du Online-Shops: Du pflegst das Sortiment, gibst Produkte ein, gestaltest Preise, analysierst Daten und übernimmst kaufmännische Aufgaben wie Rechnungen und Marketing.", partner: ["Schmersal", "Conmetall Meister", "E/D/E", "Wiesemann & Theis"] },
       { name: "Kaufleute Marketingkommunikation", dauer: "3 Jahre", info: "Kaufleute für Marketingkommunikation planen, setzen um und kontrollieren Marketingmaßnahmen: Du entwickelst Werbekonzepte, gestaltest Materialien, organisierst Veranstaltungen und betreust die Online-Präsenz von Unternehmen.", partner: ["Erfurt", "E/D/E"] },
@@ -609,19 +613,15 @@ window.BERUFE_KATEGORIEN = [
       { name: "Duales Studium Kindheitspädagogik", dauer: "3 Jahre", info: "Das duale Studium kombiniert Hochschulphasen mit Praxis in Kitas: Du arbeitest später als pädagogische Fachkraft, Einrichtungsleitung oder in der frühkindlichen Bildungsforschung.", partner: ["Stadt Wuppertal"] },
       { name: "Duales Studium Soziale Arbeit", dauer: "3–4 Jahre", info: "Das duale Studium verbindet Hochschulausbildung mit Praxis in sozialen Einrichtungen: Du erwirbst Fachwissen in Pädagogik, Psychologie und Recht und wendest es z. B. bei Jugendämtern und Beratungsstellen an.", partner: ["Stadt Remscheid"] },
       { name: "Fachkraft für Lagerlogistik", dauer: "3 Jahre", info: "Als Fachkraft für Lagerlogistik organisierst und verwaltest du Waren: Wareneingang, Bestandskontrolle, Kommissionierung und Versand – eine vielseitige Rolle zwischen Lager und Büro.", partner: ["Erfurt", "WASI", "Gebrüder Becker", "Knipex", "PE Automotive", "Coroplast", "Metaq", "Freund", "Procar Automobile", "Stadt Wuppertal", "WKW Group", "Conmetall Meister", "Wiesemann & Theis", "Kaut", "E/D/E"] },
-      { name: "Fachkraft für Restaurant und Veranstaltungsgastronomie", dauer: "3 Jahre", info: "Du sorgst dafür, dass sich Gäste in Restaurants und bei Veranstaltungen wohlfühlen: Tische eindecken, Gläser polieren, Dekoration und Gästebetreuung gehören zu deinen Aufgaben.", partner: ["Barmenia Versicherungen", "Culinaria"] },
-      { name: "Fachkraft für Veranstaltungstechnik", dauer: "3 Jahre", info: "Als Veranstaltungstechniker:in planst, baust und betreust du die Technik von Events: Du installierst und steuerst Licht-, Ton- und Videotechnik und sorgst für die Sicherheit aller Beteiligten.", partner: ["Stadt Remscheid"] },
       { name: "Fachkraft im Fahrbetrieb", dauer: "3 Jahre", info: "Die Ausbildung vermittelt Kompetenzen im öffentlichen Nahverkehr: Du beförderst Fahrgäste sicher, hältst den Fahrplan ein und wartest Fahrzeugtechnik. Ein Führerschein der Klasse B ist erforderlich.", partner: ["Wuppertaler Stadtwerke", "Stadtwerke Remscheid"] },
       { name: "Fachkraft Leistungsgewährung", dauer: "ca. 2 Jahre", info: "Als Fachkraft für Leistungsgewährung bearbeitest du Anträge in der Sozialversicherung: Du prüfst Ansprüche, berücksichtigst gesetzliche Bestimmungen und entscheidest über Leistungen – eng mit den Antragstellenden.", partner: ["Jobcenter Wuppertal"] },
       { name: "Fachlagerist:in", dauer: "2 Jahre", info: "Als Fachlagerist:in verwaltest du Waren: Du lagerst ein, kommissionierst und hältst die Lagerplätze ordentlich – mit praktischer Lagerarbeit und Büroaufgaben.", partner: ["Schmersal", "Conmetall Meister", "Beuthel", "GEPA", "E/D/E"] },
-      { name: "Forstwirt:in", dauer: "3 Jahre", info: "Als Forstwirt:in pflegst und bewirtschaftest du Wälder: Bäume pflanzen und ernten, Wege anlegen und Naturschutz betreiben. Die Ausbildung dauert drei Jahre und wird dual durchgeführt.", partner: ["Stadt Wuppertal", "Wupperverband", "Stadt Remscheid"] },
       { name: "Kaufleute Büromanagement", dauer: "3 Jahre", info: "Als Kaufmann/-frau für Büromanagement organisierst du Büroabläufe: Du bearbeitest Schriftverkehr, planst Termine, unterstützt die Buchhaltung, koordinierst Kommunikation und kümmerst dich um Personalverwaltung und Veranstaltungen.", partner: ["Peter Barth GmbH", "Erfurt", "Autohaus Lackmann", "Wupperverband", "Vorwerk", "Mencke", "Coroplast", "Karl Deutsch", "Laré", "Stahlwille", "Wuppertaler Stadtwerke", "Beuthel", "Alex & Greiff GmbH", "Martin GmbH"] },
       { name: "Kaufleute Dialogmarketing", dauer: "3 Jahre", info: "Als Kaufmann/-frau für Dialogmarketing betreust du Kund:innen am Telefon oder per Chat, informierst über Produkte und entwickelst Strategien zur Kundenbindung.", partner: ["Stadt Wuppertal", "Stadtsparkasse Wuppertal", "Beuthel"] },
       { name: "Kaufleute für Digitalisierungsmanagement", dauer: "3 Jahre", info: "Als Kaufmann/-frau für Digitalisierungsmanagement verbindest du IT und kaufmännische Aufgaben: Du planst und verwaltest IT-Systeme, analysierst Anforderungen, berätst bei der Hard- und Software-Auswahl und führst Vertragsverhandlungen.", partner: ["Wupperverband", "Sparkasse Wuppertal", "Wuppertaler Stadtwerke"] },
       { name: "Kaufleute für Versicherungen und Finanzanlagen", dauer: "3 Jahre", info: "Du berätst Kund:innen zu Versicherungs- und Finanzprodukten, erstellst maßgeschneiderte Konzepte und kümmerst dich um Schadensregulierung und Vertragsverwaltung.", partner: ["Barmenia Versicherungen"] },
       { name: "Kaufleute für Versicherungen und Finanzanlagen + B. Sc. Risk and Insurance", dauer: "ca. 4 Jahre", info: "Im dualen Studium lernst du die Versicherungs- und Finanzbranche kennen – inkl. Kundenberatung, Konzepterstellung und Vertragsabwicklung – und absolvierst parallel einen Bachelor in Risk and Insurance mit Fokus Risikomanagement.", partner: ["Barmenia Versicherungen"] },
       { name: "Kaufleute Groß- & Außenhandelsmanagement", dauer: "3 Jahre", info: "Im Groß- und Außenhandel verwaltest du den Warenhandel: Du kaufst und verkaufst, erstellst Angebote, verhandelst mit Geschäftspartnern, überwachst den Warenfluss und bearbeitest Im- und Exportgeschäfte.", partner: ["WASI", "PE Automotive", "Fohrer", "Karl Deutsch", "Reeder und Kamp", "Conmetall Meister", "Kaut", "GEPA", "E/D/E"] },
-      { name: "Koch / Köchin", dauer: "3 Jahre", info: "Köch:innen bereiten Speisen in der Gastronomie zu, planen Speisepläne, kaufen Zutaten ein und richten Gerichte an: Du beachtest Hygienevorschriften und arbeitest unter Zeitdruck im Team.", partner: ["Stadt Wuppertal", "Barmenia Versicherungen", "Culinaria"] },
       { name: "Steuerfachangestellte:r + Studium Taxation", dauer: "ca. 4–4,5 Jahre", info: "Die Ausbildung zum/zur Steuerfachangestellten mit dualem Studium Taxation verbindet Praxis und Theorie: Du erwirbst Fähigkeiten in Steuererklärungen und Mandantenberatung und vertiefst dein Wissen im Steuerrecht.", partner: ["Rinke Treuhand GmbH"] },
       { name: "Verwaltungsfachangestellte", dauer: "3 Jahre", info: "Verwaltungsfachangestellte sind zentrale Stützen der öffentlichen Verwaltung: Du bearbeitest verwaltungstechnische Aufgaben, erledigst Schriftverkehr, führst Akten und arbeitest direkt mit Bürger:innen – mit viel Sinn für Datenschutz.", partner: ["Stadt Remscheid", "Stadt Wuppertal", "Jobcenter Wuppertal"] },
       { name: "Verwaltungsfachangestellte im Ordnungsdienst", dauer: "3 Jahre", info: "Hier sorgst du für Sicherheit und Ordnung in Behörden und Ordnungsämtern: Du überwachst die Einhaltung von Gesetzen und Verordnungen, führst Kontrollen durch und erteilst Bußgelder.", partner: ["Stadt Remscheid"] },
@@ -650,11 +650,16 @@ function berufSlug(name) {
     .replace(/^-+|-+$/g, "");
 }
 
-function berufTyp(name) {
+function berufTyp(name, dauer) {
   var n = String(name).toLowerCase();
+  var d = String(dauer || "").toLowerCase();
   if (n.indexOf("freiwilligendienst") > -1) return "Freiwilligendienst";
+  var istStudium = n.indexOf("studium") > -1 || n.indexOf("bachelor") === 0 ||
+    n.indexOf("b. sc") > -1 || n.indexOf("b.sc") > -1 ||
+    n.indexOf("kooperative ingenieur") > -1 || n.indexOf("kis studium") > -1;
   if (n.indexOf("duales studium") > -1 || n.indexOf("kooperative ingenieur") > -1 || n.indexOf("kis studium") > -1) return "Duales Studium";
-  if (n.indexOf("studium") > -1 || n.indexOf("bachelor") === 0 || n.indexOf("b. sc") > -1 || n.indexOf("b.sc") > -1) return "Studium";
+  if (istStudium && d.indexOf("dual") > -1) return "Duales Studium";
+  if (istStudium) return "Studium";
   return "Ausbildung";
 }
 
@@ -668,7 +673,7 @@ function alleBerufe() {
       out.push({
         name: name,
         slug: berufSlug(name),
-        typ: berufTyp(name),
+        typ: berufTyp(name, entry.dauer),
         kategorie: kat.name,
         kategorieIcon: kat.icon,
         dauer: entry.dauer || null,
@@ -842,7 +847,7 @@ function renderBerufeUebersicht() {
         var name = (typeof b === "string") ? b : b.name;
         var entry = (typeof b === "string") ? {} : b;
         var st = (typeof standorteFuer === "function") ? standorteFuer(berufSlug(name)) : (entry.standorte || ["Wuppertal"]);
-        return { name: name, slug: berufSlug(name), typ: berufTyp(name), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st };
+        return { name: name, slug: berufSlug(name), typ: berufTyp(name, entry.dauer), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st };
       }).filter(function (it) {
         if (q && it.name.toLowerCase().indexOf(q) < 0) return false;
         if (state.typ !== "*" && it.typ !== state.typ) return false;
@@ -964,7 +969,7 @@ function renderBerufDetail() {
   var hero =
     '<section class="hero"><div class="container"><div class="hero-inner">' +
     '<div class="hero-text">' +
-    '<div class="breadcrumb"><a href="' + linkZukunft() + '">Deine Zukunft</a> · ' + escHtml(beruf.kategorie) + "</div>" +
+    '<div class="breadcrumb"><a href="' + linkZukunft() + '">Berufswelt</a> · ' + escHtml(beruf.kategorie) + "</div>" +
     '<span class="hero-badge">' + escHtml(beruf.typ) + "</span>" +
     "<h1>" + escHtml(beruf.name) + "</h1>" +
     '<p class="lead">' + escHtml(beruf.kategorie) +

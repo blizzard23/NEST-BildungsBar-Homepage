@@ -15,7 +15,7 @@ export default function Footer() {
           <div>
             <h4>Angebot</h4>
             <ul>
-              <li><a href="/deine-zukunft">Deine Zukunft</a></li>
+              <li><a href="/berufswelt">Berufswelt</a></li>
               <li><a href="/fuer-schulen">Für Schulen</a></li>
               <li><a href="/kooperation">Für Unternehmen</a></li>
               <li><a href="/referenzen">Referenzen</a></li>

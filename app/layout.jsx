@@ -19,7 +19,7 @@ window.NEST_MAIL_API = "/api/kontakt";
 window.NEST_TERMIN_MAIL = "${TERMIN_MAIL}";
 window.NEST_LINKS = {
   beruf: "/beruf",
-  zukunft: "/deine-zukunft",
+  zukunft: "/berufswelt",
   kontakt: "/kontakt",
   kooperation: "/kooperation",
   termin: "/terminbuchung"

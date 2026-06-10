@@ -5,7 +5,7 @@ const html = `
     <div class="container">
       <div class="hero-inner">
         <div class="hero-text">
-          <span class="hero-badge">Deine Zukunft</span>
+          <span class="hero-badge">Berufswelt</span>
           <h1>Über 200 Wege<br /><em>in deine Ausbildung</em></h1>
           <p class="lead">Von Gesundheit über Handwerk bis IT: Wir helfen dir, die Ausbildung oder das duale Studium zu finden, das wirklich zu dir passt.</p>
           <div class="hero-actions">

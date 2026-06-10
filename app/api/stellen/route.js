@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
-/* Öffentliche Stellen-Liste für die „Aktuelle Stellen"-Leiste auf /deine-zukunft.
+/* Öffentliche Stellen-Liste für die „Aktuelle Stellen"-Leiste auf /berufswelt.
    Liefert ein Array im Format, das stellen-ui.js erwartet:
    { firma, beruf, art, ort, start, url, aktiviertAm }. */
 export const dynamic = "force-dynamic";

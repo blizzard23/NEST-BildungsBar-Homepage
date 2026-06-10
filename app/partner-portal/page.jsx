@@ -178,7 +178,7 @@ export default function PartnerPortal() {
               {/* Neue Stelle */}
               <div className="card" style={{ marginBottom: "28px" }}>
                 <h3>Neue Ausbildungsstelle veröffentlichen</h3>
-                <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>Erscheint auf „Deine Zukunft" – automatisch 30 Tage sichtbar.</p>
+                <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>Erscheint auf „Berufswelt" – automatisch 30 Tage sichtbar.</p>
                 <form onSubmit={speichern} className="tb-form">
                   <div className="row2">
                     <div className="field"><label>Unternehmen *</label><input value={form.firma} onChange={set("firma")} required /></div>

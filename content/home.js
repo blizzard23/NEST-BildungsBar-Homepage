@@ -10,7 +10,7 @@ const html = `
           <p class="lead">In lockerer Atmosphäre über verschiedene Ausbildungsberufe und Unternehmen informieren – und den passenden Partner für deine Zukunft finden.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="/terminbuchung">Termin buchen →</a>
-            <a class="btn btn-ghost" href="/deine-zukunft">Berufe entdecken</a>
+            <a class="btn btn-ghost" href="/berufswelt">Berufe entdecken</a>
           </div>
           <div class="hero-stats">
             <div class="stat"><strong>400+</strong><span>Gäste pro Jahr</span></div>
@@ -19,10 +19,10 @@ const html = `
           </div>
         </div>
         <div class="hero-visual hero-visual--phone">
-          <a class="hero-phone" href="/deine-zukunft" aria-label="Deine Zukunft – alle Ausbildungsberufe entdecken">
+          <a class="hero-phone" href="/berufswelt" aria-label="Berufswelt – alle Ausbildungsberufe entdecken">
             <span class="hp-notch"></span>
             <div class="hp-screen">
-              <span class="hp-badge">Deine Zukunft</span>
+              <span class="hp-badge">Berufswelt</span>
               <div class="hp-title">Finde deinen Beruf</div>
               <div class="hp-search">Beruf oder Berufsfeld suchen …</div>
               <div class="hp-chips">
@@ -104,7 +104,7 @@ const html = `
             <li>Direkte Kontakte zu regionalen Unternehmen</li>
             <li>Komplett kostenlos – ohne Hintergedanken</li>
           </ul>
-          <a class="btn btn-navy mt-2" href="/deine-zukunft">Berufe entdecken →</a>
+          <a class="btn btn-navy mt-2" href="/berufswelt">Berufe entdecken →</a>
         </div>
       </div>
     </div>
@@ -118,7 +118,7 @@ const html = `
         <h2>Gemeinsam für die Ausbildung</h2>
       </div>
       <div class="card-grid cols-3">
-        <div class="card reveal"><div class="icon" data-icon="cap" data-icon-size="26"></div><h3>Schüler:innen</h3><p>Kostenlose Orientierung, Bewerbungshilfe und der direkte Draht zu Ausbildungsbetrieben.</p><a class="badge link" href="/deine-zukunft">Mehr erfahren →</a></div>
+        <div class="card reveal"><div class="icon" data-icon="cap" data-icon-size="26"></div><h3>Schüler:innen</h3><p>Kostenlose Orientierung, Bewerbungshilfe und der direkte Draht zu Ausbildungsbetrieben.</p><a class="badge link" href="/berufswelt">Mehr erfahren →</a></div>
         <div class="card reveal"><div class="icon" data-icon="people" data-icon-size="26"></div><h3>Schulen</h3><p>Workshops und Berufsorientierung, die kAoA-Kriterien erfüllen – jugendgerecht &amp; gamifiziert.</p><a class="badge link" href="/fuer-schulen">Für Schulen →</a></div>
         <div class="card reveal"><div class="icon" data-icon="briefcase" data-icon-size="26"></div><h3>Unternehmen</h3><p>Werdet sichtbar bei motivierten Talenten und gestaltet die Ausbildung von morgen mit.</p><a class="badge link" href="/kooperation">Kooperieren →</a></div>
       </div>

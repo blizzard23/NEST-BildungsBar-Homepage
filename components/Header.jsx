@@ -10,7 +10,7 @@ export default function Header() {
           <ul className="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="/ueber-uns">Über uns</a></li>
-            <li><a href="/deine-zukunft">Deine Zukunft</a></li>
+            <li><a href="/berufswelt">Berufswelt</a></li>
             <li><a href="/terminbuchung">Termine</a></li>
             <li><a href="/fuer-schulen">Für Schulen</a></li>
             <li><a href="/kooperation">Für Unternehmen</a></li>

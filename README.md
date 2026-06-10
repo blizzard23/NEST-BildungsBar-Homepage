@@ -92,9 +92,31 @@ git push -u origin main
    | `SMTP_PASS` | Postfach-Passwort |
    | `MAIL_TO` | `info@nest-bildungsbar.de` |
    | `MAIL_FROM` | dein lima-city Postfach (E-Mail) |
+   | `SUPABASE_SERVICE_ROLE_KEY` | service_role-Secret (für den Erinnerungs-Cron) |
+   | `CRON_SECRET` | langes Zufallsgeheimnis (schützt den Cron) |
+   | `WHATSAPP_TOKEN` *(optional)* | WhatsApp Cloud API Token |
+   | `WHATSAPP_PHONE_ID` *(optional)* | WhatsApp Telefonnummern-ID |
+   | `WHATSAPP_TEMPLATE` *(optional)* | Name des genehmigten Templates |
+   | `WHATSAPP_LANG` *(optional)* | Sprachcode, z. B. `de` |
    | `NEXT_PUBLIC_TERMIN_MAIL` *(optional)* | `info@nest-bildungsbar.de` |
 4. **Deploy** klicken. Fertig – Vercel gibt dir eine `…vercel.app`-URL.
    Eigene Domain unter **Settings → Domains** verbinden.
+
+### Erinnerungen am Vortag (Cron)
+
+`vercel.json` enthält einen **täglichen Cron** (`/api/cron/erinnerungen`, 16:00 UTC).
+Er sucht alle Buchungen für **morgen** und schickt eine freundliche Erinnerung per
+**E-Mail** (SMTP) und – falls konfiguriert – per **WhatsApp**. Damit nichts doppelt
+verschickt wird, wird je Buchung `erinnert_am` gesetzt.
+
+- Pflicht dafür: `SUPABASE_SERVICE_ROLE_KEY` (Cron liest ohne Login) und `CRON_SECRET`.
+- **WhatsApp** läuft über die **WhatsApp Cloud API (Meta)**. Du brauchst: ein WhatsApp-
+  Business-Konto, eine Telefonnummern-ID, ein dauerhaftes Token und ein **genehmigtes
+  Template** mit genau einer Variablen `{{1}}` (dort wird „Datum um Uhrzeit in Ort"
+  eingesetzt), z. B. Template `terminerinnerung`:
+  *„Hallo! Erinnerung: Dein Termin bei der NEST BildungsBar ist morgen, {{1}}. Wir freuen uns auf dich!"*
+  Ohne diese WhatsApp-Variablen wird nur die E-Mail-Erinnerung verschickt.
+- Cron testen: den Endpoint manuell aufrufen mit Header `Authorization: Bearer <CRON_SECRET>`.
 
 ### Mailversand (lima-city SMTP)
 
@@ -117,12 +139,15 @@ Jeder weitere `git push` deployt automatisch neu.
 - **Stellen:** Partner legen sie selbst im Portal an (oder du im Supabase-Table-Editor).
 - **Blog:** Tabelle `posts` → Zeile anlegen, `published = true`. `inhalt` ist HTML.
 - **Veranstaltungen & Blog:** im Partner-Portal → Admin-Bereich (Login als `info@nest-bildungsbar.de`).
-- **Terminbuchungen:** ein fester Slot **17:00 Uhr** pro Di/Do-Termin. Kapazität pro Tag:
-  **Wuppertal 4**, **Essen 2** – ist ein Tag voll, wird er als „ausgebucht" gesperrt.
-  Buchungen werden über `/api/buchung` in der Tabelle `buchungen` gespeichert **und** per
-  SMTP gemailt; sichtbar/löschbar im Admin-Bereich. Die Belegung kommt aggregiert (ohne
-  persönliche Daten) über `/api/verfuegbarkeit` (SQL-Funktion `termin_belegung`). Kapazität
-  einstellbar in `nest-app.js` (`KAPAZITAET`) **und** in `app/api/buchung/route.js` + `verfuegbarkeit/route.js`.
+- **Terminbuchungen:** ein fester Slot **17:00 Uhr** pro Di/Do-Termin, Kapazität pro Tag
+  **Wuppertal 4 / Essen 2**. Buchungen sind **verbindlich** – der Platz ist sofort vergeben
+  (kein Bestätigen nötig), volle Tage werden als „ausgebucht" gesperrt, freie Tage zeigen die
+  Restplätze. Beim Buchen wird in `buchungen` gespeichert, das NEST-Team benachrichtigt **und**
+  die buchende Person bekommt sofort eine **Bestätigungsmail**. Am Vortag folgt eine
+  **Erinnerung** (E-Mail + optional WhatsApp) über den Cron. Im **Admin-Bereich** siehst du
+  pro Tag, **wer** gebucht hat (Name + Kontaktdaten) sowie die Auslastung. Kapazität
+  einstellbar in `nest-app.js` (`KAPAZITAET`), `app/api/buchung/route.js`,
+  `app/api/verfuegbarkeit/route.js` und `app/partner-portal/page.jsx`.
 - **Kontakt / Sonderanfrage:** werden per SMTP (`/api/kontakt`) gemailt, mit mailto-Fallback.
 - **Berufe / Texte / Bilder:** in `public/assets/` (`berufe-data` & Co. stecken im
   Bundle `nest-app.js`; Bilder unter `public/assets/img/berufe/`).

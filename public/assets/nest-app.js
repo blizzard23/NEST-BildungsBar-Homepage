@@ -1469,9 +1469,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(function (r) { return r.ok; }).catch(function () { return false; });
   }
   function baueDaten() {
-    var betreff = "Terminanfrage BildungsBar – " + state.ort + " · " + state.datumText + " · " + state.zeit;
+    var betreff = "Terminbuchung BildungsBar – " + state.ort + " · " + state.datumText + " · " + state.zeit;
     var text = [
-      "Neue Terminanfrage über die Website:", "",
+      "Neue Terminbuchung über die Website:", "",
       "Standort: " + state.ort + (state.adr ? " (" + state.adr + ")" : ""),
       "Datum: " + state.datumText,
       "Uhrzeit: " + state.zeit, "",
@@ -1513,10 +1513,10 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!update()) return;
       var fehler = document.getElementById("tb-fehler");
       if (fehler) fehler.style.display = "none";
-      if (btn) { btn.disabled = true; btn.textContent = "Wird gesendet …"; }
+      if (btn) { btn.disabled = true; btn.textContent = "Wird gebucht …"; }
 
       sendBuchung(baueBuchung()).then(function (res) {
-        if (btn) { btn.disabled = false; btn.textContent = "Termin anfragen"; }
+        if (btn) { btn.disabled = false; btn.textContent = "Jetzt verbindlich buchen"; }
 
         // Tag ausgebucht (Kapazität erreicht) -> Formular bleibt, Hinweis + neu laden
         if (res.status === 409) {
@@ -1545,10 +1545,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var statusP = box ? box.querySelector("p") : null;
         if (res.ok) {
-          if (statusP) statusP.textContent = "Deine Terminanfrage wurde gespeichert und an uns gesendet – wir bestätigen dir den Termin per E-Mail. ✅";
+          if (statusP) statusP.textContent = "Dein Termin ist gebucht ✅ – du bekommst gleich eine Bestätigung per E-Mail. Am Tag vorher erinnern wir dich nochmal.";
           if (sendBtn) sendBtn.style.display = "none";
         } else {
-          if (statusP) statusP.textContent = "Fast geschafft! Schick uns deine Anfrage mit einem Klick – wir bestätigen dir den Termin per E-Mail.";
+          if (statusP) statusP.textContent = "Fast geschafft! Schick uns deine Buchung mit einem Klick – wir bestätigen dir den Termin per E-Mail.";
+          if (sendBtn) sendBtn.style.display = "";
         }
       });
     });

@@ -123,6 +123,7 @@ create table if not exists public.buchungen (
   telefon     text,
   schule      text,
   nachricht   text,
+  erinnert_am date,
   created_at  timestamptz not null default now()
 );
 

@@ -15,8 +15,12 @@ create table if not exists public.buchungen (
   telefon     text,
   schule      text,
   nachricht   text,
+  erinnert_am date,
   created_at  timestamptz not null default now()
 );
+
+-- Falls die Tabelle schon ohne diese Spalte existiert:
+alter table public.buchungen add column if not exists erinnert_am date;
 
 alter table public.buchungen enable row level security;
 

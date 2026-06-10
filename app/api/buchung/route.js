@@ -71,13 +71,38 @@ export async function POST(req) {
         "Schule/Klasse: " + (buchung.schule || "—"), "",
         "Nachricht: " + (buchung.nachricht || "—"),
       ].join("\n");
+      const von = `"NEST BildungsBar" <${process.env.MAIL_FROM || user}>`;
+      const wann = (buchung.datum_text || buchung.datum) + " um " + buchung.uhrzeit;
+
+      // a) Benachrichtigung ans NEST-Team
       await transporter.sendMail({
-        from: `"NEST Website" <${process.env.MAIL_FROM || user}>`,
+        from: von,
         to: process.env.MAIL_TO || "info@nest-bildungsbar.de",
         replyTo: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buchung.email) ? buchung.email : undefined,
-        subject: "Terminbuchung – " + buchung.standort + " · " + (buchung.datum_text || buchung.datum) + " · " + buchung.uhrzeit,
+        subject: "Terminbuchung – " + buchung.standort + " · " + wann,
         text,
       });
+
+      // b) Bestätigung an die buchende Person
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buchung.email)) {
+        const bestaetigung = [
+          "Hallo " + buchung.name + ",", "",
+          "dein Termin bei der NEST BildungsBar ist gebucht:", "",
+          "📍 Standort: " + buchung.standort + (b.adresse ? " (" + clean(b.adresse, 120) + ")" : ""),
+          "📅 Datum: " + (buchung.datum_text || buchung.datum),
+          "🕔 Uhrzeit: " + buchung.uhrzeit, "",
+          "Am Tag vor deinem Termin schicken wir dir eine kurze Erinnerung.",
+          "Falls dir doch etwas dazwischenkommt, antworte einfach auf diese E-Mail.", "",
+          "Wir freuen uns auf dich!",
+          "Dein NEST-Team",
+        ].join("\n");
+        await transporter.sendMail({
+          from: von,
+          to: buchung.email,
+          subject: "Dein Termin ist gebucht – " + buchung.standort + " · " + wann,
+          text: bestaetigung,
+        });
+      }
       mailed = true;
     } catch (e) { mailed = false; }
   }

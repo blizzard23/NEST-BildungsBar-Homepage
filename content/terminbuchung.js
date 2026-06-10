@@ -109,7 +109,7 @@ const html = `
                   <div class="tb-sum-row"><span class="k">Datum</span><span class="v empty" id="sum-datum">noch offen</span></div>
                   <div class="tb-sum-row"><span class="k">Uhrzeit</span><span class="v empty" id="sum-zeit">noch offen</span></div>
                   <div class="tb-sum-row"><span class="k">Name</span><span class="v empty" id="sum-name">noch offen</span></div>
-                  <button type="submit" class="btn btn-primary" id="tb-submit" disabled>Termin anfragen</button>
+                  <button type="submit" class="btn btn-primary" id="tb-submit" disabled>Jetzt verbindlich buchen</button>
                   <p id="tb-fehler" style="display:none;color:#ffd2dc;background:rgba(232,64,85,0.25);border-radius:8px;padding:8px 12px;font-size:13px;margin-top:12px;"></p>
                 </div>
               </aside>
@@ -120,12 +120,12 @@ const html = `
 
         <!-- Erfolg / Senden -->
         <div class="tb-success" id="tb-success">
-          <h3>Fast geschafft! 🎉</h3>
-          <p>Wir haben deine Auswahl notiert. Damit deine Anfrage bei uns ankommt, schick sie bitte mit einem Klick ab – wir bestätigen dir den Termin dann per E-Mail.</p>
+          <h3>Dein Termin ist gebucht! 🎉</h3>
+          <p>Dein Platz ist reserviert. Du bekommst gleich eine Bestätigung per E-Mail – und am Tag vorher erinnern wir dich nochmal.</p>
           <div class="tb-recap" id="tb-recap"></div>
           <div class="tb-actions">
-            <a class="btn btn-primary" id="tb-send-mail" href="#">Anfrage per E-Mail senden</a>
-            <a class="btn btn-ghost" href="tel:017641933496">Lieber anrufen</a>
+            <a class="btn btn-primary" id="tb-send-mail" href="#" style="display:none">Bestätigung per E-Mail senden</a>
+            <a class="btn btn-ghost" href="tel:017641933496">Fragen? Ruf uns an</a>
           </div>
         </div>
 

@@ -295,24 +295,49 @@ export default function PartnerPortal() {
 
                   {/* Terminbuchungen */}
                   <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Terminbuchungen ({buchungen.length})</h3>
-                  {buchungen.length ? (
-                    <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
-                      {buchungen.map((bu) => (
-                        <div className="card" key={bu.id}>
-                          <span className="badge">{bu.standort} · {bu.uhrzeit}</span>
-                          <h3 style={{ marginTop: "10px" }}>{bu.datum_text || bu.datum}</h3>
-                          <p style={{ color: "var(--navy)", fontWeight: 700, margin: "2px 0" }}>{bu.name}</p>
-                          <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "0 0 4px" }}>
-                            {bu.email ? <a href={`mailto:${bu.email}`}>{bu.email}</a> : null}
-                            {bu.telefon ? " · " + bu.telefon : ""}
-                          </p>
-                          {bu.schule ? <p style={{ fontSize: "13px", color: "var(--text-mute)", margin: 0 }}>{bu.schule}</p> : null}
-                          {bu.nachricht ? <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "6px" }}>„{bu.nachricht}"</p> : null}
-                          <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => buchungLoeschen(bu.id)}>Löschen</button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Terminbuchungen.</p>}
+                  {buchungen.length ? (() => {
+                    const groups = {};
+                    buchungen.forEach((bu) => {
+                      const k = bu.standort + "|" + (bu.datum || bu.datum_text || "");
+                      (groups[k] = groups[k] || []).push(bu);
+                    });
+                    const keys = Object.keys(groups).sort((a, b) => {
+                      const da = groups[a][0].datum || "", db = groups[b][0].datum || "";
+                      return db.localeCompare(da);
+                    });
+                    return (
+                      <div style={{ marginBottom: "32px" }}>
+                        {keys.map((k) => {
+                          const list = groups[k];
+                          const first = list[0];
+                          const cap = KAPAZITAET[first.standort] || 0;
+                          const voll = cap && list.length >= cap;
+                          return (
+                            <div className="card" key={k} style={{ marginBottom: "16px" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px", borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
+                                <h3 style={{ margin: 0 }}>{first.datum_text || first.datum} · {first.standort}</h3>
+                                <span style={{ fontWeight: 800, color: voll ? "#c2415a" : "var(--gold-dark)" }}>{list.length}{cap ? "/" + cap : ""} belegt{voll ? " · ausgebucht" : ""}</span>
+                              </div>
+                              {list.map((bu) => (
+                                <div key={bu.id} style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
+                                  <div>
+                                    <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--navy)" }}>{bu.name} <span style={{ fontWeight: 600, color: "var(--text-mute)" }}>· {bu.uhrzeit}</span></p>
+                                    <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
+                                      {bu.email ? <a href={`mailto:${bu.email}`}>{bu.email}</a> : "—"}
+                                      {bu.telefon ? <> · <a href={`tel:${bu.telefon}`}>{bu.telefon}</a></> : ""}
+                                    </p>
+                                    {bu.schule ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>{bu.schule}</p> : null}
+                                    {bu.nachricht ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{bu.nachricht}"</p> : null}
+                                  </div>
+                                  <button className="btn btn-ghost" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => buchungLoeschen(bu.id)}>Löschen</button>
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })() : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Terminbuchungen.</p>}
 
                   {/* Veranstaltung anlegen */}
                   <div className="card" style={{ marginBottom: "24px" }}>

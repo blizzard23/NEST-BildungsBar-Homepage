@@ -17,7 +17,8 @@ export default async function BlogPage() {
       .from("posts")
       .select("slug,titel,excerpt,bild_url,veroeffentlicht_am")
       .eq("published", true)
-      .order("veroeffentlicht_am", { ascending: false });
+      .order("veroeffentlicht_am", { ascending: false })
+      .limit(3);
     posts = data || [];
   }
 

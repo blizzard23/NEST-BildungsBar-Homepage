@@ -30,7 +30,7 @@ const html = `
       <div class="card-grid cols-3" id="partner">
         <div class="card reveal"><div class="icon" data-icon="briefcase" data-icon-size="26"></div><h3>Unternehmen</h3><p>Regionale Betriebe aus Handwerk, Technik, Wirtschaft und mehr – unsere Basis für passgenaue Vernetzung.</p></div>
         <div class="card reveal"><div class="icon" data-icon="building" data-icon-size="26"></div><h3>Einrichtungen</h3><p>Bildungs- und soziale Einrichtungen, mit denen wir Hand in Hand junge Menschen begleiten.</p></div>
-        <div class="card reveal"><div class="icon" data-icon="health" data-icon-size="26"></div><h3>Gesundheitspartner</h3><p>Partner aus Pflege und Medizin, die jungen Menschen Perspektiven im Gesundheitswesen eröffnen.</p></div>
+        <div class="card reveal"><div class="icon" data-icon="grid" data-icon-size="26"></div><h3>Institutionen</h3><p>Öffentliche Einrichtungen, Kammern und Verbände, die die Ausbildung in der Region mitgestalten und unterstützen.</p></div>
       </div>
     </div>
   </section>
@@ -46,21 +46,6 @@ const html = `
         <div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div>
       </div>
       <p class="text-center mt-2"><span class="badge-pill">Platzhalter – echte Partnerlogos einfügen</span></p>
-    </div>
-  </section>
-
-  <section class="bg-white">
-    <div class="container">
-      <div class="section-head centered reveal">
-        <span class="section-label">Stimmen</span>
-        <h2>Das sagen unsere Partner</h2>
-      </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card reveal"><div class="testimonial-header"><div class="testimonial-initials">UN</div><div class="testimonial-stars">★★★★★</div></div><p class="testimonial-quote">„Durch die BildungsBar erreichen wir junge Menschen, die wirklich Interesse an einer Ausbildung haben – und nicht nur zufällig vorbeischauen."</p><div class="testimonial-author">Ausbildungsleitung</div><div class="testimonial-role">Partnerunternehmen, Wuppertal</div></div>
-        <div class="testimonial-card reveal"><div class="testimonial-header"><div class="testimonial-initials">SC</div><div class="testimonial-stars">★★★★★</div></div><p class="testimonial-quote">„Die Workshops kommen bei unseren Schüler:innen super an – jugendgerecht, spielerisch und auf Augenhöhe."</p><div class="testimonial-author">Lehrkraft</div><div class="testimonial-role">Kooperierende Schule</div></div>
-        <div class="testimonial-card reveal"><div class="testimonial-header"><div class="testimonial-initials">GP</div><div class="testimonial-stars">★★★★★</div></div><p class="testimonial-quote">„Eine vertrauensvolle, langfristige Zusammenarbeit, die uns hilft, Nachwuchs für die Pflege zu begeistern."</p><div class="testimonial-author">Personalleitung</div><div class="testimonial-role">Gesundheitspartner</div></div>
-      </div>
-      <p class="text-center mt-2"><span class="badge-pill">Beispielhafte Stimmen – durch echte Zitate ersetzen</span></p>
     </div>
   </section>
 

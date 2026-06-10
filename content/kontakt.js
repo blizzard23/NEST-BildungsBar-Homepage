@@ -33,9 +33,6 @@ const html = `
             <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" placeholder="Vor- und Nachname" required /></div>
             <div class="field"><label for="email">E-Mail</label><input id="email" name="email" type="email" placeholder="dein@email.de" required /></div>
             <div class="field"><label for="phone">Telefon</label><input id="phone" name="phone" type="tel" placeholder="optional" /></div>
-            <div class="field"><label for="standort">Wunschstandort</label>
-              <select id="standort" name="standort"><option>Wuppertal</option><option>Essen</option><option>Egal / Online</option></select>
-            </div>
             <div class="field"><label for="subject">Betreff</label><input id="subject" name="subject" type="text" placeholder="Worum geht's?" /></div>
             <div class="field"><label for="message">Nachricht</label><textarea id="message" name="message" placeholder="Deine Nachricht (optional)"></textarea></div>
             <div class="checkbox-row"><input type="checkbox" id="privacy" required /><label for="privacy" style="font-weight:400;color:var(--text-soft);">Ich stimme der Verarbeitung meiner Daten gemäß Datenschutzerklärung zu.</label></div>

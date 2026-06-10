@@ -1398,45 +1398,52 @@ document.addEventListener("DOMContentLoaded", function () {
     if (calLabel) calLabel.textContent = MONATE[calMonat] + " " + calJahr;
 
     var heute = new Date(); heute.setHours(0,0,0,0);
-    // 1. Tag des Monats
-    var erster = new Date(calJahr, calMonat, 1);
-    // Wochentag des 1. (0=So -> Mo=1, Di=2, ...) ISO-Montag-basiert
-    var startWt = erster.getDay(); if (startWt === 0) startWt = 7; // So = 7
     var anzTage = new Date(calJahr, calMonat + 1, 0).getDate();
 
-    var html = '<div class="tb-cal-week">';
-    var zelle = 0;
-    // Leere Zellen vor dem 1.
-    for (var v = 1; v < startWt; v++) {
-      html += '<div class="tb-cal-day tb-cal-day--empty"></div>';
-      zelle++;
+    // Collect Di(2) and Do(4) grouped by calendar week (keyed by Monday date)
+    var wMap = {}, wOrder = [];
+    function wKey(d) {
+      var day = d.getDay() || 7;
+      var mo = new Date(d.getFullYear(), d.getMonth(), d.getDate() - (day - 1));
+      return mo.getFullYear() + '-' + mo.getMonth() + '-' + mo.getDate();
     }
     for (var t = 1; t <= anzTage; t++) {
       var d = new Date(calJahr, calMonat, t);
-      var wt = d.getDay(); // 0=So, 2=Di, 4=Do
+      var wt = d.getDay();
+      if (wt === 2 || wt === 4) {
+        var k = wKey(d);
+        if (!wMap[k]) { wMap[k] = {di: null, doDat: null, sort: d.getTime()}; wOrder.push(k); }
+        if (wt === 2) wMap[k].di = new Date(d);
+        else wMap[k].doDat = new Date(d);
+      }
+    }
+    wOrder.sort(function(a,b){ return wMap[a].sort - wMap[b].sort; });
+
+    function dayCell(d) {
       var key = iso(d);
       var vergangen = d < heute;
-      var istDiDo = (wt === 2 || wt === 4);
       var cls = "tb-cal-day";
-      var anklickbar = false;
-      if (!istDiDo || vergangen) {
-        cls += " tb-cal-day--past";
-      } else {
-        var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
-        var voll = kapazitaet > 0 && frei <= 0;
-        if (voll) { cls += " tb-cal-day--full"; }
-        else if (frei === 1) { cls += " tb-cal-day--knapp"; anklickbar = true; }
-        else { cls += " tb-cal-day--available"; anklickbar = true; }
-        if (state.datum === key) cls += " tb-cal-day--selected";
+      var inner = '<span class="dido-n">' + d.getDate() + '</span><span class="dido-mon">' + MONATE[d.getMonth()].slice(0,3) + '</span>';
+      if (vergangen) {
+        return '<div class="' + cls + ' tb-cal-day--past" data-nok="1">' + inner + '</div>';
       }
-      html += '<div class="' + cls + '" data-key="' + key + '" data-d="' + d.getTime() + '" ' + (anklickbar ? '' : 'data-nok="1"') + '>' + t + '</div>';
-      zelle++;
-      if (zelle % 7 === 0 && t < anzTage) html += '</div><div class="tb-cal-week">';
+      var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
+      var voll = kapazitaet > 0 && frei <= 0;
+      if (voll) { cls += " tb-cal-day--full"; }
+      else if (frei === 1) { cls += " tb-cal-day--knapp"; inner += '<span class="dido-rest">1 Platz</span>'; }
+      else { cls += " tb-cal-day--available"; }
+      if (state.datum === key) cls += " tb-cal-day--selected";
+      return '<div class="' + cls + '" data-key="' + key + '" data-d="' + d.getTime() + '" ' + (voll ? 'data-nok="1"' : '') + '>' + inner + '</div>';
     }
-    // Auffüllen bis Zeilenende
-    var rest = zelle % 7;
-    if (rest > 0) { for (var r = rest; r < 7; r++) html += '<div class="tb-cal-day tb-cal-day--empty"></div>'; }
-    html += '</div>';
+
+    var html = '';
+    wOrder.forEach(function(k) {
+      var w = wMap[k];
+      html += '<div class="tb-cal-week">';
+      html += w.di ? dayCell(w.di) : '<div class="tb-cal-day tb-cal-day--empty"></div>';
+      html += w.doDat ? dayCell(w.doDat) : '<div class="tb-cal-day tb-cal-day--empty"></div>';
+      html += '</div>';
+    });
     calWochen.innerHTML = html;
 
     // Click-Events
@@ -1445,13 +1452,11 @@ document.addEventListener("DOMContentLoaded", function () {
         var k = el.getAttribute('data-key');
         var ms = parseInt(el.getAttribute('data-d'));
         var dd = new Date(ms);
-        // Alle vorherigen Markierungen löschen
         calWochen.querySelectorAll('.tb-cal-day--selected').forEach(function(x){ x.classList.remove('tb-cal-day--selected'); });
         el.classList.add('tb-cal-day--selected');
         state.datum = k;
         state.datumText = langText(dd);
         update();
-        // Zum Zeitschritt scrollen (optional)
         var stepTime = document.getElementById('step-time');
         if (stepTime) { stepTime.classList.remove('tb-locked'); }
         renderZeit();

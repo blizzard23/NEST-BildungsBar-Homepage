@@ -25,47 +25,49 @@ const html = `
           <div class="hp-screen">
             <span class="hp-badge">Termine</span>
             <div class="hp-title">Wähle deinen Termin</div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin:2px 0 4px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin:2px 0 6px;">
               <span style="font-size:9px;font-weight:800;color:var(--navy);">Juni 2026</span>
-              <div style="display:flex;gap:4px;font-size:9px;color:var(--text-mute);">&#8249; &#8250;</div>
+              <div style="display:flex;gap:4px;font-size:10px;color:var(--text-mute);">&#8249; &#8250;</div>
             </div>
-            <div class="hp-cal-wd-row" style="background:none;padding:2px 0;margin:0 -2px;">
-              <span class="hp-cal-wd">Mo</span><span class="hp-cal-wd">Di</span><span class="hp-cal-wd">Mi</span>
-              <span class="hp-cal-wd">Do</span><span class="hp-cal-wd">Fr</span>
-              <span class="hp-cal-wd" style="color:#c2415a;">Sa</span><span class="hp-cal-wd" style="color:#c2415a;">So</span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px;">
+              <span style="text-align:center;font-size:9px;font-weight:800;color:var(--navy);background:#f4f5f7;border-radius:5px;padding:3px 0;">Di</span>
+              <span style="text-align:center;font-size:9px;font-weight:800;color:var(--navy);background:#f4f5f7;border-radius:5px;padding:3px 0;">Do</span>
             </div>
-            <div style="padding:0;flex:1;">
-              <div class="hp-cal-week">
-                <span class="hp-cal-d hp-cal-d--empty"></span>
-                <span class="hp-cal-d hp-cal-d--open">3</span>
-                <span class="hp-cal-d hp-cal-d--past">4</span>
-                <span class="hp-cal-d hp-cal-d--open">5</span>
-                <span class="hp-cal-d hp-cal-d--past">6</span>
-                <span class="hp-cal-d hp-cal-d--past">7</span>
-                <span class="hp-cal-d hp-cal-d--past">8</span>
+            <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+                <div style="background:#d4eddf;border-radius:7px;padding:6px 4px;text-align:center;border:1.5px solid #a8dfc0;">
+                  <div style="font-size:14px;font-weight:900;color:#1a8550;line-height:1;">3</div>
+                  <div style="font-size:7px;font-weight:700;color:#1a8550;opacity:0.7;text-transform:uppercase;">Jun</div>
+                </div>
+                <div style="background:#d4eddf;border-radius:7px;padding:6px 4px;text-align:center;border:1.5px solid #a8dfc0;">
+                  <div style="font-size:14px;font-weight:900;color:#1a8550;line-height:1;">5</div>
+                  <div style="font-size:7px;font-weight:700;color:#1a8550;opacity:0.7;text-transform:uppercase;">Jun</div>
+                </div>
               </div>
-              <div class="hp-cal-week">
-                <span class="hp-cal-d hp-cal-d--past">9</span>
-                <span class="hp-cal-d hp-cal-d--full">10</span>
-                <span class="hp-cal-d hp-cal-d--past">11</span>
-                <span class="hp-cal-d hp-cal-d--knapp">12</span>
-                <span class="hp-cal-d hp-cal-d--past">13</span>
-                <span class="hp-cal-d hp-cal-d--past">14</span>
-                <span class="hp-cal-d hp-cal-d--past">15</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+                <div style="background:#fdeaed;border-radius:7px;padding:6px 4px;text-align:center;border:1.5px solid #f5b0bc;">
+                  <div style="font-size:14px;font-weight:900;color:#c2415a;line-height:1;">10</div>
+                  <div style="font-size:7px;font-weight:700;color:#c2415a;opacity:0.7;text-transform:uppercase;">Jun</div>
+                </div>
+                <div style="background:#fef3d0;border-radius:7px;padding:6px 4px;text-align:center;border:1.5px solid #f5d98a;">
+                  <div style="font-size:14px;font-weight:900;color:#b06800;line-height:1;">12</div>
+                  <div style="font-size:7px;font-weight:700;color:#b06800;opacity:0.7;text-transform:uppercase;">Jun</div>
+                </div>
               </div>
-              <div class="hp-cal-week">
-                <span class="hp-cal-d hp-cal-d--past">16</span>
-                <span class="hp-cal-d hp-cal-d--open">17</span>
-                <span class="hp-cal-d hp-cal-d--past">18</span>
-                <span class="hp-cal-d hp-cal-d--selected">19</span>
-                <span class="hp-cal-d hp-cal-d--past">20</span>
-                <span class="hp-cal-d hp-cal-d--past">21</span>
-                <span class="hp-cal-d hp-cal-d--past">22</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+                <div style="background:#d4eddf;border-radius:7px;padding:6px 4px;text-align:center;border:1.5px solid #a8dfc0;">
+                  <div style="font-size:14px;font-weight:900;color:#1a8550;line-height:1;">17</div>
+                  <div style="font-size:7px;font-weight:700;color:#1a8550;opacity:0.7;text-transform:uppercase;">Jun</div>
+                </div>
+                <div style="background:var(--navy);border-radius:7px;padding:6px 4px;text-align:center;border:1.5px solid var(--navy);">
+                  <div style="font-size:14px;font-weight:900;color:var(--gold);line-height:1;">19</div>
+                  <div style="font-size:7px;font-weight:700;color:rgba(239,165,0,0.7);text-transform:uppercase;">Jun</div>
+                </div>
               </div>
             </div>
-            <div style="background:var(--gold-soft);border-radius:8px;padding:7px 10px;display:flex;align-items:center;gap:8px;">
+            <div style="background:var(--gold-soft);border-radius:8px;padding:7px 10px;display:flex;align-items:center;gap:8px;margin-top:6px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              <span style="font-size:9px;font-weight:700;color:var(--gold-dark);">Do, 19. Juni · 15:00 Uhr</span>
+              <span style="font-size:9px;font-weight:700;color:var(--gold-dark);">Do, 19. Juni · 17:00 Uhr</span>
             </div>
           </div>
         </div>
@@ -149,9 +151,8 @@ const html = `
                     </div>
                     <div class="tb-cal-body">
                       <div class="tb-cal-wd-row">
-                        <span class="tb-cal-wd">Mo</span><span class="tb-cal-wd">Di</span><span class="tb-cal-wd">Mi</span>
-                        <span class="tb-cal-wd">Do</span><span class="tb-cal-wd">Fr</span>
-                        <span class="tb-cal-wd">Sa</span><span class="tb-cal-wd">So</span>
+                        <span class="tb-cal-wd">Dienstag</span>
+                        <span class="tb-cal-wd">Donnerstag</span>
                       </div>
                       <div class="tb-cal-weeks" id="tb-cal-weeks"></div>
                       <div class="tb-cal-legend">

@@ -39,9 +39,24 @@ const html = `
               <div style="background:#fff;border:1px solid var(--line);color:var(--text-mute);border-radius:8px;padding:7px 6px;font-size:9px;font-weight:700;text-align:center;">4 Jahre</div>
               <div style="background:#fff;border:1px solid var(--line);color:var(--text-mute);border-radius:8px;padding:7px 6px;font-size:9px;font-weight:700;text-align:center;">5 Jahre</div>
             </div>
-            <div style="background:var(--navy);border-radius:8px;padding:6px 10px;display:flex;justify-content:space-between;align-items:center;margin-top:auto;">
+            <div style="background:var(--navy);border-radius:8px;padding:6px 10px;display:flex;justify-content:space-between;align-items:center;">
               <span style="font-size:8.5px;color:rgba(255,255,255,0.6);">Team Fuchs</span>
               <span style="font-size:12px;font-weight:900;color:var(--gold);">40 Pkt.</span>
+            </div>
+            <div style="background:#fff;border-radius:8px;padding:7px 8px;display:flex;flex-direction:column;gap:4px;">
+              <div style="font-size:7.5px;font-weight:800;color:var(--text-mute);letter-spacing:1px;text-transform:uppercase;margin-bottom:1px;">Rangliste</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:9px;">
+                <span style="font-weight:700;color:var(--navy);">🥇 Team Fuchs</span>
+                <span style="font-weight:900;color:var(--gold-dark);">40 Pkt.</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:9px;">
+                <span style="font-weight:700;color:var(--navy);">🥈 Team Wolf</span>
+                <span style="font-weight:700;color:var(--text-soft);">35 Pkt.</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:9px;">
+                <span style="font-weight:700;color:var(--navy);">🥉 Team Adler</span>
+                <span style="font-weight:700;color:var(--text-soft);">28 Pkt.</span>
+              </div>
             </div>
           </div>
         </a>

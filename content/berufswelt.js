@@ -30,12 +30,15 @@ const html = `
                 <span class="hp-chip hp-chip--on">Alle</span>
                 <span class="hp-chip">Handwerk</span>
                 <span class="hp-chip">IT</span>
+                <span class="hp-chip">Gesundheit</span>
               </div>
               <div class="hp-grid">
                 <div class="hp-card"><img src="/assets/img/berufe/mechatroniker.png" alt="" loading="lazy"><span class="hp-name">Mechatroniker:in</span></div>
                 <div class="hp-card"><img src="/assets/img/berufe/fachinformatiker-systemintegration.png" alt="" loading="lazy"><span class="hp-name">Fachinformatiker:in</span></div>
                 <div class="hp-card"><img src="/assets/img/berufe/automobilkaufleute.png" alt="" loading="lazy"><span class="hp-name">Automobilkaufleute</span></div>
                 <div class="hp-card"><img src="/assets/img/berufe/baecker.png" alt="" loading="lazy"><span class="hp-name">Bäcker:in</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/augenoptiker.png" alt="" loading="lazy"><span class="hp-name">Augenoptiker:in</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/anlagenmechaniker-rohrsystemtechnik.webp" alt="" loading="lazy"><span class="hp-name">Anlagenmechaniker:in</span></div>
               </div>
             </div>
           </a>

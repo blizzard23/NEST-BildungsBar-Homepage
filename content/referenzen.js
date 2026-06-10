@@ -29,12 +29,15 @@ const html = `
               <span class="hp-chip hp-chip--on">Alle</span>
               <span class="hp-chip">Handwerk</span>
               <span class="hp-chip">IT</span>
+              <span class="hp-chip">Karriere</span>
             </div>
             <div class="hp-grid">
               <div class="hp-card"><div style="height:46px;background:linear-gradient(135deg,#0F2145,#162d5e);display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;font-weight:900;color:#EFA500;line-height:1;">M</span></div><span class="hp-name">Maier &amp; Söhne</span></div>
               <div class="hp-card"><div style="height:46px;background:linear-gradient(135deg,#1a8550,#1f9d63);display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;font-weight:900;color:#fff;line-height:1;">D</span></div><span class="hp-name">DigiSystems</span></div>
               <div class="hp-card"><div style="height:46px;background:linear-gradient(135deg,#b06800,#EFA500);display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;font-weight:900;color:#fff;line-height:1;">R</span></div><span class="hp-name">Rhenag</span></div>
               <div class="hp-card"><div style="height:46px;background:linear-gradient(135deg,#4a3fc5,#6c5fd3);display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;font-weight:900;color:#fff;line-height:1;">T</span></div><span class="hp-name">TechWorks</span></div>
+              <div class="hp-card"><div style="height:46px;background:linear-gradient(135deg,#c2415a,#e05573);display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;font-weight:900;color:#fff;line-height:1;">K</span></div><span class="hp-name">KFZ-Welt</span></div>
+              <div class="hp-card"><div style="height:46px;background:linear-gradient(135deg,#1a6070,#2a8fa8);display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;font-weight:900;color:#fff;line-height:1;">A</span></div><span class="hp-name">ATC GmbH</span></div>
             </div>
           </div>
         </div>

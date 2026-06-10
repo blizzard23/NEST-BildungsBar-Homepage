@@ -21,7 +21,9 @@ const html = `
               <div class="hp-chat-in">Hallo! Ich möchte einen Termin buchen 👋<div class="hp-chat-time">17:02</div></div>
               <div class="hp-chat-out">Super! Wuppertal oder Essen?<div class="hp-chat-time">17:03</div></div>
               <div class="hp-chat-in">Wuppertal bitte!<div class="hp-chat-time">17:04</div></div>
-              <div class="hp-chat-out">Do, 19. Juni · 15 Uhr frei ✅<div class="hp-chat-time">17:04</div></div>
+              <div class="hp-chat-out">Do, 19. Juni · 17 Uhr frei ✅<div class="hp-chat-time">17:04</div></div>
+              <div class="hp-chat-in">Super, danke! 🙏<div class="hp-chat-time">17:05</div></div>
+              <div class="hp-chat-out">Bis dann! Wir freuen uns auf dich 🎉<div class="hp-chat-time">17:05</div></div>
             </div>
             <div class="hp-search" style="color:var(--text-mute);">Nachricht schreiben …</div>
           </div>

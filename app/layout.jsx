@@ -17,6 +17,7 @@ window.NEST_ASSETS = "/";
 window.NEST_STELLEN_API = "/api/stellen";
 window.NEST_MAIL_API = "/api/kontakt";
 window.NEST_BUCHUNG_API = "/api/buchung";
+window.NEST_VERFUEGBARKEIT_API = "/api/verfuegbarkeit";
 window.NEST_TERMIN_MAIL = "${TERMIN_MAIL}";
 window.NEST_LINKS = {
   beruf: "/beruf",

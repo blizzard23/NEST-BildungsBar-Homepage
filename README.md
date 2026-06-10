@@ -117,10 +117,12 @@ Jeder weitere `git push` deployt automatisch neu.
 - **Stellen:** Partner legen sie selbst im Portal an (oder du im Supabase-Table-Editor).
 - **Blog:** Tabelle `posts` → Zeile anlegen, `published = true`. `inhalt` ist HTML.
 - **Veranstaltungen & Blog:** im Partner-Portal → Admin-Bereich (Login als `info@nest-bildungsbar.de`).
-- **Terminbuchungen:** werden über `/api/buchung` in der Tabelle `buchungen` gespeichert
-  **und** per SMTP gemailt. Sichtbar/löschbar im Admin-Bereich. Buchbare Zeiten **ab 17:00**:
-  Wuppertal 4 Slots (bis 19:00), Essen 2 Slots (bis 18:00) – einstellbar in `nest-app.js`
-  (`ZEITEN_NACH_ORT`).
+- **Terminbuchungen:** ein fester Slot **17:00 Uhr** pro Di/Do-Termin. Kapazität pro Tag:
+  **Wuppertal 4**, **Essen 2** – ist ein Tag voll, wird er als „ausgebucht" gesperrt.
+  Buchungen werden über `/api/buchung` in der Tabelle `buchungen` gespeichert **und** per
+  SMTP gemailt; sichtbar/löschbar im Admin-Bereich. Die Belegung kommt aggregiert (ohne
+  persönliche Daten) über `/api/verfuegbarkeit` (SQL-Funktion `termin_belegung`). Kapazität
+  einstellbar in `nest-app.js` (`KAPAZITAET`) **und** in `app/api/buchung/route.js` + `verfuegbarkeit/route.js`.
 - **Kontakt / Sonderanfrage:** werden per SMTP (`/api/kontakt`) gemailt, mit mailto-Fallback.
 - **Berufe / Texte / Bilder:** in `public/assets/` (`berufe-data` & Co. stecken im
   Bundle `nest-app.js`; Bilder unter `public/assets/img/berufe/`).

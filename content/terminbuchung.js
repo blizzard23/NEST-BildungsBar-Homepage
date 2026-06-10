@@ -110,6 +110,7 @@ const html = `
                   <div class="tb-sum-row"><span class="k">Uhrzeit</span><span class="v empty" id="sum-zeit">noch offen</span></div>
                   <div class="tb-sum-row"><span class="k">Name</span><span class="v empty" id="sum-name">noch offen</span></div>
                   <button type="submit" class="btn btn-primary" id="tb-submit" disabled>Termin anfragen</button>
+                  <p id="tb-fehler" style="display:none;color:#ffd2dc;background:rgba(232,64,85,0.25);border-radius:8px;padding:8px 12px;font-size:13px;margin-top:12px;"></p>
                 </div>
               </aside>
 

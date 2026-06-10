@@ -49,6 +49,10 @@
 .tb-date.active .d-day { color: #fff; }
 .tb-date .d-mon { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-mute); }
 .tb-date.active .d-mon { color: rgba(255,255,255,0.7); }
+/* ausgebuchter Tag */
+.tb-date--full { cursor: not-allowed; opacity: .5; background: var(--bg-light); border-style: dashed; }
+.tb-date--full:hover { transform: none; border-color: var(--line); }
+.tb-date--full .d-full { margin-top: 4px; font-size: 9px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #c2415a; }
 
 /* Uhrzeit */
 .tb-times { display: flex; flex-wrap: wrap; gap: 10px; }

@@ -142,6 +142,18 @@ drop policy if exists "buchungen_admin_delete" on public.buchungen;
 create policy "buchungen_admin_delete" on public.buchungen
   for delete using ( (auth.jwt() ->> 'email') = 'info@nest-bildungsbar.de' );
 
+-- Aggregierte Belegung pro Tag (nur Datum + Anzahl, keine persönlichen Daten).
+-- SECURITY DEFINER, damit das öffentliche Formular freie/ausgebuchte Tage anzeigen kann.
+create or replace function public.termin_belegung(p_standort text)
+returns table(datum date, anzahl bigint)
+language sql security definer set search_path = public as $$
+  select datum, count(*)::bigint
+  from public.buchungen
+  where standort = p_standort and datum is not null and datum >= current_date
+  group by datum;
+$$;
+grant execute on function public.termin_belegung(text) to anon, authenticated;
+
 
 -- =====================================================================
 -- BEISPIELDATEN (optional – zum Testen, danach löschbar)

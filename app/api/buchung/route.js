@@ -31,8 +31,23 @@ export async function POST(req) {
 
   let stored = false, mailed = false;
 
-  // 1) In Supabase speichern (RLS erlaubt öffentliches INSERT)
+  const KAPAZITAET = { Wuppertal: 4, Essen: 2 };
+  const cap = KAPAZITAET[buchung.standort] || 0;
   const sb = supabaseServer();
+
+  // 0) Kapazität prüfen (max. 4 in Wuppertal, 2 in Essen pro Tag)
+  if (sb && cap && buchung.datum) {
+    const { data, error } = await sb.rpc("termin_belegung", { p_standort: buchung.standort });
+    if (!error && Array.isArray(data)) {
+      const row = data.find((r) => r.datum === buchung.datum);
+      const anzahl = row ? Number(row.anzahl) || 0 : 0;
+      if (anzahl >= cap) {
+        return NextResponse.json({ ok: false, error: "ausgebucht" }, { status: 409 });
+      }
+    }
+  }
+
+  // 1) In Supabase speichern (RLS erlaubt öffentliches INSERT)
   if (sb) {
     const { error } = await sb.from("buchungen").insert(buchung);
     stored = !error;

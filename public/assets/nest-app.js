@@ -1308,14 +1308,14 @@ document.addEventListener("DOMContentLoaded", function () {
   var WDAYS = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
   var MONS  = ["Jan", "Feb", "März", "Apr", "Mai", "Juni", "Juli", "Aug", "Sept", "Okt", "Nov", "Dez"];
   var MONS_LANG = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
-  // Termine ab 17:00 Uhr – Wuppertal max. 4 Slots, Essen 2 Slots
-  var ZEITEN_NACH_ORT = {
-    "Wuppertal": ["17:00 – 17:30", "17:30 – 18:00", "18:00 – 18:30", "18:30 – 19:00"],
-    "Essen": ["17:00 – 17:30", "17:30 – 18:00"]
-  };
-  var ANZAHL = 8; // wie viele Termine angeboten werden (Di + Do)
+  // Nur EIN Slot: 17:00 Uhr. Kapazität pro Tag: Wuppertal 4, Essen 2.
+  var UHRZEIT = "17:00 Uhr";
+  var KAPAZITAET = { "Wuppertal": 4, "Essen": 2 };
+  var ANZAHL = 8; // wie viele Di/Do-Termine angeboten werden
 
   var state = { ort: "", adr: "", datum: null, datumText: "", zeit: "" };
+  var belegung = {};   // { "YYYY-MM-DD": anzahl } für den gewählten Standort
+  var kapazitaet = 0;  // max. Buchungen pro Tag am gewählten Standort
 
   /* ---------- nächste Di/Do-Termine erzeugen ---------- */
   function naechsteTermine(n) {
@@ -1331,54 +1331,69 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     return out;
   }
-
   function iso(d) {
     return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
   }
   function langText(d) {
     return WDAYS[d.getDay()] + ", " + d.getDate() + ". " + MONS_LANG[d.getMonth()] + " " + d.getFullYear();
   }
+  var TERMINE = naechsteTermine(ANZAHL);
 
-  /* ---------- Datums-Kacheln rendern ---------- */
+  /* ---------- Datums-Kacheln (inkl. „ausgebucht") ---------- */
   var dateList = document.getElementById("tb-date-list");
-  naechsteTermine(ANZAHL).forEach(function (d) {
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "tb-date";
-    b.setAttribute("data-iso", iso(d));
-    b.setAttribute("data-text", langText(d));
-    b.innerHTML = '<div class="d-wday">' + WDAYS[d.getDay()] + '</div>' +
-                  '<div class="d-day">' + d.getDate() + '</div>' +
-                  '<div class="d-mon">' + MONS[d.getMonth()] + '</div>';
-    b.addEventListener("click", function () {
-      dateList.querySelectorAll(".tb-date").forEach(function (x) { x.classList.remove("active"); });
-      b.classList.add("active");
-      state.datum = b.getAttribute("data-iso");
-      state.datumText = b.getAttribute("data-text");
-      update();
-    });
-    dateList.appendChild(b);
-  });
-
-  /* ---------- Uhrzeit-Kacheln (abhängig vom Standort) ---------- */
-  var timeList = document.getElementById("tb-time-list");
-  function renderZeiten() {
-    timeList.innerHTML = "";
-    state.zeit = "";
-    var slots = ZEITEN_NACH_ORT[state.ort] || [];
-    slots.forEach(function (z) {
+  function renderDates() {
+    dateList.innerHTML = "";
+    TERMINE.forEach(function (d) {
+      var key = iso(d);
+      var voll = kapazitaet > 0 && (belegung[key] || 0) >= kapazitaet;
       var b = document.createElement("button");
       b.type = "button";
-      b.className = "tb-time";
-      b.textContent = z;
-      b.addEventListener("click", function () {
-        timeList.querySelectorAll(".tb-time").forEach(function (x) { x.classList.remove("active"); });
-        b.classList.add("active");
-        state.zeit = z;
-        update();
-      });
-      timeList.appendChild(b);
+      b.className = "tb-date" + (voll ? " tb-date--full" : "") + (state.datum === key ? " active" : "");
+      b.disabled = voll;
+      b.innerHTML = '<div class="d-wday">' + WDAYS[d.getDay()] + '</div>' +
+                    '<div class="d-day">' + d.getDate() + '</div>' +
+                    '<div class="d-mon">' + MONS[d.getMonth()] + '</div>' +
+                    (voll ? '<div class="d-full">ausgebucht</div>' : '');
+      if (!voll) {
+        b.addEventListener("click", function () {
+          dateList.querySelectorAll(".tb-date").forEach(function (x) { x.classList.remove("active"); });
+          b.classList.add("active");
+          state.datum = key;
+          state.datumText = langText(d);
+          update();
+        });
+      }
+      dateList.appendChild(b);
     });
+  }
+
+  /* ---------- Uhrzeit: einziger Slot 17:00 Uhr (vorausgewählt) ---------- */
+  var timeList = document.getElementById("tb-time-list");
+  function renderZeit() {
+    timeList.innerHTML = "";
+    state.zeit = UHRZEIT;
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "tb-time active";
+    b.textContent = UHRZEIT;
+    b.addEventListener("click", function () { b.classList.add("active"); state.zeit = UHRZEIT; update(); });
+    timeList.appendChild(b);
+  }
+
+  /* ---------- Belegung des Standorts laden (für „ausgebucht") ---------- */
+  function ladeVerfuegbarkeit(ort, cb) {
+    belegung = {};
+    kapazitaet = KAPAZITAET[ort] || 0;
+    var api = window.NEST_VERFUEGBARKEIT_API;
+    if (!api || !window.fetch) { if (cb) cb(); return; }
+    fetch(api + "?standort=" + encodeURIComponent(ort))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.belegung) belegung = d.belegung;
+        if (d && typeof d.kapazitaet === "number") kapazitaet = d.kapazitaet;
+        if (cb) cb();
+      })
+      .catch(function () { if (cb) cb(); });
   }
 
   /* ---------- Standort ---------- */
@@ -1388,10 +1403,14 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.classList.add("active");
       state.ort = btn.getAttribute("data-ort");
       state.adr = btn.getAttribute("data-adr") || "";
-      renderZeiten();
+      state.datum = null; state.datumText = "";
+      renderZeit();
+      ladeVerfuegbarkeit(state.ort, function () { renderDates(); update(); });
       update();
     });
   });
+
+  renderDates(); // Startansicht (alle Tage, Schritt ist bis zur Standortwahl gesperrt)
 
   /* ---------- Felder ---------- */
   var fName = document.getElementById("tb-name");
@@ -1477,9 +1496,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   function sendBuchung(payload) {
     var api = window.NEST_BUCHUNG_API;
-    if (!api || !window.fetch) return Promise.resolve(false);
+    if (!api || !window.fetch) return Promise.resolve({ ok: false, status: 0 });
     return fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
-      .then(function (r) { return r.ok; }).catch(function () { return false; });
+      .then(function (r) { return { ok: r.ok, status: r.status }; })
+      .catch(function () { return { ok: false, status: 0 }; });
   }
 
   var form = document.getElementById("termin-form");
@@ -1487,29 +1507,40 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!update()) return;
-      var d = baueDaten();
-      var mailto = mailtoVon(d);
+      var fehler = document.getElementById("tb-fehler");
+      if (fehler) fehler.style.display = "none";
+      if (btn) { btn.disabled = true; btn.textContent = "Wird gesendet …"; }
 
-      var recap = document.getElementById("tb-recap");
-      if (recap) {
-        recap.innerHTML =
-          "<div><b>Standort:</b> " + state.ort + "</div>" +
-          "<div><b>Datum:</b> " + state.datumText + "</div>" +
-          "<div><b>Uhrzeit:</b> " + state.zeit + " Uhr</div>" +
-          "<div><b>Name:</b> " + (fName ? fName.value.trim() : "") + "</div>";
-      }
-      var sendBtn = document.getElementById("tb-send-mail");
-      if (sendBtn) sendBtn.setAttribute("href", mailto);
+      sendBuchung(baueBuchung()).then(function (res) {
+        if (btn) { btn.disabled = false; btn.textContent = "Termin anfragen"; }
 
-      var box = document.getElementById("tb-success");
-      var formCard = document.getElementById("tb-formcard");
-      if (box) box.classList.add("show");
-      if (formCard) formCard.style.display = "none";
-      if (box) box.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Tag ausgebucht (Kapazität erreicht) -> Formular bleibt, Hinweis + neu laden
+        if (res.status === 409) {
+          if (fehler) { fehler.textContent = "Dieser Termin ist leider ausgebucht. Bitte wähle einen anderen Tag."; fehler.style.display = "block"; }
+          ladeVerfuegbarkeit(state.ort, function () { renderDates(); update(); });
+          return;
+        }
 
-      var statusP = box ? box.querySelector("p") : null;
-      sendBuchung(baueBuchung()).then(function (ok) {
-        if (ok) {
+        var d = baueDaten();
+        var mailto = mailtoVon(d);
+        var recap = document.getElementById("tb-recap");
+        if (recap) {
+          recap.innerHTML =
+            "<div><b>Standort:</b> " + state.ort + "</div>" +
+            "<div><b>Datum:</b> " + state.datumText + "</div>" +
+            "<div><b>Uhrzeit:</b> " + state.zeit + "</div>" +
+            "<div><b>Name:</b> " + (fName ? fName.value.trim() : "") + "</div>";
+        }
+        var sendBtn = document.getElementById("tb-send-mail");
+        if (sendBtn) sendBtn.setAttribute("href", mailto);
+        var box = document.getElementById("tb-success");
+        var formCard = document.getElementById("tb-formcard");
+        if (box) box.classList.add("show");
+        if (formCard) formCard.style.display = "none";
+        if (box) box.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        var statusP = box ? box.querySelector("p") : null;
+        if (res.ok) {
           if (statusP) statusP.textContent = "Deine Terminanfrage wurde gespeichert und an uns gesendet – wir bestätigen dir den Termin per E-Mail. ✅";
           if (sendBtn) sendBtn.style.display = "none";
         } else {

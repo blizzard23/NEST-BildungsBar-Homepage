@@ -13,6 +13,22 @@ function slugify(s) {
     .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
+// Auslastung: Kapazität pro Tag + nächste Di/Do-Termine
+const KAPAZITAET = { Wuppertal: 4, Essen: 2 };
+const WTAGE = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+function naechsteTermine(n) {
+  const out = [];
+  const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + 1);
+  let guard = 0;
+  while (out.length < n && guard < 120) {
+    if (d.getDay() === 2 || d.getDay() === 4) out.push(new Date(d));
+    d.setDate(d.getDate() + 1); guard++;
+  }
+  return out;
+}
+function isoDatum(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+function kurzDatum(d) { return WTAGE[d.getDay()] + ", " + ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "."; }
+
 export default function PartnerPortal() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -242,6 +258,40 @@ export default function PartnerPortal() {
                 <div style={{ marginTop: "44px", borderTop: "2px solid var(--line)", paddingTop: "32px" }}>
                   <span className="section-label">Nur für Admins</span>
                   <h2 style={{ fontSize: "26px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 22px" }}>Admin-Bereich</h2>
+
+                  {/* Auslastung der nächsten Termine */}
+                  <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Auslastung der nächsten Termine</h3>
+                  {(() => {
+                    const termine = naechsteTermine(8);
+                    const zaehl = {};
+                    buchungen.forEach((b) => { if (b.datum) { const k = b.standort + "|" + b.datum; zaehl[k] = (zaehl[k] || 0) + 1; } });
+                    return (
+                      <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
+                        {["Wuppertal", "Essen"].map((ort) => (
+                          <div className="card" key={ort}>
+                            <span className="badge">{ort} · max. {KAPAZITAET[ort]}/Tag</span>
+                            <div style={{ marginTop: "12px" }}>
+                              {termine.map((d) => {
+                                const iso = isoDatum(d);
+                                const n = zaehl[ort + "|" + iso] || 0;
+                                const cap = KAPAZITAET[ort];
+                                const voll = n >= cap;
+                                const knapp = !voll && cap - n === 1;
+                                return (
+                                  <div key={iso} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 0", borderBottom: "1px solid var(--line)", fontSize: "14px" }}>
+                                    <span style={{ color: "var(--navy)" }}>{kurzDatum(d)}</span>
+                                    <span style={{ fontWeight: 800, color: voll ? "#c2415a" : (knapp ? "var(--gold-dark)" : "#1f9d63") }}>
+                                      {n}/{cap}{voll ? " · ausgebucht" : ""}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
 
                   {/* Terminbuchungen */}
                   <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Terminbuchungen ({buchungen.length})</h3>

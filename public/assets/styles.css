@@ -164,7 +164,7 @@ a { text-decoration: none; color: var(--gold-dark); }
 @media (max-width: 860px) {
   .hero { padding: 56px 0 100px; }
   .hero-inner { flex-direction: column; gap: 40px; }
-  .hero-visual { width: 100%; max-width: 340px; order: -1; }
+  .hero-visual { width: 100%; max-width: 340px; order: 1; }
   .hero h1, .hero p.lead { text-align: center; }
   .hero-badge { display: block; text-align: center; }
   .hero-actions { justify-content: center; }

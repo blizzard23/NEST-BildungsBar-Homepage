@@ -18,8 +18,8 @@ const html = `
 }
 
 /* HERO */
-.nest-about .about-hero { background: linear-gradient(135deg, #0c1829 0%, #162d5e 100%); padding: 110px 40px 140px; position: relative; overflow: hidden; color: #fff; }
-.nest-about .about-hero::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 70px; background: #fff; clip-path: polygon(0 100%, 100% 30%, 100% 100%); }
+.nest-about .about-hero { background: #0c1829; padding: 110px 40px 140px; position: relative; overflow: hidden; color: #fff; }
+.nest-about .about-hero::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 70px; background: #EFA500; clip-path: polygon(0 100%, 100% 35%, 100% 100%); }
 .nest-about .about-hero::before { content: ''; position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; border-radius: 50%; background: rgba(239,165,0,0.05); pointer-events: none; }
 .nest-about .about-hero-inner { max-width: 860px; margin: 0 auto; }
 .nest-about .about-hero h1 { font-size: clamp(34px, 5.5vw, 56px); font-weight: 800; line-height: 1.15; margin-bottom: 24px; color: #fff; }

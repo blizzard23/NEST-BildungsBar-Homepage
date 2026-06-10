@@ -35,7 +35,7 @@ const html = `
                 <div class="hp-card"><img src="/assets/img/berufe/anlagenmechaniker-rohrsystemtechnik.webp" alt="" loading="lazy"><span class="hp-name">Anlagenmechaniker:in</span></div>
                 <div class="hp-card"><img src="/assets/img/berufe/augenoptiker.png" alt="" loading="lazy"><span class="hp-name">Augenoptiker:in</span></div>
                 <div class="hp-card"><img src="/assets/img/berufe/automobilkaufleute.png" alt="" loading="lazy"><span class="hp-name">Automobilkaufleute</span></div>
-                <div class="hp-card"><img src="/assets/img/berufe/anaesthesietechnische-assistent.png" alt="" loading="lazy"><span class="hp-name">ATA</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/fachinformatiker-systemintegration.png" alt="" loading="lazy"><span class="hp-name">Fachinformatiker:in</span></div>
                 <div class="hp-card"><img src="/assets/img/berufe/baecker.png" alt="" loading="lazy"><span class="hp-name">Bäcker:in</span></div>
                 <div class="hp-card"><img src="/assets/img/berufe/baeckereifachverkaeufer.png" alt="" loading="lazy"><span class="hp-name">Fachverkäufer:in</span></div>
               </div>

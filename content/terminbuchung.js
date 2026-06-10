@@ -110,14 +110,28 @@ const html = `
                   <div class="tb-step-head"><span class="tb-step-n step-icon">${IC.pin}</span><h3>Wo möchtest du uns treffen?</h3></div>
                   <div class="tb-choices">
                     <button type="button" class="tb-ort" data-ort="Wuppertal" data-adr="Hochstraße 65, 42105 Wuppertal">
-                      <span class="o-check">ausgewählt ✓</span>
-                      <span class="o-city">Wuppertal</span>
-                      <span class="o-adr">Hochstraße 65 · 42105 Wuppertal</span>
+                      <div class="o-header">
+                        <span class="o-emoji">🏙️</span>
+                        <span class="o-header-label">Wuppertal</span>
+                        <span class="o-header-badge">Di &amp; Do · 17–19 Uhr</span>
+                      </div>
+                      <div class="o-body">
+                        <span class="o-city">BildungsBar Wuppertal</span>
+                        <span class="o-adr">Hochstraße 65 · 42105 Wuppertal</span>
+                        <span class="o-check">✓ Ausgewählt</span>
+                      </div>
                     </button>
                     <button type="button" class="tb-ort" data-ort="Essen" data-adr="Kopstadtplatz 12, 45127 Essen">
-                      <span class="o-check">ausgewählt ✓</span>
-                      <span class="o-city">Essen</span>
-                      <span class="o-adr">Kopstadtplatz 12 · 45127 Essen</span>
+                      <div class="o-header">
+                        <span class="o-emoji">🌆</span>
+                        <span class="o-header-label">Essen</span>
+                        <span class="o-header-badge">Di &amp; Do · 17–19 Uhr</span>
+                      </div>
+                      <div class="o-body">
+                        <span class="o-city">BildungsBar Essen</span>
+                        <span class="o-adr">Kopstadtplatz 12 · 45127 Essen</span>
+                        <span class="o-check">✓ Ausgewählt</span>
+                      </div>
                     </button>
                   </div>
                 </div>
@@ -194,8 +208,11 @@ const html = `
 
         <!-- Erfolg / Senden -->
         <div class="tb-success" id="tb-success">
-          <h3>Dein Termin ist gebucht! 🎉</h3>
-          <p>Dein Platz ist reserviert. Du bekommst gleich eine Bestätigung per E-Mail – und am Tag vorher erinnern wir dich nochmal.</p>
+          <div class="tb-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>Termin gebucht! 🎉</h3>
+          <p>Dein Platz ist reserviert. Du bekommst gleich eine Bestätigung per E-Mail – am Tag vorher erinnern wir dich nochmal.</p>
           <div class="tb-recap" id="tb-recap"></div>
           <div class="tb-actions">
             <a class="btn btn-primary" id="tb-send-mail" href="#" style="display:none">Bestätigung per E-Mail senden</a>

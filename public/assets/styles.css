@@ -900,31 +900,31 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .info-card-text { font-size: 12.5px; color: var(--text-soft); line-height: 1.65; margin: 0; }
 
 /* --- Terminbuchung Monatskalender --- */
-.tb-cal-wrap { margin-bottom: 20px; }
-.tb-cal-nav { display: flex; align-items: center; justify-content: space-between; background: var(--navy); border-radius: 12px 12px 0 0; padding: 11px 14px; }
-.tb-cal-month-label { font-size: 14px; font-weight: 800; color: #fff; }
-.tb-cal-btn { background: rgba(255,255,255,0.1); border: none; border-radius: 8px; width: 30px; height: 30px; cursor: pointer; color: #fff; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background 0.2s; font-family: var(--font); }
-.tb-cal-btn:hover { background: rgba(239,165,0,0.3); }
-.tb-cal-body { background: #fff; border: 1px solid var(--line); border-top: none; border-radius: 0 0 12px 12px; padding: 10px 10px 12px; }
-.tb-cal-wd-row { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px; }
+.tb-cal-wrap { margin-bottom: 20px; background: #fff; border: 1.5px solid var(--line); border-radius: 18px; overflow: hidden; }
+.tb-cal-nav { display: flex; align-items: center; justify-content: space-between; background: var(--navy); padding: 13px 16px; }
+.tb-cal-month-label { font-size: 15px; font-weight: 800; color: #fff; }
+.tb-cal-btn { background: rgba(255,255,255,0.12); border: none; border-radius: 10px; width: 34px; height: 34px; cursor: pointer; color: #fff; font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background 0.2s; font-family: var(--font); }
+.tb-cal-btn:hover { background: rgba(239,165,0,0.35); }
+.tb-cal-body { padding: 12px 12px 14px; }
+.tb-cal-wd-row { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 6px; }
 .tb-cal-wd { text-align: center; font-size: 11px; font-weight: 800; color: var(--text-mute); text-transform: uppercase; padding: 4px 0; letter-spacing: 0.3px; }
-.tb-cal-weeks { display: flex; flex-direction: column; gap: 3px; }
-.tb-cal-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.tb-cal-weeks { display: flex; flex-direction: column; gap: 4px; }
+.tb-cal-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .tb-cal-day {
   aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 600; border-radius: 8px; transition: background 0.15s;
+  font-size: 13px; font-weight: 700; border-radius: 10px; transition: all 0.15s;
 }
 .tb-cal-day--empty { background: none; }
-.tb-cal-day--past { color: #ccc; }
-.tb-cal-day--available { background: rgba(31,157,99,0.12); color: #1f9d63; font-weight: 800; cursor: pointer; }
-.tb-cal-day--available:hover { background: rgba(31,157,99,0.25); }
-.tb-cal-day--knapp { background: rgba(212,146,10,0.14); color: var(--gold-dark); font-weight: 800; cursor: pointer; }
-.tb-cal-day--knapp:hover { background: rgba(212,146,10,0.28); }
-.tb-cal-day--full { background: rgba(194,65,90,0.1); color: #c2415a; font-weight: 700; cursor: not-allowed; }
-.tb-cal-day--selected { background: var(--navy) !important; color: var(--gold) !important; }
-.tb-cal-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.tb-cal-day--past { color: #d0d4de; }
+.tb-cal-day--available { background: #e6f7ef; color: #1a8550; font-weight: 800; cursor: pointer; }
+.tb-cal-day--available:hover { background: #1f9d63; color: #fff; }
+.tb-cal-day--knapp { background: #fef3d0; color: #b06800; font-weight: 800; cursor: pointer; }
+.tb-cal-day--knapp:hover { background: var(--gold); color: var(--navy); }
+.tb-cal-day--full { background: #fdeaed; color: #c2415a; font-weight: 700; cursor: not-allowed; }
+.tb-cal-day--selected { background: var(--navy) !important; color: var(--gold) !important; border-radius: 10px; }
+.tb-cal-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
 .tb-cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-mute); font-weight: 600; }
 .tb-cal-legend-dot { width: 10px; height: 10px; border-radius: 4px; }
-.tb-cal-legend-dot--free { background: rgba(31,157,99,0.2); border: 1.5px solid #1f9d63; }
-.tb-cal-legend-dot--knapp { background: rgba(212,146,10,0.2); border: 1.5px solid var(--gold-dark); }
-.tb-cal-legend-dot--full { background: rgba(194,65,90,0.15); border: 1.5px solid #c2415a; }
+.tb-cal-legend-dot--free { background: #e6f7ef; border: 1.5px solid #1f9d63; }
+.tb-cal-legend-dot--knapp { background: #fef3d0; border: 1.5px solid #b06800; }
+.tb-cal-legend-dot--full { background: #fdeaed; border: 1.5px solid #c2415a; }

@@ -25,27 +25,17 @@ const html = `
             <div class="hp-screen">
               <span class="hp-badge">Berufswelt</span>
               <div class="hp-title">Aktuelle Stellen</div>
+              <div class="hp-search">Beruf oder Stelle suchen …</div>
               <div class="hp-chips">
                 <span class="hp-chip hp-chip--on">Alle</span>
                 <span class="hp-chip">Handwerk</span>
                 <span class="hp-chip">IT</span>
               </div>
-              <div style="display:flex;flex-direction:column;gap:6px;flex:1;overflow:hidden;">
-                <div class="hp-card" style="border-radius:9px;padding:7px 9px;display:block;border-left:3px solid var(--gold);">
-                  <span style="font-size:7.5px;font-weight:800;color:#1f9d63;">Neu</span>
-                  <div style="font-size:10px;font-weight:800;color:var(--navy);line-height:1.2;">Mechatroniker:in</div>
-                  <div style="font-size:8.5px;color:var(--text-soft);">Maier &amp; Söhne · Wuppertal</div>
-                </div>
-                <div class="hp-card" style="border-radius:9px;padding:7px 9px;display:block;border-left:3px solid var(--gold);">
-                  <span style="font-size:7.5px;font-weight:800;color:var(--gold-dark);">Dual</span>
-                  <div style="font-size:10px;font-weight:800;color:var(--navy);line-height:1.2;">BWL Industrie</div>
-                  <div style="font-size:8.5px;color:var(--text-soft);">Rhenag · Essen</div>
-                </div>
-                <div class="hp-card" style="border-radius:9px;padding:7px 9px;display:block;border-left:3px solid var(--gold);">
-                  <span style="font-size:7.5px;font-weight:800;color:var(--navy);">2 Plätze</span>
-                  <div style="font-size:10px;font-weight:800;color:var(--navy);line-height:1.2;">Fachinformatiker:in</div>
-                  <div style="font-size:8.5px;color:var(--text-soft);">DigiSystems · Essen</div>
-                </div>
+              <div class="hp-grid">
+                <div class="hp-card"><img src="/assets/img/berufe/mechatroniker.png" alt="" loading="lazy"><span class="hp-name">Mechatroniker:in</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/fachinformatiker-systemintegration.png" alt="" loading="lazy"><span class="hp-name">Fachinformatiker:in</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/automobilkaufleute.png" alt="" loading="lazy"><span class="hp-name">Automobilkaufleute</span></div>
+                <div class="hp-card"><img src="/assets/img/berufe/baecker.png" alt="" loading="lazy"><span class="hp-name">Bäcker:in</span></div>
               </div>
             </div>
           </a>

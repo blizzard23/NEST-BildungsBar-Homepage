@@ -21,20 +21,37 @@ const html = `
       <div class="hero-visual hero-visual--phone">
         <div class="hero-phone">
           <span class="hp-notch"></span>
-          <div class="hp-screen hp-screen--partner">
-            <div class="hp-partner-topbar">
-              <div class="hp-partner-label">Netzwerk</div>
-              <div class="hp-partner-title">Unsere Partner</div>
-              <div class="hp-partner-sub">70+ Unternehmen im Netzwerk</div>
+          <div class="hp-screen">
+            <span class="hp-badge">Netzwerk</span>
+            <div class="hp-title">70+ Partner</div>
+            <div class="hp-chips" style="flex-wrap:wrap;">
+              <span class="hp-chip hp-chip--on">Alle</span>
+              <span class="hp-chip">Handwerk</span>
+              <span class="hp-chip">IT</span>
+              <span class="hp-chip">Gesundheit</span>
             </div>
-            <div class="hp-partner-grid">
-              <div class="hp-partner-chip">Maier &amp; Söhne</div>
-              <div class="hp-partner-chip">DigiSystems</div>
-              <div class="hp-partner-chip">Rhenag</div>
-              <div class="hp-partner-chip">TechWorks</div>
-              <div class="hp-partner-chip">GreenCare</div>
-              <div class="hp-partner-chip">Stadtwerke</div>
-              <div class="hp-partner-chip hp-partner-chip--wide">+ 64 weitere Partner</div>
+            <div class="hp-grid" style="flex:1;overflow:hidden;">
+              <div class="hp-card" style="display:block;padding:8px 8px;border-radius:9px;">
+                <span class="hp-name" style="font-size:9.5px;">Maier &amp; Söhne</span>
+              </div>
+              <div class="hp-card" style="display:block;padding:8px 8px;border-radius:9px;">
+                <span class="hp-name" style="font-size:9.5px;">DigiSystems</span>
+              </div>
+              <div class="hp-card" style="display:block;padding:8px 8px;border-radius:9px;">
+                <span class="hp-name" style="font-size:9.5px;">Rhenag</span>
+              </div>
+              <div class="hp-card" style="display:block;padding:8px 8px;border-radius:9px;">
+                <span class="hp-name" style="font-size:9.5px;">TechWorks</span>
+              </div>
+              <div class="hp-card" style="display:block;padding:8px 8px;border-radius:9px;">
+                <span class="hp-name" style="font-size:9.5px;">GreenCare</span>
+              </div>
+              <div class="hp-card" style="display:block;padding:8px 8px;border-radius:9px;">
+                <span class="hp-name" style="font-size:9.5px;">Stadtwerke</span>
+              </div>
+            </div>
+            <div style="background:var(--gold-soft);border-radius:8px;padding:5px 8px;text-align:center;">
+              <span style="font-size:8.5px;font-weight:700;color:var(--gold-dark);">+ 64 weitere Partner</span>
             </div>
           </div>
         </div>

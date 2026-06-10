@@ -19,40 +19,32 @@ const html = `
           <a class="btn btn-ghost" href="#nestplay">NESTplay entdecken</a>
         </div>
       </div>
-      <div class="hero-visual">
-        <!-- Desktop Mockup NESTplay -->
-        <div class="wf-laptop-outer" style="transform:perspective(1200px) rotateY(-8deg);">
-          <div class="wf-laptop" style="transform:none;">
-            <div class="wf-lap-screen">
-              <div class="br-bar">
-                <div class="br-dots"><div class="br-dot br-dot-r"></div><div class="br-dot br-dot-y"></div><div class="br-dot br-dot-g"></div></div>
-                <div class="br-url">nestplay.de</div>
-              </div>
-              <div class="lap-app">
-                <div class="lap-header" style="background:var(--navy);">
-                  <div class="lap-logo" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:12px;">N</div>
-                  <div><div class="lap-co-name" style="color:#fff;">NESTplay.</div><div class="lap-co-jobs" style="color:rgba(255,255,255,0.5);">Berufsorientierung gamifiziert</div></div>
-                  <div class="lap-tabs">
-                    <div class="lap-tab--active lap-tab" style="color:#EFA500;border-color:#EFA500;">Live-Quiz</div>
-                    <div class="lap-tab" style="color:rgba(255,255,255,0.35);">Ergebnisse</div>
-                  </div>
-                </div>
-                <div class="lap-body">
-                  <div class="la-label" style="color:#EFA500;">Aktive Runde – Klasse 9b</div>
-                  <div class="la-job" style="background:#f0f4fa;">
-                    <div class="ji" style="background:var(--navy);color:#EFA500;font-weight:900;font-size:11px;">?</div>
-                    <div class="jt"><strong style="font-size:10px;color:var(--navy);">Wie lange dauert eine Ausbildung zum Mechatroniker?</strong><span style="font-size:8px;color:#8a9bbf;">Frage 3 von 5</span></div>
-                  </div>
-                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px;">
-                    <div style="background:#e63946;border-radius:6px;padding:6px 8px;color:#fff;font-size:9px;font-weight:800;text-align:center;">2 Jahre</div>
-                    <div style="background:#EFA500;border-radius:6px;padding:6px 8px;color:var(--navy);font-size:9px;font-weight:800;text-align:center;">3,5 Jahre ✓</div>
-                  </div>
-                </div>
-              </div>
+      <div class="hero-visual hero-visual--phone">
+        <a class="hero-phone" href="#nestplay" aria-label="NESTplay – Gamifizierte Berufsorientierung">
+          <span class="hp-notch"></span>
+          <div class="hp-screen">
+            <span class="hp-badge">NESTplay</span>
+            <div class="hp-title">Live-Quiz · Klasse 9b</div>
+            <div class="hp-chips">
+              <span class="hp-chip hp-chip--on">Live-Quiz</span>
+              <span class="hp-chip">Ergebnisse</span>
             </div>
-            <div class="wf-lap-base"></div><div class="wf-lap-foot"></div>
+            <div style="background:#fff;border-radius:9px;padding:8px;margin-top:2px;">
+              <div style="font-size:8px;font-weight:700;color:var(--gold-dark);letter-spacing:1px;margin-bottom:3px;">FRAGE 3 / 5</div>
+              <div style="font-size:10px;font-weight:700;color:var(--navy);line-height:1.4;">Wie lange dauert die Ausbildung zum Mechatroniker?</div>
+            </div>
+            <div class="hp-grid" style="gap:5px;margin-top:4px;">
+              <div style="background:rgba(194,65,90,0.15);color:#c2415a;border-radius:8px;padding:7px 6px;font-size:9px;font-weight:800;text-align:center;">2 Jahre</div>
+              <div style="background:var(--navy);color:var(--gold);border-radius:8px;padding:7px 6px;font-size:9px;font-weight:800;text-align:center;">3,5 Jahre ✓</div>
+              <div style="background:#fff;border:1px solid var(--line);color:var(--text-mute);border-radius:8px;padding:7px 6px;font-size:9px;font-weight:700;text-align:center;">4 Jahre</div>
+              <div style="background:#fff;border:1px solid var(--line);color:var(--text-mute);border-radius:8px;padding:7px 6px;font-size:9px;font-weight:700;text-align:center;">5 Jahre</div>
+            </div>
+            <div style="background:var(--navy);border-radius:8px;padding:6px 10px;display:flex;justify-content:space-between;align-items:center;margin-top:auto;">
+              <span style="font-size:8.5px;color:rgba(255,255,255,0.6);">Team Fuchs</span>
+              <span style="font-size:12px;font-weight:900;color:var(--gold);">40 Pkt.</span>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
     </div></div>
   </section>

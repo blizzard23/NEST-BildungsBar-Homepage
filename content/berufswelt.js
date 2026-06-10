@@ -22,30 +22,29 @@ const html = `
         <div class="hero-visual hero-visual--phone">
           <a class="hero-phone" href="#felder" aria-label="Berufswelt – Stellenangebote entdecken">
             <span class="hp-notch"></span>
-            <div class="hp-screen hp-screen--jobs">
-              <div class="hp-jobs-topbar">
-                <div class="hp-jobs-label">Jobbörse</div>
-                <div class="hp-jobs-title">Aktuelle Stellen</div>
-                <div class="hp-jobs-sub">Wuppertal &amp; Essen</div>
+            <div class="hp-screen">
+              <span class="hp-badge">Berufswelt</span>
+              <div class="hp-title">Aktuelle Stellen</div>
+              <div class="hp-chips">
+                <span class="hp-chip hp-chip--on">Alle</span>
+                <span class="hp-chip">Handwerk</span>
+                <span class="hp-chip">IT</span>
               </div>
-              <div class="hp-job-list">
-                <div class="hp-job-card">
-                  <div class="hp-job-badge hp-job-badge--neu">Neu</div>
-                  <div class="hp-job-title">Mechatroniker:in</div>
-                  <div class="hp-job-firm">Maier &amp; Söhne · Wuppertal</div>
-                  <div class="hp-job-type">Ausbildung · ab 09/2026</div>
+              <div style="display:flex;flex-direction:column;gap:6px;flex:1;overflow:hidden;">
+                <div class="hp-card" style="border-radius:9px;padding:7px 9px;display:block;border-left:3px solid var(--gold);">
+                  <span style="font-size:7.5px;font-weight:800;color:#1f9d63;">Neu</span>
+                  <div style="font-size:10px;font-weight:800;color:var(--navy);line-height:1.2;">Mechatroniker:in</div>
+                  <div style="font-size:8.5px;color:var(--text-soft);">Maier &amp; Söhne · Wuppertal</div>
                 </div>
-                <div class="hp-job-card">
-                  <div class="hp-job-badge hp-job-badge--dual">Dual</div>
-                  <div class="hp-job-title">BWL Industrie</div>
-                  <div class="hp-job-firm">Rhenag · Essen</div>
-                  <div class="hp-job-type">Duales Studium · B.A.</div>
+                <div class="hp-card" style="border-radius:9px;padding:7px 9px;display:block;border-left:3px solid var(--gold);">
+                  <span style="font-size:7.5px;font-weight:800;color:var(--gold-dark);">Dual</span>
+                  <div style="font-size:10px;font-weight:800;color:var(--navy);line-height:1.2;">BWL Industrie</div>
+                  <div style="font-size:8.5px;color:var(--text-soft);">Rhenag · Essen</div>
                 </div>
-                <div class="hp-job-card">
-                  <div class="hp-job-badge hp-job-badge--frei">2 Plätze</div>
-                  <div class="hp-job-title">Fachinformatiker:in</div>
-                  <div class="hp-job-firm">DigiSystems · Essen</div>
-                  <div class="hp-job-type">Ausbildung · ab 08/2026</div>
+                <div class="hp-card" style="border-radius:9px;padding:7px 9px;display:block;border-left:3px solid var(--gold);">
+                  <span style="font-size:7.5px;font-weight:800;color:var(--navy);">2 Plätze</span>
+                  <div style="font-size:10px;font-weight:800;color:var(--navy);line-height:1.2;">Fachinformatiker:in</div>
+                  <div style="font-size:8.5px;color:var(--text-soft);">DigiSystems · Essen</div>
                 </div>
               </div>
             </div>

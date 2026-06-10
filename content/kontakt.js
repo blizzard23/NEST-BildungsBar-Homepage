@@ -14,25 +14,16 @@ const html = `
       <div class="hero-visual hero-visual--phone">
         <a class="hero-phone" href="https://wa.me/4915753934038" aria-label="WhatsApp – Terminanfrage senden">
           <span class="hp-notch"></span>
-          <div class="hp-screen hp-screen--wa">
-            <div class="hp-wa-header">
-              <div class="hp-wa-avatar">N</div>
-              <div class="hp-wa-info">
-                <div class="hp-wa-name">NEST BildungsBar</div>
-                <div class="hp-wa-status">online</div>
-              </div>
+          <div class="hp-screen">
+            <span class="hp-badge">Kontakt</span>
+            <div class="hp-title">Schreib uns direkt</div>
+            <div class="hp-chat-wrap">
+              <div class="hp-chat-in">Hallo! Ich möchte einen Termin buchen 👋<div class="hp-chat-time">17:02</div></div>
+              <div class="hp-chat-out">Super! Wuppertal oder Essen?<div class="hp-chat-time">17:03</div></div>
+              <div class="hp-chat-in">Wuppertal bitte!<div class="hp-chat-time">17:04</div></div>
+              <div class="hp-chat-out">Do, 19. Juni · 15 Uhr frei ✅<div class="hp-chat-time">17:04</div></div>
             </div>
-            <div class="hp-wa-body">
-              <div class="hp-wa-msg hp-wa-msg-in">Hallo! Ich würde gerne einen Termin vereinbaren 😊<div class="hp-wa-msg-time">17:02</div></div>
-              <div class="hp-wa-msg hp-wa-msg-out">Hallo! Super, wir freuen uns. Welcher Standort passt dir – Wuppertal oder Essen?<div class="hp-wa-msg-time">17:03</div></div>
-              <div class="hp-wa-msg hp-wa-msg-in">Wuppertal wäre perfekt!<div class="hp-wa-msg-time">17:04</div></div>
-              <div class="hp-wa-msg hp-wa-msg-out">Donnerstag, 17 Uhr ist noch frei. Soll ich reservieren?<div class="hp-wa-msg-time">17:04</div></div>
-              <div class="hp-wa-msg hp-wa-msg-in">Ja bitte! 🙌<div class="hp-wa-msg-time">17:05</div></div>
-              <div class="hp-wa-msg hp-wa-msg-out">Termin reserviert ✅ Bis Donnerstag!<div class="hp-wa-msg-time">17:05</div></div>
-            </div>
-            <div class="hp-wa-input-row">
-              <div class="hp-wa-input-box">Schreib eine Nachricht …</div>
-            </div>
+            <div class="hp-search" style="color:var(--text-mute);">Nachricht schreiben …</div>
           </div>
         </a>
       </div>

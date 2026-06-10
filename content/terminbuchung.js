@@ -22,21 +22,19 @@ const html = `
       <div class="hero-visual hero-visual--phone">
         <div class="hero-phone">
           <span class="hp-notch"></span>
-          <div class="hp-screen hp-screen--cal">
-            <div class="hp-cal-topbar">
-              <div class="hp-cal-app-name">NEST Termine</div>
+          <div class="hp-screen">
+            <span class="hp-badge">Termine</span>
+            <div class="hp-title">Wähle deinen Termin</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin:2px 0 4px;">
+              <span style="font-size:9px;font-weight:800;color:var(--navy);">Juni 2026</span>
+              <div style="display:flex;gap:4px;font-size:9px;color:var(--text-mute);">&#8249; &#8250;</div>
             </div>
-            <div class="hp-cal-monthrow">
-              <span style="font-size:9px;color:rgba(255,255,255,0.5);">&#8249;</span>
-              <span class="hp-cal-mname">Juni 2026</span>
-              <span style="font-size:9px;color:rgba(255,255,255,0.5);">&#8250;</span>
-            </div>
-            <div class="hp-cal-wd-row">
+            <div class="hp-cal-wd-row" style="background:none;padding:2px 0;margin:0 -2px;">
               <span class="hp-cal-wd">Mo</span><span class="hp-cal-wd">Di</span><span class="hp-cal-wd">Mi</span>
               <span class="hp-cal-wd">Do</span><span class="hp-cal-wd">Fr</span>
               <span class="hp-cal-wd" style="color:#c2415a;">Sa</span><span class="hp-cal-wd" style="color:#c2415a;">So</span>
             </div>
-            <div class="hp-cal-body">
+            <div style="padding:0;flex:1;">
               <div class="hp-cal-week">
                 <span class="hp-cal-d hp-cal-d--empty"></span>
                 <span class="hp-cal-d hp-cal-d--open">3</span>
@@ -47,27 +45,27 @@ const html = `
                 <span class="hp-cal-d hp-cal-d--past">8</span>
               </div>
               <div class="hp-cal-week">
-                <span class="hp-cal-d">9</span>
+                <span class="hp-cal-d hp-cal-d--past">9</span>
                 <span class="hp-cal-d hp-cal-d--full">10</span>
-                <span class="hp-cal-d">11</span>
+                <span class="hp-cal-d hp-cal-d--past">11</span>
                 <span class="hp-cal-d hp-cal-d--knapp">12</span>
-                <span class="hp-cal-d">13</span>
+                <span class="hp-cal-d hp-cal-d--past">13</span>
                 <span class="hp-cal-d hp-cal-d--past">14</span>
                 <span class="hp-cal-d hp-cal-d--past">15</span>
               </div>
               <div class="hp-cal-week">
-                <span class="hp-cal-d">16</span>
+                <span class="hp-cal-d hp-cal-d--past">16</span>
                 <span class="hp-cal-d hp-cal-d--open">17</span>
-                <span class="hp-cal-d">18</span>
-                <span class="hp-cal-d hp-cal-d--open">19</span>
-                <span class="hp-cal-d">20</span>
+                <span class="hp-cal-d hp-cal-d--past">18</span>
+                <span class="hp-cal-d hp-cal-d--selected">19</span>
+                <span class="hp-cal-d hp-cal-d--past">20</span>
                 <span class="hp-cal-d hp-cal-d--past">21</span>
                 <span class="hp-cal-d hp-cal-d--past">22</span>
               </div>
             </div>
-            <div class="hp-cal-legend">
-              <span class="hp-cal-legend-item"><span class="hp-cal-legend-dot" style="background:rgba(31,157,99,0.2);border:1.5px solid #1f9d63;"></span>Frei</span>
-              <span class="hp-cal-legend-item"><span class="hp-cal-legend-dot" style="background:rgba(194,65,90,0.15);border:1.5px solid #c2415a;"></span>Voll</span>
+            <div style="background:var(--gold-soft);border-radius:8px;padding:7px 10px;display:flex;align-items:center;gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span style="font-size:9px;font-weight:700;color:var(--gold-dark);">Do, 19. Juni · 15:00 Uhr</span>
             </div>
           </div>
         </div>

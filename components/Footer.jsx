@@ -54,8 +54,8 @@ export default function Footer() {
         <p>© {new Date().getFullYear()} NEST GmbH · Alle Rechte vorbehalten.</p>
         <span className="nest-footer__badge">Made in Wuppertal</span>
         <div className="nest-footer__bottom-links">
-          <a href="#">Datenschutz</a>
-          <a href="#">Impressum</a>
+          <a href="/datenschutz">Datenschutz</a>
+          <a href="/impressum">Impressum</a>
         </div>
       </div>
     </footer>

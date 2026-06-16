@@ -85,8 +85,9 @@ const html = `
           <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Wuppertal</a>
         </div>
         <div class="loc-card reveal">
-          <div style="border-radius:12px;overflow:hidden;margin-bottom:14px;aspect-ratio:16/9;background:linear-gradient(135deg,var(--navy-2),var(--navy));display:flex;align-items:center;justify-content:center;">
-            <span style="font-size:14px;font-weight:800;color:rgba(255,255,255,0.25);letter-spacing:3px;">ESSEN</span>
+          <div style="border-radius:12px;overflow:hidden;margin-bottom:14px;aspect-ratio:16/9;background:linear-gradient(135deg,var(--navy-2),var(--navy));display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="rgba(239,165,0,0.7)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg>
+            <span style="font-size:14px;font-weight:800;color:rgba(255,255,255,0.45);letter-spacing:3px;">ESSEN</span>
           </div>
           <span class="tag">Standort Essen</span>
           <h3>Essen</h3>

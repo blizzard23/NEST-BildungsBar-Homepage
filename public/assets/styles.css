@@ -133,6 +133,8 @@ a { text-decoration: none; color: var(--gold-dark); }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; height: 74px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.25rem; color: #fff; }
 .brand:hover { color: #fff; }
+.brand-logo { height: 46px; width: auto; display: block; }
+@media (max-width: 640px) { .brand-logo { height: 38px; } }
 .brand .logo-mark {
   width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px;
   background: var(--navy-2); color: var(--gold); font-weight: 900; font-size: 1.2rem;
@@ -399,6 +401,26 @@ section { padding: 90px 0; }
   box-shadow: 0 2px 10px rgba(15,33,69,0.05);
 }
 
+/* ---------- Referenzen: Partner-Logowand ---------- */
+.logo-wall {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+@media (max-width: 520px) { .logo-wall { grid-template-columns: repeat(2, 1fr); } }
+.logo-wall-item {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 84px; padding: 16px 18px; background: #fff;
+  border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(15,33,69,0.05);
+  font-family: var(--font-alt); font-weight: 800; font-size: 15px; line-height: 1.2;
+  color: var(--navy); letter-spacing: .2px; text-decoration: none;
+  transition: transform .18s, box-shadow .2s, border-color .2s, color .2s;
+}
+.logo-wall-item:hover {
+  transform: translateY(-3px); color: var(--gold-dark);
+  border-color: rgba(239,165,0,0.45); box-shadow: 0 12px 26px rgba(15,33,69,0.12);
+}
+
 /* ---------- FAQ (messe accordion) ---------- */
 .faq-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 36px; flex-wrap: wrap; }
 .faq-tab { padding: 10px 22px; background: #fff; border: 1.5px solid var(--line); border-radius: 9999px; cursor: pointer; font-weight: 700; font-size: 13px; color: #888; transition: all .2s; font-family: var(--font); }
@@ -600,13 +622,17 @@ section { padding: 90px 0; }
 .ort-chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
 .ort-chip.active .ic-svg { color: var(--gold); }
 
-.stellen-strip {
-  display: flex; gap: 16px; overflow-x: auto; padding: 4px 4px 16px;
-  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+.stellen-live { margin-bottom: 10px; }
+/* Scroll-Container: standardmäßig horizontal scrollbar (kein Auto-Lauf) */
+.stellen-track {
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; padding-bottom: 2px;
 }
-.stellen-strip::-webkit-scrollbar { height: 8px; }
-.stellen-strip::-webkit-scrollbar-thumb { background: #d6deec; border-radius: 4px; }
-.stellen-strip::-webkit-scrollbar-track { background: transparent; }
+.stellen-track::-webkit-scrollbar { height: 8px; }
+.stellen-track::-webkit-scrollbar-thumb { background: #d6deec; border-radius: 4px; }
+.stellen-track::-webkit-scrollbar-track { background: transparent; }
+.stellen-strip {
+  display: flex; gap: 16px; padding: 4px 4px 16px; width: max-content;
+}
 .stellen-card {
   flex: 0 0 268px; scroll-snap-align: start;
   background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px;
@@ -637,11 +663,16 @@ section { padding: 90px 0; }
 /* ---------- Beruf-Detailseite ---------- */
 .beruf-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: start; }
 @media (max-width: 860px) { .beruf-layout { grid-template-columns: 1fr; } }
-.beruf-hero-img { height: 260px; border-radius: 16px; margin-bottom: 28px; display: grid; place-items: center; overflow: hidden; background: var(--navy); box-shadow: 0 16px 50px rgba(15,33,69,0.18); }
+/* Detailbild im 1:1-Format (quadratisch) */
+.beruf-hero-img { aspect-ratio: 1 / 1; width: 100%; max-width: 420px; border-radius: 16px; margin-bottom: 28px; display: grid; place-items: center; overflow: hidden; background: var(--navy); box-shadow: 0 16px 50px rgba(15,33,69,0.18); }
 .beruf-hero-img img { width: 100%; height: 100%; object-fit: cover; }
 .beruf-hero-img .bild-ic { color: #fff; opacity: .95; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.25)); }
 .detail-merk.on .ic-svg { fill: #e84055; color: #e84055; }
-@media (max-width: 860px) { .beruf-hero-img { height: 200px; } }
+/* „Merken" im Hero stärker hervorheben */
+.detail-merk--hero { font-size: 1.02rem; padding: 14px 30px; box-shadow: 0 10px 26px rgba(239,165,0,0.32); }
+.detail-merk--hero.on { background: #e84055; border-color: #e84055; color: #fff; box-shadow: 0 10px 26px rgba(232,64,85,0.32); }
+.detail-merk--hero.on .ic-svg { fill: #fff; color: #fff; }
+@media (max-width: 860px) { .beruf-hero-img { max-width: 340px; } }
 .partner-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 .partner-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--navy); background: var(--bg-light); border: 1px solid var(--line); border-radius: 9999px; padding: 7px 14px; }
 .partner-chip.is-link { cursor: pointer; transition: border-color .2s, color .2s, background .2s; }
@@ -841,14 +872,17 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .loc-img-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .loc-img { border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1/1; background: var(--navy); }
 .loc-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.loc-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--navy-2), var(--navy)); }
-.loc-img-city { font-size: 18px; font-weight: 900; color: rgba(255,255,255,0.2); letter-spacing: 2px; }
+.loc-img-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--navy-2), var(--navy)); }
+.loc-img-placeholder svg { width: 46px; height: 46px; color: rgba(239,165,0,0.65); }
+.loc-img-city { font-size: 18px; font-weight: 900; color: rgba(255,255,255,0.45); letter-spacing: 2px; text-transform: uppercase; }
 .loc-label {
   position: absolute; bottom: 0; left: 0; right: 0;
-  background: linear-gradient(to top, rgba(15,33,69,0.88), transparent);
-  color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
-  text-transform: uppercase; padding: 18px 10px 8px; text-align: center;
+  background: linear-gradient(to top, rgba(15,33,69,0.92), rgba(15,33,69,0.05) 70%, transparent);
+  color: #fff; padding: 22px 12px 10px; text-align: center;
+  display: flex; flex-direction: column; gap: 2px;
 }
+.loc-label b { font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+.loc-label small { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.78); letter-spacing: .3px; }
 
 /* --- WhatsApp Chat Phone Screen --- */
 .hp-screen--wa { padding: 0 !important; gap: 0 !important; display: flex !important; flex-direction: column !important; overflow: hidden; }
@@ -911,19 +945,23 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .hp-partner-chip { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 8px 6px; text-align: center; font-size: 8.5px; font-weight: 700; color: var(--navy); display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(15,33,69,0.06); }
 .hp-partner-chip--wide { grid-column: span 2; font-size: 9px; }
 
-/* --- Job Carousel Auto-Scroll --- */
-.stellen-strip {
-  animation: stellenScroll 30s linear infinite;
-}
-.stellen-strip:hover { animation-play-state: paused; }
-@keyframes stellenScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.stellen-strip--wrap {
+/* --- Job-Karussell: läuft nur „im Kreis", wenn der Bildbereich überschritten wird
+       (Klasse is-marquee wird per JS gesetzt, sobald mehrere Stellen überlaufen) --- */
+.stellen-track.is-marquee {
   overflow: hidden;
   mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+.stellen-strip.is-marquee {
+  animation: stellenScroll 30s linear infinite;
+}
+.stellen-strip.is-marquee:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .stellen-strip.is-marquee { animation: none; }
+}
+@keyframes stellenScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* --- Merkliste teilen Button --- */
@@ -1032,3 +1070,64 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .tb-cal-legend-dot--free { background: #e6f7ef; border: 1.5px solid #1f9d63; }
 .tb-cal-legend-dot--knapp { background: #fef3d0; border: 1.5px solid #b06800; }
 .tb-cal-legend-dot--full { background: #fdeaed; border: 1.5px solid #c2415a; }
+
+/* ===== Partner-Portal: Dashboard, Ampelsystem & Messetermine ===== */
+.dash-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px;
+}
+.dash-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px;
+  box-shadow: 0 2px 12px rgba(15,33,69,0.06); display: flex; flex-direction: column; gap: 4px;
+}
+.dash-ic {
+  width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center;
+  margin-bottom: 8px; color: #fff; background: var(--navy);
+}
+.dash-ic--play { background: linear-gradient(135deg, #1a8550, #1f9d63); }
+.dash-ic--job { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); }
+.dash-ic--time { background: linear-gradient(135deg, var(--navy-2), var(--navy)); }
+.dash-num { font-family: var(--font-alt); font-size: 2rem; font-weight: 900; color: var(--navy); line-height: 1.1; }
+.dash-lbl { font-size: 13px; font-weight: 600; color: var(--text-soft); }
+.dash-card--ampel.ampel-gruen { border-color: #a8dfc0; }
+.dash-card--ampel.ampel-gelb { border-color: #f5d98a; }
+.dash-card--ampel.ampel-rot { border-color: #f5b0bc; }
+.dash-card--ampel.ampel-gruen .dash-num { color: #1a8550; }
+.dash-card--ampel.ampel-gelb .dash-num { color: #b06800; }
+.dash-card--ampel.ampel-rot .dash-num { color: #c2415a; }
+.ampel-legend { display: flex; flex-direction: column; gap: 7px; font-size: 12.5px; font-weight: 600; color: var(--text-soft); }
+.ampel-legend span { display: flex; align-items: center; gap: 8px; }
+.ampel-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; background: #c9ced8; display: inline-block; }
+.ampel-gruen .ampel-dot, .ampel-dot.ampel-gruen { background: #1f9d63; }
+.ampel-gelb .ampel-dot, .ampel-dot.ampel-gelb { background: #efa500; }
+.ampel-rot .ampel-dot, .ampel-dot.ampel-rot { background: #c2415a; }
+.ampel-badge {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  font-size: 11.5px; font-weight: 800; padding: 4px 10px; border-radius: 9999px;
+  background: var(--bg-light); color: var(--text-soft);
+}
+.ampel-badge.ampel-gruen { background: rgba(31,157,99,0.12); color: #1a8550; }
+.ampel-badge.ampel-gelb { background: rgba(239,165,0,0.14); color: #b06800; }
+.ampel-badge.ampel-rot { background: rgba(194,65,90,0.12); color: #c2415a; }
+
+.messe-termine { display: flex; flex-direction: column; gap: 14px; }
+.messe-termin {
+  display: flex; align-items: center; gap: 18px;
+  background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 22px;
+  box-shadow: 0 2px 12px rgba(15,33,69,0.06);
+}
+.messe-termin-date {
+  flex-shrink: 0; width: 62px; height: 62px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--navy-2), var(--navy)); color: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.messe-termin-date .mt-day { font-family: var(--font-alt); font-size: 22px; font-weight: 900; line-height: 1; color: var(--gold); }
+.messe-termin-date .mt-mon { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
+.messe-termin-body { flex: 1; }
+.messe-termin-body h4 { margin: 0 0 4px; font-size: 16px; font-weight: 800; color: var(--navy); }
+.messe-termin-meta { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-soft); }
+.messe-termin-info { margin: 4px 0 0; font-size: 13px; color: var(--text-mute); }
+.messe-termin .btn { flex-shrink: 0; }
+@media (max-width: 600px) {
+  .messe-termin { flex-wrap: wrap; gap: 12px; }
+  .messe-termin .btn { width: 100%; justify-content: center; }
+}

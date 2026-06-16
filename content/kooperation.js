@@ -212,29 +212,34 @@ const html = `
           <ul class="list-check">
             <li>Workshops &amp; OpenHouse</li>
             <li>Stellenseite &amp; Social Media</li>
-            <li>Netzwerktreffen</li>
+            <li>NESTplay in Schulen</li>
+            <li>Ausbildungsdialog &amp; Netzwerktreffen</li>
+            <li>On- &amp; Offboarding-Support</li>
           </ul>
           <a class="btn btn-outline mt-2" href="/kontakt#termin">Anfragen</a>
         </div>
-        <div class="price-card feature reveal">
-          <span class="ribbon">Beliebt</span>
+        <div class="price-card reveal">
           <div class="tier">Mittlere Kooperation</div>
           <div class="amount">139,90 €<span> / Monat</span></div>
           <div class="who">bis 10 Auszubildende</div>
           <ul class="list-check">
-            <li>Alle Leistungen der Kleinsten</li>
+            <li>Workshops &amp; OpenHouse</li>
+            <li>Stellenseite &amp; Social Media</li>
             <li>NESTplay in Schulen</li>
-            <li>Ausbildungsdialog &amp; Sprechzeiten</li>
+            <li>Ausbildungsdialog &amp; Netzwerktreffen</li>
+            <li>On- &amp; Offboarding-Support</li>
           </ul>
-          <a class="btn btn-primary mt-2" href="/kontakt#termin">Anfragen</a>
+          <a class="btn btn-outline mt-2" href="/kontakt#termin">Anfragen</a>
         </div>
         <div class="price-card reveal">
           <div class="tier">Große Kooperation</div>
           <div class="amount">199,90 €<span> / Monat</span></div>
           <div class="who">ab 11 Auszubildende</div>
           <ul class="list-check">
-            <li>Alle Leistungen der Mittleren</li>
-            <li>Priorisierte Vernetzung</li>
+            <li>Workshops &amp; OpenHouse</li>
+            <li>Stellenseite &amp; Social Media</li>
+            <li>NESTplay in Schulen</li>
+            <li>Ausbildungsdialog &amp; Netzwerktreffen</li>
             <li>On- &amp; Offboarding-Support</li>
           </ul>
           <a class="btn btn-outline mt-2" href="/kontakt#termin">Anfragen</a>

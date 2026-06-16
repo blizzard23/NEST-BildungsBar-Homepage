@@ -65,12 +65,33 @@ const html = `
       <div class="section-head centered reveal">
         <span class="section-label">Vertrauensvolle Zusammenarbeit</span>
         <h2>Über 70 Partner im Netzwerk</h2>
+        <p>Ein Auszug aus den Unternehmen, Einrichtungen und Institutionen, mit denen wir zusammenarbeiten – klick für die jeweilige Karriereseite.</p>
       </div>
-      <div class="logo-strip reveal">
-        <div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div>
-        <div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div><div class="logo-chip">Partner-Logo</div>
+      <div class="logo-wall reveal">
+        <a class="logo-wall-item" href="https://career-vorwerkgroups.com/" target="_blank" rel="noopener">Vorwerk</a>
+        <a class="logo-wall-item" href="https://www.die-lehre-deines-lebens.de/" target="_blank" rel="noopener">KNIPEX</a>
+        <a class="logo-wall-item" href="https://stahlwille.com/de_de/karriere/ausbildung/6c637dad" target="_blank" rel="noopener">STAHLWILLE</a>
+        <a class="logo-wall-item" href="https://www.schmersal.com/karriere/ausbildung" target="_blank" rel="noopener">Schmersal</a>
+        <a class="logo-wall-item" href="https://jobs.vaillant-group.com/content/schueler/?locale=de_DE" target="_blank" rel="noopener">Vaillant</a>
+        <a class="logo-wall-item" href="https://jobs.coroplast.de/" target="_blank" rel="noopener">Coroplast</a>
+        <a class="logo-wall-item" href="https://karriere.barmenia.blog/innendienst/ausbildung/" target="_blank" rel="noopener">Barmenia</a>
+        <a class="logo-wall-item" href="https://karriere.ede.de/Ausbildung" target="_blank" rel="noopener">E/D/E</a>
+        <a class="logo-wall-item" href="https://www.wsw-online.de/ueber-uns/karriere/ausbildung/ausbildungsangebote/" target="_blank" rel="noopener">Wuppertaler Stadtwerke</a>
+        <a class="logo-wall-item" href="https://sparkasse.mein-check-in.de/sparkasse-wuppertal" target="_blank" rel="noopener">Stadtsparkasse Wuppertal</a>
+        <a class="logo-wall-item" href="https://www.wuppertal.de/microsite/wuppertalent/ausbildungsberufe/" target="_blank" rel="noopener">Stadt Wuppertal</a>
+        <a class="logo-wall-item" href="https://karriere.essen.de/" target="_blank" rel="noopener">Stadt Essen</a>
+        <a class="logo-wall-item" href="https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/" target="_blank" rel="noopener">Helios Kliniken</a>
+        <a class="logo-wall-item" href="https://www.gepa.de/karriere/ausbildung" target="_blank" rel="noopener">GEPA</a>
+        <a class="logo-wall-item" href="https://www.wut.de/jobs/" target="_blank" rel="noopener">Wiesemann &amp; Theis</a>
+        <a class="logo-wall-item" href="https://www.wkw.de/karriere/ausbildung-1/unsere-ausbildungsberufe" target="_blank" rel="noopener">WKW Group</a>
+        <a class="logo-wall-item" href="https://www.minimax.com/de/de/karriere/ausbildung-bei-minimax/" target="_blank" rel="noopener">Minimax</a>
+        <a class="logo-wall-item" href="https://www.wupperverband.de/ueber-uns/personal/ausbildung" target="_blank" rel="noopener">Wupperverband</a>
+        <a class="logo-wall-item" href="https://www.bergische-volksbank.de/karriere/ausbildung_duales_studium.html" target="_blank" rel="noopener">Volksbank im Bergischen Land</a>
+        <a class="logo-wall-item" href="https://rundum-akzenta.de/karriere/ausbildung/" target="_blank" rel="noopener">akzenta</a>
+        <a class="logo-wall-item" href="https://www.radprax.de/karriere/ausbildung-bei-radprax/" target="_blank" rel="noopener">radprax</a>
+        <a class="logo-wall-item" href="https://karriere.wuppertal.de/jobs" target="_blank" rel="noopener">Jobcenter Wuppertal</a>
       </div>
-      <p class="text-center mt-2"><span class="badge-pill">Platzhalter – echte Partnerlogos einfügen</span></p>
+      <p class="text-center mt-2" style="color:var(--text-mute);font-size:13px;">… und über 50 weitere Partner aus Wuppertal, Essen und der Region.</p>
     </div>
   </section>
 

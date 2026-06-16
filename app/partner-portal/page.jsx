@@ -29,6 +29,35 @@ function naechsteTermine(n) {
 function isoDatum(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
 function kurzDatum(d) { return WTAGE[d.getDay()] + ", " + ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "."; }
 
+// Stellen sind 30 Tage online – Resttage + Ampelstatus für das Dashboard
+const STELLEN_TAGE = 30;
+function tageRestStelle(aktiviertAm) {
+  if (!aktiviertAm) return null;
+  const start = new Date(aktiviertAm + "T00:00:00");
+  if (isNaN(start)) return null;
+  const heute = new Date(); heute.setHours(0, 0, 0, 0);
+  return Math.ceil((new Date(start.getTime() + STELLEN_TAGE * 86400000) - heute) / 86400000);
+}
+function ampelStatus(rest) {
+  if (rest == null || rest < 0) return { cls: "ampel-rot", text: "abgelaufen" };
+  if (rest <= 3) return { cls: "ampel-rot", text: "läuft bald ab" };
+  if (rest <= 10) return { cls: "ampel-gelb", text: "endet in Kürze" };
+  return { cls: "ampel-gruen", text: "online" };
+}
+function langDatum(iso) {
+  const d = new Date(iso + "T00:00:00");
+  if (isNaN(d)) return iso;
+  const MON = ["Jan.", "Feb.", "März", "Apr.", "Mai", "Juni", "Juli", "Aug.", "Sept.", "Okt.", "Nov.", "Dez."];
+  return WTAGE[d.getDay()] + ", " + d.getDate() + ". " + MON[d.getMonth()] + " " + d.getFullYear();
+}
+
+// Kommende NEST-Explore-Termine (Ausbildungsmesse, Quelle: NEST-Messe-Projekt / Repo nest-messe-v2).
+// Sobald die Termine im Messe-Projekt feststehen, hier zentral pflegen.
+const MESSE_TERMINE = [
+  { titel: "NEST Explore – Ausbildungsmesse Wuppertal", datum: "2026-09-24", uhrzeit: "09:00–14:00 Uhr", ort: "Wuppertal", info: "Schulklassen-Zeitfenster vorab buchbar." },
+  { titel: "NEST Explore – Ausbildungsmesse Essen", datum: "2026-11-12", uhrzeit: "09:00–14:00 Uhr", ort: "Essen", info: "Aussteller-Anmeldung geöffnet." },
+];
+
 export default function PartnerPortal() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,6 +66,7 @@ export default function PartnerPortal() {
   const [authErr, setAuthErr] = useState("");
   const [stellen, setStellen] = useState([]);
   const [events, setEvents] = useState([]);
+  const [nestplaySpiele, setNestplaySpiele] = useState(0);
   const [form, setForm] = useState(LEER);
   const [msg, setMsg] = useState("");
 
@@ -66,10 +96,6 @@ export default function PartnerPortal() {
       cls: "info-card--messe",
       icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
     },
-    "Netzwerk": {
-      cls: "info-card--netz",
-      icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-    },
   };
 
   const INFO_CARDS = [
@@ -80,11 +106,11 @@ export default function PartnerPortal() {
     { kat: "NESTplay", titel: "NESTplay für Unternehmen", text: "Präsentiere deinen Betrieb im Unterricht als interaktives Live-Quiz. Schüler:innen spielen in Echtzeit und merken sich deinen Betrieb nachhaltig." },
     { kat: "NESTplay", titel: "Quiz-Inhalte erstellen", text: "Du lieferst 5 Fragen zu deinem Unternehmen und Ausbildungsberuf – unser Team kümmert sich um die technische Umsetzung und den Einsatz in der Klasse." },
     { kat: "NESTplay", titel: "Ablauf eines NESTplay-Workshops", text: "45–90 Minuten direkt in der Schule. Unternehmensvorstellung, Live-Quiz-Runde, Ergebnisdiskussion und Kontaktmöglichkeit – alles in einem Format." },
-    { kat: "Messe", titel: "NEST Ausbildungsmesse", text: "Das zentrale Format für direkte Begegnungen: Schüler:innen, Schulklassen und Jugendliche treffen regionale Ausbildungsunternehmen an einem Ort." },
+    { kat: "Messe", titel: "NEST Explore Ausbildungsmesse", text: "Das zentrale Format für direkte Begegnungen: Schüler:innen, Schulklassen und Jugendliche treffen regionale Ausbildungsunternehmen an einem Ort." },
     { kat: "Messe", titel: "Aussteller-Infos", text: "Als Aussteller erhältst du einen eigenen Stand, Besucherführung durch Schulklassen und die Möglichkeit, interaktive Elemente einzusetzen." },
-    { kat: "Messe", titel: "Messetermin & Anmeldung", text: "Die NEST Messe findet einmal jährlich statt. Schulen buchen Zeitfenster vorab – du kannst deinen Auftritt gezielt auf Klassen und Schulformen abstimmen." },
-    { kat: "Netzwerk", titel: "Netzwerktreffen", text: "Regelmäßige Treffen mit anderen NEST-Partnern: Austausch über Ausbildungstrends, gemeinsame Aktionen und direkte Kommunikation mit dem NEST-Team." },
-    { kat: "Netzwerk", titel: "Gemeinwohl & Verantwortung", text: "Dein Engagement als NEST-Partner stärkt die Region: Du investierst in den Ausbildungsnachwuchs und trägst zur Jugendberufsorientierung vor Ort bei." },
+    { kat: "Messe", titel: "Messetermin & Anmeldung", text: "NEST Explore findet einmal jährlich statt. Schulen buchen Zeitfenster vorab – du kannst deinen Auftritt gezielt auf Klassen und Schulformen abstimmen." },
+    { kat: "Kooperation", titel: "Netzwerktreffen", text: "Regelmäßige Treffen mit anderen NEST-Partnern: Austausch über Ausbildungstrends, gemeinsame Aktionen und direkte Kommunikation mit dem NEST-Team." },
+    { kat: "Kooperation", titel: "Gemeinwohl & Verantwortung", text: "Dein Engagement als NEST-Partner stärkt die Region: Du investierst in den Ausbildungsnachwuchs und trägst zur Jugendberufsorientierung vor Ort bei." },
   ];
 
   useEffect(() => {
@@ -108,6 +134,12 @@ export default function PartnerPortal() {
       .from("veranstaltungen").select("*")
       .gte("datum", heute).order("datum", { ascending: true });
     setEvents(ev || []);
+
+    // NESTplay-Spiele online (optionale Tabelle "nestplay_spiele"; fehlt sie, bleibt der Wert 0)
+    const { count: npCount } = await supabase
+      .from("nestplay_spiele").select("*", { count: "exact", head: true })
+      .eq("partner_id", session.user.id);
+    setNestplaySpiele(npCount || 0);
   }, [session]); // eslint-disable-line
 
   const ladeAdmin = useCallback(async () => {
@@ -231,6 +263,51 @@ export default function PartnerPortal() {
                 <button className="btn btn-ghost" onClick={logout}>Abmelden</button>
               </div>
 
+              {/* Dashboard */}
+              {!isAdmin && (() => {
+                const aktive = stellen.filter((s) => { const r = tageRestStelle(s.aktiviert_am); return r != null && r >= 0; });
+                const restWerte = aktive.map((s) => tageRestStelle(s.aktiviert_am));
+                const minRest = restWerte.length ? Math.min(...restWerte) : null;
+                const a = ampelStatus(minRest);
+                return (
+                  <div style={{ marginBottom: "36px" }}>
+                    <span className="section-label">Übersicht</span>
+                    <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 16px" }}>Dein Dashboard</h3>
+                    <div className="dash-grid">
+                      <div className="dash-card">
+                        <div className="dash-ic dash-ic--play">
+                          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="10" r="1"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+                        </div>
+                        <div className="dash-num">{nestplaySpiele}</div>
+                        <div className="dash-lbl">NESTplay-Spiele online</div>
+                      </div>
+                      <div className="dash-card">
+                        <div className="dash-ic dash-ic--job">
+                          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        </div>
+                        <div className="dash-num">{aktive.length}</div>
+                        <div className="dash-lbl">Aktuelle Stellen online</div>
+                      </div>
+                      <div className={"dash-card dash-card--ampel " + a.cls}>
+                        <div className="dash-ic dash-ic--time">
+                          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div className="dash-num">{minRest == null ? "–" : minRest + (minRest === 1 ? " Tag" : " Tage")}</div>
+                        <div className="dash-lbl">Nächste Stelle noch online</div>
+                      </div>
+                      <div className="dash-card">
+                        <div className="dash-lbl" style={{ marginBottom: "10px", fontWeight: 800 }}>Ampelsystem</div>
+                        <div className="ampel-legend">
+                          <span><i className="ampel-dot ampel-gruen"></i> mehr als 10 Tage online</span>
+                          <span><i className="ampel-dot ampel-gelb"></i> 4–10 Tage – bald verlängern</span>
+                          <span><i className="ampel-dot ampel-rot"></i> 3 Tage oder weniger</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Eure Ansprechpartner */}
               <div style={{ marginBottom: "36px" }}>
                 <span className="section-label">Euer Team</span>
@@ -285,7 +362,7 @@ export default function PartnerPortal() {
                   </div>
                   <div className="row2">
                     <div className="field"><label>Start / Dauer</label><input value={form.start} onChange={set("start")} placeholder="z. B. ab 08/2026 · 3,5 Jahre" /></div>
-                    <div className="field"><label>Link (Bewerbung/Karriereseite)</label><input value={form.url} onChange={set("url")} placeholder="https://…" /></div>
+                    <div className="field"><label>Link (Bewerbung/Karriereseite) *</label><input type="url" value={form.url} onChange={set("url")} placeholder="https://…" required /></div>
                   </div>
                   {msg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{msg}</p> : null}
                   <button className="btn btn-primary" type="submit">Stelle veröffentlichen</button>
@@ -296,15 +373,23 @@ export default function PartnerPortal() {
               <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Deine Stellen ({stellen.length})</h3>
               {stellen.length ? (
                 <div className="card-grid cols-2" style={{ marginBottom: "28px" }}>
-                  {stellen.map((s) => (
-                    <div className="card" key={s.id}>
-                      <span className="badge">{s.art} · {s.ort}</span>
-                      <h3 style={{ marginTop: "10px" }}>{s.beruf}</h3>
-                      <p style={{ color: "var(--text-soft)" }}>{s.firma}{s.start ? " · " + s.start : ""}</p>
-                      <p style={{ fontSize: "12px", color: "var(--text-mute)" }}>aktiviert am {s.aktiviert_am}</p>
-                      <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => loeschen(s.id)}>Löschen</button>
-                    </div>
-                  ))}
+                  {stellen.map((s) => {
+                    const rest = tageRestStelle(s.aktiviert_am);
+                    const a = ampelStatus(rest);
+                    return (
+                      <div className="card" key={s.id}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
+                          <span className="badge">{s.art} · {s.ort}</span>
+                          <span className={"ampel-badge " + a.cls}><i className="ampel-dot"></i>{rest == null || rest < 0 ? "abgelaufen" : "noch " + rest + (rest === 1 ? " Tag" : " Tage")}</span>
+                        </div>
+                        <h3 style={{ marginTop: "10px" }}>{s.beruf}</h3>
+                        <p style={{ color: "var(--text-soft)" }}>{s.firma}{s.start ? " · " + s.start : ""}</p>
+                        <p style={{ fontSize: "12px", color: "var(--text-mute)" }}>aktiviert am {s.aktiviert_am}</p>
+                        {s.url ? <p style={{ fontSize: "12px", margin: "2px 0 0" }}><a href={s.url} target="_blank" rel="noopener">Bewerbungslink ↗</a></p> : null}
+                        <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => loeschen(s.id)}>Löschen</button>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : <p style={{ color: "var(--text-soft)", marginBottom: "28px" }}>Du hast noch keine Stellen veröffentlicht.</p>}
 
@@ -322,6 +407,30 @@ export default function PartnerPortal() {
                   ))}
                 </div>
               ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Veranstaltungen eingetragen.</p>}
+
+              {/* Kommende Messetermine (NEST Explore) */}
+              <div style={{ marginTop: "36px" }}>
+                <span className="section-label">NEST Explore</span>
+                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 14px" }}>Kommende Messetermine</h3>
+                {MESSE_TERMINE.length ? (
+                  <div className="messe-termine">
+                    {MESSE_TERMINE.map((m) => (
+                      <div className="messe-termin" key={m.titel + m.datum}>
+                        <div className="messe-termin-date">
+                          <span className="mt-day">{new Date(m.datum + "T00:00:00").getDate()}</span>
+                          <span className="mt-mon">{["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"][new Date(m.datum + "T00:00:00").getMonth()]}</span>
+                        </div>
+                        <div className="messe-termin-body">
+                          <h4>{m.titel}</h4>
+                          <p className="messe-termin-meta">{langDatum(m.datum)} · {m.uhrzeit} · {m.ort}</p>
+                          {m.info ? <p className="messe-termin-info">{m.info}</p> : null}
+                        </div>
+                        <a className="btn btn-outline" href="https://nest-messe.de" target="_blank" rel="noopener">Details ↗</a>
+                      </div>
+                    ))}
+                  </div>
+                ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Messetermine eingetragen.</p>}
+              </div>
 
               {/* NESTplay Promo für Partner */}
               {!isAdmin && (
@@ -363,7 +472,7 @@ export default function PartnerPortal() {
                 <span className="section-label">Infos für Partner</span>
                 <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 16px" }}>Alles auf einen Blick</h3>
                 <div className="info-filter-row">
-                  {["Alle", "Kooperation", "NESTplay", "Messe", "Netzwerk"].map((f) => (
+                  {["Alle", "Kooperation", "NESTplay", "Messe"].map((f) => (
                     <button key={f} className={"info-filter-btn" + (infoFilter === f ? " active" : "")} onClick={() => setInfoFilter(f)}>{f}</button>
                   ))}
                 </div>

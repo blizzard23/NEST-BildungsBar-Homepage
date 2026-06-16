@@ -834,6 +834,7 @@ function renderBerufeUebersicht() {
         '<span class="berufe-count" id="beruf-count"></span>' +
       "</div>" +
     "</div>" +
+    '<div id="stellen-live" class="stellen-live"></div>' +
     '<div id="beruf-list"></div>';
 
   function aktualisiereMerkToggle() {
@@ -907,6 +908,98 @@ function renderBerufeUebersicht() {
     document.getElementById("beruf-count").textContent =
       total + (state.nurMerk ? " gemerkt" : " von " + alle.length);
     document.getElementById("reset-btn").hidden = !filterAktiv();
+
+    drawStellen();
+  }
+
+  /* ---- Aktuelle Stellen: direkt unter dem Suchklaster, mit denselben Filtern ---- */
+  var STELLEN_TAGE = window.STELLEN_SICHTBAR_TAGE || 30;
+  var MS_TAG = 86400000;
+  var stellenAlle = []; // geladen + bei jedem Seitenaufruf zufällig sortiert
+  function st0() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  function stRest(a) { var s = new Date(a + "T00:00:00"); if (isNaN(s)) return -1; return Math.ceil((new Date(s.getTime() + STELLEN_TAGE * MS_TAG) - st0()) / MS_TAG); }
+  function stAlt(a) { var s = new Date(a + "T00:00:00"); if (isNaN(s)) return 9999; return Math.floor((st0() - s) / MS_TAG); }
+  function stMono(f) { var w = String(f).replace(/&/g, " ").split(/\s+/).filter(Boolean); return ((w[0] ? w[0][0] : "") + (w[1] ? w[1][0] : "")).toUpperCase() || "•"; }
+  function stLogo(f) { var h = 0; for (var i = 0; i < f.length; i++) h = (h * 31 + f.charCodeAt(i)) % 360; return "background:linear-gradient(135deg,hsl(" + h + ",55%,42%),hsl(" + ((h + 30) % 360) + ",58%,30%));"; }
+  function stArtClass(a) { a = (a || "").toLowerCase(); if (a.indexOf("dual") > -1) return "art-dual"; if (a.indexOf("praktikum") > -1) return "art-prakt"; return "art-azubi"; }
+  function stShuffle(arr) { for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; } return arr; }
+  function stKategorie(beruf) { if (typeof findeBeruf === "function") { var b = findeBeruf(berufSlug(beruf)); if (b) return b.kategorie; } return null; }
+
+  function stKarte(s) {
+    var rest = stRest(s.aktiviertAm);
+    var neu = stAlt(s.aktiviertAm) <= 7;
+    var bald = rest <= 5;
+    var flag = neu ? '<span class="sc-flag neu">Neu</span>' : (bald ? '<span class="sc-flag bald">Endet bald</span>' : "");
+    var restTxt = "noch " + rest + (rest === 1 ? " Tag" : " Tage");
+    // „Mehr erfahren" führt direkt zur Karriere-/Bewerbungsseite des Unternehmens (s.url),
+    // ersatzweise zur Beruf-Detailseite.
+    var link = s.url || linkBeruf(berufSlug(s.beruf)) || ((nestLinks().kontakt || "/kontakt") + "#termin");
+    var extern = /^https?:\/\//.test(link);
+    return '<a class="stellen-card" href="' + escAttr(link) + '"' + (extern ? ' target="_blank" rel="noopener"' : '') + '>' +
+      '<div class="sc-top"><span class="sc-logo" style="' + stLogo(s.firma) + '">' + escHtml(stMono(s.firma)) + "</span>" + flag + "</div>" +
+      '<div class="sc-titel">' + escHtml(s.beruf) + "</div>" +
+      '<div class="sc-firma">' + escHtml(s.firma) + "</div>" +
+      '<div class="sc-meta"><span class="sc-art ' + stArtClass(s.art) + '">' + escHtml(s.art || "Ausbildung") + "</span>" +
+      '<span class="sc-tag">' + ic("pin", 13) + escHtml(s.ort) + "</span>" +
+      (s.start ? '<span class="sc-tag">' + ic("calendar", 13) + escHtml(s.start) + "</span>" : "") + "</div>" +
+      '<div class="sc-foot"><span class="sc-rest">' + ic("clock", 13) + restTxt + "</span>" +
+      '<span class="sc-go">Mehr erfahren &rarr;</span></div></a>';
+  }
+
+  function drawStellen() {
+    var wrap = document.getElementById("stellen-live");
+    if (!wrap) return;
+    if (!stellenAlle.length) { wrap.innerHTML = ""; return; } // keine Stellen -> Bereich ausblenden
+
+    var q = state.q.trim().toLowerCase();
+    var merk = ladeMerkliste();
+    var liste = stellenAlle.filter(function (s) {
+      if (stRest(s.aktiviertAm) < 0) return false;
+      if (q && (s.beruf + " " + s.firma).toLowerCase().indexOf(q) < 0) return false;
+      if (state.ort !== "*" && s.ort !== state.ort) return false;
+      if (state.typ !== "*" && (s.art || "Ausbildung") !== state.typ) return false;
+      if (state.cat !== "*" && stKategorie(s.beruf) !== state.cat) return false;
+      if (state.nurMerk && merk.indexOf(berufSlug(s.beruf)) < 0) return false; // Merkliste berücksichtigen
+      return true;
+    });
+
+    var head = '<div class="stellen-strip-head"><div><span class="section-label">Jobbörse</span>' +
+      "<h2>Aktuelle Stellen</h2><p>" + liste.length + " offene " + (liste.length === 1 ? "Stelle" : "Stellen") +
+      (filterAktiv() ? " passend zu deiner Auswahl" : "") + " · 30 Tage aktuell</p></div>" +
+      '<a class="btn btn-outline" href="' + (nestLinks().kooperation || "/kooperation") + '">Stelle eintragen</a></div>';
+
+    if (!liste.length) {
+      wrap.innerHTML = head + '<div class="stellen-empty">Für deine aktuelle Auswahl sind derzeit keine Stellen ausgeschrieben.</div>';
+      return;
+    }
+
+    var cards = liste.map(stKarte).join("");
+    wrap.innerHTML = head + '<div class="stellen-track" id="stellen-track"><div class="stellen-strip" id="stellen-strip">' + cards + "</div></div>";
+
+    // „Im Kreis bewegen" nur bei mehreren Stellen UND wenn der Bildbereich überschritten wird.
+    requestAnimationFrame(function () {
+      var strip = document.getElementById("stellen-strip");
+      var track = document.getElementById("stellen-track");
+      if (!strip || !track) return;
+      var ueberlauf = strip.scrollWidth > track.clientWidth + 4;
+      if (liste.length >= 4 && ueberlauf) {
+        strip.innerHTML = cards + cards; // duplizieren für nahtlosen Loop
+        strip.style.animationDuration = Math.max(22, Math.round(liste.length * 4.5)) + "s";
+        track.classList.add("is-marquee");
+        strip.classList.add("is-marquee");
+      } else {
+        track.classList.remove("is-marquee");
+        strip.classList.remove("is-marquee");
+      }
+    });
+  }
+
+  function ladeStellenLive() {
+    var api = window.NEST_STELLEN_API;
+    function fertig(d) { stellenAlle = stShuffle((Array.isArray(d) ? d : (window.STELLEN || [])).slice()); drawStellen(); }
+    if (api && window.fetch) {
+      fetch(api).then(function (r) { return r.json(); }).then(fertig).catch(function () { fertig(window.STELLEN || []); });
+    } else { fertig(window.STELLEN || []); }
   }
 
   // ---- Events ----
@@ -949,6 +1042,7 @@ function renderBerufeUebersicht() {
     heart.classList.toggle("on", jetzt);
     aktualisiereMerkToggle();
     if (state.nurMerk && !jetzt) draw();
+    else drawStellen();
   });
 
   var shareBtn = document.getElementById("merk-share");
@@ -992,6 +1086,7 @@ function renderBerufeUebersicht() {
 
   aktualisiereMerkToggle();
   draw();
+  ladeStellenLive();
 }
 
 /* ---------------- Detailseite ---------------- */
@@ -1028,8 +1123,8 @@ function renderBerufDetail() {
     "<h1>" + escHtml(beruf.name) + "</h1>" +
     '<p class="lead">' + escHtml(beruf.kategorie) +
     " – wir beraten dich kostenfrei und vernetzen dich mit passenden Betrieben.</p>" +
-    '<div class="hero-actions"><a class="btn btn-primary" href="' + linkKontaktTermin() + '">Beratung buchen</a>' +
-    '<button class="btn btn-ghost detail-merk">' + ic("heart", 16) + "<span>" + (gem ? "Gemerkt" : "Merken") + "</span></button></div>" +
+    '<div class="hero-actions">' +
+    '<button class="btn btn-primary detail-merk detail-merk--hero">' + ic("heart", 18) + "<span>" + (gem ? "Gemerkt" : "Merken") + "</span></button></div>" +
     "</div></div></div></section>";
 
   var body =
@@ -1356,6 +1451,9 @@ if (!window.STELLEN || !window.STELLEN.length) {
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    // Wird nur noch genutzt, wenn ein eigener #stellen-section-Container existiert.
+    // Auf /berufswelt rendern die Stellen jetzt direkt im Berufe-Browser.
+    if (!document.getElementById("stellen-section")) return;
     ladeStellen(render);
   });
 })();

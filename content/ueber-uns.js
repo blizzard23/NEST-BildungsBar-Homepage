@@ -169,7 +169,7 @@ const html = `
         <span class="section-label">Wie alles begann</span>
         <h2>Ein gemeinsamer Ausflug. Eine Idee. Ein Ökosystem.</h2>
         <p>Bei einem gemeinsamen Ausflug während des Studiums entdeckten wir unsere Gemeinsamkeiten – und merkten schnell: Obwohl wir beide technische Ausbildungshintergründe haben, schlägt unser Herz für etwas anderes. Für Menschen. Für echte Orientierung. Für Ausbildung, die wirklich wirkt.</p>
-        <p>Aus dieser Erkenntnis entstand die NEST BildungsBar – ein kostenfreies Beratungsangebot in Café Atmosphäre, das Schüler:innen unabhängig und auf Augenhöhe bei der Berufswahl begleitet. Heute hat sich daraus ein ganzes Ökosystem entwickelt: mit der NEST Messe, AzubiConnect und über 500 begleiteten Schüler:innen pro Jahr.</p>
+        <p>Aus dieser Erkenntnis entstand die NEST BildungsBar – ein kostenfreies Beratungsangebot in Café Atmosphäre, das Schüler:innen unabhängig und auf Augenhöhe bei der Berufswahl begleitet. Heute hat sich daraus ein ganzes Ökosystem entwickelt: mit NEST Explore, AzubiConnect und über 500 begleiteten Schüler:innen pro Jahr.</p>
         <p>Wir verbinden Einrichtungen, Unternehmen und Schüler:innen zu einem starken Netzwerk und gestalten aktives Generationsmanagement, das Ausbildung gemeinsam voranbringt.</p>
       </div>
       <div class="story-image-block">

@@ -5,9 +5,8 @@ export default function Header() {
     <header className="site-header">
       <div className="container">
         <nav className="nav">
-          <a className="brand" href="/">
-            <span className="logo-mark">N</span>
-            <span>NEST <small>BildungsBar</small></span>
+          <a className="brand" href="/" aria-label="NEST BildungsBar – Startseite">
+            <img className="brand-logo" src="/assets/img/Logo/nest-bildungsbar-logo.png" alt="NEST BildungsBar" width="3173" height="1523" />
           </a>
           <ul className="nav-links">
             <li><a href="/">Home</a></li>

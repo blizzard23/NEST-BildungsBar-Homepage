@@ -63,14 +63,7 @@ const html = `
     </div>
   </section>
 
-  <!-- AKTUELLE STELLEN (aus dem Plugin via REST) -->
-  <section class="bg-light">
-    <div class="container">
-      <div id="stellen-section"></div>
-    </div>
-  </section>
-
-  <!-- BERUFE-BROWSER -->
+  <!-- BERUFE-BROWSER (inkl. aktuelle Stellen unter dem Suchklaster) -->
   <section class="bg-white" id="felder">
     <div class="container">
       <div class="section-head centered reveal">
@@ -89,12 +82,15 @@ const html = `
         <div class="split-media split-locs">
           <div class="loc-img-pair">
             <div class="loc-img">
-              <img src="/assets/img/team/bildungsbar-aussen.jpg" alt="BildungsBar Wuppertal" loading="lazy">
-              <span class="loc-label">Wuppertal</span>
+              <img src="/assets/img/team/bildungsbar-aussen.jpg" alt="BildungsBar Wuppertal – Hochstraße 65" loading="lazy">
+              <span class="loc-label"><b>Wuppertal</b><small>Hochstraße 65</small></span>
             </div>
             <div class="loc-img">
-              <div class="loc-img-placeholder"><span class="loc-img-city">Essen</span></div>
-              <span class="loc-label">Essen</span>
+              <div class="loc-img-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg>
+                <span class="loc-img-city">Essen</span>
+              </div>
+              <span class="loc-label"><b>Essen</b><small>Kopstadtplatz 12</small></span>
             </div>
           </div>
         </div>

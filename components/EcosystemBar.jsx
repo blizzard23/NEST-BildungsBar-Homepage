@@ -51,7 +51,7 @@ export default function EcosystemBar() {
         <div id="nest-ecosystem-bar-products">
           <span className="nest-eco-product nest-eco-current">NEST BildungsBar</span>
           <div className="nest-eco-dot"></div>
-          <a href="https://nest-messe.de" className="nest-eco-product" target="_blank" rel="noopener">NEST Messe</a>
+          <a href="https://nest-messe.de" className="nest-eco-product" target="_blank" rel="noopener">NEST Explore</a>
           <div className="nest-eco-dot"></div>
           <a href="https://nest-azubiconnect.de" className="nest-eco-product" target="_blank" rel="noopener">NEST Azubiconnect</a>
         </div>

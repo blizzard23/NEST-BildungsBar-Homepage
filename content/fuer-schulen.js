@@ -74,27 +74,25 @@ const html = `
       </div>
 
       <div class="split" style="margin-bottom:0;">
-        <div class="split-media" style="background:none;">
-          <div class="wf-feat-media">
-            <div class="np-mini-phone" style="width:200px;">
-              <div class="np-phone-screen">
-                <div class="np-phone-head" style="padding:22px 12px 12px;">
-                  <div class="np-phone-pl">NESTplay · Frage 2/5</div>
-                  <div class="np-phone-h4" style="font-size:13px;">Maier &amp; Söhne</div>
-                </div>
-                <div class="np-phone-body" style="padding:10px;">
-                  <div class="np-phone-q">Wie lange dauert die Ausbildung zum Mechatroniker?</div>
-                  <div class="np-phone-opts">
-                    <div class="np-phone-opt np-o-a">2 Jahre</div>
-                    <div class="np-phone-opt np-o-b">3,5 Jahre</div>
-                    <div class="np-phone-opt np-o-c">4 Jahre</div>
-                    <div class="np-phone-opt np-o-d">5 Jahre</div>
-                  </div>
-                  <div style="background:var(--navy);padding:8px 10px;display:flex;justify-content:space-between;margin-top:8px;border-radius:6px;">
-                    <span style="font-size:9px;color:rgba(255,255,255,0.5);">Team Fuchs</span>
-                    <b style="font-size:11px;color:#EFA500;font-weight:900;">20 Pkt.</b>
-                  </div>
-                </div>
+        <div class="hero-visual hero-visual--phone" style="background:none;">
+          <div class="hero-phone">
+            <span class="hp-notch"></span>
+            <div class="hp-screen">
+              <span class="hp-badge">NESTplay</span>
+              <div class="hp-title">Live-Quiz · Frage 2 / 5</div>
+              <div style="background:#fff;border-radius:9px;padding:9px 10px;">
+                <div style="font-size:9px;font-weight:800;color:var(--gold-dark);letter-spacing:1px;margin-bottom:4px;">MAIER &amp; SÖHNE</div>
+                <div style="font-size:11px;font-weight:700;color:var(--navy);line-height:1.4;">Wie lange dauert die Ausbildung zum Mechatroniker?</div>
+              </div>
+              <div class="hp-grid" style="gap:6px;">
+                <div style="background:rgba(194,65,90,0.15);color:#c2415a;border-radius:8px;padding:8px 6px;font-size:9.5px;font-weight:800;text-align:center;">2 Jahre</div>
+                <div style="background:var(--navy);color:var(--gold);border-radius:8px;padding:8px 6px;font-size:9.5px;font-weight:800;text-align:center;">3,5 Jahre ✓</div>
+                <div style="background:#fff;border:1px solid var(--line);color:var(--text-mute);border-radius:8px;padding:8px 6px;font-size:9.5px;font-weight:700;text-align:center;">4 Jahre</div>
+                <div style="background:#fff;border:1px solid var(--line);color:var(--text-mute);border-radius:8px;padding:8px 6px;font-size:9.5px;font-weight:700;text-align:center;">5 Jahre</div>
+              </div>
+              <div style="background:var(--navy);border-radius:8px;padding:7px 11px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:9px;color:rgba(255,255,255,0.6);">Team Fuchs</span>
+                <span style="font-size:12px;font-weight:900;color:var(--gold);">20 Pkt.</span>
               </div>
             </div>
           </div>
@@ -106,8 +104,6 @@ const html = `
           <ul class="list-check">
             <li>Live-Quiz aktiviert die gesamte Klasse</li>
             <li>Unternehmen bleiben im Kopf – nicht Flyer</li>
-            <li>Kursformat: 45–90 Minuten direkt an der Schule</li>
-            <li>Tagesworkshop auch an der Junioruni möglich</li>
             <li>kAoA-konform für alle Schulstufen</li>
           </ul>
           <a class="btn btn-primary mt-2" href="https://nestplay.de" target="_blank" rel="noopener">Zu NESTplay. →</a>
@@ -121,15 +117,15 @@ const html = `
     <div class="container">
       <div class="section-head centered reveal">
         <span class="section-label">Ausbildungsmesse</span>
-        <h2>NEST Messe – Ausbildung <em>live erleben</em></h2>
-        <p>Die NEST Messe bringt Schüler:innen, Schulen und Unternehmen zusammen – ein besonderes Format für echte Begegnungen auf Augenhöhe.</p>
+        <h2>NEST Explore – Ausbildung <em>live erleben</em></h2>
+        <p>NEST Explore bringt Schüler:innen, Schulen und Unternehmen zusammen – ein besonderes Format für echte Begegnungen auf Augenhöhe.</p>
       </div>
 
       <div class="split rev" style="margin-bottom:0;">
         <div class="split-text reveal">
           <span class="section-label">Messe-Format</span>
           <h2>Wo Berufe <em>lebendig werden</em></h2>
-          <p>Auf der NEST Messe präsentieren regionale Unternehmen ihre Ausbildungsberufe – interaktiv, persönlich und für Schüler:innen wirklich erlebbar.</p>
+          <p>Auf NEST Explore präsentieren regionale Unternehmen ihre Ausbildungsberufe – interaktiv, persönlich und für Schüler:innen wirklich erlebbar.</p>
           <ul class="list-check">
             <li>Direkter Kontakt zu 70+ Ausbildungsunternehmen</li>
             <li>Interaktive Berufsfelder zum Anfassen</li>
@@ -144,12 +140,12 @@ const html = `
               <div class="wf-lap-screen">
                 <div class="br-bar">
                   <div class="br-dots"><div class="br-dot br-dot-r"></div><div class="br-dot br-dot-y"></div><div class="br-dot br-dot-g"></div></div>
-                  <div class="br-url">nest-messe.de</div>
+                  <div class="br-url">nest-explore.de</div>
                 </div>
                 <div class="lap-app">
                   <div class="lap-header" style="background:var(--navy);">
-                    <div class="lap-logo" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:10px;">M</div>
-                    <div><div class="lap-co-name" style="color:#fff;">NEST Messe</div><div class="lap-co-jobs" style="color:rgba(255,255,255,0.5);">Ausbildungsmesse Wuppertal</div></div>
+                    <div class="lap-logo" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:10px;">E</div>
+                    <div><div class="lap-co-name" style="color:#fff;">NEST Explore</div><div class="lap-co-jobs" style="color:rgba(255,255,255,0.5);">Ausbildungsmesse Wuppertal</div></div>
                     <div class="lap-tabs">
                       <div class="lap-tab--active lap-tab" style="color:#EFA500;border-color:#EFA500;">Aussteller</div>
                       <div class="lap-tab" style="color:rgba(255,255,255,0.35);">Programm</div>
@@ -189,8 +185,8 @@ const html = `
           <div class="icon icon-svg" style="flex-shrink:0;">${IC.globe}</div>
           <div>
             <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:4px;">Enge Zusammenarbeit</div>
-            <h3 style="margin:0 0 6px;font-size:18px;">Junioruni Wuppertal &amp; Regionale Partner</h3>
-            <p style="margin:0;color:var(--text-soft);font-size:14px;">Unsere Workshops führen wir in Kooperation mit der Junioruni Wuppertal durch – als Tagesworkshop oder mehrstündiges Format. Zusätzlich arbeiten wir eng mit Schulen, der IHK und weiteren regionalen Bildungseinrichtungen zusammen.</p>
+            <h3 style="margin:0 0 6px;font-size:18px;">Junioruni Wuppertal &amp; Essen &amp; Regionale Partner</h3>
+            <p style="margin:0;color:var(--text-soft);font-size:14px;">Unsere Workshops führen wir in Kooperation mit der Junioruni Wuppertal und der Junioruni Essen durch – als Tagesworkshop oder mehrstündiges Format. Zusätzlich arbeiten wir eng mit Schulen, der IHK und weiteren regionalen Bildungseinrichtungen zusammen.</p>
           </div>
         </div>
       </div>

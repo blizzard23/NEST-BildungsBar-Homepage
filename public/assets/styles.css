@@ -1087,7 +1087,33 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .dash-ic--job { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); }
 .dash-ic--time { background: linear-gradient(135deg, var(--navy-2), var(--navy)); }
 .dash-num { font-family: var(--font-alt); font-size: 2rem; font-weight: 900; color: var(--navy); line-height: 1.1; }
+.dash-num--muted { color: var(--text-mute); font-size: 1.55rem; }
 .dash-lbl { font-size: 13px; font-weight: 600; color: var(--text-soft); }
+.dash-sub { font-size: 11.5px; font-weight: 600; color: var(--text-mute); text-transform: uppercase; letter-spacing: .4px; margin-top: 2px; }
+.dash-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.dash-card-top .dash-ic { margin-bottom: 0; }
+.dash-live { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; color: #1a8550; }
+.dash-live i { width: 7px; height: 7px; border-radius: 50%; background: #1f9d63; box-shadow: 0 0 0 3px rgba(31,157,99,0.18); }
+.dash-off { font-size: 11px; font-weight: 700; color: var(--text-mute); }
+.dash-compare { display: flex; align-items: flex-end; gap: 12px; margin: 2px 0 8px; }
+.dash-vs { font-size: 18px; font-weight: 800; color: var(--line); padding-bottom: 6px; }
+.dash-bar { height: 7px; border-radius: 9999px; background: var(--bg-light); overflow: hidden; margin-bottom: 8px; }
+.dash-bar span { display: block; height: 100%; border-radius: 9999px; background: linear-gradient(90deg, #1a8550, #1f9d63); min-width: 3px; transition: width .4s; }
+.dash-bar--gold span { background: linear-gradient(90deg, var(--gold-dark), var(--gold)); }
+
+/* NESTplay-Spiele Kacheln im Portal */
+.np-game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+.np-game-card { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(15,33,69,0.06); text-decoration: none; transition: transform .18s, box-shadow .2s, border-color .2s; }
+.np-game-card:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(15,33,69,0.13); border-color: #d4def0; }
+.np-game-cover { position: relative; aspect-ratio: 16 / 10; background: linear-gradient(135deg, var(--navy-2), var(--navy)); display: grid; place-items: center; }
+.np-game-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.np-game-mono { font-family: var(--font-alt); font-size: 30px; font-weight: 900; color: var(--gold); }
+.np-game-live { position: absolute; top: 8px; left: 8px; display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 800; color: #fff; background: rgba(15,33,69,0.72); padding: 3px 8px; border-radius: 9999px; }
+.np-game-live i { width: 6px; height: 6px; border-radius: 50%; background: #29d17a; }
+.np-game-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
+.np-game-cat { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--gold-dark); }
+.np-game-name { font-size: 15px; font-weight: 800; color: var(--navy); line-height: 1.25; }
+.np-game-go { font-size: 12.5px; font-weight: 800; color: var(--gold-dark); margin-top: 4px; }
 .dash-card--ampel.ampel-gruen { border-color: #a8dfc0; }
 .dash-card--ampel.ampel-gelb { border-color: #f5d98a; }
 .dash-card--ampel.ampel-rot { border-color: #f5b0bc; }

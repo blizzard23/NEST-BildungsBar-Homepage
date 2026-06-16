@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabaseClient";
+import { fetchGamesForCompany, fetchLiveGamesTotal, gameUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "" };
@@ -67,6 +68,9 @@ export default function PartnerPortal() {
   const [stellen, setStellen] = useState([]);
   const [events, setEvents] = useState([]);
   const [nestplaySpiele, setNestplaySpiele] = useState(0);
+  const [nestplayGames, setNestplayGames] = useState([]);
+  const [netzStellen, setNetzStellen] = useState(0);
+  const [netzSpiele, setNetzSpiele] = useState(0);
   const [form, setForm] = useState(LEER);
   const [msg, setMsg] = useState("");
 
@@ -127,7 +131,8 @@ export default function PartnerPortal() {
       .eq("partner_id", session.user.id)
       .order("aktiviert_am", { ascending: false });
     setStellen(st || []);
-    if (st && st.length && !form.firma) setForm((f) => ({ ...f, firma: st[0].firma || "" }));
+    const firma = (st && st.length && st[0].firma) || session.user.user_metadata?.firma || "";
+    if (firma && !form.firma) setForm((f) => ({ ...f, firma }));
 
     const heute = new Date().toISOString().slice(0, 10);
     const { data: ev } = await supabase
@@ -135,11 +140,21 @@ export default function PartnerPortal() {
       .gte("datum", heute).order("datum", { ascending: true });
     setEvents(ev || []);
 
-    // NESTplay-Spiele online (optionale Tabelle "nestplay_spiele"; fehlt sie, bleibt der Wert 0)
-    const { count: npCount } = await supabase
-      .from("nestplay_spiele").select("*", { count: "exact", head: true })
-      .eq("partner_id", session.user.id);
-    setNestplaySpiele(npCount || 0);
+    // Vergleichswert: aktive Stellen im gesamten Netzwerk (RLS gibt nur aktive Stellen frei)
+    const grenze = new Date(Date.now() - STELLEN_TAGE * 86400000).toISOString().slice(0, 10);
+    const { count: netzCount } = await supabase
+      .from("stellen").select("*", { count: "exact", head: true })
+      .gte("aktiviert_am", grenze);
+    setNetzStellen(netzCount || 0);
+
+    // NESTplay-Anbindung: Live-Spiele des Unternehmens + Netzwerk-Gesamtzahl
+    const [spiele, gesamt] = await Promise.all([
+      fetchGamesForCompany(firma),
+      fetchLiveGamesTotal(),
+    ]);
+    setNestplayGames(spiele);
+    setNestplaySpiele(spiele.length);
+    setNetzSpiele(gesamt);
   }, [session]); // eslint-disable-line
 
   const ladeAdmin = useCallback(async () => {
@@ -160,7 +175,7 @@ export default function PartnerPortal() {
     const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
     if (error) setAuthErr("Login fehlgeschlagen: " + error.message);
   }
-  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); }
+  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
 
   async function buchungLoeschen(id) { await supabase.from("buchungen").delete().eq("id", id); ladeAdmin(); }
 
@@ -263,47 +278,114 @@ export default function PartnerPortal() {
                 <button className="btn btn-ghost" onClick={logout}>Abmelden</button>
               </div>
 
-              {/* Dashboard */}
+              {/* Dashboard – Kennzahlen im Vergleich */}
               {!isAdmin && (() => {
                 const aktive = stellen.filter((s) => { const r = tageRestStelle(s.aktiviert_am); return r != null && r >= 0; });
                 const restWerte = aktive.map((s) => tageRestStelle(s.aktiviert_am));
                 const minRest = restWerte.length ? Math.min(...restWerte) : null;
                 const a = ampelStatus(minRest);
+                const pct = (mine, total) => (total > 0 ? Math.min(100, Math.round((mine / total) * 100)) : 0);
                 return (
                   <div style={{ marginBottom: "36px" }}>
                     <span className="section-label">Übersicht</span>
-                    <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 16px" }}>Dein Dashboard</h3>
+                    <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 4px" }}>Dein Dashboard im Vergleich</h3>
+                    <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "0 0 18px" }}>Deine wichtigsten Kennzahlen – direkt im Vergleich zum gesamten NEST-Netzwerk.</p>
                     <div className="dash-grid">
+                      {/* NESTplay-Spiele */}
                       <div className="dash-card">
-                        <div className="dash-ic dash-ic--play">
-                          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="10" r="1"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+                        <div className="dash-card-top">
+                          <div className="dash-ic dash-ic--play">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="10" r="1"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+                          </div>
+                          {nestplayConfigured
+                            ? <span className="dash-live"><i></i>NESTplay verbunden</span>
+                            : <span className="dash-off">nicht verbunden</span>}
                         </div>
-                        <div className="dash-num">{nestplaySpiele}</div>
+                        <div className="dash-compare">
+                          <div><div className="dash-num">{nestplaySpiele}</div><div className="dash-sub">deine</div></div>
+                          <div className="dash-vs">/</div>
+                          <div><div className="dash-num dash-num--muted">{netzSpiele}</div><div className="dash-sub">Netzwerk</div></div>
+                        </div>
+                        <div className="dash-bar"><span style={{ width: pct(nestplaySpiele, netzSpiele) + "%" }}></span></div>
                         <div className="dash-lbl">NESTplay-Spiele online</div>
                       </div>
+                      {/* Aktuelle Stellen */}
                       <div className="dash-card">
-                        <div className="dash-ic dash-ic--job">
-                          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        <div className="dash-card-top">
+                          <div className="dash-ic dash-ic--job">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                          </div>
                         </div>
-                        <div className="dash-num">{aktive.length}</div>
+                        <div className="dash-compare">
+                          <div><div className="dash-num">{aktive.length}</div><div className="dash-sub">deine</div></div>
+                          <div className="dash-vs">/</div>
+                          <div><div className="dash-num dash-num--muted">{netzStellen}</div><div className="dash-sub">Netzwerk</div></div>
+                        </div>
+                        <div className="dash-bar dash-bar--gold"><span style={{ width: pct(aktive.length, netzStellen) + "%" }}></span></div>
                         <div className="dash-lbl">Aktuelle Stellen online</div>
                       </div>
+                      {/* Restlaufzeit + Ampelsystem */}
                       <div className={"dash-card dash-card--ampel " + a.cls}>
-                        <div className="dash-ic dash-ic--time">
-                          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <div className="dash-card-top">
+                          <div className="dash-ic dash-ic--time">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                          </div>
+                          <span className={"ampel-badge " + a.cls}><i className="ampel-dot"></i>{a.text}</span>
                         </div>
                         <div className="dash-num">{minRest == null ? "–" : minRest + (minRest === 1 ? " Tag" : " Tage")}</div>
-                        <div className="dash-lbl">Nächste Stelle noch online</div>
-                      </div>
-                      <div className="dash-card">
-                        <div className="dash-lbl" style={{ marginBottom: "10px", fontWeight: 800 }}>Ampelsystem</div>
-                        <div className="ampel-legend">
-                          <span><i className="ampel-dot ampel-gruen"></i> mehr als 10 Tage online</span>
-                          <span><i className="ampel-dot ampel-gelb"></i> 4–10 Tage – bald verlängern</span>
+                        <div className="dash-sub">Restlaufzeit deiner nächsten Stelle</div>
+                        <div className="ampel-legend" style={{ marginTop: "12px" }}>
+                          <span><i className="ampel-dot ampel-gruen"></i> mehr als 10 Tage</span>
+                          <span><i className="ampel-dot ampel-gelb"></i> 4–10 Tage</span>
                           <span><i className="ampel-dot ampel-rot"></i> 3 Tage oder weniger</span>
                         </div>
                       </div>
                     </div>
+                  </div>
+                );
+              })()}
+
+              {/* Deine NESTplay-Spiele (Live-Anbindung an nest-play.de) */}
+              {!isAdmin && (() => {
+                const firma = (stellen[0] && stellen[0].firma) || form.firma || "";
+                return (
+                  <div style={{ marginBottom: "36px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px" }}>
+                      <div>
+                        <span className="section-label">NESTplay</span>
+                        <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 4px" }}>Deine NESTplay-Spiele</h3>
+                      </div>
+                      <a className="btn btn-outline" href={NESTPLAY_URL} target="_blank" rel="noopener">Zu NESTplay ↗</a>
+                    </div>
+                    {!nestplayConfigured ? (
+                      <div className="card" style={{ marginTop: "10px" }}>
+                        <p style={{ margin: 0, color: "var(--text-soft)", fontSize: "14px" }}>
+                          NESTplay ist noch nicht verbunden. Hinterlege <code>NEXT_PUBLIC_NESTPLAY_SUPABASE_URL</code> und <code>NEXT_PUBLIC_NESTPLAY_SUPABASE_ANON_KEY</code> (anon-Key des nestplay-Projekts) in den Umgebungsvariablen – danach erscheinen die Live-Spiele deines Unternehmens hier automatisch.
+                        </p>
+                      </div>
+                    ) : nestplayGames.length ? (
+                      <div className="np-game-grid" style={{ marginTop: "12px" }}>
+                        {nestplayGames.map((g) => (
+                          <a className="np-game-card" key={g.id} href={gameUrl(g)} target="_blank" rel="noopener">
+                            <div className="np-game-cover">
+                              {g.cover_image ? <img src={g.cover_image} alt={g.name} loading="lazy" /> : <span className="np-game-mono">{(g.name || "?").slice(0, 1).toUpperCase()}</span>}
+                              <span className="np-game-live"><i></i>Live</span>
+                            </div>
+                            <div className="np-game-body">
+                              {g.category ? <span className="np-game-cat">{g.category}</span> : null}
+                              <div className="np-game-name">{g.name}</div>
+                              <span className="np-game-go">Spiel öffnen →</span>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="card" style={{ marginTop: "10px" }}>
+                        <p style={{ margin: 0, color: "var(--text-soft)", fontSize: "14px" }}>
+                          Für „{firma || "dein Unternehmen"}" sind aktuell keine Live-Spiele in NESTplay hinterlegt. Sobald dein Betrieb in NESTplay ein Spiel auf „Live" stellt, erscheint es hier. Frag dazu gern dein NEST-Team.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 );
               })()}

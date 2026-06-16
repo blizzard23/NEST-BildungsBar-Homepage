@@ -1114,6 +1114,29 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .np-game-cat { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--gold-dark); }
 .np-game-name { font-size: 15px; font-weight: 800; color: var(--navy); line-height: 1.25; }
 .np-game-go { font-size: 12.5px; font-weight: 800; color: var(--gold-dark); margin-top: 4px; }
+
+/* Login / Registrierung – Tabs, Combobox (NESTplay-Firmensuche) */
+.auth-tabs { display: flex; gap: 6px; background: var(--bg-light); border-radius: 12px; padding: 4px; margin-bottom: 18px; }
+.auth-tab { flex: 1; border: 0; background: transparent; cursor: pointer; padding: 9px 12px; border-radius: 9px; font-family: var(--font); font-weight: 800; font-size: 14px; color: var(--text-soft); transition: background .18s, color .18s; }
+.auth-tab.active { background: #fff; color: var(--navy); box-shadow: 0 2px 8px rgba(15,33,69,0.08); }
+.link-btn { border: 0; background: none; padding: 0; cursor: pointer; color: var(--gold-dark); font-weight: 700; font-family: var(--font); font-size: inherit; text-decoration: underline; }
+.combo-field { position: relative; }
+.combo-ok { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 700; color: #1a8550; }
+.combo-list {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 30; margin-top: 4px;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 14px 34px rgba(15,33,69,0.16); max-height: 260px; overflow-y: auto;
+}
+.combo-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;
+  border: 0; background: #fff; cursor: pointer; text-align: left; padding: 10px 14px;
+  font-family: var(--font); font-size: 14px; font-weight: 600; color: var(--navy);
+  border-bottom: 1px solid var(--line);
+}
+.combo-item:last-child { border-bottom: 0; }
+.combo-item:hover { background: var(--bg-light); }
+.combo-count { flex-shrink: 0; font-size: 11px; font-weight: 800; color: var(--gold-dark); background: var(--gold-soft); padding: 2px 8px; border-radius: 9999px; }
+.combo-empty { padding: 10px 14px; font-size: 13px; color: var(--text-mute); }
 .dash-card--ampel.ampel-gruen { border-color: #a8dfc0; }
 .dash-card--ampel.ampel-gelb { border-color: #f5d98a; }
 .dash-card--ampel.ampel-rot { border-color: #f5b0bc; }

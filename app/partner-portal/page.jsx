@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabaseClient";
-import { fetchGamesForCompany, fetchLiveGamesTotal, gameUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
+import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "" };
@@ -65,6 +65,14 @@ export default function PartnerPortal() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [authErr, setAuthErr] = useState("");
+  // Selbst-Registrierung von Unternehmen
+  const [authMode, setAuthMode] = useState("login"); // "login" | "register"
+  const [regBusy, setRegBusy] = useState(false);
+  const [regMsg, setRegMsg] = useState("");
+  const [companies, setCompanies] = useState([]);     // NESTplay-Unternehmen (für die Auswahl)
+  const [firmaQuery, setFirmaQuery] = useState("");     // Eingabe/Anzeige im Firmen-Suchfeld
+  const [firmaRef, setFirmaRef] = useState(null);       // gewählte NESTplay-Referenz (UUID/Name)
+  const [firmaOpen, setFirmaOpen] = useState(false);    // Dropdown offen?
   const [stellen, setStellen] = useState([]);
   const [events, setEvents] = useState([]);
   const [nestplaySpiele, setNestplaySpiele] = useState(0);
@@ -131,8 +139,12 @@ export default function PartnerPortal() {
       .eq("partner_id", session.user.id)
       .order("aktiviert_am", { ascending: false });
     setStellen(st || []);
-    const firma = (st && st.length && st[0].firma) || session.user.user_metadata?.firma || "";
+    const meta = session.user.user_metadata || {};
+    const firma = meta.firma || (st && st.length && st[0].firma) || "";
     if (firma && !form.firma) setForm((f) => ({ ...f, firma }));
+    // NESTplay-Zuordnung: bevorzugt die stabile Referenz aus der Registrierung (UUID),
+    // sonst der Firmenname.
+    const nestplayRef = meta.nestplay_ref || firma;
 
     const heute = new Date().toISOString().slice(0, 10);
     const { data: ev } = await supabase
@@ -149,7 +161,7 @@ export default function PartnerPortal() {
 
     // NESTplay-Anbindung: Live-Spiele des Unternehmens + Netzwerk-Gesamtzahl
     const [spiele, gesamt] = await Promise.all([
-      fetchGamesForCompany(firma),
+      fetchGamesForCompany(nestplayRef),
       fetchLiveGamesTotal(),
     ]);
     setNestplayGames(spiele);
@@ -170,10 +182,44 @@ export default function PartnerPortal() {
   useEffect(() => { if (session) ladeDaten(); }, [session, ladeDaten]);
   useEffect(() => { if (isAdmin) ladeAdmin(); }, [isAdmin, ladeAdmin]);
 
+  // NESTplay-Unternehmen für die Auswahl bei der Registrierung laden
+  useEffect(() => {
+    if (authMode === "register" && nestplayConfigured && !companies.length) {
+      fetchNestplayCompanies().then(setCompanies).catch(() => {});
+    }
+  }, [authMode, companies.length]);
+
   async function login(e) {
     e.preventDefault(); setAuthErr("");
     const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
     if (error) setAuthErr("Login fehlgeschlagen: " + error.message);
+  }
+
+  function waehleFirma(c) {
+    setFirmaRef(c.ref); setFirmaQuery(c.name); setFirmaOpen(false);
+  }
+  function setFirmaFreitext(v) {
+    setFirmaQuery(v); setFirmaRef(null); setFirmaOpen(true); // Freitext -> Mapping später über den Namen
+  }
+
+  async function registrieren(e) {
+    e.preventDefault(); setAuthErr(""); setRegMsg("");
+    const firmaName = firmaQuery.trim();
+    if (!firmaName) { setAuthErr("Bitte wähle oder nenne dein Unternehmen."); return; }
+    if (pass.length < 8) { setAuthErr("Das Passwort muss mindestens 8 Zeichen haben."); return; }
+    setRegBusy(true);
+    const { data, error } = await supabase.auth.signUp({
+      email, password: pass,
+      options: { data: { firma: firmaName, nestplay_ref: firmaRef || firmaName } },
+    });
+    setRegBusy(false);
+    if (error) { setAuthErr("Registrierung fehlgeschlagen: " + error.message); return; }
+    if (data.session) {
+      setRegMsg("Willkommen! Dein Zugang ist aktiv.");
+    } else {
+      setRegMsg("Fast geschafft! Wir haben dir eine E-Mail zur Bestätigung geschickt. Bitte bestätige deine Adresse und melde dich anschließend an.");
+      setAuthMode("login");
+    }
   }
   async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
 
@@ -255,18 +301,71 @@ export default function PartnerPortal() {
           ) : loading ? (
             <p>Lädt …</p>
           ) : !session ? (
-            <div className="card" style={{ maxWidth: "440px", margin: "0 auto" }}>
-              <span className="section-label">Anmeldung</span>
-              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>Login</h2>
-              <form onSubmit={login} className="tb-form">
-                <div className="field"><label>E-Mail</label><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
-                <div className="field"><label>Passwort</label><input type="password" value={pass} onChange={(e) => setPass(e.target.value)} required /></div>
-                {authErr ? <p style={{ color: "#c2415a", fontSize: "14px" }}>{authErr}</p> : null}
-                <button className="btn btn-primary" type="submit" style={{ width: "100%", justifyContent: "center" }}>Anmelden</button>
-              </form>
-              <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "16px" }}>
-                Noch kein Zugang? Partner-Accounts werden vom NEST-Team angelegt – melde dich unter <a href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a>.
-              </p>
+            <div className="card" style={{ maxWidth: "460px", margin: "0 auto" }}>
+              <div className="auth-tabs">
+                <button type="button" className={"auth-tab" + (authMode === "login" ? " active" : "")} onClick={() => { setAuthMode("login"); setAuthErr(""); }}>Anmelden</button>
+                <button type="button" className={"auth-tab" + (authMode === "register" ? " active" : "")} onClick={() => { setAuthMode("register"); setAuthErr(""); }}>Registrieren</button>
+              </div>
+
+              {authMode === "login" ? (
+                <>
+                  <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>Login</h2>
+                  <form onSubmit={login} className="tb-form">
+                    <div className="field"><label>E-Mail</label><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
+                    <div className="field"><label>Passwort</label><input type="password" value={pass} onChange={(e) => setPass(e.target.value)} required /></div>
+                    {regMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{regMsg}</p> : null}
+                    {authErr ? <p style={{ color: "#c2415a", fontSize: "14px" }}>{authErr}</p> : null}
+                    <button className="btn btn-primary" type="submit" style={{ width: "100%", justifyContent: "center" }}>Anmelden</button>
+                  </form>
+                  <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "16px" }}>
+                    Noch kein Zugang? <button type="button" className="link-btn" onClick={() => { setAuthMode("register"); setAuthErr(""); }}>Jetzt als Unternehmen registrieren</button>.
+                  </p>
+                </>
+              ) : (() => {
+                const f = firmaQuery.trim().toLowerCase();
+                const treffer = companies.filter((c) => !f || c.name.toLowerCase().includes(f)).slice(0, 8);
+                return (
+                  <>
+                    <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 6px" }}>Unternehmen registrieren</h2>
+                    <p style={{ fontSize: "13px", color: "var(--text-soft)", margin: "0 0 16px" }}>Wähle dein Unternehmen aus NESTplay aus – so passt die Zuordnung garantiert.</p>
+                    <form onSubmit={registrieren} className="tb-form">
+                      <div className="field combo-field">
+                        <label>Unternehmen *</label>
+                        <input
+                          type="text" value={firmaQuery} autoComplete="off"
+                          placeholder={nestplayConfigured ? "Unternehmen suchen …" : "Unternehmensname eingeben"}
+                          onChange={(e) => setFirmaFreitext(e.target.value)}
+                          onFocus={() => setFirmaOpen(true)}
+                          onBlur={() => setTimeout(() => setFirmaOpen(false), 150)}
+                          required
+                        />
+                        {firmaRef && firmaRef !== firmaQuery ? <span className="combo-ok">✓ aus NESTplay übernommen</span> : null}
+                        {firmaOpen && treffer.length ? (
+                          <div className="combo-list">
+                            {treffer.map((c) => (
+                              <button type="button" className="combo-item" key={c.ref} onMouseDown={(e) => { e.preventDefault(); waehleFirma(c); }}>
+                                <span>{c.name}</span>
+                                <span className="combo-count">{c.count} {c.count === 1 ? "Spiel" : "Spiele"}</span>
+                              </button>
+                            ))}
+                          </div>
+                        ) : null}
+                        {firmaOpen && nestplayConfigured && f && !treffer.length ? (
+                          <div className="combo-list"><div className="combo-empty">Kein Treffer – „{firmaQuery}" wird als neuer Name verwendet.</div></div>
+                        ) : null}
+                      </div>
+                      {!nestplayConfigured ? <p style={{ fontSize: "12px", color: "var(--text-mute)", margin: "-4px 0 0" }}>Hinweis: NESTplay ist noch nicht verbunden – die Auswahlliste ist daher leer, du kannst den Namen aber frei eintragen.</p> : null}
+                      <div className="field"><label>E-Mail</label><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
+                      <div className="field"><label>Passwort</label><input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="mindestens 8 Zeichen" required /></div>
+                      {authErr ? <p style={{ color: "#c2415a", fontSize: "14px" }}>{authErr}</p> : null}
+                      <button className="btn btn-primary" type="submit" disabled={regBusy} style={{ width: "100%", justifyContent: "center" }}>{regBusy ? "Wird angelegt …" : "Registrieren"}</button>
+                    </form>
+                    <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "16px" }}>
+                      Schon registriert? <button type="button" className="link-btn" onClick={() => { setAuthMode("login"); setAuthErr(""); }}>Zum Login</button>.
+                    </p>
+                  </>
+                );
+              })()}
             </div>
           ) : (
             <div>

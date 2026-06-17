@@ -5,9 +5,18 @@ import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, game
 import { mapMesseTermin } from "@/lib/messeTermine";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
-const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "" };
+const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "" };
 const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", beschreibung: "" };
 const POST_LEER = { slug: "", titel: "", excerpt: "", inhalt: "", bild_url: "", published: true };
+const AP_LEER = { name: "", rolle: "", email: "", telefon: "", standort: "", bild_url: "", beschreibung: "", sortierung: 0 };
+
+// Standard-Ansprechpartner – werden gezeigt, solange in der Tabelle `ansprechpartner`
+// noch nichts gepflegt ist (Admin kann sie im Portal überschreiben/ergänzen).
+const AP_DEFAULT = [
+  { id: "d1", name: "Mike Schrott", rolle: "Netzwerk & Partnerschaften", email: "mike@nest-bildungsbar.de", telefon: "+49 151 12345678", bild_url: "/assets/img/team/mike.jpg" },
+  { id: "d2", name: "Patrick Müller", rolle: "Kooperation & Unternehmen", email: "patrick@nest-bildungsbar.de", telefon: "+49 151 23456789", bild_url: "/assets/img/team/patrick.jpg" },
+  { id: "d3", name: "Sarah Bauer", rolle: "Berufsorientierung & Schulen", email: "sarah@nest-bildungsbar.de", telefon: "+49 151 34567890", bild_url: "/assets/img/team/sarah.jpg" },
+];
 
 function slugify(s) {
   return String(s).toLowerCase()
@@ -81,6 +90,12 @@ export default function PartnerPortal() {
   const [poMsg, setPoMsg] = useState("");
   const [uploading, setUploading] = useState(false);
   const [infoFilter, setInfoFilter] = useState("Alle");
+  const [logoUploading, setLogoUploading] = useState(false);   // Logo-Upload bei der Stelle
+  // Ansprechpartner (öffentlich lesbar, vom Admin pflegbar)
+  const [ansprechpartner, setAnsprechpartner] = useState([]);
+  const [apForm, setApForm] = useState(AP_LEER);
+  const [apMsg, setApMsg] = useState("");
+  const [apUploading, setApUploading] = useState(false);
 
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
 
@@ -147,6 +162,12 @@ export default function PartnerPortal() {
       .from("messe_termine").select("*")
       .gte("datum", heute).order("datum", { ascending: true });
     setMesseTermine((mt || []).map(mapMesseTermin));
+
+    // Ansprechpartner (öffentlich lesbar) – Admin pflegt sie im Admin-Bereich.
+    const { data: ap } = await supabase
+      .from("ansprechpartner").select("*")
+      .order("sortierung", { ascending: true }).order("created_at", { ascending: true });
+    setAnsprechpartner(ap || []);
 
     // Vergleichswert: aktive Stellen im gesamten Netzwerk (RLS gibt nur aktive Stellen frei)
     const grenze = new Date(Date.now() - STELLEN_TAGE * 86400000).toISOString().slice(0, 10);
@@ -231,6 +252,49 @@ export default function PartnerPortal() {
     ladeDaten();
   }
   async function loeschen(id) { await supabase.from("stellen").delete().eq("id", id); ladeDaten(); }
+
+  // Optionales Firmen-Logo zur Stelle hochladen (Bucket "logos").
+  async function logoUpload(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setLogoUploading(true); setMsg("");
+    const ext = (file.name.split(".").pop() || "png").toLowerCase();
+    const pfad = `stellen/${session.user.id}-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("logos").upload(pfad, file, { cacheControl: "3600", upsert: true });
+    if (error) { setMsg("Logo-Upload-Fehler: " + error.message); setLogoUploading(false); return; }
+    const { data } = supabase.storage.from("logos").getPublicUrl(pfad);
+    setForm((f) => ({ ...f, logo_url: data.publicUrl }));
+    setLogoUploading(false);
+  }
+
+  // ---- Admin: Ansprechpartner (anlegen / bearbeiten / löschen, mit Bild) ----
+  const apSet = (k) => (e) => setApForm((f) => ({ ...f, [k]: e.target.value }));
+  async function apBildUpload(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setApUploading(true); setApMsg("");
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const pfad = `ansprechpartner/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabase.storage.from("logos").upload(pfad, file, { cacheControl: "3600", upsert: false });
+    if (error) { setApMsg("Upload-Fehler: " + error.message); setApUploading(false); return; }
+    const { data } = supabase.storage.from("logos").getPublicUrl(pfad);
+    setApForm((f) => ({ ...f, bild_url: data.publicUrl }));
+    setApUploading(false);
+  }
+  async function apSpeichern(e) {
+    e.preventDefault(); setApMsg("");
+    if (!apForm.name) { setApMsg("Name ist Pflicht."); return; }
+    const { id, ...werte } = apForm;
+    const { error } = id
+      ? await supabase.from("ansprechpartner").update(werte).eq("id", id)
+      : await supabase.from("ansprechpartner").insert(werte);
+    if (error) { setApMsg("Fehler: " + error.message); return; }
+    setApForm(AP_LEER);
+    setApMsg("Ansprechpartner gespeichert ✅");
+    ladeDaten();
+  }
+  function apBearbeiten(ap) { setApForm({ ...AP_LEER, ...ap }); setApMsg(""); }
+  async function apLoeschen(id) { await supabase.from("ansprechpartner").delete().eq("id", id); if (apForm.id === id) setApForm(AP_LEER); ladeDaten(); }
 
   // ---- Admin: Veranstaltungen ----
   async function eventSpeichern(e) {
@@ -370,7 +434,10 @@ export default function PartnerPortal() {
                   <span className="section-label">Eingeloggt{isAdmin ? " · Admin" : ""}</span>
                   <strong style={{ color: "var(--navy)", fontSize: "18px" }}>{session.user.email}</strong>
                 </div>
-                <button className="btn btn-ghost" onClick={logout}>Abmelden</button>
+                <button className="btn btn-outline" onClick={logout} style={{ borderColor: "var(--navy)", color: "var(--navy)", fontWeight: 800, display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  Abmelden
+                </button>
               </div>
 
               {/* Dashboard – Kennzahlen im Vergleich */}
@@ -440,6 +507,68 @@ export default function PartnerPortal() {
                 );
               })()}
 
+              {/* Neue Stelle */}
+              <div className="card" style={{ marginBottom: "28px" }}>
+                <h3>Neue Ausbildungsstelle veröffentlichen</h3>
+                <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>Erscheint auf „Berufswelt" – automatisch 30 Tage sichtbar.</p>
+                <form onSubmit={speichern} className="tb-form">
+                  <div className="row2">
+                    <div className="field"><label>Unternehmen *</label><input value={form.firma} onChange={set("firma")} required /></div>
+                    <div className="field"><label>Beruf *</label><input value={form.beruf} onChange={set("beruf")} placeholder="z. B. Mechatroniker:in" required /></div>
+                  </div>
+                  <div className="row2">
+                    <div className="field"><label>Art</label>
+                      <select value={form.art} onChange={set("art")}><option>Ausbildung</option><option>Duales Studium</option><option>Praktikum</option></select>
+                    </div>
+                    <div className="field"><label>Standort</label>
+                      <select value={form.ort} onChange={set("ort")}><option>Wuppertal</option><option>Essen</option></select>
+                    </div>
+                  </div>
+                  <div className="row2">
+                    <div className="field"><label>Start / Dauer</label><input value={form.start} onChange={set("start")} placeholder="z. B. ab 08/2026 · 3,5 Jahre" /></div>
+                    <div className="field"><label>Link (Bewerbung/Karriereseite) *</label><input type="url" value={form.url} onChange={set("url")} placeholder="https://…" required /></div>
+                  </div>
+                  <div className="field">
+                    <label>Logo (optional) – ersetzt in der Berufswelt die Buchstaben</label>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                      {form.logo_url ? <img src={form.logo_url} alt="Logo-Vorschau" style={{ width: "48px", height: "48px", objectFit: "contain", borderRadius: "10px", border: "1px solid var(--line)", background: "#fff", padding: "3px" }} /> : null}
+                      <input type="file" accept="image/*" onChange={logoUpload} />
+                      {logoUploading ? <span style={{ fontSize: "13px", color: "var(--text-soft)" }}>lädt …</span> : null}
+                      {form.logo_url ? <button type="button" className="btn btn-ghost" style={{ padding: "4px 10px" }} onClick={() => setForm((f) => ({ ...f, logo_url: "" }))}>Entfernen</button> : null}
+                    </div>
+                  </div>
+                  {msg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{msg}</p> : null}
+                  <button className="btn btn-primary" type="submit">Stelle veröffentlichen</button>
+                </form>
+              </div>
+
+              {/* Eigene Stellen */}
+              <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Deine Stellen ({stellen.length})</h3>
+              {stellen.length ? (
+                <div className="card-grid cols-2" style={{ marginBottom: "28px" }}>
+                  {stellen.map((s) => {
+                    const rest = tageRestStelle(s.aktiviert_am);
+                    const a = ampelStatus(rest);
+                    return (
+                      <div className="card" key={s.id}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
+                          <span className="badge">{s.art} · {s.ort}</span>
+                          <span className={"ampel-badge " + a.cls}><i className="ampel-dot"></i>{rest == null || rest < 0 ? "abgelaufen" : "noch " + rest + (rest === 1 ? " Tag" : " Tage")}</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px" }}>
+                          {s.logo_url ? <img src={s.logo_url} alt={s.firma} style={{ width: "40px", height: "40px", objectFit: "contain", borderRadius: "9px", border: "1px solid var(--line)", background: "#fff", padding: "3px", flexShrink: 0 }} /> : null}
+                          <h3 style={{ margin: 0 }}>{s.beruf}</h3>
+                        </div>
+                        <p style={{ color: "var(--text-soft)" }}>{s.firma}{s.start ? " · " + s.start : ""}</p>
+                        <p style={{ fontSize: "12px", color: "var(--text-mute)" }}>aktiviert am {s.aktiviert_am}</p>
+                        {s.url ? <p style={{ fontSize: "12px", margin: "2px 0 0" }}><a href={s.url} target="_blank" rel="noopener">Bewerbungslink ↗</a></p> : null}
+                        <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => loeschen(s.id)}>Löschen</button>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : <p style={{ color: "var(--text-soft)", marginBottom: "28px" }}>Du hast noch keine Stellen veröffentlicht.</p>}
+
               {/* Deine NESTplay-Spiele (Live-Anbindung an nest-play.de) */}
               {!isAdmin && (() => {
                 const firma = (stellen[0] && stellen[0].firma) || form.firma || "";
@@ -485,138 +614,6 @@ export default function PartnerPortal() {
                 );
               })()}
 
-              {/* Eure Ansprechpartner */}
-              <div style={{ marginBottom: "36px" }}>
-                <span className="section-label">Euer Team</span>
-                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>Eure Ansprechpartner</h3>
-                <div className="ap-grid">
-                  {[
-                    { foto: "/assets/img/team/mike.jpg", name: "Mike Schrott", thema: "Netzwerk & Partnerschaften", web: "nest-bildungsbar.de", mail: "mike@nest-bildungsbar.de", tel: "+49 151 12345678" },
-                    { foto: "/assets/img/team/patrick.jpg", name: "Patrick Müller", thema: "Kooperation & Unternehmen", web: "nest-bildungsbar.de", mail: "patrick@nest-bildungsbar.de", tel: "+49 151 23456789" },
-                    { foto: "/assets/img/team/sarah.jpg", name: "Sarah Bauer", thema: "Berufsorientierung & Schulen", web: "nest-bildungsbar.de", mail: "sarah@nest-bildungsbar.de", tel: "+49 151 34567890" },
-                  ].map((ap) => (
-                    <div className="ap-card" key={ap.mail}>
-                      <img className="ap-photo" src={ap.foto} alt={ap.name} />
-                      <div className="ap-body">
-                        <div className="ap-topic">{ap.thema}</div>
-                        <div className="ap-name">{ap.name}</div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                          <a href={`https://${ap.web}`} target="_blank" rel="noopener" style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            {ap.web}
-                          </a>
-                          <a href={`mailto:${ap.mail}`} style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            {ap.mail}
-                          </a>
-                          <a href={`tel:${ap.tel.replace(/\s/g, "")}`} style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.63a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            {ap.tel}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Neue Stelle */}
-              <div className="card" style={{ marginBottom: "28px" }}>
-                <h3>Neue Ausbildungsstelle veröffentlichen</h3>
-                <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>Erscheint auf „Berufswelt" – automatisch 30 Tage sichtbar.</p>
-                <form onSubmit={speichern} className="tb-form">
-                  <div className="row2">
-                    <div className="field"><label>Unternehmen *</label><input value={form.firma} onChange={set("firma")} required /></div>
-                    <div className="field"><label>Beruf *</label><input value={form.beruf} onChange={set("beruf")} placeholder="z. B. Mechatroniker:in" required /></div>
-                  </div>
-                  <div className="row2">
-                    <div className="field"><label>Art</label>
-                      <select value={form.art} onChange={set("art")}><option>Ausbildung</option><option>Duales Studium</option><option>Praktikum</option></select>
-                    </div>
-                    <div className="field"><label>Standort</label>
-                      <select value={form.ort} onChange={set("ort")}><option>Wuppertal</option><option>Essen</option></select>
-                    </div>
-                  </div>
-                  <div className="row2">
-                    <div className="field"><label>Start / Dauer</label><input value={form.start} onChange={set("start")} placeholder="z. B. ab 08/2026 · 3,5 Jahre" /></div>
-                    <div className="field"><label>Link (Bewerbung/Karriereseite) *</label><input type="url" value={form.url} onChange={set("url")} placeholder="https://…" required /></div>
-                  </div>
-                  {msg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{msg}</p> : null}
-                  <button className="btn btn-primary" type="submit">Stelle veröffentlichen</button>
-                </form>
-              </div>
-
-              {/* Eigene Stellen */}
-              <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Deine Stellen ({stellen.length})</h3>
-              {stellen.length ? (
-                <div className="card-grid cols-2" style={{ marginBottom: "28px" }}>
-                  {stellen.map((s) => {
-                    const rest = tageRestStelle(s.aktiviert_am);
-                    const a = ampelStatus(rest);
-                    return (
-                      <div className="card" key={s.id}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
-                          <span className="badge">{s.art} · {s.ort}</span>
-                          <span className={"ampel-badge " + a.cls}><i className="ampel-dot"></i>{rest == null || rest < 0 ? "abgelaufen" : "noch " + rest + (rest === 1 ? " Tag" : " Tage")}</span>
-                        </div>
-                        <h3 style={{ marginTop: "10px" }}>{s.beruf}</h3>
-                        <p style={{ color: "var(--text-soft)" }}>{s.firma}{s.start ? " · " + s.start : ""}</p>
-                        <p style={{ fontSize: "12px", color: "var(--text-mute)" }}>aktiviert am {s.aktiviert_am}</p>
-                        {s.url ? <p style={{ fontSize: "12px", margin: "2px 0 0" }}><a href={s.url} target="_blank" rel="noopener">Bewerbungslink ↗</a></p> : null}
-                        <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => loeschen(s.id)}>Löschen</button>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : <p style={{ color: "var(--text-soft)", marginBottom: "28px" }}>Du hast noch keine Stellen veröffentlicht.</p>}
-
-              {/* Kommende Veranstaltungen (für alle) */}
-              <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Kommende Veranstaltungen</h3>
-              {events.length ? (
-                <div className="card-grid cols-2">
-                  {events.map((v) => (
-                    <div className="card" key={v.id}>
-                      <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
-                      <h3>{v.titel}</h3>
-                      <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
-                      {v.beschreibung ? <p>{v.beschreibung}</p> : null}
-                    </div>
-                  ))}
-                </div>
-              ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Veranstaltungen eingetragen.</p>}
-
-              {/* Kommende Messetermine (NEST Explore) */}
-              <div style={{ marginTop: "36px" }}>
-                <span className="section-label">NEST Explore</span>
-                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 14px" }}>Kommende Messetermine</h3>
-                {messeTermine.length ? (
-                  <div className="messe-termine">
-                    {messeTermine.map((m) => (
-                      <div
-                        className="messe-termin"
-                        key={m.id}
-                        style={m.highlight ? { borderColor: "var(--gold)", boxShadow: "0 2px 16px rgba(191,149,63,0.18)" } : undefined}
-                      >
-                        <div className="messe-termin-date">
-                          <span className="mt-day">{m.tag}</span>
-                          <span className="mt-mon">{m.monat_kurz}</span>
-                        </div>
-                        <div className="messe-termin-body">
-                          <h4>
-                            {m.titel}
-                            {m.neu ? <span className="badge" style={{ marginLeft: "8px", verticalAlign: "middle" }}>Neu</span> : null}
-                            {m.ausgebucht ? <span className="badge ampel-badge ampel-rot" style={{ marginLeft: "8px", verticalAlign: "middle" }}>ausgebucht</span> : null}
-                          </h4>
-                          <p className="messe-termin-meta">{m.datum_text} · {m.uhrzeit} · {m.ort}</p>
-                          {m.info ? <p className="messe-termin-info">{m.info}</p> : null}
-                        </div>
-                        <a className="btn btn-outline" href="https://nest-messe.de/terminkalender" target="_blank" rel="noopener">Details ↗</a>
-                      </div>
-                    ))}
-                  </div>
-                ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Messetermine eingetragen.</p>}
-              </div>
-
               {/* NESTplay Promo für Partner */}
               {!isAdmin && (
                 <div className="np-promo" style={{ marginTop: "28px" }}>
@@ -651,6 +648,121 @@ export default function PartnerPortal() {
                   </div>
                 </div>
               )}
+
+              {/* NEST Explore (Messe) – Promo-Mockup + kommende Termine */}
+              {!isAdmin && (
+                <div className="np-promo" style={{ marginTop: "36px" }}>
+                  <div className="np-promo-text">
+                    <span className="np-promo-label">Für Unternehmen</span>
+                    <div className="np-promo-h">NEST Explore – die Messe<br /><em>kommt in die Schule</em></div>
+                    <p className="np-promo-p">Trefft motivierte Schüler:innen direkt vor Ort – unsere Ausbildungsmesse bringt euch persönlich mit Schulklassen zusammen, komplett von NEST organisiert.</p>
+                    <a href="https://nest-messe.de" target="_blank" rel="noopener" className="btn btn-primary" style={{ display: "inline-flex" }}>Zu NEST Explore →</a>
+                  </div>
+                  <div className="np-promo-phone">
+                    <div className="np-mini-phone">
+                      <div className="np-phone-screen">
+                        <div className="np-phone-head" style={{ padding: "22px 12px 12px" }}>
+                          <div className="np-phone-pl">NEST Explore · Terminkalender</div>
+                          <div className="np-phone-h4">Schul-Termine</div>
+                        </div>
+                        <div className="np-phone-body" style={{ padding: "10px", display: "flex", flexDirection: "column", gap: "7px" }}>
+                          <div style={{ background: "#fff", borderRadius: "6px", padding: "7px 9px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: "9.5px", fontWeight: 700, color: "var(--navy)" }}>Gesamtschule Barmen</span>
+                            <b style={{ fontSize: "9px", color: "var(--gold-dark)", fontWeight: 900 }}>08. Apr</b>
+                          </div>
+                          <div style={{ background: "#fff", borderRadius: "6px", padding: "7px 9px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: "9.5px", fontWeight: 700, color: "var(--navy)" }}>Berufskolleg Elberfeld</span>
+                            <b style={{ fontSize: "9px", color: "var(--gold-dark)", fontWeight: 900 }}>22. Apr</b>
+                          </div>
+                          <div style={{ background: "var(--navy)", borderRadius: "6px", padding: "7px 10px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.6)" }}>Realschule Vohwinkel</span>
+                            <b style={{ fontSize: "9px", color: "#EFA500", fontWeight: 900 }}>13. Mai</b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Kommende Messetermine (NEST Explore) */}
+              <div style={{ marginTop: "36px" }}>
+                <span className="section-label">NEST Explore</span>
+                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 14px" }}>Kommende Messetermine</h3>
+                {messeTermine.length ? (
+                  <div className="messe-termine">
+                    {messeTermine.map((m) => (
+                      <div
+                        className="messe-termin"
+                        key={m.id}
+                        style={m.highlight ? { borderColor: "var(--gold)", boxShadow: "0 2px 16px rgba(191,149,63,0.18)" } : undefined}
+                      >
+                        <div className="messe-termin-date">
+                          <span className="mt-day">{m.tag}</span>
+                          <span className="mt-mon">{m.monat_kurz}</span>
+                        </div>
+                        <div className="messe-termin-body">
+                          <h4>
+                            {m.titel}
+                            {m.neu ? <span className="badge" style={{ marginLeft: "8px", verticalAlign: "middle" }}>Neu</span> : null}
+                            {m.ausgebucht ? <span className="badge ampel-badge ampel-rot" style={{ marginLeft: "8px", verticalAlign: "middle" }}>ausgebucht</span> : null}
+                          </h4>
+                          <p className="messe-termin-meta">{m.datum_text} · {m.uhrzeit} · {m.ort}</p>
+                          {m.info ? <p className="messe-termin-info">{m.info}</p> : null}
+                        </div>
+                        <a className="btn btn-outline" href="https://nest-messe.de/terminkalender" target="_blank" rel="noopener">Details ↗</a>
+                      </div>
+                    ))}
+                  </div>
+                ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Messetermine eingetragen.</p>}
+              </div>
+
+              {/* Ansprechpartner */}
+              <div style={{ marginBottom: "36px" }}>
+                <span className="section-label">Für euch da</span>
+                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>Ansprechpartner</h3>
+                <div className="ap-grid">
+                  {(ansprechpartner.length ? ansprechpartner : AP_DEFAULT).map((ap) => (
+                    <div className="ap-card" key={ap.id || ap.email}>
+                      {ap.bild_url ? <img className="ap-photo" src={ap.bild_url} alt={ap.name} /> : null}
+                      <div className="ap-body">
+                        {ap.rolle ? <div className="ap-topic">{ap.rolle}</div> : null}
+                        <div className="ap-name">{ap.name}</div>
+                        {ap.beschreibung ? <p style={{ fontSize: "13px", color: "var(--text-soft)", margin: "0 0 8px" }}>{ap.beschreibung}</p> : null}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                          {ap.standort ? <span style={{ fontSize: "13px", color: "var(--text-soft)", display: "flex", alignItems: "center", gap: "6px" }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            {ap.standort}
+                          </span> : null}
+                          {ap.email ? <a href={`mailto:${ap.email}`} style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            {ap.email}
+                          </a> : null}
+                          {ap.telefon ? <a href={`tel:${ap.telefon.replace(/\s/g, "")}`} style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.63a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            {ap.telefon}
+                          </a> : null}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Kommende Veranstaltungen (für alle) */}
+              <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Kommende Veranstaltungen</h3>
+              {events.length ? (
+                <div className="card-grid cols-2">
+                  {events.map((v) => (
+                    <div className="card" key={v.id}>
+                      <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
+                      <h3>{v.titel}</h3>
+                      <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
+                      {v.beschreibung ? <p>{v.beschreibung}</p> : null}
+                    </div>
+                  ))}
+                </div>
+              ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Veranstaltungen eingetragen.</p>}
 
               {/* Filterbarer Info-Bereich */}
               <div style={{ marginTop: "36px", marginBottom: "12px" }}>
@@ -720,11 +832,15 @@ export default function PartnerPortal() {
                     );
                   })()}
 
-                  {/* Terminbuchungen */}
-                  <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Terminbuchungen ({buchungen.length})</h3>
-                  {buchungen.length ? (() => {
+                  {/* Terminbuchungen – abgelaufene Termine werden ausgeblendet */}
+                  {(() => {
+                  const heuteISO = new Date().toISOString().slice(0, 10);
+                  const buchungenAktiv = buchungen.filter((b) => !b.datum || b.datum >= heuteISO);
+                  return (<>
+                  <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Terminbuchungen ({buchungenAktiv.length})</h3>
+                  {buchungenAktiv.length ? (() => {
                     const groups = {};
-                    buchungen.forEach((bu) => {
+                    buchungenAktiv.forEach((bu) => {
                       const k = bu.standort + "|" + (bu.datum || bu.datum_text || "");
                       (groups[k] = groups[k] || []).push(bu);
                     });
@@ -764,7 +880,64 @@ export default function PartnerPortal() {
                         })}
                       </div>
                     );
-                  })() : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Terminbuchungen.</p>}
+                  })() : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Keine anstehenden Terminbuchungen.</p>}
+                  </>);
+                  })()}
+
+                  {/* Ansprechpartner verwalten */}
+                  <div className="card" style={{ marginBottom: "24px" }}>
+                    <h3>{apForm.id ? "Ansprechpartner bearbeiten" : "Ansprechpartner anlegen"}</h3>
+                    <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>Erscheint im Partner-Portal im Bereich „Ansprechpartner".</p>
+                    <form onSubmit={apSpeichern} className="tb-form">
+                      <div className="row2">
+                        <div className="field"><label>Name *</label><input value={apForm.name} onChange={apSet("name")} required /></div>
+                        <div className="field"><label>Rolle / Thema</label><input value={apForm.rolle} onChange={apSet("rolle")} placeholder="z. B. Kooperation & Unternehmen" /></div>
+                      </div>
+                      <div className="row2">
+                        <div className="field"><label>E-Mail</label><input type="email" value={apForm.email} onChange={apSet("email")} /></div>
+                        <div className="field"><label>Telefon</label><input value={apForm.telefon} onChange={apSet("telefon")} /></div>
+                      </div>
+                      <div className="row2">
+                        <div className="field"><label>Standort</label><input value={apForm.standort} onChange={apSet("standort")} placeholder="z. B. Wuppertal" /></div>
+                        <div className="field"><label>Reihenfolge</label><input type="number" value={apForm.sortierung} onChange={apSet("sortierung")} /></div>
+                      </div>
+                      <div className="field"><label>Kurzinfo</label><input value={apForm.beschreibung} onChange={apSet("beschreibung")} placeholder="Worum kümmert sich die Person?" /></div>
+                      <div className="field">
+                        <label>Bild</label>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                          {apForm.bild_url ? <img src={apForm.bild_url} alt="Vorschau" style={{ width: "54px", height: "54px", objectFit: "cover", borderRadius: "50%", border: "1px solid var(--line)" }} /> : null}
+                          <input type="file" accept="image/*" onChange={apBildUpload} />
+                          {apUploading ? <span style={{ fontSize: "13px", color: "var(--text-soft)" }}>lädt …</span> : null}
+                        </div>
+                      </div>
+                      {apMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{apMsg}</p> : null}
+                      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                        <button className="btn btn-primary" type="submit">{apForm.id ? "Änderungen speichern" : "Ansprechpartner speichern"}</button>
+                        {apForm.id ? <button type="button" className="btn btn-ghost" onClick={() => { setApForm(AP_LEER); setApMsg(""); }}>Abbrechen</button> : null}
+                      </div>
+                    </form>
+                  </div>
+
+                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 12px" }}>Alle Ansprechpartner ({ansprechpartner.length})</h3>
+                  {ansprechpartner.length ? (
+                    <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
+                      {ansprechpartner.map((ap) => (
+                        <div className="card" key={ap.id}>
+                          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                            {ap.bild_url ? <img src={ap.bild_url} alt={ap.name} style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "50%", flexShrink: 0 }} /> : null}
+                            <div>
+                              <strong style={{ color: "var(--navy)" }}>{ap.name}</strong>
+                              {ap.rolle ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>{ap.rolle}</p> : null}
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+                            <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => apBearbeiten(ap)}>Bearbeiten</button>
+                            <button className="btn btn-ghost" style={{ padding: "6px 14px" }} onClick={() => apLoeschen(ap.id)}>Löschen</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Ansprechpartner angelegt – es werden die Standard-Kontakte angezeigt.</p>}
 
                   {/* Veranstaltung anlegen */}
                   <div className="card" style={{ marginBottom: "24px" }}>

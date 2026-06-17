@@ -1,55 +1,65 @@
 const html = `
 
-  <!-- BAUSTEINE (dunkle wf-Sektion) -->
+  <!-- DREI SÄULEN (dunkle wf-Sektion) -->
   <section class="wf">
     <div class="wf-inner">
 
       <div class="wf-header">
-        <div class="wf-eyebrow"><div class="wf-eyebrow-line"></div>Die Bausteine<div class="wf-eyebrow-line"></div></div>
-        <h2 class="wf-h1">So sieht eure <em>Kooperation</em> aus</h2>
-        <p class="wf-lead">Von der Sichtbarkeit über die Vernetzung bis zur Begleitung – das sind die einzelnen Bausteine, mit denen wir euch unterstützen.</p>
+        <div class="wf-eyebrow"><div class="wf-eyebrow-line"></div>Drei Säulen<div class="wf-eyebrow-line"></div></div>
+        <h2 class="wf-h1">Was eure <em>Kooperation</em> bewirkt</h2>
+        <p class="wf-lead">Eure Partnerschaft wirkt auf drei Ebenen – gleichermaßen wichtig: ihr übernehmt gesellschaftliche Verantwortung, werdet bei jungen Talenten sichtbar und werdet Teil eines starken regionalen Netzwerks.</p>
       </div>
 
-      <!-- PHASE 1 -->
+      <!-- SÄULE 1: GEMEINWOHL -->
       <div class="wf-phase">
-        <div class="wf-phase-head"><div class="wf-phase-label"><div class="wf-phase-n">1</div>Sichtbar werden</div><div class="wf-phase-hr"></div></div>
+        <div class="wf-phase-head"><div class="wf-phase-label"><div class="wf-phase-n">1</div>Gemeinwohl</div><div class="wf-phase-hr"></div></div>
+        <p class="wf-lead" style="margin:-6px 0 26px;font-size:16px;">Mehr als Marketing: Ihr gestaltet aktiv die Ausbildungskultur in der Region und übernehmt gesellschaftliche Verantwortung.</p>
         <div class="wf-grid wf-grid--3">
           <div class="wf-card">
             <div class="wf-card-bg-num">01</div>
-            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">01</div></div><div class="wf-step-badge">vor Ort</div><div class="wf-step-icon">🎤</div></div>
-            <div class="wf-card-title">OpenHouse &amp; Beratung</div>
-            <div class="wf-card-body">Persönliche Beratung vor Ort in der BildungsBar – <b>ihr werdet für junge Menschen nahbar</b> und greifbar.</div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">01</div></div><div class="wf-step-badge">vor Ort</div><div class="wf-step-icon">☕</div></div>
+            <div class="wf-card-title">Beratungsangebote in der BildungsBar</div>
+            <div class="wf-card-body">Kostenfreie, persönliche Berufsorientierung für junge Menschen in Wuppertal &amp; Essen – <b>auf Augenhöhe und ohne Hürden</b>.</div>
           </div>
           <div class="wf-card">
             <div class="wf-card-bg-num">02</div>
             <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">02</div></div><div class="wf-step-badge">an Schulen</div><div class="wf-step-icon">🏫</div></div>
-            <div class="wf-card-title">Workshops</div>
-            <div class="wf-card-body">Erlebbare Berufsorientierung direkt im Klassenzimmer – <b>jugendgerecht und spielerisch</b>.</div>
+            <div class="wf-card-title">Workshops für Schulen &amp; Einrichtungen</div>
+            <div class="wf-card-body">Erlebbare Berufsorientierung direkt im Klassenzimmer und in sozialen Einrichtungen – <b>jugendgerecht und kAoA-konform</b>.</div>
           </div>
           <div class="wf-card">
             <div class="wf-card-bg-num">03</div>
-            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">03</div></div><div class="wf-step-badge">digital</div><div class="wf-step-icon">📱</div></div>
-            <div class="wf-card-title">Social Media &amp; Reichweite</div>
-            <div class="wf-card-body">Instagram, LinkedIn &amp; Spotify – <b>wir bringen eure Ausbildung dorthin, wo die Jugend ist</b>.</div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">03</div></div><div class="wf-step-badge">dauerhaft</div><div class="wf-step-icon">🤝</div></div>
+            <div class="wf-card-title">On- &amp; Offboarding</div>
+            <div class="wf-card-body">Motivational Support für eure Auszubildenden vom ersten Tag bis zum Abschluss – <b>für weniger Abbrüche und mehr Bindung</b>.</div>
           </div>
         </div>
+      </div>
 
-        <!-- Feature: Stellenseite (Laptop) -->
+      <div class="wf-divider"><div class="wf-div-dot"></div><div class="wf-div-line"></div><div class="wf-div-dot"></div></div>
+
+      <!-- SÄULE 2: AUSSENWIRKUNG -->
+      <div class="wf-phase">
+        <div class="wf-phase-head"><div class="wf-phase-label"><div class="wf-phase-n">2</div>Außenwirkung</div><div class="wf-phase-hr"></div></div>
+        <p class="wf-lead" style="margin:-6px 0 26px;font-size:16px;">Werdet sichtbar, wo die Jugend ist – digital, in den sozialen Medien und direkt im Unterricht.</p>
+
+        <!-- Feature: NEST Berufswelt / Stellenseite (Laptop) -->
         <div class="wf-feature">
           <div>
-            <div class="wf-feat-kicker"><div class="wf-feat-kicker-num">04</div><div class="wf-feat-kicker-label">Baustein · Stellenseite</div></div>
+            <div class="wf-feat-kicker"><div class="wf-feat-kicker-num">04</div><div class="wf-feat-kicker-label">NEST Berufswelt</div></div>
             <h2 class="wf-feat-h2">Eure interaktive<br /><em>Stellenseite</em></h2>
-            <p class="wf-feat-body">Ein eigenes Profil mit euren Ausbildungsberufen, das junge Menschen direkt zur Bewerbung führt – einfach gepflegt, immer aktuell.</p>
+            <p class="wf-feat-body">In der NEST Berufswelt findet ihr euch zwischen über 150 Ausbildungsberufen wieder: ein eigenes Profil mit euren Ausbildungsplätzen, das junge Menschen über den Berufsfinder und die Live-Jobbörse direkt zu euch führt – einfach gepflegt, immer aktuell.</p>
             <ul class="wf-bullets">
               <li><b>Unternehmensprofil</b> mit Logo, Beschreibung &amp; Kultur</li>
-              <li><b>Alle offenen Ausbildungsplätze</b> auf einen Blick</li>
+              <li><b>Live-Stellen</b> in der Jobbörse – 30 Tage aktuell, filterbar nach Interesse</li>
               <li><b>Direkter „Bewerben"-Button</b> zur BildungsBar</li>
             </ul>
+            <a class="btn btn-primary mt-2" href="/berufswelt">Zur Berufswelt →</a>
           </div>
           <div class="wf-feat-media">
             <div class="wf-laptop-outer"><div class="wf-laptop">
               <div class="wf-lap-screen">
-                <div class="br-bar"><div class="br-dots"><div class="br-dot br-dot-r"></div><div class="br-dot br-dot-y"></div><div class="br-dot br-dot-g"></div></div><div class="br-url">nest-bildungsbar.de/stellen</div></div>
+                <div class="br-bar"><div class="br-dots"><div class="br-dot br-dot-r"></div><div class="br-dot br-dot-y"></div><div class="br-dot br-dot-g"></div></div><div class="br-url">nest-bildungsbar.de/berufswelt</div></div>
                 <div class="lap-app">
                   <div class="lap-header">
                     <div class="lap-logo">M</div>
@@ -68,81 +78,49 @@ const html = `
             </div></div>
           </div>
         </div>
-      </div>
 
-      <div class="wf-divider"><div class="wf-div-dot"></div><div class="wf-div-line"></div><div class="wf-div-dot"></div></div>
-
-      <!-- PHASE 2 -->
-      <div class="wf-phase">
-        <div class="wf-phase-head"><div class="wf-phase-label"><div class="wf-phase-n">2</div>Talente erreichen</div><div class="wf-phase-hr"></div></div>
-
-        <!-- Feature: NESTplay (Phone) -->
-        <div class="wf-feature rev">
-          <div>
-            <div class="wf-feat-kicker"><div class="wf-feat-kicker-num">05</div><div class="wf-feat-kicker-label">Baustein · NESTplay</div></div>
-            <h2 class="wf-feat-h2">Spielerisch in<br /><em>die Schulen</em></h2>
-            <p class="wf-feat-body">Mit NESTplay präsentiert ihr euren Betrieb direkt im Unterricht – als interaktives Quiz, das Schüler:innen aktiviert und im Gedächtnis bleibt.</p>
-            <ul class="wf-bullets">
-              <li><b>Eigene Fragen</b> rund um euren Betrieb</li>
-              <li><b>Live-Quiz</b> motiviert die ganze Klasse</li>
-              <li><b>Sympathie statt Flyer</b> – ihr bleibt im Kopf</li>
-            </ul>
-          </div>
-          <div class="wf-feat-media">
-            <div class="wf-phone">
-              <div class="wf-phone-island"></div>
-              <div class="wf-phone-screen">
-                <div class="pp-head"><div class="pl">NESTplay · Frage 2/5</div><h4>Maier &amp; Söhne</h4></div>
-                <div class="pp-body">
-                  <div class="pp-q">Wie lange dauert die Ausbildung zum/zur Mechatroniker:in?</div>
-                  <div class="pp-opts">
-                    <div class="pp-opt pp-a">2 Jahre</div>
-                    <div class="pp-opt pp-b">3,5 Jahre</div>
-                    <div class="pp-opt pp-c">4 Jahre</div>
-                    <div class="pp-opt pp-d">5 Jahre</div>
-                  </div>
-                </div>
-                <div class="pp-foot"><span>Team Fuchs</span><b>20 Pkt.</b></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="wf-grid wf-grid--2">
+        <div class="wf-grid wf-grid--3" style="margin-top:30px;">
           <div class="wf-card">
+            <div class="wf-card-bg-num">05</div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">05</div></div><div class="wf-step-badge">digital</div><div class="wf-step-icon">📱</div></div>
+            <div class="wf-card-title">Social Media &amp; Reichweite</div>
+            <div class="wf-card-body">Instagram, LinkedIn &amp; Spotify – <b>wir bringen eure Ausbildung dorthin, wo die Jugend ist</b>.</div>
+          </div>
+          <div class="wf-card" style="border:1.5px solid var(--gold);box-shadow:0 10px 34px rgba(239,165,0,0.14);">
             <div class="wf-card-bg-num">06</div>
-            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">06</div></div><div class="wf-step-badge">passgenau</div><div class="wf-step-icon">🎯</div></div>
-            <div class="wf-card-title">Bewerbervernetzung</div>
-            <div class="wf-card-body">Wir begleiten junge Menschen bis zum Vorstellungsgespräch und <b>vernetzen euch mit passenden, motivierten Talenten</b>.</div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">06</div></div><div class="wf-step-badge" style="background:var(--gold);color:var(--navy);">Highlight</div><div class="wf-step-icon">🎮</div></div>
+            <div class="wf-card-title">NESTplay.</div>
+            <div class="wf-card-body">Präsentiert euren Betrieb direkt im Unterricht als interaktives Live-Quiz – <b>Schüler:innen spielen in Echtzeit und behalten euch im Kopf</b>.</div>
+            <div class="wf-card-foot"><div class="wf-tag">Gamifiziert</div><div class="wf-tag">In der Klasse</div></div>
           </div>
-          <div class="wf-card">
+          <div class="wf-card" style="border:1.5px solid var(--gold);box-shadow:0 10px 34px rgba(239,165,0,0.14);">
             <div class="wf-card-bg-num">07</div>
-            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">07</div></div><div class="wf-step-badge">regelmäßig</div><div class="wf-step-icon">🔗</div></div>
-            <div class="wf-card-title">Ausbildungsdialog &amp; Netzwerk</div>
-            <div class="wf-card-body">Netzwerktreffen, Sprechzeiten und gemeinsame Lösungsfindung – <b>ihr seid nie allein</b> mit den Herausforderungen.</div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">07</div></div><div class="wf-step-badge" style="background:var(--gold);color:var(--navy);">Highlight</div><div class="wf-step-icon">🎪</div></div>
+            <div class="wf-card-title">NEST Explore – die Messe</div>
+            <div class="wf-card-body">Unsere Ausbildungsmesse kommt direkt in die Schulen der Region. <b>Ihr trefft motivierte Schüler:innen persönlich</b> – komplett von NEST organisiert.</div>
+            <div class="wf-card-foot"><div class="wf-tag">Direkt an Schulen</div><div class="wf-tag">Persönlich</div></div>
           </div>
         </div>
       </div>
 
       <div class="wf-divider"><div class="wf-div-dot"></div><div class="wf-div-line"></div><div class="wf-div-dot"></div></div>
 
-      <!-- PHASE 3 -->
+      <!-- SÄULE 3: NETZWERK -->
       <div class="wf-phase">
-        <div class="wf-phase-head"><div class="wf-phase-label"><div class="wf-phase-n">3</div>Begleiten &amp; Wirken</div><div class="wf-phase-hr"></div></div>
+        <div class="wf-phase-head"><div class="wf-phase-label"><div class="wf-phase-n">3</div>Netzwerk</div><div class="wf-phase-hr"></div></div>
+        <p class="wf-lead" style="margin:-6px 0 26px;font-size:16px;">Ihr seid nie allein mit den Herausforderungen der Ausbildung – wir bringen die Partner regelmäßig zusammen.</p>
         <div class="wf-grid wf-grid--2">
           <div class="wf-card">
             <div class="wf-card-bg-num">08</div>
-            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">08</div></div><div class="wf-step-badge">dauerhaft</div></div>
-            <div class="wf-card-title">Onboarding &amp; Offboarding</div>
-            <div class="wf-card-body">Motivational Support für eure Auszubildenden vom ersten Tag bis zum Abschluss – <b>für weniger Abbrüche und mehr Bindung</b>.</div>
-            <div class="wf-card-foot"><div class="wf-tag">Weniger Abbruch</div><div class="wf-tag">Mehr Bindung</div></div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">08</div></div><div class="wf-step-badge">Input</div><div class="wf-step-icon">💬</div></div>
+            <div class="wf-card-title">Ausbildungsdialog</div>
+            <div class="wf-card-body">Veranstaltungen zu relevanten Themen der Ausbildung – <b>mit externem Input</b> von Expert:innen und gemeinsamem Austausch der Betriebe.</div>
           </div>
           <div class="wf-card">
             <div class="wf-card-bg-num">09</div>
-            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">09</div></div><div class="wf-step-badge">gesellschaftlich</div></div>
-            <div class="wf-card-title">Gemeinwohl &amp; Verantwortung</div>
-            <div class="wf-card-body">Eure Kooperation ist mehr als Marketing – <b>ihr gestaltet aktiv die Ausbildungskultur in der Region</b> und übernehmt gesellschaftliche Verantwortung.</div>
-            <div class="wf-card-foot"><div class="wf-tag">CSR</div><div class="wf-tag">Regionalwirtschaft</div></div>
+            <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">09</div></div><div class="wf-step-badge">4× im Jahr</div><div class="wf-step-icon">🔗</div></div>
+            <div class="wf-card-title">Netzwerktreffen</div>
+            <div class="wf-card-body">Viermal im Jahr kommen <b>alle Partner zusammen</b> – jeweils zu Gast bei einem unserer Partnerunternehmen.</div>
           </div>
         </div>
       </div>
@@ -151,8 +129,8 @@ const html = `
       <div class="wf-result">
         <div class="wf-result-icon">✅</div>
         <div>
-          <div class="wf-result-h">Alle Bausteine aus einer Hand</div>
-          <p class="wf-result-p">Ihr wählt das passende Paket – <b>wir kümmern uns um Sichtbarkeit, Vernetzung und Begleitung</b>. Gemeinsam für die Ausbildung.</p>
+          <div class="wf-result-h">Alle drei Säulen aus einer Hand</div>
+          <p class="wf-result-p">Ihr wählt das passende Paket – <b>wir kümmern uns um Gemeinwohl, Außenwirkung und Netzwerk</b>. Gemeinsam für die Ausbildung.</p>
         </div>
       </div>
 

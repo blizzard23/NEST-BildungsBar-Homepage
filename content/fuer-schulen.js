@@ -124,13 +124,13 @@ const html = `
       <div class="split rev" style="margin-bottom:0;">
         <div class="split-text reveal">
           <span class="section-label">Messe-Format</span>
-          <h2>Wo Berufe <em>lebendig werden</em></h2>
-          <p>Auf NEST Explore präsentieren regionale Unternehmen ihre Ausbildungsberufe – interaktiv, persönlich und für Schüler:innen wirklich erlebbar.</p>
+          <h2>Die Messe kommt <em>zu euch</em></h2>
+          <p>NEST Explore bringt regionale Unternehmen direkt in eure Schule – spielerisch, strukturiert und komplett von uns organisiert. Für Schulen kostenfrei.</p>
           <ul class="list-check">
-            <li>Direkter Kontakt zu 70+ Ausbildungsunternehmen</li>
-            <li>Interaktive Berufsfelder zum Anfassen</li>
-            <li>Ideal für Klassen-Ausflüge und Schulgruppen</li>
-            <li>Termine vorab buchbar für Schulen</li>
+            <li>6 regionale Unternehmen kommen direkt in eure Schule</li>
+            <li>Komplett von NEST organisiert – keine Vorbereitung nötig</li>
+            <li>Spielerisches Format – aktiviert auch ruhige Schüler:innen</li>
+            <li>Kostenfrei · ab Klasse 9 · 60 Min pro Klasse</li>
           </ul>
           <a class="btn btn-navy mt-2" href="/kontakt#termin">Schultermin anfragen →</a>
         </div>
@@ -140,21 +140,34 @@ const html = `
               <div class="wf-lap-screen">
                 <div class="br-bar">
                   <div class="br-dots"><div class="br-dot br-dot-r"></div><div class="br-dot br-dot-y"></div><div class="br-dot br-dot-g"></div></div>
-                  <div class="br-url">nest-explore.de</div>
+                  <div class="br-url">app.nest-messe.de</div>
                 </div>
                 <div class="lap-app">
                   <div class="lap-header" style="background:var(--navy);">
-                    <div class="lap-logo" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:10px;">E</div>
-                    <div><div class="lap-co-name" style="color:#fff;">NEST Explore</div><div class="lap-co-jobs" style="color:rgba(255,255,255,0.5);">Ausbildungsmesse Wuppertal</div></div>
+                    <div class="lap-logo" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:10px;">N</div>
+                    <div><div class="lap-co-name" style="color:#fff;">NEST Messe</div><div class="lap-co-jobs" style="color:rgba(255,255,255,0.5);">Terminkalender · Verwaltung</div></div>
                     <div class="lap-tabs">
-                      <div class="lap-tab--active lap-tab" style="color:#EFA500;border-color:#EFA500;">Aussteller</div>
-                      <div class="lap-tab" style="color:rgba(255,255,255,0.35);">Programm</div>
+                      <div class="lap-tab--active lap-tab" style="color:#EFA500;border-color:#EFA500;">Termine</div>
+                      <div class="lap-tab" style="color:rgba(255,255,255,0.35);">+ Neuer Termin</div>
                     </div>
                   </div>
                   <div class="lap-body">
-                    <div class="la-label" style="color:#EFA500;">25 Aussteller · Halle 3</div>
-                    <div class="la-job"><div class="ji" style="background:var(--navy);color:#EFA500;font-weight:900;font-size:13px;">M</div><div class="jt"><strong>Maier &amp; Söhne</strong><span>Mechatronik · Elektro</span></div><div class="jb">Besuchen</div></div>
-                    <div class="la-job"><div class="ji" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:13px;">D</div><div class="jt"><strong>DigiSystems</strong><span>IT · Digitalisierung</span></div><div class="jb">Besuchen</div></div>
+                    <div class="la-label" style="color:#EFA500;">Kommende Schul-Termine</div>
+                    <div class="la-job">
+                      <div class="ji" style="background:var(--navy);color:#EFA500;font-weight:900;font-size:11px;line-height:1.05;text-align:center;">08<br><span style="font-size:7px;letter-spacing:1px;">APR</span></div>
+                      <div class="jt"><strong>Gesamtschule Barmen</strong><span>Wuppertal-Barmen · 09–13 Uhr</span></div>
+                      <div class="jb" style="background:rgba(239,165,0,0.15);color:var(--gold-dark);">4 / 12</div>
+                    </div>
+                    <div class="la-job">
+                      <div class="ji" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:11px;line-height:1.05;text-align:center;">22<br><span style="font-size:7px;letter-spacing:1px;">APR</span></div>
+                      <div class="jt"><strong>Berufskolleg Elberfeld</strong><span>Wuppertal-Elberfeld · 09–13 Uhr</span></div>
+                      <div class="jb" style="background:rgba(194,65,90,0.14);color:#c2415a;">10 / 12</div>
+                    </div>
+                    <div class="la-job">
+                      <div class="ji" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:11px;line-height:1.05;text-align:center;">13<br><span style="font-size:7px;letter-spacing:1px;">MAI</span></div>
+                      <div class="jt"><strong>Realschule Vohwinkel</strong><span>Wuppertal-Vohwinkel · 09–13 Uhr</span></div>
+                      <div class="jb">6 / 12</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -185,10 +198,14 @@ const html = `
           <div class="icon icon-svg" style="flex-shrink:0;">${IC.globe}</div>
           <div>
             <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:4px;">Enge Zusammenarbeit</div>
-            <h3 style="margin:0 0 6px;font-size:18px;">Junioruni Wuppertal &amp; Essen &amp; Regionale Partner</h3>
+            <h3 style="margin:0 0 6px;font-size:18px;">Junioruni und regionale Partner</h3>
             <p style="margin:0;color:var(--text-soft);font-size:14px;">Unsere Workshops führen wir in Kooperation mit der Junioruni Wuppertal und der Junioruni Essen durch – als Tagesworkshop oder mehrstündiges Format. Zusätzlich arbeiten wir eng mit Schulen, der IHK und weiteren regionalen Bildungseinrichtungen zusammen.</p>
           </div>
         </div>
+      </div>
+
+      <div class="text-center" style="margin-top:28px;">
+        <a class="btn btn-primary" href="/kontakt#termin">Workshop für Ihre Schule anfragen →</a>
       </div>
     </div>
   </section>

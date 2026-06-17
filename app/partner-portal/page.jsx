@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabaseClient";
 import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
+import { mapMesseTermin } from "@/lib/messeTermine";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "" };
@@ -45,19 +46,6 @@ function ampelStatus(rest) {
   if (rest <= 10) return { cls: "ampel-gelb", text: "endet in Kürze" };
   return { cls: "ampel-gruen", text: "online" };
 }
-function langDatum(iso) {
-  const d = new Date(iso + "T00:00:00");
-  if (isNaN(d)) return iso;
-  const MON = ["Jan.", "Feb.", "März", "Apr.", "Mai", "Juni", "Juli", "Aug.", "Sept.", "Okt.", "Nov.", "Dez."];
-  return WTAGE[d.getDay()] + ", " + d.getDate() + ". " + MON[d.getMonth()] + " " + d.getFullYear();
-}
-
-// Kommende NEST-Explore-Termine (Ausbildungsmesse, Quelle: NEST-Messe-Projekt / Repo nest-messe-v2).
-// Sobald die Termine im Messe-Projekt feststehen, hier zentral pflegen.
-const MESSE_TERMINE = [
-  { titel: "NEST Explore – Ausbildungsmesse Wuppertal", datum: "2026-09-24", uhrzeit: "09:00–14:00 Uhr", ort: "Wuppertal", info: "Schulklassen-Zeitfenster vorab buchbar." },
-  { titel: "NEST Explore – Ausbildungsmesse Essen", datum: "2026-11-12", uhrzeit: "09:00–14:00 Uhr", ort: "Essen", info: "Aussteller-Anmeldung geöffnet." },
-];
 
 export default function PartnerPortal() {
   const [session, setSession] = useState(null);
@@ -75,6 +63,7 @@ export default function PartnerPortal() {
   const [firmaOpen, setFirmaOpen] = useState(false);    // Dropdown offen?
   const [stellen, setStellen] = useState([]);
   const [events, setEvents] = useState([]);
+  const [messeTermine, setMesseTermine] = useState([]); // kommende NEST-Explore-Termine (live aus Supabase)
   const [nestplaySpiele, setNestplaySpiele] = useState(0);
   const [nestplayGames, setNestplayGames] = useState([]);
   const [netzStellen, setNetzStellen] = useState(0);
@@ -151,6 +140,13 @@ export default function PartnerPortal() {
       .from("veranstaltungen").select("*")
       .gte("datum", heute).order("datum", { ascending: true });
     setEvents(ev || []);
+
+    // Echte Anbindung an die NEST-Messe: kommende Messe-Termine direkt aus der
+    // zentral gepflegten Tabelle `messe_termine` (öffentliche Read-Policy).
+    const { data: mt } = await supabase
+      .from("messe_termine").select("*")
+      .gte("datum", heute).order("datum", { ascending: true });
+    setMesseTermine((mt || []).map(mapMesseTermin));
 
     // Vergleichswert: aktive Stellen im gesamten Netzwerk (RLS gibt nur aktive Stellen frei)
     const grenze = new Date(Date.now() - STELLEN_TAGE * 86400000).toISOString().slice(0, 10);
@@ -593,20 +589,28 @@ export default function PartnerPortal() {
               <div style={{ marginTop: "36px" }}>
                 <span className="section-label">NEST Explore</span>
                 <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 14px" }}>Kommende Messetermine</h3>
-                {MESSE_TERMINE.length ? (
+                {messeTermine.length ? (
                   <div className="messe-termine">
-                    {MESSE_TERMINE.map((m) => (
-                      <div className="messe-termin" key={m.titel + m.datum}>
+                    {messeTermine.map((m) => (
+                      <div
+                        className="messe-termin"
+                        key={m.id}
+                        style={m.highlight ? { borderColor: "var(--gold)", boxShadow: "0 2px 16px rgba(191,149,63,0.18)" } : undefined}
+                      >
                         <div className="messe-termin-date">
-                          <span className="mt-day">{new Date(m.datum + "T00:00:00").getDate()}</span>
-                          <span className="mt-mon">{["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"][new Date(m.datum + "T00:00:00").getMonth()]}</span>
+                          <span className="mt-day">{m.tag}</span>
+                          <span className="mt-mon">{m.monat_kurz}</span>
                         </div>
                         <div className="messe-termin-body">
-                          <h4>{m.titel}</h4>
-                          <p className="messe-termin-meta">{langDatum(m.datum)} · {m.uhrzeit} · {m.ort}</p>
+                          <h4>
+                            {m.titel}
+                            {m.neu ? <span className="badge" style={{ marginLeft: "8px", verticalAlign: "middle" }}>Neu</span> : null}
+                            {m.ausgebucht ? <span className="badge ampel-badge ampel-rot" style={{ marginLeft: "8px", verticalAlign: "middle" }}>ausgebucht</span> : null}
+                          </h4>
+                          <p className="messe-termin-meta">{m.datum_text} · {m.uhrzeit} · {m.ort}</p>
                           {m.info ? <p className="messe-termin-info">{m.info}</p> : null}
                         </div>
-                        <a className="btn btn-outline" href="https://nest-messe.de" target="_blank" rel="noopener">Details ↗</a>
+                        <a className="btn btn-outline" href="https://nest-messe.de/terminkalender" target="_blank" rel="noopener">Details ↗</a>
                       </div>
                     ))}
                   </div>

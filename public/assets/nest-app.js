@@ -935,8 +935,12 @@ function renderBerufeUebersicht() {
     // ersatzweise zur Beruf-Detailseite.
     var link = s.url || linkBeruf(berufSlug(s.beruf)) || ((nestLinks().kontakt || "/kontakt") + "#termin");
     var extern = /^https?:\/\//.test(link);
+    // Logo (falls vom Unternehmen hochgeladen) ersetzt das Buchstaben-Monogramm.
+    var logo = s.logoUrl
+      ? '<span class="sc-logo sc-logo--img"><img src="' + escAttr(s.logoUrl) + '" alt="' + escAttr(s.firma) + '" loading="lazy"></span>'
+      : '<span class="sc-logo" style="' + stLogo(s.firma) + '">' + escHtml(stMono(s.firma)) + "</span>";
     return '<a class="stellen-card" href="' + escAttr(link) + '"' + (extern ? ' target="_blank" rel="noopener"' : '') + '>' +
-      '<div class="sc-top"><span class="sc-logo" style="' + stLogo(s.firma) + '">' + escHtml(stMono(s.firma)) + "</span>" + flag + "</div>" +
+      '<div class="sc-top">' + logo + flag + "</div>" +
       '<div class="sc-titel">' + escHtml(s.beruf) + "</div>" +
       '<div class="sc-firma">' + escHtml(s.firma) + "</div>" +
       '<div class="sc-meta"><span class="sc-art ' + stArtClass(s.art) + '">' + escHtml(s.art || "Ausbildung") + "</span>" +
@@ -959,6 +963,8 @@ function renderBerufeUebersicht() {
       if (state.ort !== "*" && s.ort !== state.ort) return false;
       if (state.typ !== "*" && (s.art || "Ausbildung") !== state.typ) return false;
       if (state.cat !== "*" && stKategorie(s.beruf) !== state.cat) return false;
+      // Interessen-Tags filtern auch die aktuellen Stellen mit (über Kategorie/Stichwort).
+      if (state.interest && !interessePasst(state.interest, s.beruf, stKategorie(s.beruf))) return false;
       if (state.nurMerk && merk.indexOf(berufSlug(s.beruf)) < 0) return false; // Merkliste berücksichtigen
       return true;
     });
@@ -1375,9 +1381,12 @@ if (!window.STELLEN || !window.STELLEN.length) {
       : (baldAb ? '<span class="sc-flag bald">Endet bald</span>' : "");
     var restTxt = (baldAb ? "noch " + rest + (rest === 1 ? " Tag" : " Tage") : "noch " + rest + " Tage");
     var link = s.url || berufLink(s.beruf) || lKontakt();
+    var logo = s.logoUrl
+      ? '<span class="sc-logo sc-logo--img"><img src="' + escA(s.logoUrl) + '" alt="' + esc(s.firma) + '" loading="lazy"></span>'
+      : '<span class="sc-logo" style="' + logoStyle(s.firma) + '">' + esc(monogramm(s.firma)) + "</span>";
 
     return '<a class="stellen-card" href="' + escA(link) + '">' +
-      '<div class="sc-top"><span class="sc-logo" style="' + logoStyle(s.firma) + '">' + esc(monogramm(s.firma)) + "</span>" + flag + "</div>" +
+      '<div class="sc-top">' + logo + flag + "</div>" +
       '<div class="sc-titel">' + esc(s.beruf) + "</div>" +
       '<div class="sc-firma">' + esc(s.firma) + "</div>" +
       '<div class="sc-meta">' +

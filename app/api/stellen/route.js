@@ -3,7 +3,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 
 /* Öffentliche Stellen-Liste für die „Aktuelle Stellen"-Leiste auf /berufswelt.
    Liefert ein Array im Format, das stellen-ui.js erwartet:
-   { firma, beruf, art, ort, start, url, aktiviertAm }. */
+   { firma, beruf, art, ort, start, url, logoUrl, aktiviertAm }. */
 export const dynamic = "force-dynamic";
 
 export async function GET() {
@@ -12,7 +12,7 @@ export async function GET() {
 
   const { data, error } = await sb
     .from("stellen")
-    .select("firma,beruf,art,ort,start,url,aktiviert_am")
+    .select("firma,beruf,art,ort,start,url,logo_url,aktiviert_am")
     .order("aktiviert_am", { ascending: false });
 
   if (error || !data) return NextResponse.json([]);
@@ -24,6 +24,7 @@ export async function GET() {
     ort: r.ort,
     start: r.start || "",
     url: r.url || "",
+    logoUrl: r.logo_url || "",
     aktiviertAm: r.aktiviert_am,
   }));
   return NextResponse.json(out);

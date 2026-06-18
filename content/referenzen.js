@@ -123,6 +123,7 @@ const html = `
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_34.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_35.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_36.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_37.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_38.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_39.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_40.png" alt="Partnerunternehmen" loading="lazy"></div>
@@ -142,7 +143,6 @@ const html = `
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_54.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_55.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_56.png" alt="Partnerunternehmen" loading="lazy"></div>
-          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_57.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_58.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_59.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_60.png" alt="Partnerunternehmen" loading="lazy"></div>

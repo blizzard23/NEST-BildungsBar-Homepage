@@ -581,7 +581,7 @@ export default function PartnerPortal() {
                   </div>
                   <div className="row2">
                     <div className="field"><label>Art</label>
-                      <select value={form.art} onChange={set("art")}><option>Ausbildung</option><option>Duales Studium</option><option>Praktikum</option></select>
+                      <select value={form.art} onChange={set("art")}><option>Ausbildung</option><option>Duales Studium</option><option>Praktikum</option><option>Freiwilligendienst</option></select>
                     </div>
                     <div className="field"><label>Standort</label>
                       <select value={form.ort} onChange={set("ort")}><option>Wuppertal</option><option>Essen</option></select>

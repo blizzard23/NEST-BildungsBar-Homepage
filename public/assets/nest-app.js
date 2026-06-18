@@ -853,7 +853,8 @@ function renderBerufeUebersicht() {
 
   var arten = [];
   alle.forEach(function (b) { if (arten.indexOf(b.typ) < 0) arten.push(b.typ); });
-  var artReihenfolge = ["Ausbildung", "Duales Studium", "Studium", "Freiwilligendienst"];
+  if (arten.indexOf("Freiwilligendienst") < 0) arten.push("Freiwilligendienst");
+  var artReihenfolge = ["Ausbildung", "Duales Studium", "Studium", "Praktikum", "Freiwilligendienst"];
   arten.sort(function (a, b) { return artReihenfolge.indexOf(a) - artReihenfolge.indexOf(b); });
 
   var state = { q: "", cat: "*", typ: "*", ort: "*", interest: null, nurMerk: false };
@@ -1949,13 +1950,28 @@ if (!window.STELLEN || !window.STELLEN.length) {
       "Name: " + (fName ? fName.value.trim() : ""),
       "E-Mail: " + (fMail ? fMail.value.trim() : ""),
       "Telefon: " + (fPhone && fPhone.value.trim() ? fPhone.value.trim() : "—"),
-      "Schule/Klasse: " + (fSchule && fSchule.value.trim() ? fSchule.value.trim() : "—"), "",
+      "Schule/Klasse: " + (fSchule && fSchule.value.trim() ? fSchule.value.trim() : "—"),
+      "Möchte: " + (tbZiel() || "—"),
+      "Unterstützung: " + (tbSupport() || "—"), "",
       "Nachricht: " + (fMsg && fMsg.value.trim() ? fMsg.value.trim() : "—")
     ].join("\n");
     return { subject: betreff, text: text, replyTo: (fMail ? fMail.value.trim() : "") };
   }
   function mailtoVon(d) {
     return "mailto:" + EMPFAENGER + "?subject=" + encodeURIComponent(d.subject) + "&body=" + encodeURIComponent(d.text);
+  }
+  /* Auswahl "Was möchtest du machen?" / "Wie können wir dich unterstützen?" */
+  function tbZiel() { var el = document.querySelector('input[name="tb-ziel"]:checked'); return el ? el.value : ""; }
+  function tbSupport() {
+    return Array.prototype.slice.call(document.querySelectorAll('input[name="tb-support"]:checked'))
+      .map(function (e) { return e.value; }).join(", ");
+  }
+  function tbNachricht() {
+    var teile = [];
+    if (tbZiel()) teile.push("Ziel: " + tbZiel());
+    if (tbSupport()) teile.push("Unterstützung: " + tbSupport());
+    if (fMsg && fMsg.value.trim()) teile.push(fMsg.value.trim());
+    return teile.join(" · ");
   }
   /* Buchung strukturiert an /api/buchung (speichert in Supabase + mailt) */
   function baueBuchung() {
@@ -1966,7 +1982,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
       email: fMail ? fMail.value.trim() : "",
       telefon: fPhone ? fPhone.value.trim() : "",
       schule: fSchule ? fSchule.value.trim() : "",
-      nachricht: fMsg ? fMsg.value.trim() : ""
+      nachricht: tbNachricht()
     };
   }
   function sendBuchung(payload) {

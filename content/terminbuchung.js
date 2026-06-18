@@ -123,7 +123,6 @@ const html = `
                   <div class="tb-choices">
                     <button type="button" class="tb-ort" data-ort="Wuppertal" data-adr="Hochstraße 65, 42105 Wuppertal">
                       <div class="o-header">
-                        <span class="o-emoji">🏙️</span>
                         <span class="o-header-label">Wuppertal</span>
                         <span class="o-header-badge">Di &amp; Do · 17–19 Uhr</span>
                       </div>
@@ -135,7 +134,6 @@ const html = `
                     </button>
                     <button type="button" class="tb-ort" data-ort="Essen" data-adr="Kopstadtplatz 12, 45127 Essen">
                       <div class="o-header">
-                        <span class="o-emoji">🌆</span>
                         <span class="o-header-label">Essen</span>
                         <span class="o-header-badge">Di &amp; Do · 17–19 Uhr</span>
                       </div>
@@ -193,6 +191,23 @@ const html = `
                     <div class="row2">
                       <div class="field"><label for="tb-phone">Telefon</label><input type="tel" id="tb-phone" placeholder="optional"></div>
                       <div class="field"><label for="tb-schule">Schule &amp; Klasse</label><input type="text" id="tb-schule" placeholder="optional"></div>
+                    </div>
+                    <div class="field">
+                      <label>Was möchtest du machen?</label>
+                      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;">
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="radio" name="tb-ziel" value="Ausbildung"> Ausbildung</label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="radio" name="tb-ziel" value="Duales Studium"> Duales Studium</label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="radio" name="tb-ziel" value="Praktikum"> Praktikum</label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="radio" name="tb-ziel" value="Freiwilligendienst"> Freiwilligendienst</label>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label>Wie können wir dich unterstützen?</label>
+                      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;">
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="checkbox" name="tb-support" value="Berufsorientierung"> Berufsorientierung</label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="checkbox" name="tb-support" value="Bewerbungsunterlagen"> Bewerbungsunterlagen</label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="checkbox" name="tb-support" value="Vorbereitung Vorstellungsgespräch"> Vorstellungsgespräch</label>
+                      </div>
                     </div>
                     <div class="field"><label for="tb-msg">Worum geht's? (optional)</label><textarea id="tb-msg" placeholder="z. B. Ich weiß noch nicht, welcher Beruf zu mir passt."></textarea></div>
                     <label class="tb-check"><input type="checkbox" id="tb-privacy" required> Ich bin einverstanden, dass meine Angaben zur Bearbeitung meiner Terminanfrage verarbeitet werden (Datenschutz).</label>
@@ -259,6 +274,7 @@ const html = `
                 <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="radio" name="an-ziel" value="Ausbildung"> Ausbildung</label>
                 <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="radio" name="an-ziel" value="Duales Studium"> Duales Studium</label>
                 <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="radio" name="an-ziel" value="Praktikum"> Praktikum</label>
+                <label style="display:flex;align-items:center;gap:6px;font-weight:500;color:var(--text);cursor:pointer;"><input type="radio" name="an-ziel" value="Freiwilligendienst"> Freiwilligendienst</label>
               </div>
             </div>
             <div class="field">

@@ -15,7 +15,8 @@ export async function GET() {
     .select("firma,beruf,art,ort,start,url,logo_url,keywords,aktiviert_am")
     .order("aktiviert_am", { ascending: false });
 
-  if (error || !data) return NextResponse.json([]);
+  const noStore = { headers: { "Cache-Control": "no-store, max-age=0, must-revalidate" } };
+  if (error || !data) return NextResponse.json([], noStore);
 
   const out = data.map((r) => ({
     firma: r.firma,
@@ -28,5 +29,5 @@ export async function GET() {
     keywords: Array.isArray(r.keywords) ? r.keywords : [],
     aktiviertAm: r.aktiviert_am,
   }));
-  return NextResponse.json(out);
+  return NextResponse.json(out, noStore);
 }

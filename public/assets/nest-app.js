@@ -1026,14 +1026,17 @@ function renderBerufeUebersicht() {
   function stShuffle(arr) { for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; } return arr; }
   function stKategorie(beruf) { if (typeof findeBeruf === "function") { var b = findeBeruf(berufSlug(beruf)); if (b) return b.kategorie; } return null; }
   function stBerufInfo(beruf) { if (typeof findeBeruf === "function") { var b = findeBeruf(berufSlug(beruf)); if (b && b.info) return b.info; } return ""; }
-  /* Stichwörter aller aktuellen Stellen zu einem Beruf – so findet die Suche
-     einen Beruf auch über die Keywords seiner offenen Stellen. */
+  /* Such-Index aus den aktuellen Stellen eines Berufs: Firmenname + Keywords.
+     So findet die Suche einen Beruf auch über das Unternehmen oder die
+     Stichwörter seiner offenen Stellen. */
   function stellenKwFuer(name) {
     if (!stellenAlle.length) return "";
     var slug = berufSlug(name), out = [];
     for (var i = 0; i < stellenAlle.length; i++) {
       var s = stellenAlle[i];
-      if (berufSlug(s.beruf) === slug && s.keywords && s.keywords.length) out = out.concat(s.keywords);
+      if (berufSlug(s.beruf) !== slug) continue;
+      if (s.firma) out.push(s.firma);
+      if (s.keywords && s.keywords.length) out = out.concat(s.keywords);
     }
     return out.join(" ");
   }
@@ -1135,7 +1138,7 @@ function renderBerufeUebersicht() {
     var api = window.NEST_STELLEN_API;
     function fertig(d) { stellenAlle = stShuffle((Array.isArray(d) ? d : (window.STELLEN || [])).slice()); if (state.q) draw(); else drawStellen(); }
     if (api && window.fetch) {
-      fetch(api).then(function (r) { return r.json(); }).then(fertig).catch(function () { fertig(window.STELLEN || []); });
+      fetch(api, { cache: "no-store" }).then(function (r) { return r.json(); }).then(fertig).catch(function () { fertig(window.STELLEN || []); });
     } else { fertig(window.STELLEN || []); }
   }
 
@@ -1393,7 +1396,7 @@ function renderBerufDetail() {
     }
     var api = window.NEST_STELLEN_API;
     if (api && window.fetch) {
-      fetch(api).then(function (r) { return r.json(); }).then(fertig).catch(function () { fertig(window.STELLEN || []); });
+      fetch(api, { cache: "no-store" }).then(function (r) { return r.json(); }).then(fertig).catch(function () { fertig(window.STELLEN || []); });
     } else { fertig(window.STELLEN || []); }
   })();
 }
@@ -1613,7 +1616,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
   function ladeStellen(cb) {
     var api = window.NEST_STELLEN_API;
     if (api && window.fetch) {
-      fetch(api).then(function (r) { return r.json(); })
+      fetch(api, { cache: "no-store" }).then(function (r) { return r.json(); })
         .then(function (d) { cb(Array.isArray(d) ? d : (window.STELLEN || [])); })
         .catch(function () { cb(window.STELLEN || []); });
     } else { cb(window.STELLEN || []); }

@@ -920,7 +920,7 @@ function renderBerufeUebersicht() {
         return { name: name, slug: berufSlug(name), typ: berufTyp(name, entry.dauer), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st, info: entry.info || "" };
       }).filter(function (it) {
         // Suche berücksichtigt auch den Beschreibungstext der Detailseite (it.info)
-        if (q && !sucheTrifft(normText(it.name + " " + k.name + " " + it.info + " " + interessenStichwoerter(it.name, k.name)), q)) return false;
+        if (q && !sucheTrifft(normText(it.name + " " + k.name + " " + it.info + " " + interessenStichwoerter(it.name, k.name) + " " + stellenKwFuer(it.name)), q)) return false;
         if (state.typ !== "*" && it.typ !== state.typ) return false;
         if (state.ort !== "*" && it.standorte.indexOf(state.ort) < 0) return false;
         if (!interessePasst(state.interest, it.name, k.name)) return false;
@@ -1026,6 +1026,17 @@ function renderBerufeUebersicht() {
   function stShuffle(arr) { for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; } return arr; }
   function stKategorie(beruf) { if (typeof findeBeruf === "function") { var b = findeBeruf(berufSlug(beruf)); if (b) return b.kategorie; } return null; }
   function stBerufInfo(beruf) { if (typeof findeBeruf === "function") { var b = findeBeruf(berufSlug(beruf)); if (b && b.info) return b.info; } return ""; }
+  /* Stichwörter aller aktuellen Stellen zu einem Beruf – so findet die Suche
+     einen Beruf auch über die Keywords seiner offenen Stellen. */
+  function stellenKwFuer(name) {
+    if (!stellenAlle.length) return "";
+    var slug = berufSlug(name), out = [];
+    for (var i = 0; i < stellenAlle.length; i++) {
+      var s = stellenAlle[i];
+      if (berufSlug(s.beruf) === slug && s.keywords && s.keywords.length) out = out.concat(s.keywords);
+    }
+    return out.join(" ");
+  }
 
   function stKarte(s) {
     var rest = stRest(s.aktiviertAm);
@@ -1122,7 +1133,7 @@ function renderBerufeUebersicht() {
 
   function ladeStellenLive() {
     var api = window.NEST_STELLEN_API;
-    function fertig(d) { stellenAlle = stShuffle((Array.isArray(d) ? d : (window.STELLEN || [])).slice()); drawStellen(); }
+    function fertig(d) { stellenAlle = stShuffle((Array.isArray(d) ? d : (window.STELLEN || [])).slice()); if (state.q) draw(); else drawStellen(); }
     if (api && window.fetch) {
       fetch(api).then(function (r) { return r.json(); }).then(fertig).catch(function () { fertig(window.STELLEN || []); });
     } else { fertig(window.STELLEN || []); }

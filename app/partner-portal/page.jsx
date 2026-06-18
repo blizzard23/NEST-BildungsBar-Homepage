@@ -691,12 +691,10 @@ export default function PartnerPortal() {
                       Mit diesen Stichwörtern wird deine Stelle über die Suche und die Filter in der Berufswelt
                       gefunden – auch wenn Schüler:innen umgangssprachliche Begriffe eingeben. Beispiele: „Auto", „Technik", „Pflege".
                     </p>
-                    <div className="row2" style={{ gap: "10px" }}>
-                      <input value={form.keyword1} onChange={set("keyword1")} placeholder="Stichwort 1" />
-                      <input value={form.keyword2} onChange={set("keyword2")} placeholder="Stichwort 2" />
-                    </div>
-                    <div style={{ marginTop: "10px" }}>
-                      <input value={form.keyword3} onChange={set("keyword3")} placeholder="Stichwort 3" style={{ width: "100%" }} />
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                      <input value={form.keyword1} onChange={set("keyword1")} placeholder="Stichwort 1" style={{ flex: "1 1 0", minWidth: "120px" }} />
+                      <input value={form.keyword2} onChange={set("keyword2")} placeholder="Stichwort 2" style={{ flex: "1 1 0", minWidth: "120px" }} />
+                      <input value={form.keyword3} onChange={set("keyword3")} placeholder="Stichwort 3" style={{ flex: "1 1 0", minWidth: "120px" }} />
                     </div>
                   </div>
                   <div className="field">

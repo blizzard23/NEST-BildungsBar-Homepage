@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabaseClient";
-import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
+import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameEditUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
 import { mapMesseTermin } from "@/lib/messeTermine";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
-const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "" };
+const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "", keyword1: "", keyword2: "", keyword3: "" };
 const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", beschreibung: "" };
 const POST_LEER = { slug: "", titel: "", excerpt: "", inhalt: "", bild_url: "", published: true };
 const AP_LEER = { name: "", rolle: "", email: "", telefon: "", standort: "", bild_url: "", beschreibung: "", sortierung: 0 };
@@ -93,8 +93,7 @@ export default function PartnerPortal() {
   const [logoUploading, setLogoUploading] = useState(false);   // Logo-Upload bei der Stelle
   const [toastMsg, setToastMsg] = useState("");                 // kurze Erfolg-/Hinweis-Meldung
   const [resetMsg, setResetMsg] = useState("");                 // Passwort-Reset-Feedback
-  const [firmaNeu, setFirmaNeu] = useState("");                 // Unternehmensname (Konto)
-  const [firmaMsg, setFirmaMsg] = useState("");
+  const [firmaMsg, setFirmaMsg] = useState("");                 // Konto: Unternehmensname-Feedback
   const [pwNeu, setPwNeu] = useState("");                       // neues Passwort (Konto)
   const [pwMsg, setPwMsg] = useState("");
   // Ansprechpartner (öffentlich lesbar, vom Admin pflegbar)
@@ -152,9 +151,13 @@ export default function PartnerPortal() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  // Konto: Unternehmensname-Feld mit dem gespeicherten Namen vorbelegen
+  // Konto: Firmen-Combobox mit dem gespeicherten Namen/Ref vorbelegen
   useEffect(() => {
-    if (session) setFirmaNeu((session.user.user_metadata || {}).firma || "");
+    if (session) {
+      const m = session.user.user_metadata || {};
+      setFirmaQuery(m.firma || "");
+      setFirmaRef(m.nestplay_ref || null);
+    }
   }, [session]);
 
   const ladeDaten = useCallback(async () => {
@@ -220,12 +223,13 @@ export default function PartnerPortal() {
   useEffect(() => { if (session) ladeDaten(); }, [session, ladeDaten]);
   useEffect(() => { if (isAdmin) ladeAdmin(); }, [isAdmin, ladeAdmin]);
 
-  // NESTplay-Unternehmen für die Auswahl bei der Registrierung laden
+  // NESTplay-Unternehmen für die Auswahl laden (Registrierung + Konto-Bereich)
   useEffect(() => {
-    if (authMode === "register" && nestplayConfigured && !companies.length) {
+    const gebraucht = authMode === "register" || !!session;
+    if (gebraucht && nestplayConfigured && !companies.length) {
       fetchNestplayCompanies().then(setCompanies).catch(() => {});
     }
-  }, [authMode, companies.length]);
+  }, [authMode, session, companies.length]);
 
   async function login(e) {
     e.preventDefault(); setAuthErr("");
@@ -263,11 +267,11 @@ export default function PartnerPortal() {
 
   // ---- Konto: Unternehmensname & Passwort ändern ----
   async function firmaSpeichern(e) {
-    e.preventDefault(); setFirmaMsg("");
-    const name = firmaNeu.trim();
-    if (!name) { setFirmaMsg("Bitte einen Unternehmensnamen eingeben."); return; }
+    e.preventDefault(); setFirmaMsg(""); setFirmaOpen(false);
+    const name = firmaQuery.trim();
+    if (!name) { setFirmaMsg("Bitte ein Unternehmen wählen oder eingeben."); return; }
     const meta = session.user.user_metadata || {};
-    const { error } = await supabase.auth.updateUser({ data: { ...meta, firma: name } });
+    const { error } = await supabase.auth.updateUser({ data: { ...meta, firma: name, nestplay_ref: firmaRef || name } });
     if (error) { setFirmaMsg("Fehler: " + error.message); return; }
     // Eigene Stellen auf den neuen Namen aktualisieren
     if (!isAdmin) await supabase.from("stellen").update({ firma: name }).eq("partner_id", session.user.id);
@@ -287,17 +291,18 @@ export default function PartnerPortal() {
 
   async function speichern(e) {
     e.preventDefault(); setMsg("");
+    // Nur echte Spalten an die DB schicken (keyword1..3 -> keywords-Array)
+    const keywords = [form.keyword1, form.keyword2, form.keyword3].map((k) => (k || "").trim()).filter(Boolean);
+    const werte = { firma: form.firma, beruf: form.beruf, art: form.art, ort: form.ort, start: form.start, url: form.url, logo_url: form.logo_url, keywords };
     if (form.id) {
-      // Bestehende Stelle bearbeiten
-      const { id, ...werte } = form;
-      const { error } = await supabase.from("stellen").update(werte).eq("id", id);
+      const { error } = await supabase.from("stellen").update(werte).eq("id", form.id);
       if (error) { setMsg("Fehler: " + error.message); return; }
       setForm((f) => ({ ...LEER, firma: f.firma }));
       toast("Stelle aktualisiert ✅");
       ladeDaten();
       return;
     }
-    const eintrag = { ...form, partner_id: session.user.id, aktiviert_am: new Date().toISOString().slice(0, 10) };
+    const eintrag = { ...werte, partner_id: session.user.id, aktiviert_am: new Date().toISOString().slice(0, 10) };
     const { error } = await supabase.from("stellen").insert(eintrag);
     if (error) { setMsg("Fehler: " + error.message); return; }
     setForm((f) => ({ ...LEER, firma: f.firma }));
@@ -305,7 +310,8 @@ export default function PartnerPortal() {
     ladeDaten();
   }
   function stelleBearbeiten(s) {
-    setForm({ id: s.id, firma: s.firma || "", beruf: s.beruf || "", art: s.art || "Ausbildung", ort: s.ort || "Wuppertal", start: s.start || "", url: s.url || "", logo_url: s.logo_url || "" });
+    const kw = Array.isArray(s.keywords) ? s.keywords : [];
+    setForm({ id: s.id, firma: s.firma || "", beruf: s.beruf || "", art: s.art || "Ausbildung", ort: s.ort || "Wuppertal", start: s.start || "", url: s.url || "", logo_url: s.logo_url || "", keyword1: kw[0] || "", keyword2: kw[1] || "", keyword3: kw[2] || "" });
     setMsg("");
     if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-stellen"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
   }
@@ -544,7 +550,36 @@ export default function PartnerPortal() {
                     <h3>Unternehmensname ändern</h3>
                     <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "14px" }}>Wird für neue Stellen vorausgefüllt{!isAdmin ? " und in deinen veröffentlichten Stellen aktualisiert" : ""}.</p>
                     <form onSubmit={firmaSpeichern} className="tb-form">
-                      <div className="field"><label>Unternehmensname</label><input value={firmaNeu} onChange={(e) => setFirmaNeu(e.target.value)} placeholder="z. B. Maier &amp; Söhne" /></div>
+                      {(() => {
+                        const f = firmaQuery.trim().toLowerCase();
+                        const treffer = companies.filter((c) => !f || c.name.toLowerCase().includes(f)).slice(0, 8);
+                        return (
+                          <div className="field combo-field">
+                            <label>Unternehmen</label>
+                            <input
+                              type="text" value={firmaQuery} autoComplete="off"
+                              placeholder={nestplayConfigured ? "Unternehmen suchen …" : "Unternehmensname eingeben"}
+                              onChange={(e) => setFirmaFreitext(e.target.value)}
+                              onFocus={() => setFirmaOpen(true)}
+                              onBlur={() => setTimeout(() => setFirmaOpen(false), 150)}
+                            />
+                            {firmaRef && firmaRef !== firmaQuery ? <span className="combo-ok">✓ aus NESTplay übernommen</span> : null}
+                            {firmaOpen && treffer.length ? (
+                              <div className="combo-list">
+                                {treffer.map((c) => (
+                                  <button type="button" className="combo-item" key={c.ref} onMouseDown={(e) => { e.preventDefault(); waehleFirma(c); }}>
+                                    <span>{c.name}</span>
+                                    <span className="combo-count">{c.count} {c.count === 1 ? "Spiel" : "Spiele"}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            ) : null}
+                            {firmaOpen && nestplayConfigured && f && !treffer.length ? (
+                              <div className="combo-list"><div className="combo-empty">Kein Treffer – „{firmaQuery}" wird als Name verwendet.</div></div>
+                            ) : null}
+                          </div>
+                        );
+                      })()}
                       {firmaMsg ? <p style={{ color: firmaMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{firmaMsg}</p> : null}
                       <button className="btn btn-primary" type="submit">Speichern</button>
                     </form>
@@ -651,6 +686,20 @@ export default function PartnerPortal() {
                     <div className="field"><label>Link (Bewerbung/Karriereseite) *</label><input type="url" value={form.url} onChange={set("url")} placeholder="https://…" required /></div>
                   </div>
                   <div className="field">
+                    <label>Stichwörter (max. 3, optional)</label>
+                    <p style={{ color: "var(--text-soft)", fontSize: "13px", margin: "2px 0 8px" }}>
+                      Mit diesen Stichwörtern wird deine Stelle über die Suche und die Filter in der Berufswelt
+                      gefunden – auch wenn Schüler:innen umgangssprachliche Begriffe eingeben. Beispiele: „Auto", „Technik", „Pflege".
+                    </p>
+                    <div className="row2" style={{ gap: "10px" }}>
+                      <input value={form.keyword1} onChange={set("keyword1")} placeholder="Stichwort 1" />
+                      <input value={form.keyword2} onChange={set("keyword2")} placeholder="Stichwort 2" />
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                      <input value={form.keyword3} onChange={set("keyword3")} placeholder="Stichwort 3" style={{ width: "100%" }} />
+                    </div>
+                  </div>
+                  <div className="field">
                     <label>Logo (optional) – ersetzt in der Berufswelt die Buchstaben</label>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
                       {form.logo_url ? <img src={form.logo_url} alt="Logo-Vorschau" style={{ width: "48px", height: "48px", objectFit: "contain", borderRadius: "10px", border: "1px solid var(--line)", background: "#fff", padding: "3px" }} /> : null}
@@ -722,7 +771,7 @@ export default function PartnerPortal() {
                     ) : nestplayGames.length ? (
                       <div className="np-game-grid" style={{ marginTop: "12px" }}>
                         {nestplayGames.map((g) => (
-                          <a className="np-game-card" key={g.id} href={gameUrl(g)} target="_blank" rel="noopener">
+                          <a className="np-game-card" key={g.id} href={gameEditUrl(g)} target="_blank" rel="noopener">
                             <div className="np-game-cover">
                               {g.cover_image ? <img src={g.cover_image} alt={g.name} loading="lazy" /> : <span className="np-game-mono">{(g.name || "?").slice(0, 1).toUpperCase()}</span>}
                               <span className="np-game-live"><i></i>Live</span>
@@ -730,7 +779,7 @@ export default function PartnerPortal() {
                             <div className="np-game-body">
                               {g.category ? <span className="np-game-cat">{g.category}</span> : null}
                               <div className="np-game-name">{g.name}</div>
-                              <span className="np-game-go">Spiel öffnen →</span>
+                              <span className="np-game-go">Spiel bearbeiten →</span>
                             </div>
                           </a>
                         ))}

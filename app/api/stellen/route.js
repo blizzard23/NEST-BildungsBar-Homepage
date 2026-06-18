@@ -12,7 +12,7 @@ export async function GET() {
 
   const { data, error } = await sb
     .from("stellen")
-    .select("firma,beruf,art,ort,start,url,logo_url,aktiviert_am")
+    .select("firma,beruf,art,ort,start,url,logo_url,keywords,aktiviert_am")
     .order("aktiviert_am", { ascending: false });
 
   if (error || !data) return NextResponse.json([]);
@@ -25,6 +25,7 @@ export async function GET() {
     start: r.start || "",
     url: r.url || "",
     logoUrl: r.logo_url || "",
+    keywords: Array.isArray(r.keywords) ? r.keywords : [],
     aktiviertAm: r.aktiviert_am,
   }));
   return NextResponse.json(out);

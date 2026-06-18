@@ -440,7 +440,7 @@ section { padding: 90px 0; }
 }
 .logo-tile:hover { transform: translateY(-3px); border-color: rgba(239,165,0,0.45); box-shadow: 0 12px 26px rgba(15,33,69,0.12); }
 .logo-tile img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.logo-grid--lead { grid-template-columns: repeat(auto-fill, minmax(190px, 220px)); justify-content: center; }
+.logo-grid--lead { grid-template-columns: 180px; justify-content: center; }
 
 
 /* ---------- FAQ (messe accordion) ---------- */

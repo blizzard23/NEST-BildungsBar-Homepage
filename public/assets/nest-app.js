@@ -1061,12 +1061,13 @@ function renderBerufeUebersicht() {
     var merk = ladeMerkliste();
     var liste = stellenAlle.filter(function (s) {
       if (stRest(s.aktiviertAm) < 0) return false;
-      if (q && !sucheTrifft(normText(s.beruf + " " + s.firma + " " + (stKategorie(s.beruf) || "") + " " + stBerufInfo(s.beruf) + " " + interessenStichwoerter(s.beruf, stKategorie(s.beruf) || "")), q)) return false;
+      var kw = (s.keywords && s.keywords.length) ? s.keywords.join(" ") : "";
+      if (q && !sucheTrifft(normText(s.beruf + " " + s.firma + " " + (stKategorie(s.beruf) || "") + " " + kw + " " + stBerufInfo(s.beruf) + " " + interessenStichwoerter(s.beruf, stKategorie(s.beruf) || "")), q)) return false;
       if (state.ort !== "*" && s.ort !== state.ort) return false;
       if (state.typ !== "*" && (s.art || "Ausbildung") !== state.typ) return false;
       if (state.cat !== "*" && stKategorie(s.beruf) !== state.cat) return false;
-      // Interessen-Tags filtern auch die aktuellen Stellen mit (über Kategorie/Stichwort).
-      if (state.interest && !interessePasst(state.interest, s.beruf, stKategorie(s.beruf))) return false;
+      // Interessen-Tags filtern auch die aktuellen Stellen mit (über Kategorie/Beruf/Keywords).
+      if (state.interest && !interessePasst(state.interest, s.beruf + " " + kw, stKategorie(s.beruf))) return false;
       if (state.nurMerk && merk.indexOf(berufSlug(s.beruf)) < 0) return false; // Merkliste berücksichtigen
       return true;
     });

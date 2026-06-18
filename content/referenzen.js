@@ -65,33 +65,136 @@ const html = `
       <div class="section-head centered reveal">
         <span class="section-label">Vertrauensvolle Zusammenarbeit</span>
         <h2>Über 70 Partner im Netzwerk</h2>
-        <p>Ein Auszug aus den Unternehmen, Einrichtungen und Institutionen, mit denen wir zusammenarbeiten – klick für die jeweilige Karriereseite.</p>
+        <p>Ein Auszug aus den Unternehmen, Einrichtungen und Institutionen, mit denen wir zusammenarbeiten.</p>
       </div>
-      <div class="logo-wall reveal">
-        <a class="logo-wall-item" href="https://career-vorwerkgroups.com/" target="_blank" rel="noopener">Vorwerk</a>
-        <a class="logo-wall-item" href="https://www.die-lehre-deines-lebens.de/" target="_blank" rel="noopener">KNIPEX</a>
-        <a class="logo-wall-item" href="https://stahlwille.com/de_de/karriere/ausbildung/6c637dad" target="_blank" rel="noopener">STAHLWILLE</a>
-        <a class="logo-wall-item" href="https://www.schmersal.com/karriere/ausbildung" target="_blank" rel="noopener">Schmersal</a>
-        <a class="logo-wall-item" href="https://jobs.vaillant-group.com/content/schueler/?locale=de_DE" target="_blank" rel="noopener">Vaillant</a>
-        <a class="logo-wall-item" href="https://jobs.coroplast.de/" target="_blank" rel="noopener">Coroplast</a>
-        <a class="logo-wall-item" href="https://karriere.barmenia.blog/innendienst/ausbildung/" target="_blank" rel="noopener">Barmenia</a>
-        <a class="logo-wall-item" href="https://karriere.ede.de/Ausbildung" target="_blank" rel="noopener">E/D/E</a>
-        <a class="logo-wall-item" href="https://www.wsw-online.de/ueber-uns/karriere/ausbildung/ausbildungsangebote/" target="_blank" rel="noopener">Wuppertaler Stadtwerke</a>
-        <a class="logo-wall-item" href="https://sparkasse.mein-check-in.de/sparkasse-wuppertal" target="_blank" rel="noopener">Stadtsparkasse Wuppertal</a>
-        <a class="logo-wall-item" href="https://www.wuppertal.de/microsite/wuppertalent/ausbildungsberufe/" target="_blank" rel="noopener">Stadt Wuppertal</a>
-        <a class="logo-wall-item" href="https://karriere.essen.de/" target="_blank" rel="noopener">Stadt Essen</a>
-        <a class="logo-wall-item" href="https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/" target="_blank" rel="noopener">Helios Kliniken</a>
-        <a class="logo-wall-item" href="https://www.gepa.de/karriere/ausbildung" target="_blank" rel="noopener">GEPA</a>
-        <a class="logo-wall-item" href="https://www.wut.de/jobs/" target="_blank" rel="noopener">Wiesemann &amp; Theis</a>
-        <a class="logo-wall-item" href="https://www.wkw.de/karriere/ausbildung-1/unsere-ausbildungsberufe" target="_blank" rel="noopener">WKW Group</a>
-        <a class="logo-wall-item" href="https://www.minimax.com/de/de/karriere/ausbildung-bei-minimax/" target="_blank" rel="noopener">Minimax</a>
-        <a class="logo-wall-item" href="https://www.wupperverband.de/ueber-uns/personal/ausbildung" target="_blank" rel="noopener">Wupperverband</a>
-        <a class="logo-wall-item" href="https://www.bergische-volksbank.de/karriere/ausbildung_duales_studium.html" target="_blank" rel="noopener">Volksbank im Bergischen Land</a>
-        <a class="logo-wall-item" href="https://rundum-akzenta.de/karriere/ausbildung/" target="_blank" rel="noopener">akzenta</a>
-        <a class="logo-wall-item" href="https://www.radprax.de/karriere/ausbildung-bei-radprax/" target="_blank" rel="noopener">radprax</a>
-        <a class="logo-wall-item" href="https://karriere.wuppertal.de/jobs" target="_blank" rel="noopener">Jobcenter Wuppertal</a>
+
+      <div class="logo-group">
+        <h3 class="logo-group-title">Partner</h3>
+        <div class="logo-grid">
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_00.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_01.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_02.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_03.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_04.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_05.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_06.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_07.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_08.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_09.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_10.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_11.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_12.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_13.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_14.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_00.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_01.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_02.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_03.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_04.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_05.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_06.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_07.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_08.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_09.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_10.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_11.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_12.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_13.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_14.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_15.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_16.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_17.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_18.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_19.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_20.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_21.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_22.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_23.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_24.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_25.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_26.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_27.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_28.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_29.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_30.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_31.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_32.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_33.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_34.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_35.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_36.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_38.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_39.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_40.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_41.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_42.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_43.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_44.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_45.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_46.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_47.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_48.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_49.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_50.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_51.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_52.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_53.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_54.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_55.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_56.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_57.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_58.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_59.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_60.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_61.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_62.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_63.png" alt="Partnerunternehmen" loading="lazy"></div>
+        </div>
       </div>
-      <p class="text-center mt-2" style="color:var(--text-mute);font-size:13px;">… und über 50 weitere Partner aus Wuppertal, Essen und der Region.</p>
+
+      <div class="logo-group">
+        <h3 class="logo-group-title">Einrichtungen</h3>
+        <div class="logo-grid">
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e1_01.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e1_02.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e1_03.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e1_04.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e1_05.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e1_06.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e1_07.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e1_08.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_00.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_01.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_02.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_03.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_04.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_05.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_06.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_07.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_08.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_09.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_10.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e2_11.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_00.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_01.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_02.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_03.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_04.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_05.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_06.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_07.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_08.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_09.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_10.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
+        </div>
+      </div>
+
+      <div class="logo-group">
+        <h3 class="logo-group-title">Gesundheitspartner</h3>
+        <div class="logo-grid logo-grid--lead">
+          <div class="logo-tile"><img src="/assets/img/referenzen/gesundheit/aok.png" alt="AOK – Gesundheitspartner" loading="lazy"></div>
+        </div>
+      </div>
     </div>
   </section>
 

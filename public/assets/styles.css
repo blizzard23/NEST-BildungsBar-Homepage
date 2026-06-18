@@ -574,6 +574,18 @@ section { padding: 90px 0; }
 .reset-btn:hover { color: var(--gold-dark); }
 .berufe-count { margin-left: auto; color: var(--text-mute); font-size: 13px; font-weight: 600; }
 
+/* Aktive-Filter-Chips */
+.aktive-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.aktive-filter[hidden] { display: none; }
+.filter-chip {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  background: var(--navy); color: #fff; border: 0; border-radius: 9999px;
+  padding: 6px 12px; font-size: 13px; font-weight: 700; font-family: var(--font);
+}
+.filter-chip:hover { background: var(--navy-2, #162d5e); }
+.filter-chip-x { font-size: 15px; line-height: 1; opacity: 0.75; }
+.filter-chip:hover .filter-chip-x { opacity: 1; }
+
 .beruf-cat { margin-bottom: 44px; }
 .beruf-cat-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--line); }
 .beruf-cat-head .ic { width: 48px; height: 48px; border-radius: 12px; background: var(--gold-soft); color: var(--gold-dark); display: grid; place-items: center; flex-shrink: 0; }
@@ -644,6 +656,8 @@ section { padding: 90px 0; }
 .sc-logo { width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 15px; }
 .sc-logo--img { background: #fff; border: 1px solid var(--line); overflow: hidden; }
 .sc-logo--img img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.beruf-stellen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.beruf-stellen-leer { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 28px; text-align: center; color: var(--text-soft); }
 .sc-flag { font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 4px 9px; border-radius: 9999px; }
 .sc-flag.neu { background: rgba(27,158,90,0.14); color: #1b9e5a; }
 .sc-flag.bald { background: rgba(194,65,90,0.14); color: #c2415a; }

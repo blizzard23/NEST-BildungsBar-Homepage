@@ -759,6 +759,58 @@ var INTERESSEN = [
   { id: "buero",      label: "Büro & Organisation", icon: "briefcase", cats: ["Wirtschaft & Verwaltung"], keywords: ["kaufleute", "verwaltung", "büro"] },
   { id: "verkauf",    label: "Verkauf & Kontakt",   icon: "cart",      cats: ["Verkauf und Vertrieb"] }
 ];
+
+/* Normalisiert Text für die Suche: Kleinbuchstaben, Umlaute/ß aufgelöst,
+   Sonderzeichen zu Leerzeichen. So findet "Bäcker" auch "baecker"/"backer". */
+function normText(s) {
+  return String(s == null ? "" : s).toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, " ").trim();
+}
+/* Umgangssprachliche Suchbegriffe -> Fachbegriffe, die in Berufsnamen vorkommen. */
+var SUCH_SYNONYME = {
+  auto: ["kfz", "mechatron", "fahrzeug", "automobil"],
+  autos: ["kfz", "mechatron", "fahrzeug", "automobil"],
+  kfz: ["kfz", "mechatron", "fahrzeug"],
+  computer: ["informatik", "it", "system", "digital", "software"],
+  pc: ["informatik", "it", "system"],
+  programmieren: ["informatik", "fachinformatik", "anwendungsentwicklung"],
+  zaehne: ["zahn", "zahnmedizin"], zahn: ["zahn", "zahnmedizin"],
+  tiere: ["tier", "landwirt", "forst"], tier: ["tier", "landwirt"],
+  kochen: ["koch", "gastronomie", "restaurant"], essen: ["koch", "baecker", "konditor"],
+  bauen: ["bau", "maurer", "beton", "zimmer", "dachdeck"],
+  strom: ["elektro", "elektronik"], elektrik: ["elektro", "elektronik"],
+  pflege: ["pflege", "gesundheit", "kranken"],
+  buero: ["kaufleute", "kaufmann", "kauffrau", "verwaltung", "management"],
+  garten: ["gaertner", "garten", "landschaft"],
+  mode: ["textil", "gestalt", "design"], haare: ["friseur"], schoenheit: ["kosmetik", "friseur"],
+  flugzeug: ["flug", "luftfahrt"], zug: ["bahn", "eisenbahn", "lokfuehrer"]
+};
+/* Sammelt die Stichwörter aller Interessen, die zu einem Beruf passen –
+   erweitert den Suchindex (z. B. IT-Berufe werden über "digital", "system" gefunden). */
+function interessenStichwoerter(name, katName) {
+  var out = [];
+  for (var i = 0; i < INTERESSEN.length; i++) {
+    var def = INTERESSEN[i];
+    var passt = (def.cats && def.cats.indexOf(katName) > -1);
+    if (!passt && def.keywords) {
+      var n = name.toLowerCase();
+      for (var k = 0; k < def.keywords.length; k++) { if (n.indexOf(def.keywords[k]) > -1) { passt = true; break; } }
+    }
+    if (passt) { out.push(def.label); if (def.keywords) out = out.concat(def.keywords); }
+  }
+  return out.join(" ");
+}
+/* Sucht alle Query-Tokens im Heuhaufen; Synonyme zählen als Treffer. */
+function sucheTrifft(hay, q) {
+  var tokens = normText(q).split(" ").filter(Boolean);
+  if (!tokens.length) return true;
+  return tokens.every(function (t) {
+    if (hay.indexOf(t) > -1) return true;
+    var syn = SUCH_SYNONYME[t];
+    return syn ? syn.some(function (s) { return hay.indexOf(normText(s)) > -1; }) : false;
+  });
+}
 function interessePasst(interest, name, katName) {
   if (!interest) return true;
   var def = null;
@@ -833,6 +885,7 @@ function renderBerufeUebersicht() {
         '<button class="reset-btn" id="reset-btn" hidden>Zurücksetzen</button>' +
         '<span class="berufe-count" id="beruf-count"></span>' +
       "</div>" +
+      '<div class="aktive-filter" id="aktive-filter"></div>' +
     "</div>" +
     '<div id="stellen-live" class="stellen-live"></div>' +
     '<div id="beruf-list"></div>';
@@ -865,7 +918,7 @@ function renderBerufeUebersicht() {
         var st = (typeof standorteFuer === "function") ? standorteFuer(berufSlug(name)) : (entry.standorte || ["Wuppertal"]);
         return { name: name, slug: berufSlug(name), typ: berufTyp(name, entry.dauer), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st };
       }).filter(function (it) {
-        if (q && it.name.toLowerCase().indexOf(q) < 0) return false;
+        if (q && !sucheTrifft(normText(it.name + " " + k.name + " " + interessenStichwoerter(it.name, k.name)), q)) return false;
         if (state.typ !== "*" && it.typ !== state.typ) return false;
         if (state.ort !== "*" && it.standorte.indexOf(state.ort) < 0) return false;
         if (!interessePasst(state.interest, it.name, k.name)) return false;
@@ -909,7 +962,53 @@ function renderBerufeUebersicht() {
       total + (state.nurMerk ? " gemerkt" : " von " + alle.length);
     document.getElementById("reset-btn").hidden = !filterAktiv();
 
+    renderAktiveFilter();
+    schreibeUrl();
     drawStellen();
+  }
+
+  // Aktive Filter als entfernbare Chips anzeigen
+  function interesseLabel(id) {
+    for (var i = 0; i < INTERESSEN.length; i++) { if (INTERESSEN[i].id === id) return INTERESSEN[i].label; }
+    return id;
+  }
+  function renderAktiveFilter() {
+    var box = document.getElementById("aktive-filter");
+    if (!box) return;
+    var chips = [];
+    if (state.q) chips.push({ k: "q", t: '„' + state.q + '"' });
+    if (state.interest) chips.push({ k: "interest", t: interesseLabel(state.interest) });
+    if (state.cat !== "*") chips.push({ k: "cat", t: state.cat });
+    if (state.typ !== "*") chips.push({ k: "typ", t: state.typ });
+    if (state.ort !== "*") chips.push({ k: "ort", t: state.ort });
+    if (state.nurMerk) chips.push({ k: "nurMerk", t: "Nur Merkliste" });
+    box.innerHTML = chips.map(function (c) {
+      return '<button class="filter-chip" data-fk="' + c.k + '">' + escHtml(c.t) +
+        '<span class="filter-chip-x" aria-hidden="true">&times;</span></button>';
+    }).join("");
+    box.hidden = !chips.length;
+  }
+  function filterEntfernen(k) {
+    if (k === "q") { state.q = ""; root.querySelector("#beruf-suche").value = ""; }
+    else if (k === "interest") { state.interest = null; root.querySelectorAll(".interest-tag").forEach(function (t) { t.classList.remove("active"); }); }
+    else if (k === "cat") { state.cat = "*"; root.querySelector("#f-cat").value = "*"; }
+    else if (k === "typ") { state.typ = "*"; root.querySelector("#f-art").value = "*"; }
+    else if (k === "ort") { state.ort = "*"; root.querySelector("#f-ort").value = "*"; }
+    else if (k === "nurMerk") { state.nurMerk = false; aktualisiereMerkToggle(); }
+    draw();
+  }
+
+  // Filterzustand in die URL spiegeln (teil-/verlinkbar)
+  function schreibeUrl() {
+    var p = new URLSearchParams();
+    if (state.q) p.set("q", state.q);
+    if (state.interest) p.set("int", state.interest);
+    if (state.cat !== "*") p.set("feld", state.cat);
+    if (state.typ !== "*") p.set("art", state.typ);
+    if (state.ort !== "*") p.set("ort", state.ort);
+    if (state.nurMerk) p.set("merk", "1");
+    var qs = p.toString();
+    history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : "") + window.location.hash);
   }
 
   /* ---- Aktuelle Stellen: direkt unter dem Suchklaster, mit denselben Filtern ---- */
@@ -959,7 +1058,7 @@ function renderBerufeUebersicht() {
     var merk = ladeMerkliste();
     var liste = stellenAlle.filter(function (s) {
       if (stRest(s.aktiviertAm) < 0) return false;
-      if (q && (s.beruf + " " + s.firma).toLowerCase().indexOf(q) < 0) return false;
+      if (q && !sucheTrifft(normText(s.beruf + " " + s.firma + " " + (stKategorie(s.beruf) || "") + " " + interessenStichwoerter(s.beruf, stKategorie(s.beruf) || "")), q)) return false;
       if (state.ort !== "*" && s.ort !== state.ort) return false;
       if (state.typ !== "*" && (s.art || "Ausbildung") !== state.typ) return false;
       if (state.cat !== "*" && stKategorie(s.beruf) !== state.cat) return false;
@@ -1009,7 +1108,18 @@ function renderBerufeUebersicht() {
   }
 
   // ---- Events ----
-  root.querySelector("#beruf-suche").addEventListener("input", function (e) { state.q = e.target.value; draw(); });
+  var sucheTimer = null;
+  root.querySelector("#beruf-suche").addEventListener("input", function (e) {
+    state.q = e.target.value;
+    clearTimeout(sucheTimer);
+    sucheTimer = setTimeout(draw, 160); // Debounce: ruckelfreies Tippen
+  });
+
+  // Aktive-Filter-Chips: Klick auf eine Chip entfernt genau diesen Filter
+  document.getElementById("aktive-filter").addEventListener("click", function (e) {
+    var chip = e.target.closest(".filter-chip");
+    if (chip) filterEntfernen(chip.getAttribute("data-fk"));
+  });
 
   root.querySelectorAll(".interest-tag").forEach(function (tag) {
     tag.addEventListener("click", function () {
@@ -1088,6 +1198,19 @@ function renderBerufeUebersicht() {
     params.delete("ml");
     var newUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "");
     history.replaceState(null, "", newUrl);
+  })();
+
+  // Filter aus der URL übernehmen (geteilte Links wie ?feld=…&ort=Essen)
+  (function () {
+    var p = new URLSearchParams(window.location.search);
+    var hatFilter = false;
+    if (p.get("q")) { state.q = p.get("q"); root.querySelector("#beruf-suche").value = state.q; hatFilter = true; }
+    if (p.get("int")) { state.interest = p.get("int"); var tag = root.querySelector('.interest-tag[data-int="' + state.interest + '"]'); if (tag) tag.classList.add("active"); hatFilter = true; }
+    if (p.get("feld")) { state.cat = p.get("feld"); root.querySelector("#f-cat").value = state.cat; hatFilter = true; }
+    if (p.get("art")) { state.typ = p.get("art"); root.querySelector("#f-art").value = state.typ; hatFilter = true; }
+    if (p.get("ort")) { state.ort = p.get("ort"); root.querySelector("#f-ort").value = state.ort; hatFilter = true; }
+    if (p.get("merk")) { state.nurMerk = true; hatFilter = true; }
+    if (hatFilter) setTimeout(function () { var el = document.getElementById("felder"); if (el) el.scrollIntoView({ behavior: "smooth" }); }, 120);
   })();
 
   aktualisiereMerkToggle();
@@ -1173,7 +1296,15 @@ function renderBerufDetail() {
     '<a class="btn btn-ghost" href="' + linkZukunft() + '">Weitere Berufe</a></div>' +
     "</div></div></section>";
 
-  root.innerHTML = hero + body + cta;
+  // Platz für die offenen Stellen dieses Berufs (wird asynchron befüllt)
+  var stellenSlot =
+    '<section class="bg-light" id="beruf-stellen"><div class="container">' +
+    '<div class="section-head"><span class="section-label">Jobbörse</span>' +
+    '<h2>Offene Stellen als <em>' + escHtml(beruf.name) + '</em></h2></div>' +
+    '<div id="beruf-stellen-inner"><p style="color:var(--text-mute);">Lädt …</p></div>' +
+    "</div></section>";
+
+  root.innerHTML = hero + stellenSlot + body + cta;
 
   var btns = root.querySelectorAll(".detail-merk");
   btns.forEach(function (btn) {
@@ -1186,6 +1317,53 @@ function renderBerufDetail() {
     });
     if (gem) btn.classList.add("on");
   });
+
+  // ---- Offene Stellen für genau diesen Beruf laden & verknüpfen ----
+  (function () {
+    var inner = document.getElementById("beruf-stellen-inner");
+    if (!inner) return;
+    var zielSlug = beruf.slug, zielName = normText(beruf.name);
+    function passt(s) {
+      var a = normText(s.beruf);
+      return (typeof berufSlug === "function" && berufSlug(s.beruf) === zielSlug) ||
+        a === zielName || a.indexOf(zielName) > -1 || zielName.indexOf(a) > -1;
+    }
+    function mono(f) { var w = String(f).replace(/&/g, " ").split(/\s+/).filter(Boolean); return ((w[0] ? w[0][0] : "") + (w[1] ? w[1][0] : "")).toUpperCase() || "•"; }
+    function logoStil(f) { var h = 0; for (var i = 0; i < f.length; i++) h = (h * 31 + f.charCodeAt(i)) % 360; return "background:linear-gradient(135deg,hsl(" + h + ",55%,42%),hsl(" + ((h + 30) % 360) + ",58%,30%));"; }
+    function karte(s) {
+      var link = s.url || linkKontaktTermin();
+      var extern = /^https?:\/\//.test(link);
+      var logo = s.logoUrl
+        ? '<span class="sc-logo sc-logo--img"><img src="' + escAttr(s.logoUrl) + '" alt="' + escAttr(s.firma) + '" loading="lazy"></span>'
+        : '<span class="sc-logo" style="' + logoStil(s.firma) + '">' + escHtml(mono(s.firma)) + "</span>";
+      return '<a class="stellen-card" href="' + escAttr(link) + '"' + (extern ? ' target="_blank" rel="noopener"' : "") + ">" +
+        '<div class="sc-top">' + logo + "</div>" +
+        '<div class="sc-titel">' + escHtml(s.beruf) + "</div>" +
+        '<div class="sc-firma">' + escHtml(s.firma) + "</div>" +
+        '<div class="sc-meta"><span class="sc-art art-azubi">' + escHtml(s.art || "Ausbildung") + "</span>" +
+        '<span class="sc-tag">' + ic("pin", 13) + escHtml(s.ort) + "</span></div>" +
+        '<div class="sc-foot"><span class="sc-go">' + (extern ? "Zur Bewerbung" : "Mehr erfahren") + " &rarr;</span></div></a>";
+    }
+    function fertig(daten) {
+      var heute = new Date(); heute.setHours(0, 0, 0, 0);
+      var liste = (Array.isArray(daten) ? daten : []).filter(function (s) {
+        var st = new Date(s.aktiviertAm + "T00:00:00");
+        var aktiv = !isNaN(st) && (st.getTime() + 30 * 86400000) >= heute.getTime();
+        return aktiv && passt(s);
+      });
+      if (liste.length) {
+        inner.innerHTML = '<div class="beruf-stellen-grid">' + liste.map(karte).join("") + "</div>";
+      } else {
+        inner.innerHTML = '<div class="beruf-stellen-leer">Aktuell sind für diesen Beruf keine Stellen ausgeschrieben. ' +
+          'Wir vernetzen dich trotzdem gern mit passenden Betrieben.<br>' +
+          '<a class="btn btn-primary" style="margin-top:14px;" href="' + linkKontaktTermin() + '">Kostenfreie Beratung buchen →</a></div>';
+      }
+    }
+    var api = window.NEST_STELLEN_API;
+    if (api && window.fetch) {
+      fetch(api).then(function (r) { return r.json(); }).then(fertig).catch(function () { fertig(window.STELLEN || []); });
+    } else { fertig(window.STELLEN || []); }
+  })();
 }
 
 /* ---- Standardtexte (Fallback) ---- */

@@ -1087,6 +1087,28 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .tb-cal-legend-dot--knapp { background: #fef3d0; border: 1.5px solid #b06800; }
 .tb-cal-legend-dot--full { background: #fdeaed; border: 1.5px solid #c2415a; }
 
+/* ===== Partner-Portal: Sektions-Navigation & Toast ===== */
+.pp-nav {
+  position: sticky; top: 8px; z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(6px);
+  border: 1px solid var(--line); border-radius: 9999px;
+  padding: 6px; margin-bottom: 28px;
+}
+.pp-nav-link {
+  text-decoration: none; font-size: 13px; font-weight: 700; color: var(--text-soft);
+  padding: 7px 13px; border-radius: 9999px; white-space: nowrap;
+}
+.pp-nav-link:hover { background: var(--bg-light); color: var(--navy); }
+.pp-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+  background: var(--navy); color: #fff; font-weight: 700; font-size: 14px;
+  padding: 13px 22px; border-radius: 12px; box-shadow: 0 10px 34px rgba(15,33,69,0.28);
+  z-index: 1000; animation: ppToastIn 0.25s ease;
+}
+@keyframes ppToastIn { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (max-width: 600px) { .pp-nav { top: 0; border-radius: 14px; } }
+
 /* ===== Partner-Portal: Dashboard, Ampelsystem & Messetermine ===== */
 .dash-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px;

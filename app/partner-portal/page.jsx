@@ -91,6 +91,8 @@ export default function PartnerPortal() {
   const [uploading, setUploading] = useState(false);
   const [infoFilter, setInfoFilter] = useState("Alle");
   const [logoUploading, setLogoUploading] = useState(false);   // Logo-Upload bei der Stelle
+  const [toastMsg, setToastMsg] = useState("");                 // kurze Erfolg-/Hinweis-Meldung
+  const [resetMsg, setResetMsg] = useState("");                 // Passwort-Reset-Feedback
   // Ansprechpartner (öffentlich lesbar, vom Admin pflegbar)
   const [ansprechpartner, setAnsprechpartner] = useState([]);
   const [apForm, setApForm] = useState(AP_LEER);
@@ -98,6 +100,16 @@ export default function PartnerPortal() {
   const [apUploading, setApUploading] = useState(false);
 
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
+
+  // Kurze Toast-Meldung (verschwindet nach ein paar Sekunden von selbst)
+  const toast = useCallback((text) => setToastMsg(text), []);
+  useEffect(() => {
+    if (!toastMsg) return;
+    const t = setTimeout(() => setToastMsg(""), 3200);
+    return () => clearTimeout(t);
+  }, [toastMsg]);
+  // Sicherheitsabfrage vor dem Löschen
+  const bestaetigeLoeschen = (was) => window.confirm(`„${was}" wirklich löschen? Das kann nicht rückgängig gemacht werden.`);
 
   const KAT_CFG = {
     "Kooperation": {
@@ -240,18 +252,47 @@ export default function PartnerPortal() {
   }
   async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
 
-  async function buchungLoeschen(id) { await supabase.from("buchungen").delete().eq("id", id); ladeAdmin(); }
+  async function buchungLoeschen(id, name) { if (!bestaetigeLoeschen("Buchung von " + (name || "Gast"))) return; await supabase.from("buchungen").delete().eq("id", id); toast("Buchung gelöscht"); ladeAdmin(); }
 
   async function speichern(e) {
     e.preventDefault(); setMsg("");
+    if (form.id) {
+      // Bestehende Stelle bearbeiten
+      const { id, ...werte } = form;
+      const { error } = await supabase.from("stellen").update(werte).eq("id", id);
+      if (error) { setMsg("Fehler: " + error.message); return; }
+      setForm((f) => ({ ...LEER, firma: f.firma }));
+      toast("Stelle aktualisiert ✅");
+      ladeDaten();
+      return;
+    }
     const eintrag = { ...form, partner_id: session.user.id, aktiviert_am: new Date().toISOString().slice(0, 10) };
     const { error } = await supabase.from("stellen").insert(eintrag);
     if (error) { setMsg("Fehler: " + error.message); return; }
     setForm((f) => ({ ...LEER, firma: f.firma }));
-    setMsg("Stelle veröffentlicht ✅ (30 Tage sichtbar)");
+    toast("Stelle veröffentlicht ✅ (30 Tage sichtbar)");
     ladeDaten();
   }
-  async function loeschen(id) { await supabase.from("stellen").delete().eq("id", id); ladeDaten(); }
+  function stelleBearbeiten(s) {
+    setForm({ id: s.id, firma: s.firma || "", beruf: s.beruf || "", art: s.art || "Ausbildung", ort: s.ort || "Wuppertal", start: s.start || "", url: s.url || "", logo_url: s.logo_url || "" });
+    setMsg("");
+    if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-stellen"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
+  }
+  async function verlaengern(id) {
+    const { error } = await supabase.from("stellen").update({ aktiviert_am: new Date().toISOString().slice(0, 10) }).eq("id", id);
+    if (error) { toast("Fehler: " + error.message); return; }
+    toast("Stelle um 30 Tage verlängert ✅");
+    ladeDaten();
+  }
+  async function loeschen(id, name) { if (!bestaetigeLoeschen(name || "Stelle")) return; await supabase.from("stellen").delete().eq("id", id); if (form.id === id) setForm((f) => ({ ...LEER, firma: f.firma })); toast("Stelle gelöscht"); ladeDaten(); }
+
+  async function passwortReset() {
+    setResetMsg("");
+    if (!email) { setResetMsg("Bitte zuerst deine E-Mail-Adresse oben eintragen."); return; }
+    const redirectTo = typeof window !== "undefined" ? window.location.origin + "/partner-portal" : undefined;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    setResetMsg(error ? "Fehler: " + error.message : "Wir haben dir einen Link zum Zurücksetzen geschickt – schau in dein Postfach.");
+  }
 
   // Optionales Firmen-Logo zur Stelle hochladen (Bucket "logos").
   async function logoUpload(e) {
@@ -290,11 +331,12 @@ export default function PartnerPortal() {
       : await supabase.from("ansprechpartner").insert(werte);
     if (error) { setApMsg("Fehler: " + error.message); return; }
     setApForm(AP_LEER);
-    setApMsg("Ansprechpartner gespeichert ✅");
+    setApMsg("");
+    toast("Ansprechpartner gespeichert ✅");
     ladeDaten();
   }
   function apBearbeiten(ap) { setApForm({ ...AP_LEER, ...ap }); setApMsg(""); }
-  async function apLoeschen(id) { await supabase.from("ansprechpartner").delete().eq("id", id); if (apForm.id === id) setApForm(AP_LEER); ladeDaten(); }
+  async function apLoeschen(id, name) { if (!bestaetigeLoeschen(name || "Ansprechpartner")) return; await supabase.from("ansprechpartner").delete().eq("id", id); if (apForm.id === id) setApForm(AP_LEER); toast("Ansprechpartner gelöscht"); ladeDaten(); }
 
   // ---- Admin: Veranstaltungen ----
   async function eventSpeichern(e) {
@@ -303,10 +345,10 @@ export default function PartnerPortal() {
     const { error } = await supabase.from("veranstaltungen").insert(evForm);
     if (error) { setEvMsg("Fehler: " + error.message); return; }
     setEvForm(EVENT_LEER);
-    setEvMsg("Veranstaltung gespeichert ✅");
+    toast("Veranstaltung gespeichert ✅");
     ladeAdmin(); ladeDaten();
   }
-  async function eventLoeschen(id) { await supabase.from("veranstaltungen").delete().eq("id", id); ladeAdmin(); ladeDaten(); }
+  async function eventLoeschen(id, titel) { if (!bestaetigeLoeschen(titel || "Veranstaltung")) return; await supabase.from("veranstaltungen").delete().eq("id", id); toast("Veranstaltung gelöscht"); ladeAdmin(); ladeDaten(); }
 
   // ---- Admin: Blog ----
   async function postSpeichern(e) {
@@ -320,7 +362,7 @@ export default function PartnerPortal() {
     setPoMsg("Beitrag gespeichert ✅");
     ladeAdmin();
   }
-  async function postLoeschen(id) { await supabase.from("posts").delete().eq("id", id); ladeAdmin(); }
+  async function postLoeschen(id, titel) { if (!bestaetigeLoeschen(titel || "Beitrag")) return; await supabase.from("posts").delete().eq("id", id); toast("Beitrag gelöscht"); ladeAdmin(); }
 
   // ---- Admin: Bild-Upload (Supabase Storage, Bucket "blog") ----
   async function bildUpload(e) {
@@ -375,9 +417,13 @@ export default function PartnerPortal() {
                     <div className="field"><label>Passwort</label><input type="password" value={pass} onChange={(e) => setPass(e.target.value)} required /></div>
                     {regMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{regMsg}</p> : null}
                     {authErr ? <p style={{ color: "#c2415a", fontSize: "14px" }}>{authErr}</p> : null}
+                    {resetMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{resetMsg}</p> : null}
                     <button className="btn btn-primary" type="submit" style={{ width: "100%", justifyContent: "center" }}>Anmelden</button>
                   </form>
-                  <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "16px" }}>
+                  <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "12px" }}>
+                    <button type="button" className="link-btn" onClick={passwortReset}>Passwort vergessen?</button>
+                  </p>
+                  <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "4px" }}>
                     Noch kein Zugang? <button type="button" className="link-btn" onClick={() => { setAuthMode("register"); setAuthErr(""); }}>Jetzt als Unternehmen registrieren</button>.
                   </p>
                 </>
@@ -440,6 +486,23 @@ export default function PartnerPortal() {
                 </button>
               </div>
 
+              {/* Sektions-Navigation */}
+              <nav className="pp-nav">
+                {[
+                  !isAdmin && { href: "#abschnitt-dashboard", label: "Dashboard" },
+                  { href: "#abschnitt-stellen", label: "Stellen" },
+                  !isAdmin && { href: "#abschnitt-nestplay", label: "NESTplay" },
+                  { href: "#abschnitt-messe", label: "Messe" },
+                  { href: "#abschnitt-team", label: "Ansprechpartner" },
+                  { href: "#abschnitt-veranstaltungen", label: "Veranstaltungen" },
+                  { href: "#abschnitt-infos", label: "Infos" },
+                  isAdmin && { href: "#abschnitt-admin", label: "Admin" },
+                ].filter(Boolean).map((n) => (
+                  <a key={n.href} href={n.href} className="pp-nav-link">{n.label}</a>
+                ))}
+              </nav>
+
+              <div id="abschnitt-dashboard" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* Dashboard – Kennzahlen im Vergleich */}
               {!isAdmin && (() => {
                 const aktive = stellen.filter((s) => { const r = tageRestStelle(s.aktiviert_am); return r != null && r >= 0; });
@@ -508,9 +571,9 @@ export default function PartnerPortal() {
               })()}
 
               {/* Neue Stelle */}
-              <div className="card" style={{ marginBottom: "28px" }}>
-                <h3>Neue Ausbildungsstelle veröffentlichen</h3>
-                <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>Erscheint auf „Berufswelt" – automatisch 30 Tage sichtbar.</p>
+              <div className="card" style={{ marginBottom: "28px" }} id="abschnitt-stellen">
+                <h3>{form.id ? "Stelle bearbeiten" : "Neue Ausbildungsstelle veröffentlichen"}</h3>
+                <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>{form.id ? "Änderungen werden sofort übernommen." : "Erscheint auf der Berufswelt – automatisch 30 Tage sichtbar."}</p>
                 <form onSubmit={speichern} className="tb-form">
                   <div className="row2">
                     <div className="field"><label>Unternehmen *</label><input value={form.firma} onChange={set("firma")} required /></div>
@@ -538,7 +601,10 @@ export default function PartnerPortal() {
                     </div>
                   </div>
                   {msg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{msg}</p> : null}
-                  <button className="btn btn-primary" type="submit">Stelle veröffentlichen</button>
+                  <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                    <button className="btn btn-primary" type="submit">{form.id ? "Änderungen speichern" : "Stelle veröffentlichen"}</button>
+                    {form.id ? <button type="button" className="btn btn-ghost" onClick={() => { setForm((f) => ({ ...LEER, firma: f.firma })); setMsg(""); }}>Abbrechen</button> : null}
+                  </div>
                 </form>
               </div>
 
@@ -562,13 +628,20 @@ export default function PartnerPortal() {
                         <p style={{ color: "var(--text-soft)" }}>{s.firma}{s.start ? " · " + s.start : ""}</p>
                         <p style={{ fontSize: "12px", color: "var(--text-mute)" }}>aktiviert am {s.aktiviert_am}</p>
                         {s.url ? <p style={{ fontSize: "12px", margin: "2px 0 0" }}><a href={s.url} target="_blank" rel="noopener">Bewerbungslink ↗</a></p> : null}
-                        <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => loeschen(s.id)}>Löschen</button>
+                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "10px" }}>
+                          <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => stelleBearbeiten(s)}>Bearbeiten</button>
+                          {rest == null || rest < 0 || rest <= 10
+                            ? <button className="btn btn-primary" style={{ padding: "6px 14px" }} onClick={() => verlaengern(s.id)}>Verlängern</button>
+                            : null}
+                          <button className="btn btn-ghost" style={{ padding: "6px 14px" }} onClick={() => loeschen(s.id, s.beruf)}>Löschen</button>
+                        </div>
                       </div>
                     );
                   })}
                 </div>
               ) : <p style={{ color: "var(--text-soft)", marginBottom: "28px" }}>Du hast noch keine Stellen veröffentlicht.</p>}
 
+              <div id="abschnitt-nestplay" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* Deine NESTplay-Spiele (Live-Anbindung an nest-play.de) */}
               {!isAdmin && (() => {
                 const firma = (stellen[0] && stellen[0].firma) || form.firma || "";
@@ -649,6 +722,7 @@ export default function PartnerPortal() {
                 </div>
               )}
 
+              <div id="abschnitt-messe" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* NEST Explore (Messe) – Promo-Mockup + kommende Termine */}
               {!isAdmin && (
                 <div className="np-promo" style={{ marginTop: "36px" }}>
@@ -717,6 +791,7 @@ export default function PartnerPortal() {
                 ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Messetermine eingetragen.</p>}
               </div>
 
+              <div id="abschnitt-team" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* Ansprechpartner */}
               <div style={{ marginBottom: "36px" }}>
                 <span className="section-label">Für euch da</span>
@@ -749,6 +824,7 @@ export default function PartnerPortal() {
                 </div>
               </div>
 
+              <div id="abschnitt-veranstaltungen" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* Kommende Veranstaltungen (für alle) */}
               <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Kommende Veranstaltungen</h3>
               {events.length ? (
@@ -764,6 +840,7 @@ export default function PartnerPortal() {
                 </div>
               ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Veranstaltungen eingetragen.</p>}
 
+              <div id="abschnitt-infos" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* Filterbarer Info-Bereich */}
               <div style={{ marginTop: "36px", marginBottom: "12px" }}>
                 <span className="section-label">Infos für Partner</span>
@@ -792,6 +869,7 @@ export default function PartnerPortal() {
                 </div>
               </div>
 
+              <div id="abschnitt-admin" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* =================== ADMIN-BEREICH =================== */}
               {isAdmin && (
                 <div style={{ marginTop: "44px", borderTop: "2px solid var(--line)", paddingTop: "32px" }}>
@@ -872,7 +950,7 @@ export default function PartnerPortal() {
                                     {bu.schule ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>{bu.schule}</p> : null}
                                     {bu.nachricht ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{bu.nachricht}"</p> : null}
                                   </div>
-                                  <button className="btn btn-ghost" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => buchungLoeschen(bu.id)}>Löschen</button>
+                                  <button className="btn btn-ghost" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => buchungLoeschen(bu.id, bu.name)}>Löschen</button>
                                 </div>
                               ))}
                             </div>
@@ -932,7 +1010,7 @@ export default function PartnerPortal() {
                           </div>
                           <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
                             <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => apBearbeiten(ap)}>Bearbeiten</button>
-                            <button className="btn btn-ghost" style={{ padding: "6px 14px" }} onClick={() => apLoeschen(ap.id)}>Löschen</button>
+                            <button className="btn btn-ghost" style={{ padding: "6px 14px" }} onClick={() => apLoeschen(ap.id, ap.name)}>Löschen</button>
                           </div>
                         </div>
                       ))}
@@ -968,7 +1046,7 @@ export default function PartnerPortal() {
                           <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
                           <h3>{v.titel}</h3>
                           <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
-                          <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => eventLoeschen(v.id)}>Löschen</button>
+                          <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => eventLoeschen(v.id, v.titel)}>Löschen</button>
                         </div>
                       ))}
                     </div>
@@ -1010,7 +1088,7 @@ export default function PartnerPortal() {
                           <p style={{ color: "var(--text-soft)", fontSize: "13px" }}>/blog/{p.slug}</p>
                           <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
                             <a className="btn btn-outline" href={`/blog/${p.slug}`} target="_blank" rel="noopener">Ansehen</a>
-                            <button className="btn btn-ghost" onClick={() => postLoeschen(p.id)}>Löschen</button>
+                            <button className="btn btn-ghost" onClick={() => postLoeschen(p.id, p.titel)}>Löschen</button>
                           </div>
                         </div>
                       ))}
@@ -1022,6 +1100,7 @@ export default function PartnerPortal() {
           )}
         </div>
       </section>
+      {toastMsg ? <div className="pp-toast" role="status">{toastMsg}</div> : null}
     </div>
   );
 }

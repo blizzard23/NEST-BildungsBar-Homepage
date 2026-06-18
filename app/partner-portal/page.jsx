@@ -93,6 +93,10 @@ export default function PartnerPortal() {
   const [logoUploading, setLogoUploading] = useState(false);   // Logo-Upload bei der Stelle
   const [toastMsg, setToastMsg] = useState("");                 // kurze Erfolg-/Hinweis-Meldung
   const [resetMsg, setResetMsg] = useState("");                 // Passwort-Reset-Feedback
+  const [firmaNeu, setFirmaNeu] = useState("");                 // Unternehmensname (Konto)
+  const [firmaMsg, setFirmaMsg] = useState("");
+  const [pwNeu, setPwNeu] = useState("");                       // neues Passwort (Konto)
+  const [pwMsg, setPwMsg] = useState("");
   // Ansprechpartner (öffentlich lesbar, vom Admin pflegbar)
   const [ansprechpartner, setAnsprechpartner] = useState([]);
   const [apForm, setApForm] = useState(AP_LEER);
@@ -147,6 +151,11 @@ export default function PartnerPortal() {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // Konto: Unternehmensname-Feld mit dem gespeicherten Namen vorbelegen
+  useEffect(() => {
+    if (session) setFirmaNeu((session.user.user_metadata || {}).firma || "");
+  }, [session]);
 
   const ladeDaten = useCallback(async () => {
     if (!supabase || !session) return;
@@ -251,6 +260,28 @@ export default function PartnerPortal() {
     }
   }
   async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
+
+  // ---- Konto: Unternehmensname & Passwort ändern ----
+  async function firmaSpeichern(e) {
+    e.preventDefault(); setFirmaMsg("");
+    const name = firmaNeu.trim();
+    if (!name) { setFirmaMsg("Bitte einen Unternehmensnamen eingeben."); return; }
+    const meta = session.user.user_metadata || {};
+    const { error } = await supabase.auth.updateUser({ data: { ...meta, firma: name } });
+    if (error) { setFirmaMsg("Fehler: " + error.message); return; }
+    // Eigene Stellen auf den neuen Namen aktualisieren
+    if (!isAdmin) await supabase.from("stellen").update({ firma: name }).eq("partner_id", session.user.id);
+    setForm((f) => ({ ...f, firma: name }));
+    toast("Unternehmensname aktualisiert ✅");
+    ladeDaten();
+  }
+  async function passwortAendern(e) {
+    e.preventDefault(); setPwMsg("");
+    if (pwNeu.length < 8) { setPwMsg("Das Passwort muss mindestens 8 Zeichen haben."); return; }
+    const { error } = await supabase.auth.updateUser({ password: pwNeu });
+    if (error) { setPwMsg("Fehler: " + error.message); return; }
+    setPwNeu(""); setPwMsg(""); toast("Passwort geändert ✅");
+  }
 
   async function buchungLoeschen(id, name) { if (!bestaetigeLoeschen("Buchung von " + (name || "Gast"))) return; await supabase.from("buchungen").delete().eq("id", id); toast("Buchung gelöscht"); ladeAdmin(); }
 
@@ -496,11 +527,39 @@ export default function PartnerPortal() {
                   { href: "#abschnitt-team", label: "Ansprechpartner" },
                   { href: "#abschnitt-veranstaltungen", label: "Veranstaltungen" },
                   { href: "#abschnitt-infos", label: "Infos" },
+                  { href: "#abschnitt-konto", label: "Konto" },
                   isAdmin && { href: "#abschnitt-admin", label: "Admin" },
                 ].filter(Boolean).map((n) => (
                   <a key={n.href} href={n.href} className="pp-nav-link">{n.label}</a>
                 ))}
               </nav>
+
+              {/* Konto & Zugang */}
+              <div id="abschnitt-konto" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
+              <div style={{ marginBottom: "36px" }}>
+                <span className="section-label">Konto</span>
+                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 14px" }}>Konto &amp; Zugang</h3>
+                <div className="card-grid cols-2">
+                  <div className="card">
+                    <h3>Unternehmensname ändern</h3>
+                    <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "14px" }}>Wird für neue Stellen vorausgefüllt{!isAdmin ? " und in deinen veröffentlichten Stellen aktualisiert" : ""}.</p>
+                    <form onSubmit={firmaSpeichern} className="tb-form">
+                      <div className="field"><label>Unternehmensname</label><input value={firmaNeu} onChange={(e) => setFirmaNeu(e.target.value)} placeholder="z. B. Maier &amp; Söhne" /></div>
+                      {firmaMsg ? <p style={{ color: firmaMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{firmaMsg}</p> : null}
+                      <button className="btn btn-primary" type="submit">Speichern</button>
+                    </form>
+                  </div>
+                  <div className="card">
+                    <h3>Passwort ändern</h3>
+                    <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "14px" }}>Mindestens 8 Zeichen. Du bleibst danach eingeloggt.</p>
+                    <form onSubmit={passwortAendern} className="tb-form">
+                      <div className="field"><label>Neues Passwort</label><input type="password" value={pwNeu} onChange={(e) => setPwNeu(e.target.value)} placeholder="mindestens 8 Zeichen" autoComplete="new-password" /></div>
+                      {pwMsg ? <p style={{ color: pwMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{pwMsg}</p> : null}
+                      <button className="btn btn-primary" type="submit">Passwort ändern</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
 
               <div id="abschnitt-dashboard" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* Dashboard – Kennzahlen im Vergleich */}
@@ -597,13 +656,13 @@ export default function PartnerPortal() {
                       {form.logo_url ? <img src={form.logo_url} alt="Logo-Vorschau" style={{ width: "48px", height: "48px", objectFit: "contain", borderRadius: "10px", border: "1px solid var(--line)", background: "#fff", padding: "3px" }} /> : null}
                       <input type="file" accept="image/*" onChange={logoUpload} />
                       {logoUploading ? <span style={{ fontSize: "13px", color: "var(--text-soft)" }}>lädt …</span> : null}
-                      {form.logo_url ? <button type="button" className="btn btn-ghost" style={{ padding: "4px 10px" }} onClick={() => setForm((f) => ({ ...f, logo_url: "" }))}>Entfernen</button> : null}
+                      {form.logo_url ? <button type="button" className="btn btn-outline" style={{ padding: "4px 10px" }} onClick={() => setForm((f) => ({ ...f, logo_url: "" }))}>Entfernen</button> : null}
                     </div>
                   </div>
                   {msg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{msg}</p> : null}
                   <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                     <button className="btn btn-primary" type="submit">{form.id ? "Änderungen speichern" : "Stelle veröffentlichen"}</button>
-                    {form.id ? <button type="button" className="btn btn-ghost" onClick={() => { setForm((f) => ({ ...LEER, firma: f.firma })); setMsg(""); }}>Abbrechen</button> : null}
+                    {form.id ? <button type="button" className="btn btn-outline" onClick={() => { setForm((f) => ({ ...LEER, firma: f.firma })); setMsg(""); }}>Abbrechen</button> : null}
                   </div>
                 </form>
               </div>
@@ -633,7 +692,7 @@ export default function PartnerPortal() {
                           {rest == null || rest < 0 || rest <= 10
                             ? <button className="btn btn-primary" style={{ padding: "6px 14px" }} onClick={() => verlaengern(s.id)}>Verlängern</button>
                             : null}
-                          <button className="btn btn-ghost" style={{ padding: "6px 14px" }} onClick={() => loeschen(s.id, s.beruf)}>Löschen</button>
+                          <button className="btn btn-danger" style={{ padding: "6px 14px" }} onClick={() => loeschen(s.id, s.beruf)}>Löschen</button>
                         </div>
                       </div>
                     );
@@ -950,7 +1009,7 @@ export default function PartnerPortal() {
                                     {bu.schule ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>{bu.schule}</p> : null}
                                     {bu.nachricht ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{bu.nachricht}"</p> : null}
                                   </div>
-                                  <button className="btn btn-ghost" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => buchungLoeschen(bu.id, bu.name)}>Löschen</button>
+                                  <button className="btn btn-danger" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => buchungLoeschen(bu.id, bu.name)}>Löschen</button>
                                 </div>
                               ))}
                             </div>
@@ -991,7 +1050,7 @@ export default function PartnerPortal() {
                       {apMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{apMsg}</p> : null}
                       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                         <button className="btn btn-primary" type="submit">{apForm.id ? "Änderungen speichern" : "Ansprechpartner speichern"}</button>
-                        {apForm.id ? <button type="button" className="btn btn-ghost" onClick={() => { setApForm(AP_LEER); setApMsg(""); }}>Abbrechen</button> : null}
+                        {apForm.id ? <button type="button" className="btn btn-outline" onClick={() => { setApForm(AP_LEER); setApMsg(""); }}>Abbrechen</button> : null}
                       </div>
                     </form>
                   </div>
@@ -1010,7 +1069,7 @@ export default function PartnerPortal() {
                           </div>
                           <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
                             <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => apBearbeiten(ap)}>Bearbeiten</button>
-                            <button className="btn btn-ghost" style={{ padding: "6px 14px" }} onClick={() => apLoeschen(ap.id, ap.name)}>Löschen</button>
+                            <button className="btn btn-danger" style={{ padding: "6px 14px" }} onClick={() => apLoeschen(ap.id, ap.name)}>Löschen</button>
                           </div>
                         </div>
                       ))}
@@ -1046,7 +1105,7 @@ export default function PartnerPortal() {
                           <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
                           <h3>{v.titel}</h3>
                           <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
-                          <button className="btn btn-ghost" style={{ marginTop: "8px" }} onClick={() => eventLoeschen(v.id, v.titel)}>Löschen</button>
+                          <button className="btn btn-danger" style={{ marginTop: "8px" }} onClick={() => eventLoeschen(v.id, v.titel)}>Löschen</button>
                         </div>
                       ))}
                     </div>
@@ -1088,7 +1147,7 @@ export default function PartnerPortal() {
                           <p style={{ color: "var(--text-soft)", fontSize: "13px" }}>/blog/{p.slug}</p>
                           <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
                             <a className="btn btn-outline" href={`/blog/${p.slug}`} target="_blank" rel="noopener">Ansehen</a>
-                            <button className="btn btn-ghost" onClick={() => postLoeschen(p.id, p.titel)}>Löschen</button>
+                            <button className="btn btn-danger" onClick={() => postLoeschen(p.id, p.titel)}>Löschen</button>
                           </div>
                         </div>
                       ))}

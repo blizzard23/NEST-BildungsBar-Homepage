@@ -67,6 +67,8 @@ a { text-decoration: none; color: var(--gold-dark); }
 .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
 .btn-outline { background: transparent; color: var(--navy); border-color: var(--line); }
 .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+.btn-danger { background: transparent; color: #c2415a; border-color: rgba(194,65,90,0.55); }
+.btn-danger:hover { background: #c2415a; color: #fff; border-color: #c2415a; }
 
 /* ---------- Header ---------- */
 .site-header {

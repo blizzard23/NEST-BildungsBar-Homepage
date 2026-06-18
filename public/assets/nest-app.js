@@ -1068,13 +1068,30 @@ function renderBerufeUebersicht() {
       return true;
     });
 
-    var head = '<div class="stellen-strip-head"><div><span class="section-label">Jobbörse</span>' +
-      "<h2>Aktuelle Stellen</h2><p>" + liste.length + " offene " + (liste.length === 1 ? "Stelle" : "Stellen") +
-      (filterAktiv() ? " passend zu deiner Auswahl" : "") + " · 30 Tage aktuell</p></div>" +
-      '<a class="btn btn-outline" href="' + (nestLinks().kooperation || "/kooperation") + '">Stelle eintragen</a></div>';
+    var aktiv = filterAktiv();
+    var n = liste.length;
+    var sub = aktiv
+      ? (n ? (n + " passende" + (n === 1 ? "r Platz" : " Plätze") + " zu deiner Auswahl · jederzeit unverbindlich")
+           : "Gerade kein passender Platz online – aber kein Stress 👇")
+      : "Eine Auswahl offener Plätze aus unserem Netzwerk. Dein Wunschberuf ist (noch) nicht dabei? Kein Stress – scroll dich durch alle 150+ Berufe oder lass uns gemeinsam suchen.";
+    var head = '<div class="stellen-strip-head"><div><span class="section-label">Direkt offen</span>' +
+      "<h2>Aktuelle Ausbildungsplätze</h2><p>" + sub + "</p></div>" +
+      '<a class="btn btn-outline" href="#beruf-list">↓ Alle Berufe ansehen</a></div>';
 
     if (!liste.length) {
-      wrap.innerHTML = head + '<div class="stellen-empty">Für deine aktuelle Auswahl sind derzeit keine Stellen ausgeschrieben.</div>';
+      var suchwort = state.q ? '„' + escHtml(state.q) + '"'
+        : (state.interest ? '„' + escHtml(interesseLabel(state.interest)) + '"'
+          : (state.cat !== "*" ? '„' + escHtml(state.cat) + '"' : "deine Auswahl"));
+      var beratung = nestLinks().termin || "/terminbuchung";
+      wrap.innerHTML = head +
+        '<div class="stellen-empty">' +
+          '<p class="stellen-empty-h">Für ' + suchwort + ' ist gerade kein Platz online – das heißt aber nicht, dass es keinen gibt! 💪</p>' +
+          '<p class="stellen-empty-p">Wir kennen über 70 Partnerbetriebe und viele Plätze, die nie öffentlich ausgeschrieben werden. Schau dir unten in Ruhe alle Berufe an oder buch dir eine kostenlose Beratung – wir finden gemeinsam deinen Weg.</p>' +
+          '<div class="stellen-empty-cta">' +
+            '<a class="btn btn-primary" href="#beruf-list">↓ Alle Berufe ansehen</a>' +
+            '<a class="btn btn-outline" href="' + beratung + '">Kostenlose Beratung</a>' +
+          "</div>" +
+        "</div>";
       return;
     }
 

@@ -674,7 +674,11 @@ section { padding: 90px 0; }
 .sc-rest { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; color: var(--text-soft); }
 .sc-rest .ic-svg { color: var(--text-mute); }
 .sc-go { display: inline-flex; align-items: center; gap: 3px; font-size: 12.5px; font-weight: 800; color: var(--gold-dark); flex-shrink: 0; }
-.stellen-empty { color: var(--text-mute); font-size: 14px; padding: 24px 4px; }
+.stellen-empty { color: var(--text-soft); font-size: 14px; padding: 24px; background: var(--bg-light); border: 1px solid var(--line); border-radius: 16px; }
+.stellen-empty-h { margin: 0 0 6px; font-size: 17px; font-weight: 800; color: var(--navy); }
+.stellen-empty-p { margin: 0 0 16px; max-width: 60ch; }
+.stellen-empty-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+#beruf-list { scroll-margin-top: 90px; }
 
 /* ---------- Beruf-Detailseite ---------- */
 .beruf-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: start; }

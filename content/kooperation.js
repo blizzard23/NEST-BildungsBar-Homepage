@@ -79,7 +79,7 @@ const html = `
             <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">06</div></div><div class="wf-step-badge" style="background:var(--gold);color:var(--navy);">Highlight</div><div class="wf-step-icon">🎮</div></div>
             <div class="wf-card-title">NESTplay.</div>
             <div class="wf-card-body">Präsentiert euren Betrieb direkt im Unterricht als interaktives Live-Quiz – <b>Schüler:innen spielen in Echtzeit und behalten euch im Kopf</b>.</div>
-            <div class="wf-card-foot"><div class="wf-tag">Gamifiziert</div><div class="wf-tag">In der Klasse</div></div>
+            <div class="wf-card-foot"><a class="wf-tag wf-tag--link" href="https://nestplay.de" target="_blank" rel="noopener">Gamifiziert ↗</a><a class="wf-tag wf-tag--link" href="https://nestplay.de" target="_blank" rel="noopener">In der Klasse ↗</a></div>
             <a class="btn btn-outline wf-card-cta" href="https://nestplay.de" target="_blank" rel="noopener">Zu NESTplay. →</a>
           </div>
           <div class="wf-card" style="border:1.5px solid var(--gold);box-shadow:0 10px 34px rgba(239,165,0,0.14);">
@@ -87,7 +87,7 @@ const html = `
             <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">07</div></div><div class="wf-step-badge" style="background:var(--gold);color:var(--navy);">Highlight</div><div class="wf-step-icon">🎪</div></div>
             <div class="wf-card-title">NEST Explore – die Messe</div>
             <div class="wf-card-body">Unsere Ausbildungsmesse kommt direkt in die Schulen der Region. <b>Ihr trefft motivierte Schüler:innen persönlich</b> – komplett von NEST organisiert.</div>
-            <div class="wf-card-foot"><div class="wf-tag">Direkt an Schulen</div><div class="wf-tag">Persönlich</div></div>
+            <div class="wf-card-foot"><a class="wf-tag wf-tag--link" href="https://nest-messe.de" target="_blank" rel="noopener">Direkt an Schulen ↗</a><a class="wf-tag wf-tag--link" href="https://nest-messe.de" target="_blank" rel="noopener">Persönlich ↗</a></div>
             <a class="btn btn-outline wf-card-cta" href="https://nest-messe.de" target="_blank" rel="noopener">Zu NEST Explore →</a>
           </div>
         </div>

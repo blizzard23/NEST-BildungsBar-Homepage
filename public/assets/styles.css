@@ -703,6 +703,8 @@ section { padding: 90px 0; }
 .explore-foto img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3/2; }
 .wf-card-cta { display: inline-flex; margin-top: 16px; border-color: var(--gold); color: var(--gold); }
 .wf-card-cta:hover { background: var(--gold); color: var(--navy); }
+.wf-tag--link { text-decoration: none; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.wf-tag--link:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
 
 /* ---------- Beruf-Detailseite ---------- */
 .beruf-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: start; }
@@ -779,6 +781,15 @@ section { padding: 90px 0; }
   display: flex; align-items: center; justify-content: center;
   font-weight: 900; letter-spacing: 8px; font-size: 26px; color: rgba(255,255,255,0.9);
 }
+
+/* Foto-Varianten (Standortbilder, Messebild): kein navy Panel, keine Punkte,
+   kein NEST-Watermark – der Rahmen sitzt direkt an den Bildern. */
+.split-media.split-locs, .split-media.is-photo {
+  background: none; min-height: 0; box-shadow: none; border-radius: 0;
+  overflow: visible; display: block; place-items: initial;
+}
+.split-media.split-locs::before, .split-media.split-locs::after,
+.split-media.is-photo::before, .split-media.is-photo::after { content: none; display: none; }
 
 /* --- Steckbrief: Gold-Akzentstrich statt Zeilen-Icon --- */
 .steckbrief .sb-row .ic { display: none; }

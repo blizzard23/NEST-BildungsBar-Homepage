@@ -134,7 +134,7 @@ const html = `
           </ul>
           <a class="btn btn-navy mt-2" href="/kontakt#termin">Schultermin anfragen →</a>
         </div>
-        <div class="split-media" style="background:none; overflow:visible; border-radius:0; min-height:0; box-shadow:none;">
+        <div class="split-media is-photo">
           <div class="explore-foto">
             <img src="/assets/img/nest-explore.png" alt="NEST Explore – Schüler:innen entdecken Berufe an einem interaktiven NEST-Stand" loading="lazy">
           </div>

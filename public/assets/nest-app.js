@@ -916,9 +916,10 @@ function renderBerufeUebersicht() {
         var name = (typeof b === "string") ? b : b.name;
         var entry = (typeof b === "string") ? {} : b;
         var st = (typeof standorteFuer === "function") ? standorteFuer(berufSlug(name)) : (entry.standorte || ["Wuppertal"]);
-        return { name: name, slug: berufSlug(name), typ: berufTyp(name, entry.dauer), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st };
+        return { name: name, slug: berufSlug(name), typ: berufTyp(name, entry.dauer), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st, info: entry.info || "" };
       }).filter(function (it) {
-        if (q && !sucheTrifft(normText(it.name + " " + k.name + " " + interessenStichwoerter(it.name, k.name)), q)) return false;
+        // Suche berücksichtigt auch den Beschreibungstext der Detailseite (it.info)
+        if (q && !sucheTrifft(normText(it.name + " " + k.name + " " + it.info + " " + interessenStichwoerter(it.name, k.name)), q)) return false;
         if (state.typ !== "*" && it.typ !== state.typ) return false;
         if (state.ort !== "*" && it.standorte.indexOf(state.ort) < 0) return false;
         if (!interessePasst(state.interest, it.name, k.name)) return false;
@@ -1023,6 +1024,7 @@ function renderBerufeUebersicht() {
   function stArtClass(a) { a = (a || "").toLowerCase(); if (a.indexOf("dual") > -1) return "art-dual"; if (a.indexOf("praktikum") > -1) return "art-prakt"; return "art-azubi"; }
   function stShuffle(arr) { for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; } return arr; }
   function stKategorie(beruf) { if (typeof findeBeruf === "function") { var b = findeBeruf(berufSlug(beruf)); if (b) return b.kategorie; } return null; }
+  function stBerufInfo(beruf) { if (typeof findeBeruf === "function") { var b = findeBeruf(berufSlug(beruf)); if (b && b.info) return b.info; } return ""; }
 
   function stKarte(s) {
     var rest = stRest(s.aktiviertAm);
@@ -1058,7 +1060,7 @@ function renderBerufeUebersicht() {
     var merk = ladeMerkliste();
     var liste = stellenAlle.filter(function (s) {
       if (stRest(s.aktiviertAm) < 0) return false;
-      if (q && !sucheTrifft(normText(s.beruf + " " + s.firma + " " + (stKategorie(s.beruf) || "") + " " + interessenStichwoerter(s.beruf, stKategorie(s.beruf) || "")), q)) return false;
+      if (q && !sucheTrifft(normText(s.beruf + " " + s.firma + " " + (stKategorie(s.beruf) || "") + " " + stBerufInfo(s.beruf) + " " + interessenStichwoerter(s.beruf, stKategorie(s.beruf) || "")), q)) return false;
       if (state.ort !== "*" && s.ort !== state.ort) return false;
       if (state.typ !== "*" && (s.art || "Ausbildung") !== state.typ) return false;
       if (state.cat !== "*" && stKategorie(s.beruf) !== state.cat) return false;
@@ -1072,11 +1074,11 @@ function renderBerufeUebersicht() {
     var n = liste.length;
     var sub = aktiv
       ? (n ? (n + " passende" + (n === 1 ? "r Platz" : " Plätze") + " zu deiner Auswahl · jederzeit unverbindlich")
-           : "Gerade kein passender Platz online – aber kein Stress 👇")
+           : "Gerade kein passender Platz online – aber kein Stress, lies einfach weiter.")
       : "Eine Auswahl offener Plätze aus unserem Netzwerk. Dein Wunschberuf ist (noch) nicht dabei? Kein Stress – scroll dich durch alle 150+ Berufe oder lass uns gemeinsam suchen.";
     var head = '<div class="stellen-strip-head"><div><span class="section-label">Direkt offen</span>' +
       "<h2>Aktuelle Ausbildungsplätze</h2><p>" + sub + "</p></div>" +
-      '<a class="btn btn-outline" href="#beruf-list">↓ Alle Berufe ansehen</a></div>';
+      '<a class="btn btn-outline" href="#beruf-list">Alle Berufe ansehen</a></div>';
 
     if (!liste.length) {
       var suchwort = state.q ? '„' + escHtml(state.q) + '"'
@@ -1085,10 +1087,10 @@ function renderBerufeUebersicht() {
       var beratung = nestLinks().termin || "/terminbuchung";
       wrap.innerHTML = head +
         '<div class="stellen-empty">' +
-          '<p class="stellen-empty-h">Für ' + suchwort + ' ist gerade kein Platz online – das heißt aber nicht, dass es keinen gibt! 💪</p>' +
+          '<p class="stellen-empty-h">Für ' + suchwort + ' ist gerade kein Platz online – das heißt aber nicht, dass es keinen gibt!</p>' +
           '<p class="stellen-empty-p">Wir kennen über 70 Partnerbetriebe und viele Plätze, die nie öffentlich ausgeschrieben werden. Schau dir unten in Ruhe alle Berufe an oder buch dir eine kostenlose Beratung – wir finden gemeinsam deinen Weg.</p>' +
           '<div class="stellen-empty-cta">' +
-            '<a class="btn btn-primary" href="#beruf-list">↓ Alle Berufe ansehen</a>' +
+            '<a class="btn btn-primary" href="#beruf-list">Alle Berufe ansehen</a>' +
             '<a class="btn btn-outline" href="' + beratung + '">Kostenlose Beratung</a>' +
           "</div>" +
         "</div>";

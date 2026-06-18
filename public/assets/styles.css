@@ -679,6 +679,10 @@ section { padding: 90px 0; }
 .stellen-empty-p { margin: 0 0 16px; max-width: 60ch; }
 .stellen-empty-cta { display: flex; gap: 10px; flex-wrap: wrap; }
 #beruf-list { scroll-margin-top: 90px; }
+.explore-foto { width: 100%; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 60px rgba(15,33,69,0.20); }
+.explore-foto img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3/2; }
+.wf-card-cta { display: inline-flex; margin-top: 16px; border-color: var(--gold); color: var(--gold); }
+.wf-card-cta:hover { background: var(--gold); color: var(--navy); }
 
 /* ---------- Beruf-Detailseite ---------- */
 .beruf-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: start; }
@@ -890,7 +894,7 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 /* --- Standort-Bilder-Paar im Split-Bereich --- */
 .split-locs { display: flex; flex-direction: column; gap: 12px; }
 .loc-img-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.loc-img { border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1/1; background: var(--navy); }
+.loc-img { border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 4/3; background: var(--navy); }
 .loc-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .loc-img-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--navy-2), var(--navy)); }
 .loc-img-placeholder svg { width: 46px; height: 46px; color: rgba(239,165,0,0.65); }

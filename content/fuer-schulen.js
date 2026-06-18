@@ -135,44 +135,8 @@ const html = `
           <a class="btn btn-navy mt-2" href="/kontakt#termin">Schultermin anfragen →</a>
         </div>
         <div class="split-media" style="background:none; overflow:visible; border-radius:0; min-height:0; box-shadow:none;">
-          <div class="wf-laptop-outer" style="width:100%; transform:perspective(1200px) rotateY(8deg);">
-            <div class="wf-laptop" style="transform:none;">
-              <div class="wf-lap-screen">
-                <div class="br-bar">
-                  <div class="br-dots"><div class="br-dot br-dot-r"></div><div class="br-dot br-dot-y"></div><div class="br-dot br-dot-g"></div></div>
-                  <div class="br-url">app.nest-messe.de</div>
-                </div>
-                <div class="lap-app">
-                  <div class="lap-header" style="background:var(--navy);">
-                    <div class="lap-logo" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:10px;">N</div>
-                    <div><div class="lap-co-name" style="color:#fff;">NEST Messe</div><div class="lap-co-jobs" style="color:rgba(255,255,255,0.5);">Terminkalender · Verwaltung</div></div>
-                    <div class="lap-tabs">
-                      <div class="lap-tab--active lap-tab" style="color:#EFA500;border-color:#EFA500;">Termine</div>
-                      <div class="lap-tab" style="color:rgba(255,255,255,0.35);">+ Neuer Termin</div>
-                    </div>
-                  </div>
-                  <div class="lap-body">
-                    <div class="la-label" style="color:#EFA500;">Kommende Schul-Termine</div>
-                    <div class="la-job">
-                      <div class="ji" style="background:var(--navy);color:#EFA500;font-weight:900;font-size:11px;line-height:1.05;text-align:center;">08<br><span style="font-size:7px;letter-spacing:1px;">APR</span></div>
-                      <div class="jt"><strong>Gesamtschule Barmen</strong><span>Wuppertal-Barmen · 09–13 Uhr</span></div>
-                      <div class="jb" style="background:rgba(239,165,0,0.15);color:var(--gold-dark);">4 / 12</div>
-                    </div>
-                    <div class="la-job">
-                      <div class="ji" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:11px;line-height:1.05;text-align:center;">22<br><span style="font-size:7px;letter-spacing:1px;">APR</span></div>
-                      <div class="jt"><strong>Berufskolleg Elberfeld</strong><span>Wuppertal-Elberfeld · 09–13 Uhr</span></div>
-                      <div class="jb" style="background:rgba(194,65,90,0.14);color:#c2415a;">10 / 12</div>
-                    </div>
-                    <div class="la-job">
-                      <div class="ji" style="background:#162d5e;color:#EFA500;font-weight:900;font-size:11px;line-height:1.05;text-align:center;">13<br><span style="font-size:7px;letter-spacing:1px;">MAI</span></div>
-                      <div class="jt"><strong>Realschule Vohwinkel</strong><span>Wuppertal-Vohwinkel · 09–13 Uhr</span></div>
-                      <div class="jb">6 / 12</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="wf-lap-base"></div><div class="wf-lap-foot"></div>
-            </div>
+          <div class="explore-foto">
+            <img src="/assets/img/nest-explore.png" alt="NEST Explore – Schüler:innen entdecken Berufe an einem interaktiven NEST-Stand" loading="lazy">
           </div>
         </div>
       </div>

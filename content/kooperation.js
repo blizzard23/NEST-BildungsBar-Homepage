@@ -31,7 +31,7 @@ const html = `
             <div class="wf-card-bg-num">03</div>
             <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">03</div></div><div class="wf-step-badge">dauerhaft</div><div class="wf-step-icon">🤝</div></div>
             <div class="wf-card-title">On- &amp; Offboarding</div>
-            <div class="wf-card-body">Motivational Support für eure Auszubildenden vom ersten Tag bis zum Abschluss – <b>für weniger Abbrüche und mehr Bindung</b>.</div>
+            <div class="wf-card-body">Vor dem Vorstellungsgespräch bereiten sich Bewerbende bei uns vor – und <b>nach einer Absage vermitteln wir sie an andere Partnerbetriebe weiter</b>, statt sie zu verlieren.</div>
           </div>
         </div>
       </div>
@@ -60,19 +60,7 @@ const html = `
             <div class="wf-laptop-outer"><div class="wf-laptop">
               <div class="wf-lap-screen">
                 <div class="br-bar"><div class="br-dots"><div class="br-dot br-dot-r"></div><div class="br-dot br-dot-y"></div><div class="br-dot br-dot-g"></div></div><div class="br-url">nest-bildungsbar.de/berufswelt</div></div>
-                <div class="lap-app">
-                  <div class="lap-header">
-                    <div class="lap-logo">M</div>
-                    <div><div class="lap-co-name">Maier &amp; Söhne</div><div class="lap-co-jobs">3 offene Ausbildungsplätze</div></div>
-                    <div class="lap-tabs"><div class="lap-tab--active lap-tab">Stellen</div><div class="lap-tab">Profil</div></div>
-                  </div>
-                  <div class="lap-body">
-                    <div class="la-label">Offene Ausbildungsplätze</div>
-                    <div class="la-job"><div class="ji">M</div><div class="jt"><strong>Mechatroniker:in</strong><span>Ausbildung · 3,5 Jahre</span></div><div class="jb">Bewerben</div></div>
-                    <div class="la-job"><div class="ji">D</div><div class="jt"><strong>Dachdecker:in</strong><span>Ausbildung · 3 Jahre</span></div><div class="jb">Bewerben</div></div>
-                    <div class="la-job"><div class="ji">K</div><div class="jt"><strong>Kaufleute Büromanagement</strong><span>Ausbildung · 3 Jahre</span></div><div class="jb">Bewerben</div></div>
-                  </div>
-                </div>
+                <img class="lap-shot" src="/assets/img/berufswelt-screenshot.png" alt="NEST Berufswelt – interaktive Stellenseite mit Suche, Filtern und aktuellen Ausbildungsplätzen" loading="lazy">
               </div>
               <div class="wf-lap-base"></div><div class="wf-lap-foot"></div>
             </div></div>
@@ -92,6 +80,7 @@ const html = `
             <div class="wf-card-title">NESTplay.</div>
             <div class="wf-card-body">Präsentiert euren Betrieb direkt im Unterricht als interaktives Live-Quiz – <b>Schüler:innen spielen in Echtzeit und behalten euch im Kopf</b>.</div>
             <div class="wf-card-foot"><div class="wf-tag">Gamifiziert</div><div class="wf-tag">In der Klasse</div></div>
+            <a class="btn btn-outline wf-card-cta" href="https://nestplay.de" target="_blank" rel="noopener">Zu NESTplay. →</a>
           </div>
           <div class="wf-card" style="border:1.5px solid var(--gold);box-shadow:0 10px 34px rgba(239,165,0,0.14);">
             <div class="wf-card-bg-num">07</div>
@@ -99,6 +88,7 @@ const html = `
             <div class="wf-card-title">NEST Explore – die Messe</div>
             <div class="wf-card-body">Unsere Ausbildungsmesse kommt direkt in die Schulen der Region. <b>Ihr trefft motivierte Schüler:innen persönlich</b> – komplett von NEST organisiert.</div>
             <div class="wf-card-foot"><div class="wf-tag">Direkt an Schulen</div><div class="wf-tag">Persönlich</div></div>
+            <a class="btn btn-outline wf-card-cta" href="https://nest-messe.de" target="_blank" rel="noopener">Zu NEST Explore →</a>
           </div>
         </div>
       </div>
@@ -114,7 +104,7 @@ const html = `
             <div class="wf-card-bg-num">08</div>
             <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">08</div></div><div class="wf-step-badge">Input</div><div class="wf-step-icon">💬</div></div>
             <div class="wf-card-title">Ausbildungsdialog</div>
-            <div class="wf-card-body">Veranstaltungen zu relevanten Themen der Ausbildung – <b>mit externem Input</b> von Expert:innen und gemeinsamem Austausch der Betriebe.</div>
+            <div class="wf-card-body">Regelmäßige Veranstaltungen zu relevanten Themen der Ausbildung – <b>mit externem Input</b> von Expert:innen und gemeinsamem Austausch der Betriebe.</div>
           </div>
           <div class="wf-card">
             <div class="wf-card-bg-num">09</div>
@@ -130,7 +120,7 @@ const html = `
         <div class="wf-result-icon">✅</div>
         <div>
           <div class="wf-result-h">Alle drei Säulen aus einer Hand</div>
-          <p class="wf-result-p">Ihr wählt das passende Paket – <b>wir kümmern uns um Gemeinwohl, Außenwirkung und Netzwerk</b>. Gemeinsam für die Ausbildung.</p>
+          <p class="wf-result-p">Alles in einem Gesamtpaket – <b>wir kümmern uns um Gemeinwohl, Außenwirkung und Netzwerk</b>. Gemeinsam für die Ausbildung.</p>
         </div>
       </div>
 

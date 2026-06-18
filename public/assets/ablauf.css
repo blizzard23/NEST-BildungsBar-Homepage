@@ -105,6 +105,7 @@
 .br-dot-r { background: #FF5F57; } .br-dot-y { background: #FEBC2E; } .br-dot-g { background: #28C840; }
 .br-url { flex: 1; background: rgba(255,255,255,.06); border-radius: 5px; padding: 4px 9px; font-size: 9.5px; color: rgba(255,255,255,.38); }
 .lap-app { background: var(--app-bg); }
+.lap-shot { display: block; width: 100%; height: auto; }
 .lap-header { background: var(--wf-navy); padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
 .lap-logo { width: 30px; height: 30px; border-radius: 8px; background: var(--wf-navy2); display: flex; align-items: center; justify-content: center; color: var(--wf-gold); font-weight: 900; flex-shrink: 0; }
 .lap-co-name { font-size: 12px; font-weight: 800; color: #fff; }

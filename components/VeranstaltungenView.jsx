@@ -21,6 +21,9 @@ function fmtLang(iso) {
   const wt = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"][d.getDay()];
   return `${wt}, ${t}. ${MONATE[m - 1]} ${j}`;
 }
+function mapsUrl(adresse) {
+  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(adresse);
+}
 
 export default function VeranstaltungenView({ initialEventId = null }) {
   const heute = useMemo(() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; }, []);
@@ -236,6 +239,12 @@ export default function VeranstaltungenView({ initialEventId = null }) {
                             <p className="messe-termin-meta">
                               {fmtLang(ev.datum)}{ev.uhrzeit ? " · " + ev.uhrzeit : ""}{ev.ort ? " · " + ev.ort : ""}
                             </p>
+                            {ev.adresse ? (
+                              <p className="messe-termin-info" style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: "2px", color: "var(--gold-dark)" }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <span>{ev.adresse} · <a href={mapsUrl(ev.adresse)} target="_blank" rel="noopener">Karte ↗</a></span>
+                              </p>
+                            ) : null}
                             {ev.beschreibung ? <p className="messe-termin-info">{ev.beschreibung}</p> : null}
                             {n > 0 ? <p className="messe-termin-info" style={{ color: "var(--gold-dark)", fontWeight: 700 }}>{n} {n === 1 ? "Unternehmen" : "Unternehmen"} angemeldet</p> : null}
                           </div>
@@ -258,6 +267,7 @@ export default function VeranstaltungenView({ initialEventId = null }) {
                         <span className="section-label">Als Unternehmen anmelden</span>
                         <h3 style={{ margin: "4px 0 2px" }}>{aktivesEvent.titel}</h3>
                         <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: 0 }}>{fmtLang(aktivesEvent.datum)}{aktivesEvent.uhrzeit ? " · " + aktivesEvent.uhrzeit : ""}{aktivesEvent.ort ? " · " + aktivesEvent.ort : ""}</p>
+                        {aktivesEvent.adresse ? <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "2px 0 0" }}>{aktivesEvent.adresse} · <a href={mapsUrl(aktivesEvent.adresse)} target="_blank" rel="noopener">Karte ↗</a></p> : null}
                       </div>
                       <button type="button" className="kal-nav" aria-label="Schließen" onClick={() => setAktivesEvent(null)}>×</button>
                     </div>

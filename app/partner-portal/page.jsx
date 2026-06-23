@@ -6,7 +6,7 @@ import { mapMesseTermin } from "@/lib/messeTermine";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "", keyword1: "", keyword2: "", keyword3: "" };
-const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", beschreibung: "" };
+const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", adresse: "", beschreibung: "" };
 const POST_LEER = { slug: "", titel: "", excerpt: "", inhalt: "", bild_url: "", published: true };
 const AP_LEER = { name: "", rolle: "", email: "", telefon: "", standort: "", bild_url: "", beschreibung: "", sortierung: 0 };
 
@@ -970,7 +970,7 @@ export default function PartnerPortal() {
                     <div className="card" key={v.id}>
                       <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
                       <h3>{v.titel}</h3>
-                      <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
+                      <p style={{ color: "var(--text-soft)" }}>{v.ort}{v.adresse ? " · " + v.adresse : ""}</p>
                       {v.beschreibung ? <p>{v.beschreibung}</p> : null}
                     </div>
                   ))}
@@ -1164,10 +1164,11 @@ export default function PartnerPortal() {
                       </div>
                       <div className="row2">
                         <div className="field"><label>Uhrzeit</label><input value={evForm.uhrzeit} onChange={setEv("uhrzeit")} placeholder="z. B. 17:00–19:00" /></div>
-                        <div className="field"><label>Ort</label>
+                        <div className="field"><label>Ort (Stadt / Format)</label>
                           <select value={evForm.ort} onChange={setEv("ort")}><option>Wuppertal</option><option>Essen</option><option>Online</option></select>
                         </div>
                       </div>
+                      <div className="field"><label>Genaue Adresse</label><input value={evForm.adresse} onChange={setEv("adresse")} placeholder="z. B. NEST BildungsBar, Hochstraße 65, 42105 Wuppertal" /></div>
                       <div className="field"><label>Beschreibung</label><textarea value={evForm.beschreibung} onChange={setEv("beschreibung")} placeholder="Kurzbeschreibung (optional)"></textarea></div>
                       {evMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{evMsg}</p> : null}
                       <button className="btn btn-primary" type="submit">Veranstaltung speichern</button>
@@ -1187,6 +1188,7 @@ export default function PartnerPortal() {
                           <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
                           <h3>{v.titel}</h3>
                           <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
+                          {v.adresse ? <p style={{ color: "var(--text-mute)", fontSize: "13px", margin: "2px 0 0" }}>{v.adresse}</p> : null}
                           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "8px" }}>
                             <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => linkKopieren("/veranstaltungen/" + v.id)}>Link kopieren</button>
                             <button className="btn btn-danger" style={{ padding: "6px 14px" }} onClick={() => eventLoeschen(v.id, v.titel)}>Löschen</button>

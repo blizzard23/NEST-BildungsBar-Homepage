@@ -50,9 +50,13 @@ create table if not exists public.veranstaltungen (
   datum        date not null,
   uhrzeit      text,
   ort          text,
+  adresse      text,           -- genaue Adresse (Straße, PLZ, Ort)
   beschreibung text,
   created_at   timestamptz not null default now()
 );
+
+-- Falls die Tabelle schon existiert: Adress-Spalte nachrüsten
+alter table public.veranstaltungen add column if not exists adresse text;
 
 alter table public.veranstaltungen enable row level security;
 

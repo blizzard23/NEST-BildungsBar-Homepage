@@ -813,6 +813,11 @@ function sucheTrifft(hay, q) {
     return syn ? syn.some(function (s) { return hay.indexOf(normText(s)) > -1; }) : false;
   });
 }
+/* Namen der Partnerunternehmen eines Berufs als Suchtext (Eintrag ist String oder {name,url}). */
+function partnerNamenText(partner) {
+  if (!Array.isArray(partner)) return "";
+  return partner.map(function (p) { return (typeof p === "string") ? p : ((p && p.name) || ""); }).join(" ");
+}
 function interessePasst(interest, name, katName) {
   if (!interest) return true;
   var def = null;
@@ -919,10 +924,10 @@ function renderBerufeUebersicht() {
         var name = (typeof b === "string") ? b : b.name;
         var entry = (typeof b === "string") ? {} : b;
         var st = (typeof standorteFuer === "function") ? standorteFuer(berufSlug(name)) : (entry.standorte || ["Wuppertal"]);
-        return { name: name, slug: berufSlug(name), typ: berufTyp(name, entry.dauer), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st, info: entry.info || "" };
+        return { name: name, slug: berufSlug(name), typ: berufTyp(name, entry.dauer), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st, info: entry.info || "", partner: entry.partner || null };
       }).filter(function (it) {
-        // Suche berücksichtigt auch den Beschreibungstext der Detailseite (it.info)
-        if (q && !sucheTrifft(normText(it.name + " " + k.name + " " + it.info + " " + interessenStichwoerter(it.name, k.name) + " " + stellenKwFuer(it.name)), q)) return false;
+        // Suche berücksichtigt auch den Beschreibungstext der Detailseite (it.info) und die Partnerunternehmen (it.partner)
+        if (q && !sucheTrifft(normText(it.name + " " + k.name + " " + it.info + " " + partnerNamenText(it.partner) + " " + interessenStichwoerter(it.name, k.name) + " " + stellenKwFuer(it.name)), q)) return false;
         if (state.typ !== "*" && it.typ !== state.typ) return false;
         if (state.ort !== "*" && it.standorte.indexOf(state.ort) < 0) return false;
         if (!interessePasst(state.interest, it.name, k.name)) return false;

@@ -15,7 +15,6 @@ export default function Header() {
             <li><a href="/fuer-schulen">Schulen</a></li>
             <li><a href="/kooperation">Unternehmen</a></li>
             <li><a href="/referenzen">Referenzen</a></li>
-            <li><a href="/veranstaltungen">Veranstaltungen</a></li>
             <li><a href="/blog">Blog</a></li>
             <li><a href="/kontakt">Kontakt</a></li>
             <li className="nav-li-termin"><a className="btn btn-primary nav-li-termin-a" href="/terminbuchung">Termin buchen</a></li>

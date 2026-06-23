@@ -29,7 +29,6 @@ export default function Footer() {
             <li><a href="/fuer-schulen">Für Schulen</a></li>
             <li><a href="/kooperation">Für Unternehmen</a></li>
             <li><a href="/referenzen">Referenzen</a></li>
-            <li><a href="/veranstaltungen">Veranstaltungen</a></li>
             <li><a href="/terminbuchung">Termin buchen</a></li>
           </ul>
         </div>

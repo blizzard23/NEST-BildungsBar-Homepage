@@ -390,6 +390,11 @@ export default function PartnerPortal() {
   }
   async function eventLoeschen(id, titel) { if (!bestaetigeLoeschen(titel || "Veranstaltung")) return; await supabase.from("veranstaltungen").delete().eq("id", id); toast("Veranstaltung gelöscht"); ladeAdmin(); ladeDaten(); }
   async function anmeldungLoeschen(id, firma) { if (!bestaetigeLoeschen("Anmeldung von " + (firma || "Unternehmen"))) return; await supabase.from("veranstaltung_anmeldungen").delete().eq("id", id); toast("Anmeldung gelöscht"); ladeAdmin(); }
+  function linkKopieren(pfad) {
+    const url = (typeof window !== "undefined" ? window.location.origin : "") + pfad;
+    if (typeof navigator !== "undefined" && navigator.clipboard) { navigator.clipboard.writeText(url).then(() => toast("Link kopiert ✅")).catch(() => toast(url)); }
+    else toast(url);
+  }
 
   // ---- Admin: Blog ----
   async function postSpeichern(e) {
@@ -1148,7 +1153,11 @@ export default function PartnerPortal() {
                   </div>
 
                   {/* Alle Veranstaltungen verwalten */}
-                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 12px" }}>Alle Veranstaltungen ({adminEvents.length})</h3>
+                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 6px" }}>Alle Veranstaltungen ({adminEvents.length})</h3>
+                  <div className="card" style={{ marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap", padding: "14px 18px" }}>
+                    <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>Der Kalender ist <strong style={{ color: "var(--navy)" }}>nicht im Menü verlinkt</strong> – verteile diesen Link direkt. Pro Veranstaltung gibt es zusätzlich einen Direktlink.</p>
+                    <button type="button" className="btn btn-outline" style={{ flexShrink: 0 }} onClick={() => linkKopieren("/veranstaltungen")}>Kalender-Link kopieren</button>
+                  </div>
                   {adminEvents.length ? (
                     <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
                       {adminEvents.map((v) => (
@@ -1156,7 +1165,10 @@ export default function PartnerPortal() {
                           <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
                           <h3>{v.titel}</h3>
                           <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
-                          <button className="btn btn-danger" style={{ marginTop: "8px" }} onClick={() => eventLoeschen(v.id, v.titel)}>Löschen</button>
+                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "8px" }}>
+                            <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => linkKopieren("/veranstaltungen/" + v.id)}>Link kopieren</button>
+                            <button className="btn btn-danger" style={{ padding: "6px 14px" }} onClick={() => eventLoeschen(v.id, v.titel)}>Löschen</button>
+                          </div>
                         </div>
                       ))}
                     </div>

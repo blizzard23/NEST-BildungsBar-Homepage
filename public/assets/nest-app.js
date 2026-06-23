@@ -272,6 +272,7 @@ window.BERUF_BILDER = {
   "duales-studium-maschinenbau-und-digitale-technologien-werkzeugmechaniker": "assets/img/berufe/duales-studium-maschinenbau-und-digitale-technologien-werkzeugmechaniker.png",
   "duales-studium-wirtschafts-und-industrieinformatik": "assets/img/berufe/duales-studium-wirtschafts-und-industrieinformatik.png",
   "duales-studium-wirtschaftsinformatik": "assets/img/berufe/duales-studium-wirtschaftsinformatik.png",
+  "duales-studium-wirtschaftsingenieurwesen": "assets/img/berufe/duales-studium-wirtschaftsingenieurwesen.png",
   "energieelektroniker": "assets/img/berufe/energieelektroniker.webp",
   "fachinformatiker-anwendungsentwicklung": "assets/img/berufe/fachinformatiker-anwendungsentwicklung.png",
   "fachinformatiker-daten-und-prozessanalyse": "assets/img/berufe/fachinformatiker-daten-und-prozessanalyse.png",

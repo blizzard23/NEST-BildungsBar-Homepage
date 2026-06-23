@@ -84,6 +84,7 @@ export default function PartnerPortal() {
   const [adminEvents, setAdminEvents] = useState([]);
   const [adminPosts, setAdminPosts] = useState([]);
   const [buchungen, setBuchungen] = useState([]);
+  const [anmeldungen, setAnmeldungen] = useState([]); // Unternehmens-Anmeldungen zu Veranstaltungen
   const [evForm, setEvForm] = useState(EVENT_LEER);
   const [evMsg, setEvMsg] = useState("");
   const [poForm, setPoForm] = useState(POST_LEER);
@@ -218,6 +219,8 @@ export default function PartnerPortal() {
     setAdminPosts(po || []);
     const { data: bu } = await supabase.from("buchungen").select("*").order("created_at", { ascending: false });
     setBuchungen(bu || []);
+    const { data: an } = await supabase.from("veranstaltung_anmeldungen").select("*").order("created_at", { ascending: false });
+    setAnmeldungen(an || []);
   }, [isAdmin]); // eslint-disable-line
 
   useEffect(() => { if (session) ladeDaten(); }, [session, ladeDaten]);
@@ -263,7 +266,7 @@ export default function PartnerPortal() {
       setAuthMode("login");
     }
   }
-  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
+  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setAnmeldungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
 
   // ---- Konto: Unternehmensname & Passwort ändern ----
   async function firmaSpeichern(e) {
@@ -386,6 +389,7 @@ export default function PartnerPortal() {
     ladeAdmin(); ladeDaten();
   }
   async function eventLoeschen(id, titel) { if (!bestaetigeLoeschen(titel || "Veranstaltung")) return; await supabase.from("veranstaltungen").delete().eq("id", id); toast("Veranstaltung gelöscht"); ladeAdmin(); ladeDaten(); }
+  async function anmeldungLoeschen(id, firma) { if (!bestaetigeLoeschen("Anmeldung von " + (firma || "Unternehmen"))) return; await supabase.from("veranstaltung_anmeldungen").delete().eq("id", id); toast("Anmeldung gelöscht"); ladeAdmin(); }
 
   // ---- Admin: Blog ----
   async function postSpeichern(e) {
@@ -1157,6 +1161,48 @@ export default function PartnerPortal() {
                       ))}
                     </div>
                   ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Veranstaltungen.</p>}
+
+                  {/* Anmeldungen von Unternehmen zu Veranstaltungen */}
+                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 12px" }}>Anmeldungen zu Veranstaltungen ({anmeldungen.length})</h3>
+                  {anmeldungen.length ? (() => {
+                    const evMap = {};
+                    adminEvents.forEach((v) => { evMap[v.id] = v; });
+                    const groups = {};
+                    anmeldungen.forEach((a) => { (groups[a.veranstaltung_id] = groups[a.veranstaltung_id] || []).push(a); });
+                    const keys = Object.keys(groups).sort((a, b) => {
+                      const da = (evMap[a] && evMap[a].datum) || "", db = (evMap[b] && evMap[b].datum) || "";
+                      return da.localeCompare(db);
+                    });
+                    return (
+                      <div style={{ marginBottom: "32px" }}>
+                        {keys.map((k) => {
+                          const list = groups[k];
+                          const ev = evMap[k];
+                          const personen = list.reduce((s, a) => s + (a.personen || 1), 0);
+                          return (
+                            <div className="card" key={k} style={{ marginBottom: "16px" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px", borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
+                                <h3 style={{ margin: 0 }}>{ev ? ev.titel : "Veranstaltung"}{ev && ev.datum ? <span style={{ fontWeight: 600, color: "var(--text-mute)" }}> · {ev.datum}{ev.uhrzeit ? " · " + ev.uhrzeit : ""}{ev.ort ? " · " + ev.ort : ""}</span> : null}</h3>
+                                <span style={{ fontWeight: 800, color: "var(--gold-dark)" }}>{list.length} {list.length === 1 ? "Unternehmen" : "Unternehmen"} · {personen} {personen === 1 ? "Person" : "Personen"}</span>
+                              </div>
+                              {list.map((a) => (
+                                <div key={a.id} style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
+                                  <div>
+                                    <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--navy)" }}>{a.firma} <span style={{ fontWeight: 600, color: "var(--text-mute)" }}>· {a.personen || 1} {(a.personen || 1) === 1 ? "Person" : "Personen"}</span></p>
+                                    <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
+                                      {a.name}{a.email ? <> · <a href={`mailto:${a.email}`}>{a.email}</a></> : ""}{a.telefon ? <> · <a href={`tel:${a.telefon}`}>{a.telefon}</a></> : ""}
+                                    </p>
+                                    {a.nachricht ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{a.nachricht}"</p> : null}
+                                  </div>
+                                  <button className="btn btn-danger" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => anmeldungLoeschen(a.id, a.firma)}>Löschen</button>
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })() : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Anmeldungen von Unternehmen.</p>}
 
                   {/* Blogbeitrag anlegen */}
                   <div className="card" style={{ marginBottom: "24px" }}>

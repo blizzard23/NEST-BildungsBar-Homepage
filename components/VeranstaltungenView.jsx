@@ -149,13 +149,30 @@ export default function VeranstaltungenView({ initialEventId = null }) {
       begleitpersonen: begleit,
       nachricht: form.nachricht.trim() || null,
     };
-    const { error } = await supabase.from("veranstaltung_anmeldungen").insert(eintrag);
+    // Über die API speichern – dort wird zusätzlich die Bestätigungsmail mit
+    // Kalender-Anhang (.ics) verschickt.
+    let ok = false, mailed = false;
+    try {
+      const res = await fetch("/api/veranstaltung-anmeldung", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(eintrag),
+      });
+      const out = await res.json().catch(() => ({}));
+      ok = res.ok && out.ok; mailed = !!out.mailed;
+      if (!ok) { setErr("Anmeldung fehlgeschlagen: " + (out.error || res.status)); }
+    } catch (e) {
+      // Fallback: direkt in Supabase speichern (ohne E-Mail)
+      const { error } = await supabase.from("veranstaltung_anmeldungen").insert(eintrag);
+      ok = !error;
+      if (!ok) setErr("Anmeldung fehlgeschlagen: " + error.message);
+    }
     setBusy(false);
-    if (error) { setErr("Anmeldung fehlgeschlagen: " + error.message); return; }
-    setMsg("Danke! Eure Anmeldung ist eingegangen – wir melden uns mit allen Details.");
+    if (!ok) return;
+    setMsg(mailed
+      ? "Danke! Eure Anmeldung ist bestätigt – wir haben euch eine E-Mail mit dem Kalender-Termin geschickt."
+      : "Danke! Eure Anmeldung ist eingegangen – wir melden uns mit allen Details.");
     setForm(ANMELDUNG_LEER);
     setAnzahl((a) => ({ ...a, [aktivesEvent.id]: (a[aktivesEvent.id] || 0) + 1 }));
-    setTimeout(() => setAktivesEvent(null), 2200);
+    setTimeout(() => setAktivesEvent(null), 2600);
   }
 
   return (

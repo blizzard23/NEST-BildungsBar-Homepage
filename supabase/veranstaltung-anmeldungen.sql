@@ -12,10 +12,23 @@ create table if not exists public.veranstaltung_anmeldungen (
   name             text not null,
   email            text not null,
   telefon          text,
-  personen         int  not null default 1,
+  personen         int  not null default 1 check (personen between 1 and 2),
+  begleitpersonen  text[] not null default '{}',  -- namentlich benannte Begleitperson(en)
   nachricht        text,
   created_at       timestamptz not null default now()
 );
+
+-- Falls die Tabelle schon existiert: fehlende Spalte/Constraint nachrüsten
+alter table public.veranstaltung_anmeldungen
+  add column if not exists begleitpersonen text[] not null default '{}';
+do $$ begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'veranstaltung_anmeldungen_personen_check'
+  ) then
+    alter table public.veranstaltung_anmeldungen
+      add constraint veranstaltung_anmeldungen_personen_check check (personen between 1 and 2);
+  end if;
+end $$;
 
 create index if not exists veranstaltung_anmeldungen_event_idx
   on public.veranstaltung_anmeldungen (veranstaltung_id);

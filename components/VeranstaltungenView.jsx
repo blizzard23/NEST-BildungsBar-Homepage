@@ -8,7 +8,8 @@ const MONATE = [
 ];
 const WOCHENTAGE = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 
-const ANMELDUNG_LEER = { firma: "", name: "", email: "", telefon: "", personen: 1, nachricht: "" };
+const MAX_PERSONEN = 2;
+const ANMELDUNG_LEER = { firma: "", name: "", email: "", telefon: "", personen: 1, begleitpersonen: ["", ""], nachricht: "" };
 
 function isoDay(d) {
   return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -121,11 +122,18 @@ export default function VeranstaltungenView({ initialEventId = null }) {
     }
   }
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const setBegleit = (i) => (e) => setForm((f) => { const b = [...f.begleitpersonen]; b[i] = e.target.value; return { ...f, begleitpersonen: b }; });
 
   async function anmeldenSenden(e) {
     e.preventDefault(); setErr(""); setMsg("");
     if (!form.firma.trim() || !form.name.trim() || !form.email.trim()) {
       setErr("Bitte Unternehmen, Ansprechpartner:in und E-Mail ausfüllen."); return;
+    }
+    const personen = Math.min(MAX_PERSONEN, Math.max(1, parseInt(form.personen, 10) || 1));
+    // Begleitpersonen (alle außer der Ansprechpartner:in) müssen namentlich benannt sein
+    const begleit = form.begleitpersonen.slice(0, personen - 1).map((n) => (n || "").trim());
+    if (begleit.some((n) => !n)) {
+      setErr("Bitte benenne alle Begleitpersonen namentlich."); return;
     }
     setBusy(true);
     const eintrag = {
@@ -134,7 +142,8 @@ export default function VeranstaltungenView({ initialEventId = null }) {
       name: form.name.trim(),
       email: form.email.trim(),
       telefon: form.telefon.trim() || null,
-      personen: Math.max(1, parseInt(form.personen, 10) || 1),
+      personen,
+      begleitpersonen: begleit,
       nachricht: form.nachricht.trim() || null,
     };
     const { error } = await supabase.from("veranstaltung_anmeldungen").insert(eintrag);
@@ -261,7 +270,19 @@ export default function VeranstaltungenView({ initialEventId = null }) {
                         <div className="field"><label>E-Mail *</label><input type="email" value={form.email} onChange={set("email")} required /></div>
                         <div className="field"><label>Telefon</label><input value={form.telefon} onChange={set("telefon")} /></div>
                       </div>
-                      <div className="field" style={{ maxWidth: "200px" }}><label>Anzahl Personen</label><input type="number" min="1" value={form.personen} onChange={set("personen")} /></div>
+                      <div className="field" style={{ maxWidth: "220px" }}>
+                        <label>Anzahl Personen (max. {MAX_PERSONEN})</label>
+                        <select value={form.personen} onChange={set("personen")}>
+                          <option value={1}>1 Person</option>
+                          <option value={2}>2 Personen</option>
+                        </select>
+                      </div>
+                      {Number(form.personen) > 1 ? Array.from({ length: Number(form.personen) - 1 }).map((_, i) => (
+                        <div className="field" key={i}>
+                          <label>Name der Begleitperson{Number(form.personen) - 1 > 1 ? " " + (i + 1) : ""} *</label>
+                          <input value={form.begleitpersonen[i] || ""} onChange={setBegleit(i)} placeholder="Vor- und Nachname" required />
+                        </div>
+                      )) : null}
                       <div className="field"><label>Nachricht (optional)</label><textarea value={form.nachricht} onChange={set("nachricht")} placeholder="Wünsche, Fragen, …"></textarea></div>
                       {err ? <p style={{ color: "#c2415a", fontSize: "14px" }}>{err}</p> : null}
                       {msg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{msg}</p> : null}

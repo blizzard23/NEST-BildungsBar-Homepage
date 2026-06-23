@@ -395,6 +395,28 @@ export default function PartnerPortal() {
     if (typeof navigator !== "undefined" && navigator.clipboard) { navigator.clipboard.writeText(url).then(() => toast("Link kopiert ✅")).catch(() => toast(url)); }
     else toast(url);
   }
+  // Namensschilder-Export: eine Zeile pro Person (Ansprechpartner:in + Begleitpersonen)
+  function csvFeld(v) { const s = String(v == null ? "" : v); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  function namensschilderExport(ev, list) {
+    const titel = (ev && ev.titel) || "Veranstaltung";
+    const datum = (ev && ev.datum) || "";
+    const zeilen = [["Name", "Unternehmen", "Rolle", "Veranstaltung", "Datum"]];
+    list.forEach((a) => {
+      zeilen.push([a.name, a.firma, "Ansprechpartner:in", titel, datum]);
+      (Array.isArray(a.begleitpersonen) ? a.begleitpersonen : []).forEach((bp) => {
+        if (bp && bp.trim()) zeilen.push([bp.trim(), a.firma, "Begleitperson", titel, datum]);
+      });
+    });
+    const csv = "﻿" + zeilen.map((r) => r.map(csvFeld).join(";")).join("\r\n");
+    const slug = slugify(titel + (datum ? "-" + datum : "")) || "veranstaltung";
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url; link.download = `namensschilder-${slug}.csv`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast("Namensschilder exportiert ✅");
+  }
 
   // ---- Admin: Blog ----
   async function postSpeichern(e) {
@@ -1195,20 +1217,27 @@ export default function PartnerPortal() {
                             <div className="card" key={k} style={{ marginBottom: "16px" }}>
                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px", borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
                                 <h3 style={{ margin: 0 }}>{ev ? ev.titel : "Veranstaltung"}{ev && ev.datum ? <span style={{ fontWeight: 600, color: "var(--text-mute)" }}> · {ev.datum}{ev.uhrzeit ? " · " + ev.uhrzeit : ""}{ev.ort ? " · " + ev.ort : ""}</span> : null}</h3>
-                                <span style={{ fontWeight: 800, color: "var(--gold-dark)" }}>{list.length} {list.length === 1 ? "Unternehmen" : "Unternehmen"} · {personen} {personen === 1 ? "Person" : "Personen"}</span>
+                                <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                                  <span style={{ fontWeight: 800, color: "var(--gold-dark)" }}>{list.length} {list.length === 1 ? "Unternehmen" : "Unternehmen"} · {personen} {personen === 1 ? "Person" : "Personen"}</span>
+                                  <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => namensschilderExport(ev, list)}>Namensschilder (CSV)</button>
+                                </div>
                               </div>
-                              {list.map((a) => (
+                              {list.map((a) => {
+                                const begleit = (Array.isArray(a.begleitpersonen) ? a.begleitpersonen : []).filter((bp) => bp && bp.trim());
+                                return (
                                 <div key={a.id} style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
                                   <div>
                                     <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--navy)" }}>{a.firma} <span style={{ fontWeight: 600, color: "var(--text-mute)" }}>· {a.personen || 1} {(a.personen || 1) === 1 ? "Person" : "Personen"}</span></p>
                                     <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
                                       {a.name}{a.email ? <> · <a href={`mailto:${a.email}`}>{a.email}</a></> : ""}{a.telefon ? <> · <a href={`tel:${a.telefon}`}>{a.telefon}</a></> : ""}
                                     </p>
+                                    {begleit.length ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>Begleitung: {begleit.join(", ")}</p> : null}
                                     {a.nachricht ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{a.nachricht}"</p> : null}
                                   </div>
                                   <button className="btn btn-danger" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => anmeldungLoeschen(a.id, a.firma)}>Löschen</button>
                                 </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           );
                         })}

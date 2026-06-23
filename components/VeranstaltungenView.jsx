@@ -178,7 +178,8 @@ export default function VeranstaltungenView({ initialEventId = null }) {
             <p>Lädt …</p>
           ) : (
             <div className="kal-layout">
-              {/* Kalender */}
+              {/* Linke Spalte: Kalender + Veranstaltungsbilder */}
+              <div className="kal-col-left">
               <div className="kal-card">
                 <div className="kal-head">
                   <button type="button" className="kal-nav" aria-label="Vorheriger Monat" onClick={() => monatWechseln(-1)}>‹</button>
@@ -216,6 +217,22 @@ export default function VeranstaltungenView({ initialEventId = null }) {
                   <span><i className="kal-dot"></i> Veranstaltung</span>
                   {selectedDay ? <button type="button" className="link-btn" onClick={() => setSelectedDay(null)}>Filter aufheben</button> : null}
                 </div>
+              </div>
+
+              {/* Bilder der angezeigten Veranstaltungen – unter dem Kalender */}
+              {liste.some((e) => e.bild_url) ? (
+                <div className="kal-bilder">
+                  {liste.filter((e) => e.bild_url).map((e) => (
+                    <figure className="kal-bild" key={e.id}>
+                      <img src={e.bild_url} alt={e.titel} loading="lazy" />
+                      <figcaption>
+                        <strong>{e.titel}</strong>
+                        <span>{fmtLang(e.datum)}</span>
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              ) : null}
               </div>
 
               {/* Liste der Veranstaltungen */}

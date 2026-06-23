@@ -6,7 +6,7 @@ import { mapMesseTermin } from "@/lib/messeTermine";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "", keyword1: "", keyword2: "", keyword3: "" };
-const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", adresse: "", beschreibung: "" };
+const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", adresse: "", bild_url: "", beschreibung: "" };
 const POST_LEER = { slug: "", titel: "", excerpt: "", inhalt: "", bild_url: "", published: true };
 const AP_LEER = { name: "", rolle: "", email: "", telefon: "", standort: "", bild_url: "", beschreibung: "", sortierung: 0 };
 
@@ -87,6 +87,7 @@ export default function PartnerPortal() {
   const [anmeldungen, setAnmeldungen] = useState([]); // Unternehmens-Anmeldungen zu Veranstaltungen
   const [evForm, setEvForm] = useState(EVENT_LEER);
   const [evMsg, setEvMsg] = useState("");
+  const [evUploading, setEvUploading] = useState(false);
   const [poForm, setPoForm] = useState(POST_LEER);
   const [poMsg, setPoMsg] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -382,11 +383,38 @@ export default function PartnerPortal() {
   async function eventSpeichern(e) {
     e.preventDefault(); setEvMsg("");
     if (!evForm.titel || !evForm.datum) { setEvMsg("Titel und Datum sind Pflicht."); return; }
-    const { error } = await supabase.from("veranstaltungen").insert(evForm);
+    const { id, created_at, ...werte } = evForm;
+    if (id) {
+      const { error } = await supabase.from("veranstaltungen").update(werte).eq("id", id);
+      if (error) { setEvMsg("Fehler: " + error.message); return; }
+      setEvForm(EVENT_LEER);
+      toast("Veranstaltung aktualisiert ✅");
+      ladeAdmin(); ladeDaten();
+      return;
+    }
+    const { error } = await supabase.from("veranstaltungen").insert(werte);
     if (error) { setEvMsg("Fehler: " + error.message); return; }
     setEvForm(EVENT_LEER);
     toast("Veranstaltung gespeichert ✅");
     ladeAdmin(); ladeDaten();
+  }
+  function eventBearbeiten(v) {
+    setEvForm({ id: v.id, titel: v.titel || "", datum: v.datum || "", uhrzeit: v.uhrzeit || "", ort: v.ort || "Wuppertal", adresse: v.adresse || "", bild_url: v.bild_url || "", beschreibung: v.beschreibung || "" });
+    setEvMsg("");
+    if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-event-form"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
+  }
+  // Bild zur Veranstaltung hochladen (Bucket "blog")
+  async function eventBildUpload(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setEvUploading(true); setEvMsg("");
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const pfad = `veranstaltungen/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabase.storage.from("blog").upload(pfad, file, { cacheControl: "3600", upsert: false });
+    if (error) { setEvMsg("Upload-Fehler: " + error.message); setEvUploading(false); return; }
+    const { data } = supabase.storage.from("blog").getPublicUrl(pfad);
+    setEvForm((f) => ({ ...f, bild_url: data.publicUrl }));
+    setEvUploading(false);
   }
   async function eventLoeschen(id, titel) { if (!bestaetigeLoeschen(titel || "Veranstaltung")) return; await supabase.from("veranstaltungen").delete().eq("id", id); toast("Veranstaltung gelöscht"); ladeAdmin(); ladeDaten(); }
   async function anmeldungLoeschen(id, firma) { if (!bestaetigeLoeschen("Anmeldung von " + (firma || "Unternehmen"))) return; await supabase.from("veranstaltung_anmeldungen").delete().eq("id", id); toast("Anmeldung gelöscht"); ladeAdmin(); }
@@ -1154,9 +1182,9 @@ export default function PartnerPortal() {
                     </div>
                   ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Ansprechpartner angelegt – es werden die Standard-Kontakte angezeigt.</p>}
 
-                  {/* Veranstaltung anlegen */}
-                  <div className="card" style={{ marginBottom: "24px" }}>
-                    <h3>Veranstaltung anlegen</h3>
+                  {/* Veranstaltung anlegen / bearbeiten */}
+                  <div className="card" style={{ marginBottom: "24px" }} id="abschnitt-event-form">
+                    <h3>{evForm.id ? "Veranstaltung bearbeiten" : "Veranstaltung anlegen"}</h3>
                     <form onSubmit={eventSpeichern} className="tb-form">
                       <div className="row2">
                         <div className="field"><label>Titel *</label><input value={evForm.titel} onChange={setEv("titel")} placeholder="z. B. OpenHouse Wuppertal" required /></div>
@@ -1169,9 +1197,21 @@ export default function PartnerPortal() {
                         </div>
                       </div>
                       <div className="field"><label>Genaue Adresse</label><input value={evForm.adresse} onChange={setEv("adresse")} placeholder="z. B. NEST BildungsBar, Hochstraße 65, 42105 Wuppertal" /></div>
+                      <div className="field">
+                        <label>Bild (optional) – erscheint unter dem Kalender</label>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                          {evForm.bild_url ? <img src={evForm.bild_url} alt="Vorschau" style={{ width: "84px", height: "60px", objectFit: "cover", borderRadius: "10px", border: "1px solid var(--line)" }} /> : null}
+                          <input type="file" accept="image/*" onChange={eventBildUpload} disabled={evUploading} />
+                          {evUploading ? <span style={{ fontSize: "13px", color: "var(--text-soft)" }}>lädt …</span> : null}
+                          {evForm.bild_url ? <button type="button" className="btn btn-outline" style={{ padding: "4px 10px" }} onClick={() => setEvForm((f) => ({ ...f, bild_url: "" }))}>Entfernen</button> : null}
+                        </div>
+                      </div>
                       <div className="field"><label>Beschreibung</label><textarea value={evForm.beschreibung} onChange={setEv("beschreibung")} placeholder="Kurzbeschreibung (optional)"></textarea></div>
                       {evMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{evMsg}</p> : null}
-                      <button className="btn btn-primary" type="submit">Veranstaltung speichern</button>
+                      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                        <button className="btn btn-primary" type="submit">{evForm.id ? "Änderungen speichern" : "Veranstaltung speichern"}</button>
+                        {evForm.id ? <button type="button" className="btn btn-outline" onClick={() => { setEvForm(EVENT_LEER); setEvMsg(""); }}>Abbrechen</button> : null}
+                      </div>
                     </form>
                   </div>
 
@@ -1185,11 +1225,13 @@ export default function PartnerPortal() {
                     <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
                       {adminEvents.map((v) => (
                         <div className="card" key={v.id}>
+                          {v.bild_url ? <img src={v.bild_url} alt={v.titel} style={{ width: "100%", height: "120px", objectFit: "cover", borderRadius: "10px", marginBottom: "12px" }} /> : null}
                           <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
                           <h3>{v.titel}</h3>
                           <p style={{ color: "var(--text-soft)" }}>{v.ort}</p>
                           {v.adresse ? <p style={{ color: "var(--text-mute)", fontSize: "13px", margin: "2px 0 0" }}>{v.adresse}</p> : null}
                           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "8px" }}>
+                            <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => eventBearbeiten(v)}>Bearbeiten</button>
                             <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => linkKopieren("/veranstaltungen/" + v.id)}>Link kopieren</button>
                             <button className="btn btn-danger" style={{ padding: "6px 14px" }} onClick={() => eventLoeschen(v.id, v.titel)}>Löschen</button>
                           </div>

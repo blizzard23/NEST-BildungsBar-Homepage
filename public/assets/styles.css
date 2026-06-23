@@ -1262,10 +1262,20 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 
 /* ───────────────────────── Veranstaltungs-Kalender ───────────────────────── */
 .kal-layout { display: grid; grid-template-columns: minmax(300px, 380px) 1fr; gap: 28px; align-items: start; }
+.kal-col-left { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .kal-card {
   background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 20px;
-  box-shadow: 0 2px 14px rgba(15,33,69,0.06); position: sticky; top: 92px;
+  box-shadow: 0 2px 14px rgba(15,33,69,0.06);
 }
+.kal-bilder { display: flex; flex-direction: column; gap: 14px; }
+.kal-bild {
+  margin: 0; background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(15,33,69,0.06);
+}
+.kal-bild img { display: block; width: 100%; height: 180px; object-fit: cover; }
+.kal-bild figcaption { padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; }
+.kal-bild figcaption strong { color: var(--navy); font-size: 15px; font-weight: 800; }
+.kal-bild figcaption span { color: var(--text-soft); font-size: 13px; font-weight: 600; }
 .kal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .kal-head strong { font-family: var(--font-alt); font-size: 18px; font-weight: 800; color: var(--navy); }
 .kal-nav {
@@ -1296,5 +1306,4 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .kal-list { min-width: 0; }
 @media (max-width: 860px) {
   .kal-layout { grid-template-columns: 1fr; }
-  .kal-card { position: static; }
 }

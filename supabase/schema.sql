@@ -51,12 +51,14 @@ create table if not exists public.veranstaltungen (
   uhrzeit      text,
   ort          text,
   adresse      text,           -- genaue Adresse (Straße, PLZ, Ort)
+  bild_url     text,           -- optionales Bild zur Veranstaltung
   beschreibung text,
   created_at   timestamptz not null default now()
 );
 
--- Falls die Tabelle schon existiert: Adress-Spalte nachrüsten
+-- Falls die Tabelle schon existiert: Spalten nachrüsten
 alter table public.veranstaltungen add column if not exists adresse text;
+alter table public.veranstaltungen add column if not exists bild_url text;
 
 alter table public.veranstaltungen enable row level security;
 

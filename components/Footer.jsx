@@ -36,7 +36,7 @@ export default function Footer() {
           <h4>NEST Ökosystem</h4>
           <ul className="nest-footer__links">
             <li><a href="https://nest-messe.de" target="_blank" rel="noopener">NEST Explore</a></li>
-            <li><a href="https://nest-azubiconnect.de" target="_blank" rel="noopener">NEST Azubiconnect</a></li>
+            <li><a href="https://nest-azubiconnect.de" target="_blank" rel="noopener">NEST AzubiConnect</a></li>
             <li><a href="/ueber-uns">Über uns</a></li>
             <li><a href="/blog">Blog</a></li>
             <li><a href="/partner-portal">Partner-Login</a></li>

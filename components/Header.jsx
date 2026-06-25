@@ -6,7 +6,7 @@ export default function Header() {
       <div className="container">
         <nav className="nav">
           <a className="brand" href="/" aria-label="NEST BildungsBar – Startseite">
-            <img className="brand-logo" src="/assets/img/Logo/nest-bildungsbar-logo.png" alt="NEST BildungsBar" width="3173" height="1523" />
+            <img className="brand-logo" src="/assets/img/Logo/nest-logo.png" alt="NEST" width="598" height="194" />
           </a>
           <ul className="nav-links">
             <li><a href="/">Home</a></li>

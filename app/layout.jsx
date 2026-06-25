@@ -53,6 +53,7 @@ export default function RootLayout({ children }) {
         {children}
         <Footer />
         <Script src={`/assets/nest-app.js?v=${V}`} strategy="afterInteractive" />
+        <Script src={`/cookie-consent.js?v=${V}`} strategy="afterInteractive" />
       </body>
     </html>
   );

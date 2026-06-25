@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="nest-footer__inner">
         <div>
           <a className="nest-footer__logo" href="/" aria-label="NEST BildungsBar – Startseite">
-            <img className="nest-footer__logo-img" src="/assets/img/Logo/nest-bildungsbar-logo-weiss.png" alt="NEST BildungsBar" width="3173" height="1523" />
+            <img className="nest-footer__logo-img" src="/assets/img/Logo/nest-logo.png" alt="NEST" width="598" height="194" />
           </a>
           <p className="nest-footer__desc">
             Kostenfreie Berufsorientierung in lockerer Atmosphäre – über 150 Ausbildungsberufe,
@@ -55,6 +55,7 @@ export default function Footer() {
         <div className="nest-footer__bottom-links">
           <a href="/datenschutz">Datenschutz</a>
           <a href="/impressum">Impressum</a>
+          <a href="#cookie-einstellungen">Cookie-Einstellungen</a>
         </div>
       </div>
     </footer>

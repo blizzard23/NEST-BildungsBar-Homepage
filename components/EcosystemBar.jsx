@@ -49,13 +49,13 @@ export default function EcosystemBar() {
           <div className="nest-bar-divider"></div>
         </div>
         <div id="nest-ecosystem-bar-products">
-          <a href="https://nest-messe.de" className="nest-eco-product" target="_blank" rel="noopener">NEST Explore</a>
+          <a href="https://nest-messe.de" className="nest-eco-product">NEST Explore</a>
           <div className="nest-eco-dot"></div>
           <span className="nest-eco-product nest-eco-current">NEST BildungsBar</span>
           <div className="nest-eco-dot"></div>
-          <a href="https://nest-azubiconnect.de" className="nest-eco-product" target="_blank" rel="noopener">NEST AzubiConnect</a>
+          <a href="https://nest-azubiconnect.de" className="nest-eco-product">NEST AzubiConnect</a>
         </div>
-        <a href="https://nest-ausbilden.de" id="nest-ecosystem-bar-cta" target="_blank" rel="noopener">
+        <a href="https://nest-ausbilden.de" id="nest-ecosystem-bar-cta">
           <span className="nest-bar-cta-icon">↗</span>
           Alle NEST-Angebote
         </a>

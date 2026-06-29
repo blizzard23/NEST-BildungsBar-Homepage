@@ -906,7 +906,7 @@ export default function PartnerPortal() {
                         </div>
                         <div className="np-phone-body" style={{ padding: "10px", display: "flex", flexDirection: "column", gap: "7px" }}>
                           <div style={{ background: "#fff", borderRadius: "6px", padding: "7px 9px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontSize: "9.5px", fontWeight: 700, color: "var(--navy)" }}>Gesamtschule Barmen</span>
+                            <span style={{ fontSize: "9.5px", fontWeight: 700, color: "var(--navy)" }}>Gymnasium Bayreuther Straße</span>
                             <b style={{ fontSize: "9px", color: "var(--gold-dark)", fontWeight: 900 }}>08. Apr</b>
                           </div>
                           <div style={{ background: "#fff", borderRadius: "6px", padding: "7px 9px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>

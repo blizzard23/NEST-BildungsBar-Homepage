@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Partner-Logos – Druckvorlage</title>
+<style>
+  @page { size: A4 portrait; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    background: #ffffff;
+    padding: 18mm 16mm;
+    display: flex;
+    flex-direction: column;
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: auto; }
+  .cell {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6mm;
+    min-height: 0;
+  }
+  .cell img {
+    width: 100%;
+    max-width: 150mm;
+    max-height: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  @media screen {
+    body { background: #e9e9ee; }
+    .page { margin: 16px auto; box-shadow: 0 2px 12px rgba(0,0,0,.18); }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Seite 1 -->
+  <section class="page">
+    <div class="cell"><img src="../public/assets/img/referenzen/partner/p1_14.png" alt="Wupperverband"></div>
+    <div class="cell"><img src="../public/assets/img/referenzen/partner/p1_11.png" alt="Knipex"></div>
+  </section>
+
+  <!-- Seite 2 -->
+  <section class="page">
+    <div class="cell"><img src="../public/assets/img/referenzen/partner/p1_37.png" alt="FOM Hochschule"></div>
+    <div class="cell"><img src="../public/assets/img/referenzen/partner/p1_13.png" alt="Stadt Wuppertal"></div>
+  </section>
+
+  <!-- Seite 3 -->
+  <section class="page">
+    <div class="cell"><img src="../public/assets/img/Logo/nest-bildungsbar-logo-print.png" alt="NEST Bildungsbar"></div>
+    <div class="cell"></div>
+  </section>
+
+</body>
+</html>

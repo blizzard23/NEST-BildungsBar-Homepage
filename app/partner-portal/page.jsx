@@ -12,10 +12,16 @@ const AP_LEER = { name: "", rolle: "", email: "", telefon: "", standort: "", bil
 
 // Standard-Ansprechpartner – werden gezeigt, solange in der Tabelle `ansprechpartner`
 // noch nichts gepflegt ist (Admin kann sie im Portal überschreiben/ergänzen).
+// Bilder für die Partner:innen (Jana, Esther, Marc) werden nachgeliefert.
 const AP_DEFAULT = [
-  { id: "d1", name: "Mike Schrott", rolle: "Netzwerk & Partnerschaften", email: "mike@nest-bildungsbar.de", telefon: "+49 151 12345678", bild_url: "/assets/img/team/mike.jpg" },
-  { id: "d2", name: "Patrick Müller", rolle: "Kooperation & Unternehmen", email: "patrick@nest-bildungsbar.de", telefon: "+49 151 23456789", bild_url: "/assets/img/team/patrick.jpg" },
-  { id: "d3", name: "Sarah Bauer", rolle: "Berufsorientierung & Schulen", email: "sarah@nest-bildungsbar.de", telefon: "+49 151 34567890", bild_url: "/assets/img/team/sarah.jpg" },
+  // Team der BildungsBar
+  { id: "d1", name: "Mike Stoeck", rolle: "Gründer & Geschäftsführer", standort: "Wuppertal", bild_url: "/assets/img/team/mike.jpg", sortierung: 1, beschreibung: "Mitgründer der BildungsBar. Mike startete selbst als Azubi zum Mechatroniker, engagierte sich früh als Jugendvertreter in Betriebsrat und Gewerkschaft und bringt seine Erfahrung heute praxisnah und auf Augenhöhe in Workshops und Coachings ein." },
+  { id: "d2", name: "Patrick Nekola-Ossé", rolle: "Gründer & Geschäftsführer", standort: "Wuppertal", bild_url: "/assets/img/team/patrick.jpg", sortierung: 2, beschreibung: "Mitgründer der BildungsBar. Patrick lernte Elektriker, qualifizierte sich zum Elektrotechniker weiter und gestaltete im Personalmanagement das Generationsmanagement aktiv mit. Sein Fokus: gute Ausbildung und echte Begegnung." },
+  { id: "d3", name: "Sevda Askin", rolle: "Sales- & Marketing Managerin", standort: "Essen", bild_url: "/assets/img/team/sevda.jpg", sortierung: 3, beschreibung: "Sevda verantwortet Sales & Marketing und ist eure Ansprechpartnerin für den Standort Essen. Mit Leidenschaft für Netzwerke, Kommunikation und neue Ideen begleitet sie Partnerunternehmen von der ersten Idee bis zur Zusammenarbeit." },
+  // Partner:innen im NEST-Netzwerk
+  { id: "d4", name: "Jana Kortwig", rolle: "Soulspace Wuppertal", standort: "Wuppertal", bild_url: "", sortierung: 4, beschreibung: "Jana Kortwig ist Gründerin von Soulspace, Wuppertals erstem Jugendzentrum für mentale Gesundheit. Als pädagogisch-therapeutische Beraterin schafft sie einen offenen Ort, an dem Jugendliche kostenlos und ohne Termin über ihre Sorgen sprechen können." },
+  { id: "d5", name: "Esther Königes", rolle: "Workstadt", standort: "Wuppertal", bild_url: "", sortierung: 5, beschreibung: "Esther Königes ist Mitgründerin und Geschäftsführerin der WorkStadt GmbH in Wuppertal. Mit WorkStadt unterstützt sie Unternehmen beim Onboarding internationaler Fachkräfte – vom Ankommen in der Stadt bis zur nachhaltigen Integration ins Team." },
+  { id: "d6", name: "Marc Longjaloux", rolle: "Designbüro Longjaloux", standort: "Wuppertal", bild_url: "", sortierung: 6, beschreibung: "Marc Longjaloux führt das Büro Longjaloux, eine Wuppertaler Designagentur für Corporate Design und Markenführung. In zweiter Generation entwickelt das Team Markenidentitäten, die den Kern eines Unternehmens sichtbar machen." },
 ];
 
 function slugify(s) {

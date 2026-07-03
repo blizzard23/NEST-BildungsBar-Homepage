@@ -116,15 +116,15 @@ const html = `
   <section class="bg-light" id="nestmesse" style="padding-top:80px;">
     <div class="container">
       <div class="section-head centered reveal">
-        <span class="section-label">Ausbildungsmesse</span>
+        <span class="section-label">NEST Explore</span>
         <h2>NEST Explore – Ausbildung <em>live erleben</em></h2>
         <p>NEST Explore bringt Schüler:innen, Schulen und Unternehmen zusammen – ein besonderes Format für echte Begegnungen auf Augenhöhe.</p>
       </div>
 
       <div class="split rev" style="margin-bottom:0;">
         <div class="split-text reveal">
-          <span class="section-label">Messe-Format</span>
-          <h2>Die Messe kommt <em>zu euch</em></h2>
+          <span class="section-label">NEST Explore</span>
+          <h2>NEST Explore kommt <em>zu euch</em></h2>
           <p>NEST Explore bringt regionale Unternehmen direkt in eure Schule – spielerisch, strukturiert und komplett von uns organisiert. Für Schulen kostenfrei.</p>
           <ul class="list-check">
             <li>6 regionale Unternehmen kommen direkt in eure Schule</li>

@@ -149,7 +149,7 @@ const html = `
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_61.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_62.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_63.png" alt="Partnerunternehmen" loading="lazy"></div>
-          <div class="logo-tile"><img src="/assets/img/referenzen/partner/vorwerk-autotec.jpg" alt="Vorwerk Autotec" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/vorwerk-autotec.png" alt="Vorwerk Autotec" loading="lazy"></div>
         </div>
       </div>
 

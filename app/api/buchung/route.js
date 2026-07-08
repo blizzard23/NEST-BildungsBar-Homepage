@@ -2,10 +2,13 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { clientIp, rateLimitErreicht, spamGrund } from "@/lib/spamSchutz";
 
 /* Terminbuchung: speichert die Anfrage in Supabase (Tabelle "buchungen")
    UND verschickt eine E-Mail über SMTP (lima-city).
-   Gibt ok:true zurück, sobald mindestens eines davon geklappt hat. */
+   Gibt ok:true zurück, sobald mindestens eines davon geklappt hat.
+   Erwartet zusätzlich hp (Honeypot) und t (Ausfüllzeit in ms) für den
+   Spamschutz – siehe lib/spamSchutz. */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -28,6 +31,22 @@ export async function POST(req) {
   };
   if (!buchung.name || !buchung.standort || !buchung.uhrzeit) {
     return NextResponse.json({ ok: false, error: "Pflichtfelder fehlen" }, { status: 400 });
+  }
+
+  // Spamschutz: Spam still verwerfen (ok:true), damit Bots keine Rückmeldung bekommen.
+  // Wichtig auch für die Kapazität – Spam-Buchungen würden sonst echte Plätze blockieren.
+  const ip = clientIp(req);
+  const grund = rateLimitErreicht("buchung", ip, 3)
+    ? "Rate-Limit überschritten"
+    : spamGrund({
+        honeypot: b.hp,
+        ausfuellZeitMs: b.t,
+        kurzfelder: [buchung.name, buchung.email, buchung.telefon, buchung.schule],
+        text: buchung.nachricht,
+      });
+  if (grund) {
+    console.warn("Buchungs-Spam verworfen (" + grund + ") von " + ip);
+    return NextResponse.json({ ok: true, stored: false, mailed: false });
   }
 
   let stored = false, mailed = false;

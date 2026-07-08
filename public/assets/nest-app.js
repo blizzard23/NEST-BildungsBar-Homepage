@@ -1,5 +1,9 @@
 /* NEST BildungsBar – gebündelte App-Logik (Reihenfolge wichtig) */
 
+/* Spamschutz: Zeitpunkt des Seitenaufrufs – die Formulare schicken die
+   Ausfüllzeit (ms) als "t" mit, die API sortiert zu schnelle Einsendungen aus. */
+window.NEST_T0 = window.NEST_T0 || Date.now();
+
 /* ===== script.js ===== */
 /* NEST BildungsBar – Interaktionen (Stil nest-messe.de) */
 document.addEventListener('DOMContentLoaded', function () {
@@ -56,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (ok) form.reset();
       }
       if (api && window.fetch) {
-        fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subject: subject, text: text, replyTo: v('email') }) })
+        fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subject: subject, text: text, replyTo: v('email'), hp: v('website'), t: Date.now() - window.NEST_T0 }) })
           .then(function (r) { if (r.ok) { fertig(true); } else { window.location.href = mailto; fertig(false); } })
           .catch(function () { window.location.href = mailto; fertig(false); });
       } else { window.location.href = mailto; fertig(false); }
@@ -2005,7 +2009,9 @@ if (!window.STELLEN || !window.STELLEN.length) {
       email: fMail ? fMail.value.trim() : "",
       telefon: fPhone ? fPhone.value.trim() : "",
       schule: fSchule ? fSchule.value.trim() : "",
-      nachricht: tbNachricht()
+      nachricht: tbNachricht(),
+      hp: (function () { var el = document.getElementById("tb-website"); return el ? el.value : ""; })(),
+      t: Date.now() - (window.NEST_T0 || Date.now())
     };
   }
   function sendBuchung(payload) {
@@ -2082,7 +2088,9 @@ if (!window.STELLEN || !window.STELLEN.length) {
           "Telefon: " + (g("an-phone") || "—"),
           "Wunschstandort: " + (g("an-ort") || "—")
         ].join("\n"),
-        replyTo: g("an-email")
+        replyTo: g("an-email"),
+        hp: g("an-website"),
+        t: Date.now() - (window.NEST_T0 || Date.now())
       };
       var mailto = mailtoVon(d);
       var note = anfrage.querySelector(".form-note");

@@ -44,6 +44,8 @@ const html = `
             <div class="form-note" hidden>Danke für deine Nachricht! Wir melden uns bald bei dir. ✅</div>
             <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" placeholder="Vor- und Nachname" required /></div>
             <div class="field"><label for="email">E-Mail</label><input id="email" name="email" type="email" placeholder="dein@email.de" required /></div>
+            <!-- Honeypot (Spamschutz): für Menschen unsichtbar, Bots füllen es aus -->
+            <div style="position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden;" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
             <div class="field"><label for="phone">Telefon</label><input id="phone" name="phone" type="tel" placeholder="optional" /></div>
             <div class="field"><label for="subject">Betreff</label><input id="subject" name="subject" type="text" placeholder="Worum geht's?" /></div>
             <div class="field"><label for="message">Nachricht</label><textarea id="message" name="message" placeholder="Deine Nachricht (optional)"></textarea></div>

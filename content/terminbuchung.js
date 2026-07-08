@@ -188,6 +188,8 @@ const html = `
                       <div class="field"><label for="tb-name">Name *</label><input type="text" id="tb-name" placeholder="Vor- und Nachname" required></div>
                       <div class="field"><label for="tb-email">E-Mail *</label><input type="email" id="tb-email" placeholder="dein@email.de" required></div>
                     </div>
+                    <!-- Honeypot (Spamschutz): für Menschen unsichtbar, Bots füllen es aus -->
+                    <div style="position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden;" aria-hidden="true"><label for="tb-website">Website</label><input type="text" id="tb-website" name="website" tabindex="-1" autocomplete="off"></div>
                     <div class="row2">
                       <div class="field"><label for="tb-phone">Telefon</label><input type="tel" id="tb-phone" placeholder="optional"></div>
                       <div class="field"><label for="tb-schule">Schule &amp; Klasse</label><input type="text" id="tb-schule" placeholder="optional"></div>
@@ -264,6 +266,8 @@ const html = `
               <div class="field"><label for="an-name">Name *</label><input type="text" id="an-name" placeholder="Vor- und Nachname" required></div>
               <div class="field"><label for="an-email">E-Mail *</label><input type="email" id="an-email" placeholder="dein@email.de" required></div>
             </div>
+            <!-- Honeypot (Spamschutz): für Menschen unsichtbar, Bots füllen es aus -->
+            <div style="position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden;" aria-hidden="true"><label for="an-website">Website</label><input type="text" id="an-website" name="website" tabindex="-1" autocomplete="off"></div>
             <div class="row2">
               <div class="field"><label for="an-phone">Telefon</label><input type="tel" id="an-phone" placeholder="optional"></div>
               <div class="field"><label for="an-herkunft">Woher kommst du?</label><input type="text" id="an-herkunft" placeholder="z. B. Wuppertal, Essen, Solingen …"></div>

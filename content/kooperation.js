@@ -86,7 +86,7 @@ const html = `
             <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">07</div></div><div class="wf-step-badge" style="background:var(--gold);color:var(--navy);">Highlight</div><div class="wf-step-icon">🎪</div></div>
             <div class="wf-card-title">NEST Explore</div>
             <div class="wf-card-body">NEST Explore kommt direkt in die Schulen der Region. <b>Ihr trefft motivierte Schüler:innen persönlich</b> – komplett von NEST organisiert.</div>
-            <a class="btn btn-outline wf-card-cta" href="https://nest-messe.de" target="_blank" rel="noopener">Zu NEST Explore →</a>
+            <a class="btn btn-outline wf-card-cta" href="https://nest-explore.de" target="_blank" rel="noopener">Zu NEST Explore →</a>
           </div>
         </div>
       </div>

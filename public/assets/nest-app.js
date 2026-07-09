@@ -5,7 +5,7 @@
 window.NEST_T0 = window.NEST_T0 || Date.now();
 
 /* ===== script.js ===== */
-/* NEST BildungsBar – Interaktionen (Stil nest-messe.de) */
+/* NEST BildungsBar – Interaktionen (Stil nest-explore.de) */
 document.addEventListener('DOMContentLoaded', function () {
 
   /* Mobile Navigation */

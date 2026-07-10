@@ -26,7 +26,7 @@ const html = `
           <div class="hero-stats">
             <div class="stat"><strong>500+</strong><span>Gäste pro Jahr</span></div>
             <div class="stat"><strong>70+</strong><span>Unternehmenskontakte</span></div>
-            <div class="stat"><strong>2</strong><span>Standorte</span></div>
+            <div class="stat"><strong>4</strong><span>Standorte</span></div>
           </div>
         </div>
         <div class="hero-visual hero-visual--phone">

@@ -1695,7 +1695,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
 /* ===== termin.js ===== */
 /* =========================================================
    NEST BildungsBar – Terminbuchung (Schüler:innen)
-   Erzeugt die nächsten Dienstags-/Donnerstags-Termine,
+   Erzeugt die nächsten Beratungstermine (Wochentage je Standort),
    verwaltet Standort/Datum/Uhrzeit und baut eine vorab
    ausgefüllte E-Mail-Anfrage (kein Backend nötig).
    Optional: an ein Buchungs-Plugin (Amelia, Bookly …) koppeln.
@@ -1706,26 +1706,42 @@ if (!window.STELLEN || !window.STELLEN.length) {
 
   var EMPFAENGER = (window.NEST_TERMIN_MAIL || "info@nest-bildungsbar.de");
   var WDAYS = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+  var WDAYS_LANG = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
   var MONS  = ["Jan", "Feb", "März", "Apr", "Mai", "Juni", "Juli", "Aug", "Sept", "Okt", "Nov", "Dez"];
   var MONS_LANG = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
-  // Nur EIN Slot: 17:00 Uhr. Kapazität pro Tag: Wuppertal 4, Essen 2.
+  // Nur EIN Slot: 17:00 Uhr. Beratungstage & Kapazität pro Tag je Standort;
+  // buchbarAb sperrt neue Standorte bis zum Start (Solingen/Remscheid ab Sept. 2026).
   var UHRZEIT = "17:00 Uhr";
-  var KAPAZITAET = { "Wuppertal": 4, "Essen": 2 };
-  var ANZAHL = 8; // wie viele Di/Do-Termine angeboten werden
+  var STANDORTE = {
+    "Wuppertal": { tage: [2, 4], kapazitaet: 4 },
+    "Essen":     { tage: [2, 4], kapazitaet: 2 },
+    "Solingen":  { tage: [1],    kapazitaet: 2, buchbarAb: "2026-09-01" },
+    "Remscheid": { tage: [3],    kapazitaet: 2, buchbarAb: "2026-09-01" }
+  };
+  var DEFAULT_TAGE = [2, 4];
+  var ANZAHL = 8; // wie viele Beratungstermine angeboten werden
 
   var state = { ort: "", adr: "", datum: null, datumText: "", zeit: "" };
   var belegung = {};   // { "YYYY-MM-DD": anzahl } für den gewählten Standort
   var kapazitaet = 0;  // max. Buchungen pro Tag am gewählten Standort
 
-  /* ---------- nächste Di/Do-Termine erzeugen ---------- */
-  function naechsteTermine(n) {
+  function ortInfo() { return STANDORTE[state.ort] || null; }
+  function ortTage() { var i = ortInfo(); return (i && i.tage) || DEFAULT_TAGE; }
+  function ortGesperrtBis(key) {
+    var i = ortInfo();
+    return !!(i && i.buchbarAb && key < i.buchbarAb);
+  }
+
+  /* ---------- nächste Beratungstermine (Wochentage je Standort) erzeugen ---------- */
+  function naechsteTermine(n, tage) {
+    tage = tage || DEFAULT_TAGE;
     var out = [];
     var d = new Date(); d.setHours(0, 0, 0, 0);
     d.setDate(d.getDate() + 1); // ab morgen
     var guard = 0;
     while (out.length < n && guard < 120) {
       var wd = d.getDay();
-      if (wd === 2 || wd === 4) out.push(new Date(d));
+      if (tage.indexOf(wd) > -1) out.push(new Date(d));
       d.setDate(d.getDate() + 1);
       guard++;
     }
@@ -1737,7 +1753,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
   function langText(d) {
     return WDAYS[d.getDay()] + ", " + d.getDate() + ". " + MONS_LANG[d.getMonth()] + " " + d.getFullYear();
   }
-  var TERMINE = naechsteTermine(ANZAHL);
+  var TERMINE = naechsteTermine(ANZAHL, DEFAULT_TAGE);
 
   /* ---------- Monatskalender ---------- */
   var calWochen = document.getElementById("tb-cal-weeks");
@@ -1753,10 +1769,20 @@ if (!window.STELLEN || !window.STELLEN.length) {
     if (!calWochen) return;
     if (calLabel) calLabel.textContent = MONATE[calMonat] + " " + calJahr;
 
+    var tage = ortTage(); // Beratungstage des gewählten Standorts (Mo/Di/Mi/Do)
+    var cols = 'repeat(' + tage.length + ',1fr)';
+
+    // Spaltenkopf (Wochentage) passend zum Standort
+    var wdRow = document.getElementById('tb-cal-wd-row');
+    if (wdRow) {
+      wdRow.style.gridTemplateColumns = cols;
+      wdRow.innerHTML = tage.map(function (t) { return '<span class="tb-cal-wd">' + WDAYS_LANG[t] + '</span>'; }).join('');
+    }
+
     var heute = new Date(); heute.setHours(0,0,0,0);
     var anzTage = new Date(calJahr, calMonat + 1, 0).getDate();
 
-    // Collect Di(2) and Do(4) grouped by calendar week (keyed by Monday date)
+    // Beratungstage des Monats je Kalenderwoche gruppieren (Schlüssel = Montag)
     var wMap = {}, wOrder = [];
     function wKey(d) {
       var day = d.getDay() || 7;
@@ -1766,11 +1792,10 @@ if (!window.STELLEN || !window.STELLEN.length) {
     for (var t = 1; t <= anzTage; t++) {
       var d = new Date(calJahr, calMonat, t);
       var wt = d.getDay();
-      if (wt === 2 || wt === 4) {
+      if (tage.indexOf(wt) > -1) {
         var k = wKey(d);
-        if (!wMap[k]) { wMap[k] = {di: null, doDat: null, sort: d.getTime()}; wOrder.push(k); }
-        if (wt === 2) wMap[k].di = new Date(d);
-        else wMap[k].doDat = new Date(d);
+        if (!wMap[k]) { wMap[k] = { days: {}, sort: d.getTime() }; wOrder.push(k); }
+        wMap[k].days[wt] = new Date(d);
       }
     }
     wOrder.sort(function(a,b){ return wMap[a].sort - wMap[b].sort; });
@@ -1782,6 +1807,10 @@ if (!window.STELLEN || !window.STELLEN.length) {
       var inner = '<span class="dido-n">' + d.getDate() + '</span><span class="dido-mon">' + MONATE[d.getMonth()].slice(0,3) + '</span>';
       if (vergangen) {
         return '<div class="' + cls + ' tb-cal-day--past" data-nok="1">' + inner + '</div>';
+      }
+      if (ortGesperrtBis(key)) {
+        inner += '<span class="dido-rest">Ab Sept.</span>';
+        return '<div class="' + cls + ' tb-cal-day--blocked" data-nok="1">' + inner + '</div>';
       }
       var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
       var voll = kapazitaet > 0 && frei <= 0;
@@ -1802,9 +1831,10 @@ if (!window.STELLEN || !window.STELLEN.length) {
     var html = '';
     wOrder.forEach(function(k) {
       var w = wMap[k];
-      html += '<div class="tb-cal-week">';
-      html += w.di ? dayCell(w.di) : '<div class="tb-cal-day tb-cal-day--empty"></div>';
-      html += w.doDat ? dayCell(w.doDat) : '<div class="tb-cal-day tb-cal-day--empty"></div>';
+      html += '<div class="tb-cal-week" style="grid-template-columns:' + cols + ';">';
+      tage.forEach(function (t) {
+        html += w.days[t] ? dayCell(w.days[t]) : '<div class="tb-cal-day tb-cal-day--empty"></div>';
+      });
       html += '</div>';
     });
     calWochen.innerHTML = html;
@@ -1844,13 +1874,16 @@ if (!window.STELLEN || !window.STELLEN.length) {
     dateList.innerHTML = "";
     TERMINE.forEach(function (d) {
       var key = iso(d);
+      var gesperrt = ortGesperrtBis(key);
       var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
-      var voll = kapazitaet > 0 && frei <= 0;
+      var voll = (kapazitaet > 0 && frei <= 0) || gesperrt;
       var b = document.createElement("button");
       b.type = "button";
       b.className = "tb-date" + (voll ? " tb-date--full" : "") + (state.datum === key ? " active" : "");
       b.disabled = voll;
-      var restHtml = voll
+      var restHtml = gesperrt
+        ? '<div class="d-full">ab Sept.</div>'
+        : voll
         ? '<div class="d-full">ausgebucht</div>'
         : (frei >= 0 ? '<div class="d-rest' + (frei === 1 ? ' d-rest--knapp' : '') + '">' + (frei === 1 ? "1 Platz frei" : frei + " Plätze frei") + '</div>' : '');
       b.innerHTML = '<div class="d-wday">' + WDAYS[d.getDay()] + '</div>' +
@@ -1886,7 +1919,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
   /* ---------- Belegung des Standorts laden (für „ausgebucht") ---------- */
   function ladeVerfuegbarkeit(ort, cb) {
     belegung = {};
-    kapazitaet = KAPAZITAET[ort] || 0;
+    kapazitaet = (STANDORTE[ort] && STANDORTE[ort].kapazitaet) || 0;
     var api = window.NEST_VERFUEGBARKEIT_API;
     if (!api || !window.fetch) { if (cb) cb(); return; }
     fetch(api + "?standort=" + encodeURIComponent(ort) + "&t=" + Date.now(), { cache: "no-store" })
@@ -1907,8 +1940,12 @@ if (!window.STELLEN || !window.STELLEN.length) {
       state.ort = btn.getAttribute("data-ort");
       state.adr = btn.getAttribute("data-adr") || "";
       state.datum = null; state.datumText = "";
+      TERMINE = naechsteTermine(ANZAHL, ortTage());
+      var dayHint = document.getElementById("tb-day-hint");
+      if (dayHint) dayHint.textContent = ortTage().map(function (t) { return WDAYS[t]; }).join(" & ");
       renderZeit();
       ladeVerfuegbarkeit(state.ort, function () { renderDates(); renderKalender(); update(); });
+      renderKalender();
       update();
     });
   });
@@ -2036,7 +2073,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
 
         // Tag ausgebucht (Kapazität erreicht) -> Formular bleibt, Hinweis + neu laden
         if (res.status === 409) {
-          if (fehler) { fehler.textContent = "Dieser Termin ist leider ausgebucht. Bitte wähle einen anderen Tag."; fehler.style.display = "block"; }
+          if (fehler) { fehler.textContent = "Dieser Termin ist leider nicht verfügbar. Bitte wähle einen anderen Tag."; fehler.style.display = "block"; }
           ladeVerfuegbarkeit(state.ort, function () { renderDates(); update(); });
           return;
         }

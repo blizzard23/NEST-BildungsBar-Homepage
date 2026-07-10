@@ -10,7 +10,7 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const KAPAZITAET = { Wuppertal: 4, Essen: 2 };
+const KAPAZITAET = { Wuppertal: 4, Essen: 2, Solingen: 2, Remscheid: 2 };
 
 function heuteISO() {
   const d = new Date();

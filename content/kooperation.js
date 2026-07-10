@@ -19,7 +19,7 @@ const html = `
             <div class="wf-card-bg-num">01</div>
             <div class="wf-step-header"><div class="wf-step-num"><div class="wf-step-num-inner">01</div></div><div class="wf-step-badge">vor Ort</div><div class="wf-step-icon">☕</div></div>
             <div class="wf-card-title">Beratungsangebote in der BildungsBar</div>
-            <div class="wf-card-body">Kostenfreie, persönliche Berufsorientierung für junge Menschen in Wuppertal &amp; Essen – <b>auf Augenhöhe und ohne Hürden</b>.</div>
+            <div class="wf-card-body">Kostenfreie, persönliche Berufsorientierung für junge Menschen in Wuppertal, Essen, Solingen &amp; Remscheid – <b>auf Augenhöhe und ohne Hürden</b>.</div>
           </div>
           <div class="wf-card">
             <div class="wf-card-bg-num">02</div>
@@ -126,7 +126,7 @@ const html = `
       <div class="wf-stats">
         <div class="wf-stat"><div class="wf-stat-n">70+</div><div class="wf-stat-l">Unternehmen<br>im Netzwerk</div></div>
         <div class="wf-stat"><div class="wf-stat-n">500+</div><div class="wf-stat-l">junge Menschen<br>pro Jahr</div></div>
-        <div class="wf-stat"><div class="wf-stat-n">2</div><div class="wf-stat-l">Standorte<br>Wuppertal &amp; Essen</div></div>
+        <div class="wf-stat"><div class="wf-stat-n">4</div><div class="wf-stat-l">Standorte<br>Wuppertal · Essen · Solingen · Remscheid</div></div>
       </div>
 
     </div>

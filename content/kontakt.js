@@ -19,7 +19,7 @@ const html = `
             <div class="hp-title">Schreib uns direkt</div>
             <div class="hp-chat-wrap">
               <div class="hp-chat-in">Hallo! Ich möchte einen Termin buchen 👋<div class="hp-chat-time">17:02</div></div>
-              <div class="hp-chat-out">Super! Wuppertal oder Essen?<div class="hp-chat-time">17:03</div></div>
+              <div class="hp-chat-out">Super! Wuppertal, Essen, Solingen oder Remscheid?<div class="hp-chat-time">17:03</div></div>
               <div class="hp-chat-in">Wuppertal bitte!<div class="hp-chat-time">17:04</div></div>
               <div class="hp-chat-out">Do, 19. Juni · 17 Uhr frei ✅<div class="hp-chat-time">17:04</div></div>
               <div class="hp-chat-in">Super, danke! 🙏<div class="hp-chat-time">17:05</div></div>
@@ -60,7 +60,7 @@ const html = `
             <div class="row"><div class="ic" data-icon="briefcase" data-icon-size="18"></div><div><b>E-Mail</b><a href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a></div></div>
             <div class="row"><div class="ic" data-icon="people" data-icon-size="18"></div><div><b>Telefon</b><a href="tel:017641933496">0176 419 334 96</a></div></div>
             <div class="row"><div class="ic" data-icon="chat" data-icon-size="18"></div><div><b>WhatsApp</b><a href="https://wa.me/4915753934038">01575 393 4038</a></div></div>
-            <div class="row"><div class="ic" data-icon="clock" data-icon-size="18"></div><div><b>Öffnungszeiten</b><span>Di &amp; Do · 17–19 Uhr</span></div></div>
+            <div class="row"><div class="ic" data-icon="clock" data-icon-size="18"></div><div><b>Öffnungszeiten</b><span>Wuppertal &amp; Essen: Di &amp; Do · Solingen: Mo · Remscheid: Mi · 17–19 Uhr</span></div></div>
             <div class="row"><div class="ic" data-icon="pin" data-icon-size="18"></div><div><b>Social Media</b><span>Instagram · Facebook · LinkedIn</span></div></div>
           </div>
         </div>
@@ -73,7 +73,7 @@ const html = `
       <div class="section-head centered reveal">
         <span class="section-label">Unsere Standorte</span>
         <h2>Komm vorbei</h2>
-        <p>Buch dir einen Termin – dienstags und donnerstags von 17 bis 19 Uhr.</p>
+        <p>Buch dir einen Termin – je nach Standort montags bis donnerstags von 17 bis 19 Uhr.</p>
       </div>
       <div class="card-grid cols-2">
         <div class="loc-card reveal">
@@ -95,6 +95,26 @@ const html = `
           <p>Kopstadtplatz 12, 45127 Essen</p>
           <p>Di &amp; Do · 17–19 Uhr</p>
           <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Essen</a>
+        </div>
+        <div class="loc-card reveal">
+          <div style="border-radius:12px;overflow:hidden;margin-bottom:14px;aspect-ratio:16/9;">
+            <img src="/assets/img/standort-solingen.jpg" alt="BildungsBar Solingen – im Gründerzentrum" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
+          </div>
+          <span class="tag">Standort Solingen</span>
+          <h3>Solingen</h3>
+          <p>Grünewalder Straße 29-31, 42657 Solingen · im Gründerzentrum</p>
+          <p>Mo · 17–19 Uhr · buchbar ab September</p>
+          <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Solingen</a>
+        </div>
+        <div class="loc-card reveal">
+          <div style="border-radius:12px;overflow:hidden;margin-bottom:14px;aspect-ratio:16/9;">
+            <img src="/assets/img/standort-remscheid.webp" alt="BildungsBar Remscheid – in der Gründerschmiede" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
+          </div>
+          <span class="tag">Standort Remscheid</span>
+          <h3>Remscheid</h3>
+          <p>Hindenburgstraße 10a, 42853 Remscheid · in der Gründerschmiede</p>
+          <p>Mi · 17–19 Uhr · buchbar ab September</p>
+          <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Remscheid</a>
         </div>
       </div>
     </div>

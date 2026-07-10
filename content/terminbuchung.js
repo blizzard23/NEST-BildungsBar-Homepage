@@ -13,7 +13,7 @@ const html = `
       <div class="hero-text">
         <span class="hero-badge">Termin buchen</span>
         <h1>Sichere dir deinen<br /><em>Beratungstermin</em></h1>
-        <p class="lead">Kostenfrei, locker und auf Augenhöhe – wähl einfach Standort, Tag und Uhrzeit. Wir beraten dich dienstags &amp; donnerstags von 17 bis 19 Uhr in Wuppertal und Essen.</p>
+        <p class="lead">Kostenfrei, locker und auf Augenhöhe – wähl einfach Standort, Tag und Uhrzeit. Wir beraten dich in Wuppertal und Essen (Di &amp; Do), in Solingen (Mo) und in Remscheid (Mi) – jeweils von 17 bis 19 Uhr.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#buchen">Jetzt Termin wählen →</a>
           <a class="btn btn-ghost" href="#anfrage">Lieber anfragen</a>
@@ -94,8 +94,8 @@ const html = `
         <p>Kein langes Formular, kein Account. Du wählst aus, was dir passt – den Rest klären wir gemeinsam vor Ort.</p>
       </div>
       <div class="card-grid cols-3">
-        <div class="card reveal"><div class="icon icon-svg">${IC.pin}</div><h3>Standort wählen</h3><p>Wuppertal oder Essen – such dir aus, wo du uns am liebsten triffst.</p></div>
-        <div class="card reveal"><div class="icon icon-svg">${IC.calendar}</div><h3>Tag &amp; Uhrzeit</h3><p>Wir sind immer dienstags und donnerstags da. Pick dir einen freien Slot.</p></div>
+        <div class="card reveal"><div class="icon icon-svg">${IC.pin}</div><h3>Standort wählen</h3><p>Wuppertal, Essen, Solingen oder Remscheid – such dir aus, wo du uns am liebsten triffst.</p></div>
+        <div class="card reveal"><div class="icon icon-svg">${IC.calendar}</div><h3>Tag &amp; Uhrzeit</h3><p>Je nach Standort sind wir montags bis donnerstags da. Pick dir einen freien Slot.</p></div>
         <div class="card reveal"><div class="icon icon-svg">${IC.user}</div><h3>Kurz Daten rein</h3><p>Name &amp; E-Mail genügen. Wir bestätigen deinen Termin schnellstmöglich.</p></div>
       </div>
     </div>
@@ -143,12 +143,36 @@ const html = `
                         <span class="o-check">✓ Ausgewählt</span>
                       </div>
                     </button>
+                    <button type="button" class="tb-ort" data-ort="Solingen" data-adr="Grünewalder Straße 29-31, 42657 Solingen (im Gründerzentrum)">
+                      <div class="o-header">
+                        <span class="o-header-label">Solingen</span>
+                        <span class="o-header-badge">Mo · 17–19 Uhr</span>
+                      </div>
+                      <div class="o-body">
+                        <span class="o-city">BildungsBar Solingen · im Gründerzentrum</span>
+                        <span class="o-adr">Grünewalder Straße 29-31 · 42657 Solingen</span>
+                        <span class="o-soon">Buchbar ab September</span>
+                        <span class="o-check">✓ Ausgewählt</span>
+                      </div>
+                    </button>
+                    <button type="button" class="tb-ort" data-ort="Remscheid" data-adr="Hindenburgstraße 10a, 42853 Remscheid (in der Gründerschmiede)">
+                      <div class="o-header">
+                        <span class="o-header-label">Remscheid</span>
+                        <span class="o-header-badge">Mi · 17–19 Uhr</span>
+                      </div>
+                      <div class="o-body">
+                        <span class="o-city">BildungsBar Remscheid · in der Gründerschmiede</span>
+                        <span class="o-adr">Hindenburgstraße 10a · 42853 Remscheid</span>
+                        <span class="o-soon">Buchbar ab September</span>
+                        <span class="o-check">✓ Ausgewählt</span>
+                      </div>
+                    </button>
                   </div>
                 </div>
 
                 <!-- Schritt 2: Monat & Datum (Kalender) -->
                 <div class="tb-step tb-locked" id="step-date">
-                  <div class="tb-step-head"><span class="tb-step-n step-icon">${IC.calendar}</span><h3>Welcher Tag passt?</h3><span class="tb-hint">Di &amp; Do</span></div>
+                  <div class="tb-step-head"><span class="tb-step-n step-icon">${IC.calendar}</span><h3>Welcher Tag passt?</h3><span class="tb-hint" id="tb-day-hint">je nach Standort</span></div>
 
                   <!-- Monatskalender -->
                   <div class="tb-cal-wrap">
@@ -158,7 +182,7 @@ const html = `
                       <button type="button" class="tb-cal-btn" id="tb-cal-next">&#8250;</button>
                     </div>
                     <div class="tb-cal-body">
-                      <div class="tb-cal-wd-row">
+                      <div class="tb-cal-wd-row" id="tb-cal-wd-row">
                         <span class="tb-cal-wd">Dienstag</span>
                         <span class="tb-cal-wd">Donnerstag</span>
                       </div>
@@ -323,7 +347,8 @@ const html = `
         <div class="reveal">
           <div class="contact-info-card">
             <h3>Gut zu wissen</h3>
-            <div class="row"><div class="ic"></div><div><b>Wann?</b><span>Di &amp; Do · 17–19 Uhr</span></div></div>
+            <div class="row"><div class="ic"></div><div><b>Wann?</b><span>Wuppertal &amp; Essen: Di &amp; Do · Solingen: Mo · Remscheid: Mi · jeweils 17–19 Uhr</span></div></div>
+            <div class="row"><div class="ic"></div><div><b>Neu!</b><span>Solingen &amp; Remscheid sind ab September buchbar</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Kosten</b><span>0 € – komplett kostenfrei</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Mitbringen</b><span>nur dich – Unterlagen sind optional</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Telefon</b><a href="tel:017641933496">0176 419 334 96</a></div></div>

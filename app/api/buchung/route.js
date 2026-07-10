@@ -51,10 +51,17 @@ export async function POST(req) {
 
   let stored = false, mailed = false;
 
-  const KAPAZITAET = { Wuppertal: 4, Essen: 2 };
+  const KAPAZITAET = { Wuppertal: 4, Essen: 2, Solingen: 2, Remscheid: 2 };
+  // Neue Standorte sind bis zum Start gesperrt (buchbar erst ab September 2026)
+  const BUCHBAR_AB = { Solingen: "2026-09-01", Remscheid: "2026-09-01" };
   const cap = KAPAZITAET[buchung.standort] || 0;
   const sb = supabaseServer();
   const admin = supabaseAdmin();
+
+  const ab = BUCHBAR_AB[buchung.standort];
+  if (ab && buchung.datum && buchung.datum < ab) {
+    return NextResponse.json({ ok: false, error: "noch nicht buchbar" }, { status: 409 });
+  }
 
   // 0) Kapazität prüfen (max. 4 in Wuppertal, 2 in Essen pro Tag)
   if (cap && buchung.datum) {

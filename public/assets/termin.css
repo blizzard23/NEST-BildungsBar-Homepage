@@ -56,6 +56,11 @@
 .tb-ort .o-body { padding: 14px 20px 16px; }
 .tb-ort .o-city { font-size: 15px; font-weight: 800; color: var(--navy); display: block; }
 .tb-ort .o-adr { font-size: 13px; color: var(--text-soft); margin-top: 3px; display: block; }
+.tb-ort .o-soon {
+  display: inline-flex; margin-top: 8px; font-size: 11px; font-weight: 800;
+  color: var(--navy); background: var(--gold-soft); padding: 3px 10px;
+  border-radius: 20px; border: 1px solid rgba(239,165,0,0.35);
+}
 .tb-ort .o-check {
   display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
   font-weight: 800; font-size: 11px; color: var(--gold-dark);

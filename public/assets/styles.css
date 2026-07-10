@@ -1114,6 +1114,8 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .dido-rest--full { background: rgba(194,65,90,0.2); }
 .tb-cal-day--empty { background: none; border: none; cursor: default; min-height: 76px; }
 .tb-cal-day--past { background: #f4f5f7; border-color: transparent; color: #c8ccd6; cursor: not-allowed; }
+.tb-cal-day--blocked { background: #f4f5f7; border-color: transparent; color: #9aa0ae; cursor: not-allowed; }
+.tb-cal-day--blocked .dido-rest { background: rgba(154,160,174,0.15); }
 .tb-cal-day--available { background: #e6f7ef; border-color: #a8dfc0; color: #1a8550; }
 .tb-cal-day--available:hover { background: #1f9d63; border-color: #1f9d63; color: #fff; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(31,157,99,0.25); }
 .tb-cal-day--knapp { background: #fef3d0; border-color: #f5d98a; color: #b06800; }

@@ -115,7 +115,7 @@ const html = `
 .nest-about .locations-header { text-align: center; margin-bottom: 50px; }
 .nest-about .locations-header h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; color: #fff; margin-bottom: 12px; }
 .nest-about .locations-header p { font-size: 16px; color: rgba(255,255,255,0.62); max-width: 500px; margin: 0 auto; line-height: 1.6; }
-.nest-about .locations-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.nest-about .locations-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .nest-about .location-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 32px; display: flex; gap: 20px; align-items: flex-start; transition: background 0.2s ease; }
 .nest-about .location-card:hover { background: rgba(255,255,255,0.09); }
 .nest-about .location-accent { width: 6px; align-self: stretch; min-height: 70px; background: #EFA500; border-radius: 4px; flex-shrink: 0; }
@@ -143,6 +143,7 @@ const html = `
   .nest-about .stats-bar-inner { grid-template-columns: 1fr; gap: 30px; }
   .nest-about .value-manifesto-item { padding: 32px 24px; }
   .nest-about .value-num { font-size: 52px; }
+  .nest-about .locations-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .nest-about .locations-grid { grid-template-columns: 1fr; }

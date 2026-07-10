@@ -901,7 +901,7 @@ export default function PartnerPortal() {
                     <span className="np-promo-label">Für Unternehmen</span>
                     <div className="np-promo-h">NEST Explore<br /><em>kommt in die Schule</em></div>
                     <p className="np-promo-p">Trefft motivierte Schüler:innen direkt vor Ort – NEST Explore bringt euch persönlich mit Schulklassen zusammen, komplett von NEST organisiert.</p>
-                    <a href="https://nest-messe.de" target="_blank" rel="noopener" className="btn btn-primary" style={{ display: "inline-flex" }}>Zu NEST Explore →</a>
+                    <a href="https://nest-explore.de" target="_blank" rel="noopener" className="btn btn-primary" style={{ display: "inline-flex" }}>Zu NEST Explore →</a>
                   </div>
                   <div className="np-promo-phone">
                     <div className="np-mini-phone">
@@ -955,7 +955,7 @@ export default function PartnerPortal() {
                           <p className="messe-termin-meta">{m.datum_text} · {m.uhrzeit} · {m.ort}</p>
                           {m.info ? <p className="messe-termin-info">{m.info}</p> : null}
                         </div>
-                        <a className="btn btn-outline" href="https://nest-messe.de/terminkalender" target="_blank" rel="noopener">Details ↗</a>
+                        <a className="btn btn-outline" href="https://nest-explore.de/terminkalender" target="_blank" rel="noopener">Details ↗</a>
                       </div>
                     ))}
                   </div>

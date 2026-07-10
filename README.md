@@ -139,15 +139,19 @@ Jeder weitere `git push` deployt automatisch neu.
 - **Stellen:** Partner legen sie selbst im Portal an (oder du im Supabase-Table-Editor).
 - **Blog:** Tabelle `posts` → Zeile anlegen, `published = true`. `inhalt` ist HTML.
 - **Veranstaltungen & Blog:** im Partner-Portal → Admin-Bereich (Login als `info@nest-bildungsbar.de`).
-- **Terminbuchungen:** ein fester Slot **17:00 Uhr** pro Di/Do-Termin, Kapazität pro Tag
-  **Wuppertal 4 / Essen 2**. Buchungen sind **verbindlich** – der Platz ist sofort vergeben
+- **Terminbuchungen:** ein fester Slot **17:00 Uhr** pro Beratungstag. Beratungstage je
+  Standort: **Wuppertal & Essen Di/Do, Solingen Mo, Remscheid Mi** (jeweils 17–19 Uhr).
+  Kapazität pro Tag: **Wuppertal 4 / Essen 2 / Solingen 2 / Remscheid 2**. Solingen und
+  Remscheid sind bis **1. September 2026** gesperrt (`buchbarAb` in `nest-app.js`,
+  `BUCHBAR_AB` in `app/api/buchung/route.js`) – die Tage erscheinen im Kalender als
+  „Ab Sept.". Buchungen sind **verbindlich** – der Platz ist sofort vergeben
   (kein Bestätigen nötig), volle Tage werden als „ausgebucht" gesperrt, freie Tage zeigen die
   Restplätze. Beim Buchen wird in `buchungen` gespeichert, das NEST-Team benachrichtigt **und**
   die buchende Person bekommt sofort eine **Bestätigungsmail**. Am Vortag folgt eine
   **Erinnerung** (E-Mail + optional WhatsApp) über den Cron. Im **Admin-Bereich** siehst du
-  pro Tag, **wer** gebucht hat (Name + Kontaktdaten) sowie die Auslastung. Kapazität
-  einstellbar in `nest-app.js` (`KAPAZITAET`), `app/api/buchung/route.js`,
-  `app/api/verfuegbarkeit/route.js` und `app/partner-portal/page.jsx`.
+  pro Tag, **wer** gebucht hat (Name + Kontaktdaten) sowie die Auslastung. Beratungstage &
+  Kapazität einstellbar in `nest-app.js` (`STANDORTE`), `app/api/buchung/route.js`,
+  `app/api/verfuegbarkeit/route.js` und `app/partner-portal/page.jsx` (`KAPAZITAET`/`TERMIN_TAGE`).
 - **Kontakt / Sonderanfrage:** werden per SMTP (`/api/kontakt`) gemailt, mit mailto-Fallback.
 - **Berufe / Texte / Bilder:** in `public/assets/` (`berufe-data` & Co. stecken im
   Bundle `nest-app.js`; Bilder unter `public/assets/img/berufe/`).

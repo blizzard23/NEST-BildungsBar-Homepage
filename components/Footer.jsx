@@ -8,7 +8,7 @@ export default function Footer() {
           </a>
           <p className="nest-footer__desc">
             Kostenfreie Berufsorientierung in lockerer Atmosphäre – über 150 Ausbildungsberufe,
-            persönliche Beratung in Wuppertal &amp; Essen. Teil des NEST Ökosystems.
+            persönliche Beratung in Wuppertal, Essen, Solingen &amp; Remscheid. Teil des NEST Ökosystems.
           </p>
           <div className="nest-footer__social">
             <a href="https://www.linkedin.com/company/89189682/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">

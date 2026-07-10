@@ -240,8 +240,8 @@ const html = `
         <div class="stat-bar-label">Gründungsjahr in Wuppertal</div>
       </div>
       <div>
-        <div class="stat-bar-number">2</div>
-        <div class="stat-bar-label">Standorte: Wuppertal &amp; Essen</div>
+        <div class="stat-bar-number">4</div>
+        <div class="stat-bar-label">Standorte: Wuppertal, Essen, Solingen &amp; Remscheid</div>
       </div>
     </div>
   </div>
@@ -357,6 +357,22 @@ const html = `
             <div class="location-city">Essen</div>
             <div class="location-address">Kopstadtplatz 12<br>45127 Essen</div>
             <span class="location-tag">Unser Standort im Ruhrgebiet</span>
+          </div>
+        </div>
+        <div class="location-card">
+          <div class="location-accent"></div>
+          <div>
+            <div class="location-city">Solingen</div>
+            <div class="location-address">Grünewalder Straße 29-31<br>42657 Solingen</div>
+            <span class="location-tag">Im Gründerzentrum</span>
+          </div>
+        </div>
+        <div class="location-card">
+          <div class="location-accent"></div>
+          <div>
+            <div class="location-city">Remscheid</div>
+            <div class="location-address">Hindenburgstraße 10a<br>42853 Remscheid</div>
+            <span class="location-tag">In der Gründerschmiede</span>
           </div>
         </div>
       </div>

@@ -93,7 +93,7 @@ const html = `
         <p>Von der Terminbuchung bis zum passenden Betrieb – so einfach läuft deine Beratung in der BildungsBar.</p>
       </div>
       <div class="how-steps">
-        <div class="how-step reveal"><div class="how-step-num step-icon">${IC.calendar}</div><h3>Termin buchen</h3><p>Such dir online einen Termin in Wuppertal oder Essen aus – kostenfrei und unverbindlich.</p><span class="how-step-time">Di &amp; Do · 17–19 Uhr</span></div>
+        <div class="how-step reveal"><div class="how-step-num step-icon">${IC.calendar}</div><h3>Termin buchen</h3><p>Such dir online einen Termin in Wuppertal, Essen, Solingen oder Remscheid aus – kostenfrei und unverbindlich.</p><span class="how-step-time">Mo–Do · 17–19 Uhr</span></div>
         <div class="how-step reveal"><div class="how-step-num step-icon">${IC.chat}</div><h3>Vor Ort beraten</h3><p>In lockerer Atmosphäre sprechen wir über Berufe, Bewerbung und passende Unternehmen.</p><span class="how-step-time">Persönlich &amp; ehrlich</span></div>
         <div class="how-step reveal"><div class="how-step-num step-icon">${IC.network}</div><h3>Partner finden</h3><p>Wir vernetzen dich direkt mit passenden Betrieben aus unserem Netzwerk – für Praktikum oder Ausbildung.</p><span class="how-step-time">70+ Partner</span></div>
       </div>
@@ -113,6 +113,14 @@ const html = `
             <div class="loc-img">
               <img src="/assets/img/standort-essen.png" alt="BildungsBar Essen – Kopstadtplatz 12 (Innenansicht)" loading="lazy">
               <span class="loc-label"><b>Essen</b><small>Kopstadtplatz 12</small></span>
+            </div>
+            <div class="loc-img">
+              <img src="/assets/img/standort-solingen.jpg" alt="BildungsBar Solingen – Grünewalder Straße 29-31 (im Gründerzentrum)" loading="lazy">
+              <span class="loc-label"><b>Solingen</b><small>Grünewalder Straße 29-31</small></span>
+            </div>
+            <div class="loc-img">
+              <img src="/assets/img/standort-remscheid.webp" alt="BildungsBar Remscheid – Hindenburgstraße 10a (in der Gründerschmiede)" loading="lazy">
+              <span class="loc-label"><b>Remscheid</b><small>Hindenburgstraße 10a</small></span>
             </div>
           </div>
         </div>
@@ -156,7 +164,7 @@ const html = `
       </div>
       <div class="faq-list">
         <div class="faq-item"><button class="faq-question"><span>Was kostet die Beratung?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Die Beratung in der BildungsBar ist für Schüler:innen und junge Menschen komplett kostenfrei.</div></div></div>
-        <div class="faq-item"><button class="faq-question"><span>Wann und wo habt ihr geöffnet?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Wir sind dienstags und donnerstags von 17 bis 19 Uhr für dich da – an unseren Standorten in Wuppertal (Hochstraße 65) und Essen (Kopstadtplatz 12).</div></div></div>
+        <div class="faq-item"><button class="faq-question"><span>Wann und wo habt ihr geöffnet?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Wir sind von 17 bis 19 Uhr für dich da: dienstags und donnerstags in Wuppertal (Hochstraße 65) und Essen (Kopstadtplatz 12), montags in Solingen (Grünewalder Straße 29-31, im Gründerzentrum) und mittwochs in Remscheid (Hindenburgstraße 10a, in der Gründerschmiede). Termine in Solingen und Remscheid sind ab September buchbar.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Muss ich einen Termin buchen?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Am besten buchst du online einen Termin – so können wir uns optimal Zeit für dich nehmen.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Für wen ist das Angebot gedacht?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Für alle jungen Menschen, die sich beruflich orientieren möchten – egal ob noch in der Schule, kurz vor dem Abschluss oder auf der Suche nach einer Ausbildung.</div></div></div>
       </div>
@@ -169,7 +177,7 @@ const html = `
       <div class="cta-inner">
         <span class="section-label" style="display:flex;justify-content:center;">Jetzt starten</span>
         <h2>Bereit, deinen <em>Partner</em> zu entdecken?</h2>
-        <p>Buch dir einen kostenfreien Termin in der BildungsBar in Wuppertal oder Essen – wir freuen uns auf dich!</p>
+        <p>Buch dir einen kostenfreien Termin in der BildungsBar in Wuppertal, Essen, Solingen oder Remscheid – wir freuen uns auf dich!</p>
         <div class="cta-actions">
           <a class="btn btn-primary" href="/terminbuchung">Termin buchen</a>
           <a class="btn btn-ghost" href="/kontakt">Kontakt aufnehmen</a>

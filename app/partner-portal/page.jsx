@@ -31,14 +31,16 @@ function slugify(s) {
 }
 
 // Auslastung: Kapazität pro Tag + nächste Di/Do-Termine
-const KAPAZITAET = { Wuppertal: 4, Essen: 2 };
+const KAPAZITAET = { Wuppertal: 4, Essen: 2, Solingen: 2, Remscheid: 2 };
+// Beratungstage je Standort (0 = So … 6 = Sa)
+const TERMIN_TAGE = { Wuppertal: [2, 4], Essen: [2, 4], Solingen: [1], Remscheid: [3] };
 const WTAGE = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
-function naechsteTermine(n) {
+function naechsteTermine(n, tage = [2, 4]) {
   const out = [];
   const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + 1);
   let guard = 0;
   while (out.length < n && guard < 120) {
-    if (d.getDay() === 2 || d.getDay() === 4) out.push(new Date(d));
+    if (tage.includes(d.getDay())) out.push(new Date(d));
     d.setDate(d.getDate() + 1); guard++;
   }
   return out;
@@ -743,7 +745,7 @@ export default function PartnerPortal() {
                       <select value={form.art} onChange={set("art")}><option>Ausbildung</option><option>Duales Studium</option><option>Praktikum</option><option>Freiwilligendienst</option></select>
                     </div>
                     <div className="field"><label>Standort</label>
-                      <select value={form.ort} onChange={set("ort")}><option>Wuppertal</option><option>Essen</option></select>
+                      <select value={form.ort} onChange={set("ort")}><option>Wuppertal</option><option>Essen</option><option>Solingen</option><option>Remscheid</option></select>
                     </div>
                   </div>
                   <div className="row2">
@@ -1050,16 +1052,15 @@ export default function PartnerPortal() {
                   {/* Auslastung der nächsten Termine */}
                   <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Auslastung der nächsten Termine</h3>
                   {(() => {
-                    const termine = naechsteTermine(8);
                     const zaehl = {};
                     buchungen.forEach((b) => { if (b.datum) { const k = b.standort + "|" + b.datum; zaehl[k] = (zaehl[k] || 0) + 1; } });
                     return (
                       <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
-                        {["Wuppertal", "Essen"].map((ort) => (
+                        {["Wuppertal", "Essen", "Solingen", "Remscheid"].map((ort) => (
                           <div className="card" key={ort}>
                             <span className="badge">{ort} · max. {KAPAZITAET[ort]}/Tag</span>
                             <div style={{ marginTop: "12px" }}>
-                              {termine.map((d) => {
+                              {naechsteTermine(8, TERMIN_TAGE[ort]).map((d) => {
                                 const iso = isoDatum(d);
                                 const n = zaehl[ort + "|" + iso] || 0;
                                 const cap = KAPAZITAET[ort];
@@ -1199,7 +1200,7 @@ export default function PartnerPortal() {
                       <div className="row2">
                         <div className="field"><label>Uhrzeit</label><input value={evForm.uhrzeit} onChange={setEv("uhrzeit")} placeholder="z. B. 17:00–19:00" /></div>
                         <div className="field"><label>Ort (Stadt / Format)</label>
-                          <select value={evForm.ort} onChange={setEv("ort")}><option>Wuppertal</option><option>Essen</option><option>Online</option></select>
+                          <select value={evForm.ort} onChange={setEv("ort")}><option>Wuppertal</option><option>Essen</option><option>Solingen</option><option>Remscheid</option><option>Online</option></select>
                         </div>
                       </div>
                       <div className="field"><label>Genaue Adresse</label><input value={evForm.adresse} onChange={setEv("adresse")} placeholder="z. B. NEST BildungsBar, Hochstraße 65, 42105 Wuppertal" /></div>

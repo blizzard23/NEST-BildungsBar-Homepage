@@ -89,6 +89,14 @@ const html = `
               <img src="/assets/img/standort-essen.png" alt="BildungsBar Essen – Kopstadtplatz 12 (Innenansicht)" loading="lazy">
               <span class="loc-label"><b>Essen</b><small>Kopstadtplatz 12</small></span>
             </div>
+            <div class="loc-img">
+              <img src="/assets/img/standort-solingen.jpg" alt="BildungsBar Solingen – Grünewalder Straße 29-31 (im Gründerzentrum)" loading="lazy">
+              <span class="loc-label"><b>Solingen</b><small>Grünewalder Straße 29-31</small></span>
+            </div>
+            <div class="loc-img">
+              <img src="/assets/img/standort-remscheid.webp" alt="BildungsBar Remscheid – Hindenburgstraße 10a (in der Gründerschmiede)" loading="lazy">
+              <span class="loc-label"><b>Remscheid</b><small>Hindenburgstraße 10a</small></span>
+            </div>
           </div>
         </div>
         <div class="split-text reveal">

@@ -123,8 +123,10 @@ function switchFAQ(tab, e) {
    der Original-Seite nest-bildungsbar.de/deine-zukunft/.
 
    NUR_ESSEN   = Berufe nur in Essen
-   AUCH_ESSEN  = Berufe in Wuppertal UND Essen (beide Standorte)
-   Alle übrigen Berufe = nur Wuppertal.
+   AUCH_ESSEN  = Berufe in Wuppertal UND Essen
+   Alle übrigen Berufe = Wuppertal.
+   Die Standorte Solingen und Remscheid bieten dieselben Berufe an
+   wie Wuppertal und werden überall dort automatisch mit ergänzt.
 
    Schlüssel = berufSlug(name) aus berufe-data.js.
    standorteFuer(slug) liefert das Standort-Array für die Filterung.
@@ -201,8 +203,8 @@ window.AUCH_ESSEN = [
 
 function standorteFuer(slug) {
   if (window.NUR_ESSEN && window.NUR_ESSEN.indexOf(slug) > -1) return ["Essen"];
-  if (window.AUCH_ESSEN && window.AUCH_ESSEN.indexOf(slug) > -1) return ["Wuppertal", "Essen"];
-  return ["Wuppertal"];
+  if (window.AUCH_ESSEN && window.AUCH_ESSEN.indexOf(slug) > -1) return ["Wuppertal", "Essen", "Solingen", "Remscheid"];
+  return ["Wuppertal", "Solingen", "Remscheid"];
 }
 
 /* ===== berufe-bilder.js ===== */
@@ -699,7 +701,7 @@ function alleBerufe() {
         mitbringen: entry.mitbringen || null,
         partner: entry.partner || null,
         bild: entry.bild || null,
-        standorte: (typeof standorteFuer === "function") ? standorteFuer(berufSlug(name)) : (entry.standorte || ["Wuppertal"])
+        standorte: (typeof standorteFuer === "function") ? standorteFuer(berufSlug(name)) : (entry.standorte || ["Wuppertal", "Solingen", "Remscheid"])
       });
     });
   });
@@ -894,7 +896,7 @@ function renderBerufeUebersicht() {
       '<div class="bt-filterrow">' +
         '<div class="select-wrap">' + ic("briefcase", 15, "sel-ic") + '<select id="f-cat" aria-label="Berufsfeld">' + catOptions + "</select></div>" +
         '<div class="select-wrap">' + ic("cap", 15, "sel-ic") + '<select id="f-art" aria-label="Art">' + artOptions + "</select></div>" +
-        '<div class="select-wrap">' + ic("pin", 15, "sel-ic") + '<select id="f-ort" aria-label="Standort"><option value="*">Alle Standorte</option><option value="Wuppertal">Wuppertal</option><option value="Essen">Essen</option></select></div>' +
+        '<div class="select-wrap">' + ic("pin", 15, "sel-ic") + '<select id="f-ort" aria-label="Standort"><option value="*">Alle Standorte</option><option value="Wuppertal">Wuppertal</option><option value="Essen">Essen</option><option value="Solingen">Solingen</option><option value="Remscheid">Remscheid</option></select></div>' +
         '<button class="reset-btn" id="reset-btn" hidden>Zurücksetzen</button>' +
         '<span class="berufe-count" id="beruf-count"></span>' +
       "</div>" +
@@ -928,7 +930,7 @@ function renderBerufeUebersicht() {
       var items = k.berufe.map(function (b) {
         var name = (typeof b === "string") ? b : b.name;
         var entry = (typeof b === "string") ? {} : b;
-        var st = (typeof standorteFuer === "function") ? standorteFuer(berufSlug(name)) : (entry.standorte || ["Wuppertal"]);
+        var st = (typeof standorteFuer === "function") ? standorteFuer(berufSlug(name)) : (entry.standorte || ["Wuppertal", "Solingen", "Remscheid"]);
         return { name: name, slug: berufSlug(name), typ: berufTyp(name, entry.dauer), kategorieIcon: k.icon, bild: entry.bild || null, standorte: st, info: entry.info || "", partner: entry.partner || null };
       }).filter(function (it) {
         // Suche berücksichtigt auch den Beschreibungstext der Detailseite (it.info) und die Partnerunternehmen (it.partner)
@@ -1286,7 +1288,7 @@ function renderBerufDetail() {
 
   document.title = beruf.name + " – NEST BildungsBar";
 
-  var standorte = (beruf.standorte && beruf.standorte.length ? beruf.standorte : ["Wuppertal", "Essen"]).join(" & ");
+  var standorte = (beruf.standorte && beruf.standorte.length ? beruf.standorte : ["Wuppertal", "Essen"]).join(" · ");
   var dauer = beruf.dauer || standardDauer(beruf.typ);
   var intro = beruf.info ? escHtml(beruf.info) : standardIntro(beruf);
   var gem = istGemerkt(beruf.slug);
@@ -1642,7 +1644,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
       .filter(function (s) { return tageRest(s.aktiviertAm) >= 0; })
       .sort(function (a, b) { return new Date(b.aktiviertAm) - new Date(a.aktiviertAm); });
 
-    var orte = ["*", "Wuppertal", "Essen"];
+    var orte = ["*", "Wuppertal", "Essen", "Solingen", "Remscheid"];
     var ortFilter = "*";
 
     var chips = orte.map(function (o) {

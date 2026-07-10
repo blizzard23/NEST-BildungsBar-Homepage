@@ -132,7 +132,7 @@ const html = `
             <li>Spielerisches Format – aktiviert auch ruhige Schüler:innen</li>
             <li>Kostenfrei · ab Klasse 9 · 60 Min pro Klasse</li>
           </ul>
-          <a class="btn btn-navy mt-2" href="/kontakt#termin">Schultermin anfragen →</a>
+          <a class="btn btn-navy mt-2" href="https://nest-explore.de" target="_blank" rel="noopener">Zu NEST Explore →</a>
         </div>
         <div class="split-media is-photo">
           <div class="explore-foto">

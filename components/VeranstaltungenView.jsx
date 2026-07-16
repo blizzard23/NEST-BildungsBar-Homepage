@@ -24,6 +24,13 @@ function fmtLang(iso) {
 function mapsUrl(adresse) {
   return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(adresse);
 }
+// Direktlinks funktionieren mit dem sprechenden Slug (neu) und der UUID (alte Links)
+function istUuid(s) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(s));
+}
+function passtZuEvent(e, idOderSlug) {
+  return e.id === idOderSlug || (e.slug && e.slug === idOderSlug);
+}
 
 export default function VeranstaltungenView({ initialEventId = null }) {
   const heute = useMemo(() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; }, []);
@@ -49,12 +56,21 @@ export default function VeranstaltungenView({ initialEventId = null }) {
     let alle = ev || [];
     // Direktlink zu einer einzelnen Veranstaltung: auch laden, wenn der Termin
     // nicht (mehr) in der Liste kommender Termine auftaucht.
-    if (initialEventId && !alle.some((e) => e.id === initialEventId)) {
+    if (initialEventId && !alle.some((e) => passtZuEvent(e, initialEventId))) {
       const { data: einzeln } = await supabase
-        .from("veranstaltungen").select("*").eq("id", initialEventId).maybeSingle();
+        .from("veranstaltungen").select("*")
+        .eq(istUuid(initialEventId) ? "id" : "slug", initialEventId)
+        .maybeSingle();
       if (einzeln) alle = [...alle, einzeln].sort((a, b) => String(a.datum).localeCompare(String(b.datum)));
     }
     setEvents(alle);
+    // Ohne Direktlink: Liegt im aktuellen Monat kein Termin, direkt zum Monat
+    // des nächsten Termins springen – sonst wirkt die Seite leer.
+    if (!initialEventId && alle.length && !alle.some((e) => String(e.datum).startsWith(heuteISO.slice(0, 7)))) {
+      const naechster = alle.find((e) => String(e.datum) >= heuteISO) || alle[0];
+      const [j, m] = String(naechster.datum).split("-").map(Number);
+      if (j && m) setCursor({ jahr: j, monat: m - 1 });
+    }
     const { data: ct } = await supabase.rpc("veranstaltung_anmeldungen_anzahl");
     const map = {};
     (ct || []).forEach((r) => { map[r.veranstaltung_id] = Number(r.anzahl) || 0; });
@@ -69,7 +85,7 @@ export default function VeranstaltungenView({ initialEventId = null }) {
   const [autoOpened, setAutoOpened] = useState(false);
   useEffect(() => {
     if (autoOpened || !initialEventId || loading || !events.length) return;
-    const ev = events.find((e) => e.id === initialEventId);
+    const ev = events.find((e) => passtZuEvent(e, initialEventId));
     setAutoOpened(true);
     if (!ev) return;
     const [j, m, t] = String(ev.datum).split("-").map(Number);

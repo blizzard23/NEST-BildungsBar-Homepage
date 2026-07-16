@@ -3,12 +3,13 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabaseClient";
 import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameEditUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
 import { mapMesseTermin } from "@/lib/messeTermine";
+import { inhaltZuHtml } from "@/lib/blogFormat";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "", keyword1: "", keyword2: "", keyword3: "" };
 const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", adresse: "", bild_url: "", beschreibung: "" };
 const POST_LEER = { slug: "", titel: "", excerpt: "", inhalt: "", bild_url: "", published: true };
-const AP_LEER = { name: "", rolle: "", email: "", telefon: "", standort: "", bild_url: "", beschreibung: "", sortierung: 0 };
+const AP_LEER = { name: "", rolle: "", email: "", telefon: "", website: "", standort: "", bild_url: "", beschreibung: "", sortierung: 0 };
 
 // Standard-Ansprechpartner – werden gezeigt, solange in der Tabelle `ansprechpartner`
 // noch nichts gepflegt ist (Admin kann sie im Portal überschreiben/ergänzen).
@@ -98,6 +99,7 @@ export default function PartnerPortal() {
   const [evUploading, setEvUploading] = useState(false);
   const [poForm, setPoForm] = useState(POST_LEER);
   const [poMsg, setPoMsg] = useState("");
+  const [poVorschau, setPoVorschau] = useState(false);   // Blog: Vorschau statt Editor anzeigen
   const [uploading, setUploading] = useState(false);
   const [infoFilter, setInfoFilter] = useState("Alle");
   const [logoUploading, setLogoUploading] = useState(false);   // Logo-Upload bei der Stelle
@@ -374,40 +376,76 @@ export default function PartnerPortal() {
   async function apSpeichern(e) {
     e.preventDefault(); setApMsg("");
     if (!apForm.name) { setApMsg("Name ist Pflicht."); return; }
-    const { id, ...werte } = apForm;
-    const { error } = id
-      ? await supabase.from("ansprechpartner").update(werte).eq("id", id)
-      : await supabase.from("ansprechpartner").insert(werte);
+    const { id, created_at, ...werte } = apForm;
+    werte.sortierung = parseInt(werte.sortierung, 10) || 0;
+    const schreiben = (w) => (id
+      ? supabase.from("ansprechpartner").update(w).eq("id", id)
+      : supabase.from("ansprechpartner").insert(w));
+    let { error } = await schreiben(werte);
+    // Fallback, solange die Website-Spalte noch nicht angelegt ist (supabase/portal-fixes.sql)
+    if (error && /website/i.test(error.message)) {
+      const { website, ...ohneWebsite } = werte;
+      ({ error } = await schreiben(ohneWebsite));
+      if (!error) toast("Gespeichert – Hinweis: Für das Feld „Website“ bitte supabase/portal-fixes.sql ausführen.");
+    } else if (!error) {
+      toast("Ansprechpartner gespeichert ✅");
+    }
     if (error) { setApMsg("Fehler: " + error.message); return; }
     setApForm(AP_LEER);
     setApMsg("");
-    toast("Ansprechpartner gespeichert ✅");
     ladeDaten();
   }
-  function apBearbeiten(ap) { setApForm({ ...AP_LEER, ...ap }); setApMsg(""); }
+  function apBearbeiten(ap) {
+    setApForm({ ...AP_LEER, ...ap });
+    setApMsg("");
+    if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-ap-form"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
+  }
+  // Die im Code hinterlegten Standard-Kontakte in die Datenbank übernehmen,
+  // damit sie im Admin-Bereich bearbeitet und gelöscht werden können.
+  async function apDefaultsUebernehmen() {
+    const eintraege = AP_DEFAULT.map(({ id, ...rest }) => ({ ...AP_LEER, ...rest }));
+    let { error } = await supabase.from("ansprechpartner").insert(eintraege);
+    if (error && /website/i.test(error.message)) {
+      ({ error } = await supabase.from("ansprechpartner").insert(eintraege.map(({ website, ...r }) => r)));
+    }
+    if (error) { toast("Fehler: " + error.message); return; }
+    toast("Standard-Ansprechpartner übernommen ✅ – jetzt bearbeitbar");
+    ladeDaten();
+  }
   async function apLoeschen(id, name) { if (!bestaetigeLoeschen(name || "Ansprechpartner")) return; await supabase.from("ansprechpartner").delete().eq("id", id); if (apForm.id === id) setApForm(AP_LEER); toast("Ansprechpartner gelöscht"); ladeDaten(); }
 
   // ---- Admin: Veranstaltungen ----
+  // Sprechender Direktlink: Slug aus dem Titel, bei Doppelungen mit Datum ergänzt.
+  function eventSlug(titel, datum, ausserId) {
+    const basis = slugify(titel) || "veranstaltung";
+    const belegt = (s) => adminEvents.some((v) => v.slug === s && v.id !== ausserId);
+    if (!belegt(basis)) return basis;
+    const mitDatum = basis + "-" + datum;
+    if (!belegt(mitDatum)) return mitDatum;
+    return mitDatum + "-" + Math.random().toString(36).slice(2, 6);
+  }
   async function eventSpeichern(e) {
     e.preventDefault(); setEvMsg("");
     if (!evForm.titel || !evForm.datum) { setEvMsg("Titel und Datum sind Pflicht."); return; }
     const { id, created_at, ...werte } = evForm;
-    if (id) {
-      const { error } = await supabase.from("veranstaltungen").update(werte).eq("id", id);
-      if (error) { setEvMsg("Fehler: " + error.message); return; }
-      setEvForm(EVENT_LEER);
-      toast("Veranstaltung aktualisiert ✅");
-      ladeAdmin(); ladeDaten();
-      return;
+    // Bestehende Slugs bleiben stabil (verteilte Links funktionieren weiter)
+    werte.slug = werte.slug || eventSlug(werte.titel, werte.datum, id);
+    const schreiben = (w) => (id
+      ? supabase.from("veranstaltungen").update(w).eq("id", id)
+      : supabase.from("veranstaltungen").insert(w));
+    let { error } = await schreiben(werte);
+    // Fallback, solange die Slug-Spalte noch nicht angelegt ist (supabase/portal-fixes.sql)
+    if (error && /slug/i.test(error.message)) {
+      const { slug, ...ohneSlug } = werte;
+      ({ error } = await schreiben(ohneSlug));
     }
-    const { error } = await supabase.from("veranstaltungen").insert(werte);
     if (error) { setEvMsg("Fehler: " + error.message); return; }
     setEvForm(EVENT_LEER);
-    toast("Veranstaltung gespeichert ✅");
+    toast(id ? "Veranstaltung aktualisiert ✅" : "Veranstaltung gespeichert ✅");
     ladeAdmin(); ladeDaten();
   }
   function eventBearbeiten(v) {
-    setEvForm({ id: v.id, titel: v.titel || "", datum: v.datum || "", uhrzeit: v.uhrzeit || "", ort: v.ort || "Wuppertal", adresse: v.adresse || "", bild_url: v.bild_url || "", beschreibung: v.beschreibung || "" });
+    setEvForm({ id: v.id, titel: v.titel || "", datum: v.datum || "", uhrzeit: v.uhrzeit || "", ort: v.ort || "Wuppertal", adresse: v.adresse || "", bild_url: v.bild_url || "", beschreibung: v.beschreibung || "", slug: v.slug || "" });
     setEvMsg("");
     if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-event-form"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
   }
@@ -459,12 +497,38 @@ export default function PartnerPortal() {
     e.preventDefault(); setPoMsg("");
     if (!poForm.titel) { setPoMsg("Titel ist Pflicht."); return; }
     const slug = poForm.slug ? slugify(poForm.slug) : slugify(poForm.titel);
-    const eintrag = { ...poForm, slug, veroeffentlicht_am: new Date().toISOString().slice(0, 10) };
+    const { id, created_at, veroeffentlicht_am, ...rest } = poForm;
+    const werte = { ...rest, slug };
+    if (id) {
+      const { error } = await supabase.from("posts").update(werte).eq("id", id);
+      if (error) { setPoMsg("Fehler: " + error.message); return; }
+      setPoForm(POST_LEER); setPoVorschau(false);
+      toast("Beitrag aktualisiert ✅");
+      ladeAdmin();
+      return;
+    }
+    const eintrag = { ...werte, veroeffentlicht_am: new Date().toISOString().slice(0, 10) };
     const { error } = await supabase.from("posts").insert(eintrag);
     if (error) { setPoMsg("Fehler: " + error.message); return; }
-    setPoForm(POST_LEER);
+    setPoForm(POST_LEER); setPoVorschau(false);
     setPoMsg("Beitrag gespeichert ✅");
     ladeAdmin();
+  }
+  function postBearbeiten(p) {
+    setPoForm({ ...POST_LEER, ...p });
+    setPoMsg(""); setPoVorschau(false);
+    if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-blog-form"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
+  }
+  // Formatierung in den Beitragstext einfügen (umschließt die aktuelle Auswahl)
+  function formatEinfuegen(vor, nach = "", platzhalter = "Text") {
+    const el = typeof document !== "undefined" ? document.getElementById("po-inhalt") : null;
+    if (!el) return;
+    const start = el.selectionStart ?? el.value.length;
+    const ende = el.selectionEnd ?? el.value.length;
+    const auswahl = el.value.slice(start, ende) || platzhalter;
+    const neu = el.value.slice(0, start) + vor + auswahl + nach + el.value.slice(ende);
+    setPoForm((f) => ({ ...f, inhalt: neu }));
+    setTimeout(() => { el.focus(); el.setSelectionRange(start + vor.length, start + vor.length + auswahl.length); }, 0);
   }
   async function postLoeschen(id, titel) { if (!bestaetigeLoeschen(titel || "Beitrag")) return; await supabase.from("posts").delete().eq("id", id); toast("Beitrag gelöscht"); ladeAdmin(); }
 
@@ -990,6 +1054,10 @@ export default function PartnerPortal() {
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.63a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                             {ap.telefon}
                           </a> : null}
+                          {ap.website ? <a href={ap.website} target="_blank" rel="noopener" style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            {ap.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                          </a> : null}
                         </div>
                       </div>
                     </div>
@@ -1135,7 +1203,7 @@ export default function PartnerPortal() {
                   })()}
 
                   {/* Ansprechpartner verwalten */}
-                  <div className="card" style={{ marginBottom: "24px" }}>
+                  <div className="card" style={{ marginBottom: "24px" }} id="abschnitt-ap-form">
                     <h3>{apForm.id ? "Ansprechpartner bearbeiten" : "Ansprechpartner anlegen"}</h3>
                     <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>Erscheint im Partner-Portal im Bereich „Ansprechpartner".</p>
                     <form onSubmit={apSpeichern} className="tb-form">
@@ -1148,8 +1216,12 @@ export default function PartnerPortal() {
                         <div className="field"><label>Telefon</label><input value={apForm.telefon} onChange={apSet("telefon")} /></div>
                       </div>
                       <div className="row2">
+                        <div className="field"><label>Website</label><input type="url" value={apForm.website || ""} onChange={apSet("website")} placeholder="https://…" /></div>
                         <div className="field"><label>Standort</label><input value={apForm.standort} onChange={apSet("standort")} placeholder="z. B. Wuppertal" /></div>
+                      </div>
+                      <div className="row2">
                         <div className="field"><label>Reihenfolge</label><input type="number" value={apForm.sortierung} onChange={apSet("sortierung")} /></div>
+                        <div className="field"></div>
                       </div>
                       <div className="field"><label>Kurzinfo</label><input value={apForm.beschreibung} onChange={apSet("beschreibung")} placeholder="Worum kümmert sich die Person?" /></div>
                       <div className="field">
@@ -1187,7 +1259,15 @@ export default function PartnerPortal() {
                         </div>
                       ))}
                     </div>
-                  ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Ansprechpartner angelegt – es werden die Standard-Kontakte angezeigt.</p>}
+                  ) : (
+                    <div className="card" style={{ marginBottom: "32px" }}>
+                      <p style={{ margin: "0 0 12px", color: "var(--text-soft)", fontSize: "14px" }}>
+                        Aktuell werden die im Code hinterlegten <strong style={{ color: "var(--navy)" }}>Standard-Kontakte</strong> angezeigt – sie liegen noch nicht in der Datenbank und können deshalb nicht bearbeitet oder gelöscht werden.
+                        Mit einem Klick übernimmst du sie in die Datenbank und kannst sie danach frei pflegen (inkl. E-Mail, Telefon und Website).
+                      </p>
+                      <button type="button" className="btn btn-primary" onClick={apDefaultsUebernehmen}>Standard-Ansprechpartner übernehmen</button>
+                    </div>
+                  )}
 
                   {/* Veranstaltung anlegen / bearbeiten */}
                   <div className="card" style={{ marginBottom: "24px" }} id="abschnitt-event-form">
@@ -1239,7 +1319,7 @@ export default function PartnerPortal() {
                           {v.adresse ? <p style={{ color: "var(--text-mute)", fontSize: "13px", margin: "2px 0 0" }}>{v.adresse}</p> : null}
                           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "8px" }}>
                             <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => eventBearbeiten(v)}>Bearbeiten</button>
-                            <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => linkKopieren("/veranstaltungen/" + v.id)}>Link kopieren</button>
+                            <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => linkKopieren("/veranstaltungen/" + (v.slug || v.id))}>Link kopieren</button>
                             <button className="btn btn-danger" style={{ padding: "6px 14px" }} onClick={() => eventLoeschen(v.id, v.titel)}>Löschen</button>
                           </div>
                         </div>
@@ -1296,9 +1376,9 @@ export default function PartnerPortal() {
                     );
                   })() : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Anmeldungen von Unternehmen.</p>}
 
-                  {/* Blogbeitrag anlegen */}
-                  <div className="card" style={{ marginBottom: "24px" }}>
-                    <h3>Blogbeitrag anlegen</h3>
+                  {/* Blogbeitrag anlegen / bearbeiten */}
+                  <div className="card" style={{ marginBottom: "24px" }} id="abschnitt-blog-form">
+                    <h3>{poForm.id ? "Blogbeitrag bearbeiten" : "Blogbeitrag anlegen"}</h3>
                     <form onSubmit={postSpeichern} className="tb-form">
                       <div className="row2">
                         <div className="field"><label>Titel *</label><input value={poForm.titel} onChange={setPo("titel")} required /></div>
@@ -1314,10 +1394,30 @@ export default function PartnerPortal() {
                         ) : null}
                         <input value={poForm.bild_url} onChange={setPo("bild_url")} placeholder="…oder Bild-URL einfügen" style={{ marginTop: "8px" }} />
                       </div>
-                      <div className="field"><label>Inhalt (HTML)</label><textarea value={poForm.inhalt} onChange={setPo("inhalt")} placeholder="<p>Dein Beitrag …</p>" style={{ minHeight: "140px" }}></textarea></div>
+                      <div className="field">
+                        <label>Inhalt</label>
+                        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "8px" }}>
+                          <button type="button" className="btn btn-outline" style={{ padding: "4px 10px", fontSize: "13px" }} onClick={() => formatEinfuegen("\n\n## ", "\n\n", "Überschrift")}>Überschrift</button>
+                          <button type="button" className="btn btn-outline" style={{ padding: "4px 10px", fontSize: "13px" }} onClick={() => formatEinfuegen("\n\n### ", "\n\n", "Zwischenüberschrift")}>Zwischenüberschrift</button>
+                          <button type="button" className="btn btn-outline" style={{ padding: "4px 10px", fontSize: "13px", fontWeight: 800 }} onClick={() => formatEinfuegen("**", "**", "fetter Text")}>B</button>
+                          <button type="button" className="btn btn-outline" style={{ padding: "4px 10px", fontSize: "13px", fontStyle: "italic" }} onClick={() => formatEinfuegen("*", "*", "kursiver Text")}>I</button>
+                          <button type="button" className="btn btn-outline" style={{ padding: "4px 10px", fontSize: "13px" }} onClick={() => formatEinfuegen("\n\n- Punkt 1\n- Punkt 2\n- Punkt 3\n\n", "", "")}>Liste</button>
+                          <button type="button" className="btn btn-outline" style={{ padding: "4px 10px", fontSize: "13px" }} onClick={() => formatEinfuegen("[", "](https://…)", "Linktext")}>Link</button>
+                          <button type="button" className={"btn " + (poVorschau ? "btn-primary" : "btn-outline")} style={{ padding: "4px 10px", fontSize: "13px", marginLeft: "auto" }} onClick={() => setPoVorschau((v) => !v)}>{poVorschau ? "Zurück zum Editor" : "Vorschau"}</button>
+                        </div>
+                        {poVorschau ? (
+                          <div className="blog-content" style={{ border: "1px solid var(--line)", borderRadius: "10px", padding: "14px 16px", background: "#fff", minHeight: "140px" }} dangerouslySetInnerHTML={{ __html: inhaltZuHtml(poForm.inhalt) || "<p style='color:#999'>Noch kein Inhalt …</p>" }} />
+                        ) : (
+                          <textarea id="po-inhalt" value={poForm.inhalt} onChange={setPo("inhalt")} placeholder={"Dein Beitrag …\n\nLeerzeile = neuer Absatz. Über die Buttons oben kannst du Überschriften, fetten Text, Listen und Links einfügen."} style={{ minHeight: "220px" }}></textarea>
+                        )}
+                        <p style={{ fontSize: "12px", color: "var(--text-mute)", margin: "6px 0 0" }}>Leerzeile = neuer Absatz · <code>## Überschrift</code> · <code>**fett**</code> · <code>*kursiv*</code> · <code>- Liste</code> · <code>[Text](https://link)</code> – vorhandenes HTML funktioniert weiterhin.</p>
+                      </div>
                       <label className="tb-check"><input type="checkbox" checked={poForm.published} onChange={setPo("published")} /> Sofort veröffentlichen</label>
                       {poMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{poMsg}</p> : null}
-                      <button className="btn btn-primary" type="submit">Beitrag speichern</button>
+                      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                        <button className="btn btn-primary" type="submit">{poForm.id ? "Änderungen speichern" : "Beitrag speichern"}</button>
+                        {poForm.id ? <button type="button" className="btn btn-outline" onClick={() => { setPoForm(POST_LEER); setPoMsg(""); setPoVorschau(false); }}>Abbrechen</button> : null}
+                      </div>
                     </form>
                   </div>
 
@@ -1330,7 +1430,8 @@ export default function PartnerPortal() {
                           <span className="num-label">{p.veroeffentlicht_am} · {p.published ? "veröffentlicht" : "Entwurf"}</span>
                           <h3>{p.titel}</h3>
                           <p style={{ color: "var(--text-soft)", fontSize: "13px" }}>/blog/{p.slug}</p>
-                          <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "8px" }}>
+                            <button className="btn btn-outline" onClick={() => postBearbeiten(p)}>Bearbeiten</button>
                             <a className="btn btn-outline" href={`/blog/${p.slug}`} target="_blank" rel="noopener">Ansehen</a>
                             <button className="btn btn-danger" onClick={() => postLoeschen(p.id, p.titel)}>Löschen</button>
                           </div>

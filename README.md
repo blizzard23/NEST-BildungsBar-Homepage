@@ -66,6 +66,8 @@ git push -u origin main
      für Beitragsbilder an (Upload nur für den Admin).
    - *(Falls `schema.sql` schon vorher lief: zusätzlich `supabase/admin-policies.sql` und
      `supabase/buchungen.sql` ausführen, um Admin-Rechte und die Buchungstabelle nachzurüsten.)*
+   - Danach `supabase/portal-fixes.sql` ausführen → Website-Feld für Ansprechpartner,
+     Standard-Ansprechpartner in der DB (bearbeitbar) und sprechende Veranstaltungs-Links (Slugs).
 3. **Project Settings → API** → kopiere:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` Key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`

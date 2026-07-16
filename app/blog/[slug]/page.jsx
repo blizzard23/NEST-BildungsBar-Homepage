@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabaseServer";
+import { inhaltZuHtml } from "@/lib/blogFormat";
 import { notFound } from "next/navigation";
 
 export const revalidate = 60;
@@ -43,7 +44,7 @@ export default async function PostPage({ params }) {
           {post.bild_url ? (
             <img src={post.bild_url} alt={post.titel} style={{ width: "100%", borderRadius: "14px", marginBottom: "28px" }} />
           ) : null}
-          <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.inhalt || "" }} />
+          <div className="blog-content" dangerouslySetInnerHTML={{ __html: inhaltZuHtml(post.inhalt) }} />
           <p style={{ marginTop: "32px" }}><a className="btn btn-ghost" href="/blog">← Zurück zum Blog</a></p>
         </div>
       </section>

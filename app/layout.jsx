@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import ConsentAnalytics from "@/components/Analytics";
 import EcosystemBar from "@/components/EcosystemBar";
 import Header from "@/components/Header";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }) {
         <Script src={`/assets/nest-app.js?v=${V}`} strategy="afterInteractive" />
         <Script src={`/cookie-consent.js?v=${V}`} strategy="afterInteractive" />
         <ConsentAnalytics />
+        <Analytics />
       </body>
     </html>
   );

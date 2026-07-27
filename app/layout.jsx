@@ -1,4 +1,5 @@
 import Script from "next/script";
+import ConsentAnalytics from "@/components/Analytics";
 import EcosystemBar from "@/components/EcosystemBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -54,6 +55,7 @@ export default function RootLayout({ children }) {
         <Footer />
         <Script src={`/assets/nest-app.js?v=${V}`} strategy="afterInteractive" />
         <Script src={`/cookie-consent.js?v=${V}`} strategy="afterInteractive" />
+        <ConsentAnalytics />
       </body>
     </html>
   );

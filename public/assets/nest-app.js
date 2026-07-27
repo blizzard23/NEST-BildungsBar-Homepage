@@ -446,7 +446,7 @@ window.UNTERNEHMEN = {
   "Minimax": "https://karriere.minimax.de/stellenangebote.html",
   "Allbau": "https://www.allbau.de/karriere/ausbildung-und-schuelerpraktika/",
   "020 EPOS": "https://www.020epos.de/karriere/aus-weiterbildung/",
-  "optadata": "https://www.optadata-gruppe.de/",
+  "optadata": "https://www.optadata.de/unternehmen/karriere/bewirb-dich/",
   "Malteser": "https://jobs.malteser.de/de/"
 };
 

@@ -49,6 +49,13 @@ function naechsteTermine(n, tage = [2, 4]) {
 function isoDatum(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
 function kurzDatum(d) { return WTAGE[d.getDay()] + ", " + ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "."; }
 
+// Status einer NEST-Explore-Buchung (Spalte `status` in messe_buchungen)
+const MESSE_STATUS = {
+  neu: { text: "offen", cls: "ampel-gelb" },
+  bestaetigt: { text: "bestätigt", cls: "ampel-gruen" },
+  abgelehnt: { text: "abgelehnt", cls: "ampel-rot" },
+};
+
 // Stellen sind 30 Tage online – Resttage + Ampelstatus für das Dashboard
 const STELLEN_TAGE = 30;
 function tageRestStelle(aktiviertAm) {
@@ -94,6 +101,8 @@ export default function PartnerPortal() {
   const [adminPosts, setAdminPosts] = useState([]);
   const [buchungen, setBuchungen] = useState([]);
   const [anmeldungen, setAnmeldungen] = useState([]); // Unternehmens-Anmeldungen zu Veranstaltungen
+  const [adminMesseTermine, setAdminMesseTermine] = useState([]); // alle NEST-Explore-Termine
+  const [messeBuchungen, setMesseBuchungen] = useState([]);       // Unternehmen, die einen Explore-Termin gebucht haben
   const [evForm, setEvForm] = useState(EVENT_LEER);
   const [evMsg, setEvMsg] = useState("");
   const [evUploading, setEvUploading] = useState(false);
@@ -232,6 +241,12 @@ export default function PartnerPortal() {
     setBuchungen(bu || []);
     const { data: an } = await supabase.from("veranstaltung_anmeldungen").select("*").order("created_at", { ascending: false });
     setAnmeldungen(an || []);
+    // NEST Explore: Termine (zentral auf nest-explore.de gepflegt) + die Unternehmen,
+    // die sich zu einem Termin angemeldet haben – hier nur lesend als Übersicht.
+    const { data: mt } = await supabase.from("messe_termine").select("*").order("datum", { ascending: true });
+    setAdminMesseTermine((mt || []).map(mapMesseTermin));
+    const { data: mb } = await supabase.from("messe_buchungen").select("*").order("created_at", { ascending: false });
+    setMesseBuchungen(mb || []);
   }, [isAdmin]); // eslint-disable-line
 
   useEffect(() => { if (session) ladeDaten(); }, [session, ladeDaten]);
@@ -277,7 +292,7 @@ export default function PartnerPortal() {
       setAuthMode("login");
     }
   }
-  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setAnmeldungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
+  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setAnmeldungen([]); setAdminMesseTermine([]); setMesseBuchungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
 
   // ---- Konto: Unternehmensname & Passwort ändern ----
   async function firmaSpeichern(e) {
@@ -469,8 +484,17 @@ export default function PartnerPortal() {
     if (typeof navigator !== "undefined" && navigator.clipboard) { navigator.clipboard.writeText(url).then(() => toast("Link kopiert ✅")).catch(() => toast(url)); }
     else toast(url);
   }
-  // Namensschilder-Export: eine Zeile pro Person (Ansprechpartner:in + Begleitpersonen)
   function csvFeld(v) { const s = String(v == null ? "" : v); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  function csvDownload(zeilen, dateiname) {
+    const csv = "﻿" + zeilen.map((r) => r.map(csvFeld).join(";")).join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url; link.download = dateiname;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+  // Namensschilder-Export: eine Zeile pro Person (Ansprechpartner:in + Begleitpersonen)
   function namensschilderExport(ev, list) {
     const titel = (ev && ev.titel) || "Veranstaltung";
     const datum = (ev && ev.datum) || "";
@@ -481,15 +505,24 @@ export default function PartnerPortal() {
         if (bp && bp.trim()) zeilen.push([bp.trim(), a.firma, "Begleitperson", titel, datum]);
       });
     });
-    const csv = "﻿" + zeilen.map((r) => r.map(csvFeld).join(";")).join("\r\n");
     const slug = slugify(titel + (datum ? "-" + datum : "")) || "veranstaltung";
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url; link.download = `namensschilder-${slug}.csv`;
-    document.body.appendChild(link); link.click(); document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    csvDownload(zeilen, `namensschilder-${slug}.csv`);
     toast("Namensschilder exportiert ✅");
+  }
+  // Aussteller-Export je NEST-Explore-Termin: Unternehmen inkl. Kontaktdaten
+  function ausstellerExport(m, list) {
+    const zeilen = [["Unternehmen", "Ansprechpartner:in", "E-Mail", "Telefon", "Berufe", "Plätze", "Status", "Schule", "Datum"]];
+    list.forEach((b) => {
+      zeilen.push([
+        b.unternehmen, [b.vorname, b.nachname].filter(Boolean).join(" "),
+        b.email, b.telefon, b.berufe, b.plaetze,
+        (MESSE_STATUS[b.status] || {}).text || b.status,
+        m.schule || b.schule, m.datum,
+      ]);
+    });
+    const slug = slugify((m.schule || "nest-explore") + "-" + m.datum) || "nest-explore";
+    csvDownload(zeilen, `aussteller-${slug}.csv`);
+    toast("Ausstellerliste exportiert ✅");
   }
 
   // ---- Admin: Blog ----
@@ -666,6 +699,7 @@ export default function PartnerPortal() {
                   { href: "#abschnitt-infos", label: "Infos" },
                   { href: "#abschnitt-konto", label: "Konto" },
                   isAdmin && { href: "#abschnitt-admin", label: "Admin" },
+                  isAdmin && { href: "#abschnitt-explore-buchungen", label: "Explore-Buchungen" },
                 ].filter(Boolean).map((n) => (
                   <a key={n.href} href={n.href} className="pp-nav-link">{n.label}</a>
                 ))}
@@ -1200,6 +1234,91 @@ export default function PartnerPortal() {
                     );
                   })() : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Keine anstehenden Terminbuchungen.</p>}
                   </>);
+                  })()}
+
+                  {/* NEST Explore: Termine + angemeldete Unternehmen (nur Übersicht) */}
+                  <div id="abschnitt-explore-buchungen" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
+                  {(() => {
+                    const heuteISO = new Date().toISOString().slice(0, 10);
+                    const kommende = adminMesseTermine.filter((m) => m.datum >= heuteISO);
+                    const proTermin = {};
+                    messeBuchungen.forEach((b) => { if (b.termin_id) (proTermin[b.termin_id] = proTermin[b.termin_id] || []).push(b); });
+                    const gesamt = kommende.reduce((s, m) => s + (proTermin[m.id] || []).length, 0);
+                    // Buchungen ohne (oder mit gelöschtem) Termin gehen sonst unter
+                    const bekannt = new Set(adminMesseTermine.map((m) => m.id));
+                    const ohneTermin = messeBuchungen.filter((b) => !b.termin_id || !bekannt.has(b.termin_id));
+
+                    const buchungZeile = (b) => {
+                      const st = MESSE_STATUS[b.status] || { text: b.status || "offen", cls: "ampel-gelb" };
+                      const person = [b.vorname, b.nachname].filter(Boolean).join(" ");
+                      return (
+                        <div key={b.id} style={{ padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
+                          <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--navy)" }}>
+                            {b.unternehmen || "Unternehmen"}
+                            <span className={"badge ampel-badge " + st.cls} style={{ marginLeft: "8px", verticalAlign: "middle" }}>{st.text}</span>
+                          </p>
+                          <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
+                            {person || "—"}
+                            {b.email ? <> · <a href={`mailto:${b.email}`}>{b.email}</a></> : ""}
+                            {b.telefon ? <> · <a href={`tel:${b.telefon.replace(/\s/g, "")}`}>{b.telefon}</a></> : ""}
+                          </p>
+                          {b.berufe ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>Berufe: {b.berufe}</p> : null}
+                          {b.plaetze ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>Plätze: {b.plaetze}</p> : null}
+                          {b.anmerkungen ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{b.anmerkungen}"</p> : null}
+                        </div>
+                      );
+                    };
+
+                    return (<>
+                      <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 6px" }}>NEST Explore – Termine &amp; Buchungen ({gesamt})</h3>
+                      <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "0 0 14px" }}>
+                        Wer ist bei welchem Schultermin dabei? Termine und Anmeldungen werden auf{" "}
+                        <a href="https://nest-explore.de" target="_blank" rel="noopener">nest-explore.de</a> gepflegt – hier siehst du sie mit.
+                      </p>
+                      {kommende.length ? (
+                        <div style={{ marginBottom: "32px" }}>
+                          {kommende.map((m) => {
+                            const list = proTermin[m.id] || [];
+                            return (
+                              <div className="card" key={m.id} style={{ marginBottom: "16px" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px", borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
+                                  <div>
+                                    <h3 style={{ margin: 0 }}>{m.datum_text} · {m.titel}</h3>
+                                    <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>
+                                      {[m.uhrzeit, m.ort, m.klassen, m.schueler ? m.schueler + " Schüler:innen" : ""].filter(Boolean).join(" · ")}
+                                    </p>
+                                  </div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                                    <span style={{ fontWeight: 800, color: m.ausgebucht ? "#c2415a" : "var(--gold-dark)" }}>
+                                      {list.length} {list.length === 1 ? "Unternehmen" : "Unternehmen"}
+                                      {m.plaetze ? " · " + m.belegt + "/" + m.plaetze + " Plätze belegt" : ""}
+                                    </span>
+                                    {m.ausgebucht ? <span className="badge ampel-badge ampel-rot">ausgebucht</span> : null}
+                                    {list.length ? <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => ausstellerExport(m, list)}>Ausstellerliste (CSV)</button> : null}
+                                  </div>
+                                </div>
+                                {list.length ? list.map(buchungZeile) : <p style={{ color: "var(--text-soft)", margin: 0 }}>Noch kein Unternehmen für diesen Termin gebucht.</p>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Aktuell sind keine kommenden NEST-Explore-Termine eingetragen.</p>}
+
+                      {ohneTermin.length ? (
+                        <div className="card" style={{ marginBottom: "32px" }}>
+                          <div style={{ borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
+                            <h3 style={{ margin: 0 }}>Ohne Termin-Zuordnung ({ohneTermin.length})</h3>
+                            <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>Buchungen, deren Termin nicht (mehr) im Kalender steht.</p>
+                          </div>
+                          {ohneTermin.map((b) => (
+                            <div key={b.id}>
+                              {b.termin_text || b.schule ? <p style={{ margin: "8px 0 0", fontSize: "13px", fontWeight: 700, color: "var(--text-mute)" }}>{[b.termin_text, b.schule].filter(Boolean).join(" · ")}</p> : null}
+                              {buchungZeile(b)}
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </>);
                   })()}
 
                   {/* Ansprechpartner verwalten */}

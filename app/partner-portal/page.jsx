@@ -318,6 +318,20 @@ export default function PartnerPortal() {
 
   async function buchungLoeschen(id, name) { if (!bestaetigeLoeschen("Buchung von " + (name || "Gast"))) return; await supabase.from("buchungen").delete().eq("id", id); toast("Buchung gelöscht"); ladeAdmin(); }
 
+  // NEST-Explore-Buchung löschen. Der Termin führt in `belegt` mit, wie viele
+  // Plätze vergeben sind (daraus baut nest-explore.de die Ausgebucht-Anzeige) –
+  // beim Löschen wird der Platz deshalb wieder freigegeben. Abgelehnte
+  // Buchungen belegen keinen Platz, dort bleibt der Zähler unverändert.
+  async function messeBuchungLoeschen(b, m) {
+    if (!bestaetigeLoeschen("Buchung von " + (b.unternehmen || "Unternehmen"))) return;
+    const { error } = await supabase.from("messe_buchungen").delete().eq("id", b.id);
+    if (error) { toast("Fehler: " + error.message); return; }
+    const platzFrei = m && b.status !== "abgelehnt" && m.belegt > 0;
+    if (platzFrei) await supabase.from("messe_termine").update({ belegt: m.belegt - 1 }).eq("id", m.id);
+    toast("Explore-Buchung gelöscht" + (platzFrei ? " · Platz wieder frei" : ""));
+    ladeAdmin();
+  }
+
   async function speichern(e) {
     e.preventDefault(); setMsg("");
     // Nur echte Spalten an die DB schicken (keyword1..3 -> keywords-Array)
@@ -1248,23 +1262,26 @@ export default function PartnerPortal() {
                     const bekannt = new Set(adminMesseTermine.map((m) => m.id));
                     const ohneTermin = messeBuchungen.filter((b) => !b.termin_id || !bekannt.has(b.termin_id));
 
-                    const buchungZeile = (b) => {
+                    const buchungZeile = (b, m) => {
                       const st = MESSE_STATUS[b.status] || { text: b.status || "offen", cls: "ampel-gelb" };
                       const person = [b.vorname, b.nachname].filter(Boolean).join(" ");
                       return (
-                        <div key={b.id} style={{ padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
-                          <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--navy)" }}>
-                            {b.unternehmen || "Unternehmen"}
-                            <span className={"badge ampel-badge " + st.cls} style={{ marginLeft: "8px", verticalAlign: "middle" }}>{st.text}</span>
-                          </p>
-                          <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
-                            {person || "—"}
-                            {b.email ? <> · <a href={`mailto:${b.email}`}>{b.email}</a></> : ""}
-                            {b.telefon ? <> · <a href={`tel:${b.telefon.replace(/\s/g, "")}`}>{b.telefon}</a></> : ""}
-                          </p>
-                          {b.berufe ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>Berufe: {b.berufe}</p> : null}
-                          {b.plaetze ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>Plätze: {b.plaetze}</p> : null}
-                          {b.anmerkungen ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{b.anmerkungen}"</p> : null}
+                        <div key={b.id} style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
+                          <div>
+                            <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--navy)" }}>
+                              {b.unternehmen || "Unternehmen"}
+                              <span className={"badge ampel-badge " + st.cls} style={{ marginLeft: "8px", verticalAlign: "middle" }}>{st.text}</span>
+                            </p>
+                            <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
+                              {person || "—"}
+                              {b.email ? <> · <a href={`mailto:${b.email}`}>{b.email}</a></> : ""}
+                              {b.telefon ? <> · <a href={`tel:${b.telefon.replace(/\s/g, "")}`}>{b.telefon}</a></> : ""}
+                            </p>
+                            {b.berufe ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>Berufe: {b.berufe}</p> : null}
+                            {b.plaetze ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>Plätze: {b.plaetze}</p> : null}
+                            {b.anmerkungen ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{b.anmerkungen}"</p> : null}
+                          </div>
+                          <button className="btn btn-danger" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => messeBuchungLoeschen(b, m)}>Löschen</button>
                         </div>
                       );
                     };
@@ -1272,8 +1289,8 @@ export default function PartnerPortal() {
                     return (<>
                       <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 6px" }}>NEST Explore – Termine &amp; Buchungen ({gesamt})</h3>
                       <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "0 0 14px" }}>
-                        Wer ist bei welchem Schultermin dabei? Termine und Anmeldungen werden auf{" "}
-                        <a href="https://nest-explore.de" target="_blank" rel="noopener">nest-explore.de</a> gepflegt – hier siehst du sie mit.
+                        Wer ist bei welchem Schultermin dabei? Die Termine selbst werden auf{" "}
+                        <a href="https://nest-explore.de" target="_blank" rel="noopener">nest-explore.de</a> gepflegt – Buchungen kannst du hier direkt löschen, der Platz wird dann wieder frei.
                       </p>
                       {kommende.length ? (
                         <div style={{ marginBottom: "32px" }}>
@@ -1297,7 +1314,7 @@ export default function PartnerPortal() {
                                     {list.length ? <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => ausstellerExport(m, list)}>Ausstellerliste (CSV)</button> : null}
                                   </div>
                                 </div>
-                                {list.length ? list.map(buchungZeile) : <p style={{ color: "var(--text-soft)", margin: 0 }}>Noch kein Unternehmen für diesen Termin gebucht.</p>}
+                                {list.length ? list.map((b) => buchungZeile(b, m)) : <p style={{ color: "var(--text-soft)", margin: 0 }}>Noch kein Unternehmen für diesen Termin gebucht.</p>}
                               </div>
                             );
                           })}
@@ -1313,7 +1330,7 @@ export default function PartnerPortal() {
                           {ohneTermin.map((b) => (
                             <div key={b.id}>
                               {b.termin_text || b.schule ? <p style={{ margin: "8px 0 0", fontSize: "13px", fontWeight: 700, color: "var(--text-mute)" }}>{[b.termin_text, b.schule].filter(Boolean).join(" · ")}</p> : null}
-                              {buchungZeile(b)}
+                              {buchungZeile(b, null)}
                             </div>
                           ))}
                         </div>

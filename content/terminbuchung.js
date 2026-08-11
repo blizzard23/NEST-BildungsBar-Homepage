@@ -110,6 +110,12 @@ const html = `
         <p style="color:var(--text-soft);font-size:14px;">Wir sind oft weit im Voraus ausgebucht – bitte frühzeitig buchen.</p>
       </div>
 
+      <!-- Hinweis über dem Kalender: neue Standorte starten erst im Oktober -->
+      <div class="tb-notice">
+        <span class="tb-notice-ic">${IC.calendar}</span>
+        <p><strong>Solingen und Remscheid können erst ab Oktober 2026 gebucht werden.</strong> Termine im September sind an diesen beiden Standorten noch gesperrt. In Wuppertal und Essen buchst du wie gewohnt.</p>
+      </div>
+
       <div class="termin-wrap" id="termin-app">
 
         <form id="termin-form">
@@ -151,7 +157,7 @@ const html = `
                       <div class="o-body">
                         <span class="o-city">BildungsBar Solingen · im Gründerzentrum</span>
                         <span class="o-adr">Grünewalder Straße 29-31 · 42657 Solingen</span>
-                        <span class="o-soon">Buchbar ab September</span>
+                        <span class="o-soon">Buchbar ab Oktober</span>
                         <span class="o-check">✓ Ausgewählt</span>
                       </div>
                     </button>
@@ -163,7 +169,7 @@ const html = `
                       <div class="o-body">
                         <span class="o-city">BildungsBar Remscheid · in der Gründerschmiede</span>
                         <span class="o-adr">Hindenburgstraße 10a · 42853 Remscheid</span>
-                        <span class="o-soon">Buchbar ab September</span>
+                        <span class="o-soon">Buchbar ab Oktober</span>
                         <span class="o-check">✓ Ausgewählt</span>
                       </div>
                     </button>
@@ -360,7 +366,7 @@ const html = `
           <div class="contact-info-card">
             <h3>Gut zu wissen</h3>
             <div class="row"><div class="ic"></div><div><b>Wann?</b><span>Wuppertal &amp; Essen: Di &amp; Do · Solingen: Mo · Remscheid: Mi · jeweils 17–19 Uhr</span></div></div>
-            <div class="row"><div class="ic"></div><div><b>Neu!</b><span>Solingen &amp; Remscheid sind ab September buchbar</span></div></div>
+            <div class="row"><div class="ic"></div><div><b>Neu!</b><span>Solingen &amp; Remscheid sind ab Oktober buchbar</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Kosten</b><span>0 € – komplett kostenfrei</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Mitbringen</b><span>nur dich – Unterlagen sind optional</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Telefon</b><a href="tel:017641933496">0176 419 334 96</a></div></div>

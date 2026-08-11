@@ -52,8 +52,8 @@ export async function POST(req) {
   let stored = false, mailed = false;
 
   const KAPAZITAET = { Wuppertal: 4, Essen: 2, Solingen: 2, Remscheid: 2 };
-  // Neue Standorte sind bis zum Start gesperrt (buchbar erst ab September 2026)
-  const BUCHBAR_AB = { Solingen: "2026-09-01", Remscheid: "2026-09-01" };
+  // Neue Standorte sind bis zum Start gesperrt (buchbar erst ab Oktober 2026)
+  const BUCHBAR_AB = { Solingen: "2026-10-01", Remscheid: "2026-10-01" };
   const cap = KAPAZITAET[buchung.standort] || 0;
   const sb = supabaseServer();
   const admin = supabaseAdmin();

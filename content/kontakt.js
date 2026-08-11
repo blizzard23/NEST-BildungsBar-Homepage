@@ -103,7 +103,7 @@ const html = `
           <span class="tag">Standort Solingen</span>
           <h3>Solingen</h3>
           <p>Grünewalder Straße 29-31, 42657 Solingen · im Gründerzentrum</p>
-          <p>Mo · 17–19 Uhr · buchbar ab September</p>
+          <p>Mo · 17–19 Uhr · buchbar ab Oktober</p>
           <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Solingen</a>
         </div>
         <div class="loc-card reveal">
@@ -113,7 +113,7 @@ const html = `
           <span class="tag">Standort Remscheid</span>
           <h3>Remscheid</h3>
           <p>Hindenburgstraße 10a, 42853 Remscheid · in der Gründerschmiede</p>
-          <p>Mi · 17–19 Uhr · buchbar ab September</p>
+          <p>Mi · 17–19 Uhr · buchbar ab Oktober</p>
           <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Remscheid</a>
         </div>
       </div>

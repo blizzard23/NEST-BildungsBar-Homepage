@@ -1717,13 +1717,13 @@ if (!window.STELLEN || !window.STELLEN.length) {
   var MONS  = ["Jan", "Feb", "März", "Apr", "Mai", "Juni", "Juli", "Aug", "Sept", "Okt", "Nov", "Dez"];
   var MONS_LANG = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
   // Nur EIN Slot: 17:00 Uhr. Beratungstage & Kapazität pro Tag je Standort;
-  // buchbarAb sperrt neue Standorte bis zum Start (Solingen/Remscheid ab Sept. 2026).
+  // buchbarAb sperrt neue Standorte bis zum Start (Solingen/Remscheid ab Okt. 2026).
   var UHRZEIT = "17:00 Uhr";
   var STANDORTE = {
     "Wuppertal": { tage: [2, 4], kapazitaet: 4 },
     "Essen":     { tage: [2, 4], kapazitaet: 2 },
-    "Solingen":  { tage: [1],    kapazitaet: 2, buchbarAb: "2026-09-01" },
-    "Remscheid": { tage: [3],    kapazitaet: 2, buchbarAb: "2026-09-01" }
+    "Solingen":  { tage: [1],    kapazitaet: 2, buchbarAb: "2026-10-01" },
+    "Remscheid": { tage: [3],    kapazitaet: 2, buchbarAb: "2026-10-01" }
   };
   var DEFAULT_TAGE = [2, 4];
   var ANZAHL = 8; // wie viele Beratungstermine angeboten werden
@@ -1816,7 +1816,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
         return '<div class="' + cls + ' tb-cal-day--past" data-nok="1">' + inner + '</div>';
       }
       if (ortGesperrtBis(key)) {
-        inner += '<span class="dido-rest">Ab Sept.</span>';
+        inner += '<span class="dido-rest">Ab Okt.</span>';
         return '<div class="' + cls + ' tb-cal-day--blocked" data-nok="1">' + inner + '</div>';
       }
       var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;

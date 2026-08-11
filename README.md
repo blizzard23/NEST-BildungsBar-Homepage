@@ -144,9 +144,9 @@ Jeder weitere `git push` deployt automatisch neu.
 - **Terminbuchungen:** ein fester Slot **17:00 Uhr** pro Beratungstag. Beratungstage je
   Standort: **Wuppertal & Essen Di/Do, Solingen Mo, Remscheid Mi** (jeweils 17–19 Uhr).
   Kapazität pro Tag: **Wuppertal 4 / Essen 2 / Solingen 2 / Remscheid 2**. Solingen und
-  Remscheid sind bis **1. September 2026** gesperrt (`buchbarAb` in `nest-app.js`,
+  Remscheid sind bis **1. Oktober 2026** gesperrt (`buchbarAb` in `nest-app.js`,
   `BUCHBAR_AB` in `app/api/buchung/route.js`) – die Tage erscheinen im Kalender als
-  „Ab Sept.". Buchungen sind **verbindlich** – der Platz ist sofort vergeben
+  „Ab Okt.". Buchungen sind **verbindlich** – der Platz ist sofort vergeben
   (kein Bestätigen nötig), volle Tage werden als „ausgebucht" gesperrt, freie Tage zeigen die
   Restplätze. Beim Buchen wird in `buchungen` gespeichert, das NEST-Team benachrichtigt **und**
   die buchende Person bekommt sofort eine **Bestätigungsmail**. Am Vortag folgt eine

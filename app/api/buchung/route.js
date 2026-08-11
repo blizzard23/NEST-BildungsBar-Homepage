@@ -54,6 +54,9 @@ export async function POST(req) {
   const KAPAZITAET = { Wuppertal: 4, Essen: 2, Solingen: 2, Remscheid: 2 };
   // Neue Standorte sind bis zum Start gesperrt (buchbar erst ab Oktober 2026)
   const BUCHBAR_AB = { Solingen: "2026-10-01", Remscheid: "2026-10-01" };
+  // Gesperrte Zeiträume an laufenden Standorten (von/bis einschließlich).
+  // Muss zu STANDORTE.gesperrt in public/assets/nest-app.js passen.
+  const GESPERRT = { Essen: [{ von: "2026-09-01", bis: "2026-09-30" }] };
   const cap = KAPAZITAET[buchung.standort] || 0;
   const sb = supabaseServer();
   const admin = supabaseAdmin();
@@ -61,6 +64,11 @@ export async function POST(req) {
   const ab = BUCHBAR_AB[buchung.standort];
   if (ab && buchung.datum && buchung.datum < ab) {
     return NextResponse.json({ ok: false, error: "noch nicht buchbar" }, { status: 409 });
+  }
+
+  const zeitraeume = GESPERRT[buchung.standort] || [];
+  if (buchung.datum && zeitraeume.some((z) => buchung.datum >= z.von && buchung.datum <= z.bis)) {
+    return NextResponse.json({ ok: false, error: "Zeitraum gesperrt" }, { status: 409 });
   }
 
   // 0) Kapazität prüfen (max. 4 in Wuppertal, 2 in Essen pro Tag)

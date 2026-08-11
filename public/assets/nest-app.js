@@ -1718,10 +1718,12 @@ if (!window.STELLEN || !window.STELLEN.length) {
   var MONS_LANG = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
   // Nur EIN Slot: 17:00 Uhr. Beratungstage & Kapazität pro Tag je Standort;
   // buchbarAb sperrt neue Standorte bis zum Start (Solingen/Remscheid ab Okt. 2026).
+  // gesperrt sperrt einzelne Zeiträume (von/bis jeweils einschließlich) an einem
+  // laufenden Standort – z. B. Essen im September 2026.
   var UHRZEIT = "17:00 Uhr";
   var STANDORTE = {
     "Wuppertal": { tage: [2, 4], kapazitaet: 4 },
-    "Essen":     { tage: [2, 4], kapazitaet: 2 },
+    "Essen":     { tage: [2, 4], kapazitaet: 2, gesperrt: [{ von: "2026-09-01", bis: "2026-09-30" }] },
     "Solingen":  { tage: [1],    kapazitaet: 2, buchbarAb: "2026-10-01" },
     "Remscheid": { tage: [3],    kapazitaet: 2, buchbarAb: "2026-10-01" }
   };
@@ -1737,6 +1739,16 @@ if (!window.STELLEN || !window.STELLEN.length) {
   function ortGesperrtBis(key) {
     var i = ortInfo();
     return !!(i && i.buchbarAb && key < i.buchbarAb);
+  }
+  // Einzelner gesperrter Zeitraum an einem laufenden Standort
+  function ortZeitraumGesperrt(key) {
+    var i = ortInfo();
+    if (!i || !i.gesperrt) return false;
+    for (var k = 0; k < i.gesperrt.length; k++) {
+      var z = i.gesperrt[k];
+      if (key >= z.von && key <= z.bis) return true;
+    }
+    return false;
   }
 
   /* ---------- nächste Beratungstermine (Wochentage je Standort) erzeugen ---------- */
@@ -1819,6 +1831,10 @@ if (!window.STELLEN || !window.STELLEN.length) {
         inner += '<span class="dido-rest">Ab Okt.</span>';
         return '<div class="' + cls + ' tb-cal-day--blocked" data-nok="1">' + inner + '</div>';
       }
+      if (ortZeitraumGesperrt(key)) {
+        inner += '<span class="dido-rest">Gesperrt</span>';
+        return '<div class="' + cls + ' tb-cal-day--blocked" data-nok="1">' + inner + '</div>';
+      }
       var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
       var voll = kapazitaet > 0 && frei <= 0;
       if (voll) {
@@ -1881,7 +1897,8 @@ if (!window.STELLEN || !window.STELLEN.length) {
     dateList.innerHTML = "";
     TERMINE.forEach(function (d) {
       var key = iso(d);
-      var gesperrt = ortGesperrtBis(key);
+      var nochNicht = ortGesperrtBis(key);
+      var gesperrt = nochNicht || ortZeitraumGesperrt(key);
       var frei = kapazitaet > 0 ? Math.max(0, kapazitaet - (belegung[key] || 0)) : -1;
       var voll = (kapazitaet > 0 && frei <= 0) || gesperrt;
       var b = document.createElement("button");
@@ -1889,7 +1906,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
       b.className = "tb-date" + (voll ? " tb-date--full" : "") + (state.datum === key ? " active" : "");
       b.disabled = voll;
       var restHtml = gesperrt
-        ? '<div class="d-full">ab Sept.</div>'
+        ? '<div class="d-full">' + (nochNicht ? "ab Okt." : "gesperrt") + '</div>'
         : voll
         ? '<div class="d-full">ausgebucht</div>'
         : (frei >= 0 ? '<div class="d-rest' + (frei === 1 ? ' d-rest--knapp' : '') + '">' + (frei === 1 ? "1 Platz frei" : frei + " Plätze frei") + '</div>' : '');

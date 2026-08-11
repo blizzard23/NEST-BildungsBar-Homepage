@@ -142,8 +142,32 @@
 .tb-summary .btn { width: 100%; justify-content: center; margin-top: 20px; font-size: 15px; padding: 14px; }
 .tb-summary .btn[disabled] { opacity: .4; cursor: not-allowed; }
 
+/* ── Buchen am Formularende ──────────────────────────────── */
+/* Zweiter „Jetzt verbindlich buchen"-Button unter den Kontaktdaten. Er wird
+   per [hidden] eingeblendet, sobald alles ausgewählt ist (siehe nest-app.js).
+   Nur im Desktop-Layout nötig – unter 860px steht die Zusammenfassung mit
+   ihrem Button ohnehin am Ende der Seite. */
+.tb-bottom-cta { display: none; }
+@media (min-width: 861px) {
+  .tb-bottom-cta:not([hidden]) {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    margin-top: 24px; padding: 18px 22px;
+    background: var(--gold-soft); border: 1.5px solid var(--gold); border-radius: 16px;
+  }
+}
+.tb-bottom-cta-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tb-bottom-cta-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gold-dark); }
+.tb-bottom-cta-recap { font-size: 15px; font-weight: 700; color: var(--navy); }
+.tb-bottom-cta .btn { flex-shrink: 0; padding: 14px 26px; font-size: 15px; }
+.tb-bottom-cta .btn[disabled] { opacity: .4; cursor: not-allowed; }
+.tb-bottom-cta-err { width: 100%; margin: 0; color: #c2415a; background: #fdeaed; border-radius: 8px; padding: 8px 12px; font-size: 13px; }
+
 /* ── Layout ─────────────────────────────────────────────── */
 .tb-grid { display: grid; grid-template-columns: 1fr 310px; gap: 32px; align-items: start; }
+/* Die Spalte muss die volle Zeilenhöhe bekommen, sonst hat position:sticky
+   in .tb-summary keinen Spielraum und die Karte scrollt oben weg. */
+.tb-grid > aside { align-self: stretch; }
 @media (max-width: 860px) {
   .tb-grid { grid-template-columns: 1fr; }
   .tb-summary { position: static; }

@@ -239,6 +239,18 @@ const html = `
                     <label class="tb-check"><input type="checkbox" id="tb-privacy" required> Ich bin einverstanden, dass meine Angaben zur Bearbeitung meiner Terminanfrage verarbeitet werden (Datenschutz).</label>
                   </div>
                 </div>
+
+                <!-- Buchen direkt am Formularende: erscheint, sobald Standort,
+                     Tag, Uhrzeit und Kontaktdaten stehen. Spart auf dem Desktop
+                     den Weg zurück nach oben zur Zusammenfassung. -->
+                <div class="tb-bottom-cta" id="tb-bottom-cta" hidden>
+                  <div class="tb-bottom-cta-info">
+                    <span class="tb-bottom-cta-label">Alles ausgewählt</span>
+                    <span class="tb-bottom-cta-recap" id="tb-bottom-recap"></span>
+                  </div>
+                  <button type="submit" class="btn btn-primary" id="tb-submit-bottom">Jetzt verbindlich buchen</button>
+                  <p class="tb-bottom-cta-err" id="tb-fehler-bottom" style="display:none;"></p>
+                </div>
               </div>
 
               <!-- Zusammenfassung -->

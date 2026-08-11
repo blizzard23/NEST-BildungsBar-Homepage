@@ -1980,6 +1980,29 @@ if (!window.STELLEN || !window.STELLEN.length) {
   var stepDate = document.getElementById("step-date");
   var stepTime = document.getElementById("step-time");
 
+  // Buchen-Button gibt es zweimal: in der Zusammenfassung (Desktop: rechts,
+  // mobil: am Seitenende) und direkt unter den Kontaktdaten. Beide werden
+  // synchron gehalten, damit man nach der Auswahl nicht hochscrollen muss.
+  var btnUnten = document.getElementById("tb-submit-bottom");
+  var ctaUnten = document.getElementById("tb-bottom-cta");
+  var recapUnten = document.getElementById("tb-bottom-recap");
+
+  function buchenButtons(gesperrt, text) {
+    [btn, btnUnten].forEach(function (b) {
+      if (!b) return;
+      b.disabled = gesperrt;
+      b.textContent = text;
+    });
+  }
+  function zeigeFehler(text) {
+    ["tb-fehler", "tb-fehler-bottom"].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = text;
+      el.style.display = text ? "block" : "none";
+    });
+  }
+
   function setVal(el, txt) {
     if (!el) return;
     if (txt) { el.textContent = txt; el.classList.remove("empty"); }
@@ -2001,6 +2024,14 @@ if (!window.STELLEN || !window.STELLEN.length) {
       fName && fName.value.trim() && fMail && mailOk(fMail.value.trim()) &&
       fPriv && fPriv.checked;
     if (btn) btn.disabled = !ready;
+    if (btnUnten) btnUnten.disabled = !ready;
+    // Button unter dem Formular erst zeigen, wenn wirklich alles steht
+    if (ctaUnten) ctaUnten.hidden = !ready;
+    if (recapUnten) {
+      recapUnten.textContent = ready
+        ? [state.ort, state.datumText, state.zeit].filter(Boolean).join(" · ")
+        : "";
+    }
     return ready;
   }
 
@@ -2071,16 +2102,15 @@ if (!window.STELLEN || !window.STELLEN.length) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!update()) return;
-      var fehler = document.getElementById("tb-fehler");
-      if (fehler) fehler.style.display = "none";
-      if (btn) { btn.disabled = true; btn.textContent = "Wird gebucht …"; }
+      zeigeFehler("");
+      buchenButtons(true, "Wird gebucht …");
 
       sendBuchung(baueBuchung()).then(function (res) {
-        if (btn) { btn.disabled = false; btn.textContent = "Jetzt verbindlich buchen"; }
+        buchenButtons(false, "Jetzt verbindlich buchen");
 
         // Tag ausgebucht (Kapazität erreicht) -> Formular bleibt, Hinweis + neu laden
         if (res.status === 409) {
-          if (fehler) { fehler.textContent = "Dieser Termin ist leider nicht verfügbar. Bitte wähle einen anderen Tag."; fehler.style.display = "block"; }
+          zeigeFehler("Dieser Termin ist leider nicht verfügbar. Bitte wähle einen anderen Tag.");
           ladeVerfuegbarkeit(state.ort, function () { renderDates(); update(); });
           return;
         }

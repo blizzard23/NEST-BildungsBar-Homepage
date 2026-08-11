@@ -31,6 +31,27 @@ function slugify(s) {
     .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
+// "2026-10-01" -> "Do, 1. Okt. 2026" (kurz, damit die Zeile in der Karte
+// einzeilig bleibt und alle Karten gleich hoch sind)
+const VA_MONATE = ["Jan.", "Feb.", "März", "Apr.", "Mai", "Juni", "Juli", "Aug.", "Sept.", "Okt.", "Nov.", "Dez."];
+const VA_WOCHENTAGE = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+function kartenDatum(iso) {
+  const [j, m, t] = String(iso || "").split("-").map(Number);
+  if (!j || !m || !t) return iso || "";
+  const d = new Date(j, m - 1, t);
+  return `${VA_WOCHENTAGE[d.getDay()]}, ${t}. ${VA_MONATE[m - 1]} ${j}`;
+}
+// Teaser für die Übersicht: an der Wortgrenze gekürzt, damit alle Karten
+// gleich viel Text zeigen. Der volle Text steht auf der Veranstaltungsseite.
+const TEASER_MAX = 145;
+function teaser(text) {
+  const t = String(text || "").replace(/\s+/g, " ").trim();
+  if (t.length <= TEASER_MAX) return t;
+  const kurz = t.slice(0, TEASER_MAX);
+  const schnitt = kurz.lastIndexOf(" ");
+  return (schnitt > 60 ? kurz.slice(0, schnitt) : kurz).replace(/[",;:.\-–]+$/, "") + " …";
+}
+
 // Auslastung: Kapazität pro Tag + nächste Di/Do-Termine
 const KAPAZITAET = { Wuppertal: 4, Essen: 2, Solingen: 2, Remscheid: 2 };
 // Beratungstage je Standort (0 = So … 6 = Sa)
@@ -110,7 +131,6 @@ export default function PartnerPortal() {
   const [poMsg, setPoMsg] = useState("");
   const [poVorschau, setPoVorschau] = useState(false);   // Blog: Vorschau statt Editor anzeigen
   const [uploading, setUploading] = useState(false);
-  const [infoFilter, setInfoFilter] = useState("Alle");
   const [logoUploading, setLogoUploading] = useState(false);   // Logo-Upload bei der Stelle
   const [toastMsg, setToastMsg] = useState("");                 // kurze Erfolg-/Hinweis-Meldung
   const [resetMsg, setResetMsg] = useState("");                 // Passwort-Reset-Feedback
@@ -135,34 +155,27 @@ export default function PartnerPortal() {
   // Sicherheitsabfrage vor dem Löschen
   const bestaetigeLoeschen = (was) => window.confirm(`„${was}" wirklich löschen? Das kann nicht rückgängig gemacht werden.`);
 
-  const KAT_CFG = {
-    "Kooperation": {
-      cls: "info-card--koop",
-      icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
+  // Die drei Kernbereiche im Partner-Portal. Der Button öffnet die jeweilige
+  // Broschüre als eigenständige HTML-Seite (liegt unter /public/broschueren).
+  const BEREICHE = [
+    {
+      titel: "Kooperation",
+      bild: "/assets/img/broschueren/kooperation.jpg",
+      text: "Hier findet ihr alle Informationen zu unserer Zusammenarbeit und eurer Kooperation mit NEST.",
+      link: "/broschueren/kooperation.html",
     },
-    "NESTplay": {
-      cls: "info-card--play",
-      icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="10" r="1"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>,
+    {
+      titel: "NESTplay",
+      bild: "/assets/img/broschueren/nestplay.jpg",
+      text: "Hier findet ihr alle Informationen zu unserem interaktiven Quiz für Schulen und eure Möglichkeiten bei NESTplay.",
+      link: "/broschueren/nestplay.html",
     },
-    "NEST Explore": {
-      cls: "info-card--messe",
-      icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+    {
+      titel: "NEST Explore",
+      bild: "/assets/img/broschueren/nest-explore.jpg",
+      text: "Hier findet ihr alle Informationen zu unserem Schulformat NEST Explore und wie ihr euch daran beteiligen könnt.",
+      link: "/broschueren/nest-explore.html",
     },
-  };
-
-  const INFO_CARDS = [
-    { kat: "Kooperation", titel: "Wie die Kooperation funktioniert", text: "Als NEST-Partner erhältst du Zugang zu allen Formaten: Workshops an Schulen, Auftritt bei NEST Explore, NESTplay-Einsatz und regelmäßige Netzwerktreffen – alles aus einer Hand." },
-    { kat: "Kooperation", titel: "Onboarding & Offboarding", text: "Wir begleiten dich vom ersten Gespräch bis zum laufenden Betrieb. Onboarding-Termin, Materialien und persönlicher Ansprechpartner inklusive." },
-    { kat: "Kooperation", titel: "Ausbildungsdialog", text: "Einmal pro Saison treffen sich alle Partner zum Ausbildungsdialog – für Austausch, Feedback und gemeinsame Weiterentwicklung der NEST-Formate." },
-    { kat: "Kooperation", titel: "Stellenpool & Berufswelt", text: "Veröffentliche deine Ausbildungsstellen direkt auf der NEST-Berufswelt-Seite. Schüler:innen können Stellen speichern und mit einem Link teilen." },
-    { kat: "NESTplay", titel: "NESTplay für Unternehmen", text: "Präsentiere deinen Betrieb im Unterricht als interaktives Live-Quiz. Schüler:innen spielen in Echtzeit und merken sich deinen Betrieb nachhaltig." },
-    { kat: "NESTplay", titel: "Quiz-Inhalte erstellen", text: "Du lieferst 5 Fragen zu deinem Unternehmen und Ausbildungsberuf – unser Team kümmert sich um die technische Umsetzung und den Einsatz in der Klasse." },
-    { kat: "NESTplay", titel: "Ablauf eines NESTplay-Workshops", text: "45–90 Minuten direkt in der Schule. Unternehmensvorstellung, Live-Quiz-Runde, Ergebnisdiskussion und Kontaktmöglichkeit – alles in einem Format." },
-    { kat: "NEST Explore", titel: "NEST Explore", text: "Das zentrale Format für direkte Begegnungen: Schüler:innen, Schulklassen und Jugendliche treffen regionale Ausbildungsunternehmen an einem Ort." },
-    { kat: "NEST Explore", titel: "Aussteller-Infos", text: "Als Aussteller erhältst du einen eigenen Stand, Besucherführung durch Schulklassen und die Möglichkeit, interaktive Elemente einzusetzen." },
-    { kat: "NEST Explore", titel: "Termin & Anmeldung", text: "NEST Explore findet einmal jährlich statt. Schulen buchen Zeitfenster vorab – du kannst deinen Auftritt gezielt auf Klassen und Schulformen abstimmen." },
-    { kat: "Kooperation", titel: "Netzwerktreffen", text: "Regelmäßige Treffen mit anderen NEST-Partnern: Austausch über Ausbildungstrends, gemeinsame Aktionen und direkte Kommunikation mit dem NEST-Team." },
-    { kat: "Kooperation", titel: "Gemeinwohl & Verantwortung", text: "Dein Engagement als NEST-Partner stärkt die Region: Du investierst in den Ausbildungsnachwuchs und trägst zur Jugendberufsorientierung vor Ort bei." },
   ];
 
   useEffect(() => {
@@ -1117,44 +1130,53 @@ export default function PartnerPortal() {
               {/* Kommende Veranstaltungen (für alle) */}
               <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Kommende Veranstaltungen</h3>
               {events.length ? (
-                <div className="card-grid cols-2">
+                <div className="va-grid">
                   {events.map((v) => (
-                    <div className="card" key={v.id}>
-                      <span className="num-label">{v.datum}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
-                      <h3>{v.titel}</h3>
-                      <p style={{ color: "var(--text-soft)" }}>{v.ort}{v.adresse ? " · " + v.adresse : ""}</p>
-                      {v.beschreibung ? <p>{v.beschreibung}</p> : null}
+                    <div className="va-card" key={v.id}>
+                      {v.bild_url ? (
+                        <img className="va-card-img" src={v.bild_url} alt={v.titel} loading="lazy" />
+                      ) : (
+                        <div className="va-card-img va-card-img--leer" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        </div>
+                      )}
+                      <div className="va-card-body">
+                        <span className="va-card-meta">{kartenDatum(v.datum)}{v.uhrzeit ? " · " + v.uhrzeit : ""}</span>
+                        <h4 className="va-card-titel">{v.titel}</h4>
+                        <p className="va-card-teaser">{teaser(v.beschreibung)}</p>
+                        <a
+                          className="btn btn-primary va-card-btn"
+                          href={"/veranstaltungen/" + (v.slug || v.id)}
+                          target="_blank"
+                          rel="noopener"
+                        >Details &amp; Anmeldung ↗</a>
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Veranstaltungen eingetragen.</p>}
 
               <div id="abschnitt-infos" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* Filterbarer Info-Bereich */}
+              {/* Die drei Kernbereiche – jeweils mit Broschüre als HTML-Seite */}
               <div style={{ marginTop: "36px", marginBottom: "12px" }}>
                 <span className="section-label">Infos für Partner</span>
                 <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 16px" }}>Alles auf einen Blick</h3>
-                <div className="info-filter-row">
-                  {["Alle", "Kooperation", "NESTplay", "NEST Explore"].map((f) => (
-                    <button key={f} className={"info-filter-btn" + (infoFilter === f ? " active" : "")} onClick={() => setInfoFilter(f)}>{f}</button>
-                  ))}
-                </div>
-                <div className="info-card-grid">
-                  {INFO_CARDS.filter((c) => infoFilter === "Alle" || c.kat === infoFilter).map((c) => {
-                    const cfg = KAT_CFG[c.kat] || {};
-                    return (
-                      <div className={"info-card " + (cfg.cls || "")} key={c.titel}>
-                        <div className="info-card-hd">
-                          <div className="info-card-hd-icon">{cfg.icon}</div>
-                          <span className="info-card-hd-label">{c.kat}</span>
-                        </div>
-                        <div className="info-card-body-wrap">
-                          <div className="info-card-title">{c.titel}</div>
-                          <p className="info-card-text">{c.text}</p>
-                        </div>
+                <div className="bereich-grid">
+                  {BEREICHE.map((b) => (
+                    <div className="bereich-card" key={b.titel}>
+                      <img className="bereich-card-img" src={b.bild} alt={b.titel} loading="lazy" />
+                      <div className="bereich-card-body">
+                        <h4 className="bereich-card-titel">{b.titel}</h4>
+                        <p className="bereich-card-text">{b.text}</p>
+                        <a
+                          className="btn btn-primary bereich-card-btn"
+                          href={b.link}
+                          target="_blank"
+                          rel="noopener"
+                        >Mehr erfahren</a>
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
               </div>
 

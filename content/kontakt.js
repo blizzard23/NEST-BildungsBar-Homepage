@@ -60,7 +60,7 @@ const html = `
             <div class="row"><div class="ic" data-icon="briefcase" data-icon-size="18"></div><div><b>E-Mail</b><a href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a></div></div>
             <div class="row"><div class="ic" data-icon="people" data-icon-size="18"></div><div><b>Telefon</b><a href="tel:017641933496">0176 419 334 96</a></div></div>
             <div class="row"><div class="ic" data-icon="chat" data-icon-size="18"></div><div><b>WhatsApp</b><a href="https://wa.me/4915753934038">01575 393 4038</a></div></div>
-            <div class="row"><div class="ic" data-icon="clock" data-icon-size="18"></div><div><b>Öffnungszeiten</b><span>Wuppertal &amp; Essen: Di &amp; Do · Solingen: Mo · Remscheid: Mi · 17–19 Uhr</span></div></div>
+            <div class="row"><div class="ic" data-icon="clock" data-icon-size="18"></div><div><b>Öffnungszeiten</b><span>Wuppertal: Di &amp; Do · Essen: ab Okt. Mo · Solingen: Mo · Remscheid: Mi · 17–19 Uhr</span></div></div>
             <div class="row"><div class="ic" data-icon="pin" data-icon-size="18"></div><div><b>Social Media</b><span>Instagram · Facebook · LinkedIn</span></div></div>
           </div>
         </div>
@@ -93,7 +93,7 @@ const html = `
           <span class="tag">Standort Essen</span>
           <h3>Essen</h3>
           <p>Kopstadtplatz 12, 45127 Essen</p>
-          <p>Di &amp; Do · 17–19 Uhr</p>
+          <p>Ab Oktober 2026: Mo · 17–19 Uhr</p>
           <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Essen</a>
         </div>
         <div class="loc-card reveal">

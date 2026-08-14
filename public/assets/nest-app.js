@@ -1720,10 +1720,14 @@ if (!window.STELLEN || !window.STELLEN.length) {
   // buchbarAb sperrt neue Standorte bis zum Start (Solingen/Remscheid ab Okt. 2026).
   // gesperrt sperrt einzelne Zeiträume (von/bis jeweils einschließlich) an einem
   // laufenden Standort – z. B. Essen im September 2026.
+  // tageAb verlegt die Beratungstage ab einem Stichtag (Essen ab Okt. 2026 auf
+  // Montag) – Einträge aufsteigend nach "ab" sortiert halten.
   var UHRZEIT = "17:00 Uhr";
   var STANDORTE = {
     "Wuppertal": { tage: [2, 4], kapazitaet: 4 },
-    "Essen":     { tage: [2, 4], kapazitaet: 2, gesperrt: [{ von: "2026-09-01", bis: "2026-09-30" }] },
+    "Essen":     { tage: [2, 4], kapazitaet: 2,
+                   gesperrt: [{ von: "2026-09-01", bis: "2026-09-30" }],
+                   tageAb: [{ ab: "2026-10-01", tage: [1] }] },
     "Solingen":  { tage: [1],    kapazitaet: 2, buchbarAb: "2026-10-01" },
     "Remscheid": { tage: [3],    kapazitaet: 2, buchbarAb: "2026-10-01" }
   };
@@ -1735,7 +1739,45 @@ if (!window.STELLEN || !window.STELLEN.length) {
   var kapazitaet = 0;  // max. Buchungen pro Tag am gewählten Standort
 
   function ortInfo() { return STANDORTE[state.ort] || null; }
-  function ortTage() { var i = ortInfo(); return (i && i.tage) || DEFAULT_TAGE; }
+  // Beratungstage, die am Datum key ("YYYY-MM-DD") gelten. tageAb verlegt sie
+  // ab dem Stichtag; ohne key gelten die Basistage.
+  function ortTage(key) {
+    var i = ortInfo();
+    var tage = (i && i.tage) || DEFAULT_TAGE;
+    if (key && i && i.tageAb) {
+      for (var k = 0; k < i.tageAb.length; k++) {
+        if (key >= i.tageAb[k].ab) tage = i.tageAb[k].tage;
+      }
+    }
+    return tage;
+  }
+  // Alle Beratungstage, die im angezeigten Monat vorkommen – nötig für die
+  // Spalten des Kalenders, wenn der Stichtag mitten in den Monat fällt.
+  function monatsTage(jahr, monat, anzTage) {
+    var gesehen = {}, out = [];
+    for (var t = 1; t <= anzTage; t++) {
+      var d = new Date(jahr, monat, t);
+      if (ortTage(iso(d)).indexOf(d.getDay()) > -1) gesehen[d.getDay()] = true;
+    }
+    for (var wd = 0; wd < 7; wd++) if (gesehen[wd]) out.push(wd);
+    return out.length ? out : ortTage(iso(new Date(jahr, monat, 1)));
+  }
+  // Kurzhinweis wie „Di & Do" bzw. „Di & Do · ab Okt. Mo", solange ein
+  // Tageswechsel noch bevorsteht.
+  function tageHinweis() {
+    var i = ortInfo();
+    var heuteKey = iso(new Date());
+    var txt = ortTage(heuteKey).map(function (t) { return WDAYS[t]; }).join(" & ");
+    if (i && i.tageAb) {
+      i.tageAb.forEach(function (w) {
+        if (w.ab > heuteKey) {
+          txt += " · ab " + MONS[parseInt(w.ab.slice(5, 7), 10) - 1] + ". " +
+                 w.tage.map(function (t) { return WDAYS[t]; }).join(" & ");
+        }
+      });
+    }
+    return txt;
+  }
   function ortGesperrtBis(key) {
     var i = ortInfo();
     return !!(i && i.buchbarAb && key < i.buchbarAb);
@@ -1752,15 +1794,13 @@ if (!window.STELLEN || !window.STELLEN.length) {
   }
 
   /* ---------- nächste Beratungstermine (Wochentage je Standort) erzeugen ---------- */
-  function naechsteTermine(n, tage) {
-    tage = tage || DEFAULT_TAGE;
+  function naechsteTermine(n) {
     var out = [];
     var d = new Date(); d.setHours(0, 0, 0, 0);
     d.setDate(d.getDate() + 1); // ab morgen
     var guard = 0;
-    while (out.length < n && guard < 120) {
-      var wd = d.getDay();
-      if (tage.indexOf(wd) > -1) out.push(new Date(d));
+    while (out.length < n && guard < 200) {
+      if (ortTage(iso(d)).indexOf(d.getDay()) > -1) out.push(new Date(d));
       d.setDate(d.getDate() + 1);
       guard++;
     }
@@ -1772,7 +1812,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
   function langText(d) {
     return WDAYS[d.getDay()] + ", " + d.getDate() + ". " + MONS_LANG[d.getMonth()] + " " + d.getFullYear();
   }
-  var TERMINE = naechsteTermine(ANZAHL, DEFAULT_TAGE);
+  var TERMINE = naechsteTermine(ANZAHL);
 
   /* ---------- Monatskalender ---------- */
   var calWochen = document.getElementById("tb-cal-weeks");
@@ -1788,7 +1828,10 @@ if (!window.STELLEN || !window.STELLEN.length) {
     if (!calWochen) return;
     if (calLabel) calLabel.textContent = MONATE[calMonat] + " " + calJahr;
 
-    var tage = ortTage(); // Beratungstage des gewählten Standorts (Mo/Di/Mi/Do)
+    // Beratungstage des angezeigten Monats (Mo/Di/Mi/Do). Fällt ein Stichtag in
+    // den Monat, enthält die Liste die Tage vor UND nach dem Wechsel.
+    var anzTage = new Date(calJahr, calMonat + 1, 0).getDate();
+    var tage = monatsTage(calJahr, calMonat, anzTage);
     var cols = 'repeat(' + tage.length + ',1fr)';
 
     // Spaltenkopf (Wochentage) passend zum Standort
@@ -1799,7 +1842,6 @@ if (!window.STELLEN || !window.STELLEN.length) {
     }
 
     var heute = new Date(); heute.setHours(0,0,0,0);
-    var anzTage = new Date(calJahr, calMonat + 1, 0).getDate();
 
     // Beratungstage des Monats je Kalenderwoche gruppieren (Schlüssel = Montag)
     var wMap = {}, wOrder = [];
@@ -1811,7 +1853,8 @@ if (!window.STELLEN || !window.STELLEN.length) {
     for (var t = 1; t <= anzTage; t++) {
       var d = new Date(calJahr, calMonat, t);
       var wt = d.getDay();
-      if (tage.indexOf(wt) > -1) {
+      // pro Datum prüfen – sonst tauchen nach einem Stichtag noch die alten Tage auf
+      if (ortTage(iso(d)).indexOf(wt) > -1) {
         var k = wKey(d);
         if (!wMap[k]) { wMap[k] = { days: {}, sort: d.getTime() }; wOrder.push(k); }
         wMap[k].days[wt] = new Date(d);
@@ -1964,9 +2007,9 @@ if (!window.STELLEN || !window.STELLEN.length) {
       state.ort = btn.getAttribute("data-ort");
       state.adr = btn.getAttribute("data-adr") || "";
       state.datum = null; state.datumText = "";
-      TERMINE = naechsteTermine(ANZAHL, ortTage());
+      TERMINE = naechsteTermine(ANZAHL);
       var dayHint = document.getElementById("tb-day-hint");
-      if (dayHint) dayHint.textContent = ortTage().map(function (t) { return WDAYS[t]; }).join(" & ");
+      if (dayHint) dayHint.textContent = tageHinweis();
       renderZeit();
       ladeVerfuegbarkeit(state.ort, function () { renderDates(); renderKalender(); update(); });
       renderKalender();

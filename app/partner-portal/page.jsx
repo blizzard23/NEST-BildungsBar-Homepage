@@ -56,13 +56,21 @@ function teaser(text) {
 const KAPAZITAET = { Wuppertal: 4, Essen: 2, Solingen: 2, Remscheid: 2 };
 // Beratungstage je Standort (0 = So … 6 = Sa)
 const TERMIN_TAGE = { Wuppertal: [2, 4], Essen: [2, 4], Solingen: [1], Remscheid: [3] };
+// Beratungstage, die ab einem Stichtag wechseln (Essen ab Okt. 2026 auf Montag).
+// Muss zu STANDORTE.tageAb in public/assets/nest-app.js passen.
+const TERMIN_TAGE_AB = { Essen: [{ ab: "2026-10-01", tage: [1] }] };
 const WTAGE = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
-function naechsteTermine(n, tage = [2, 4]) {
+function termintageAm(ort, iso) {
+  let tage = TERMIN_TAGE[ort] || [2, 4];
+  for (const w of TERMIN_TAGE_AB[ort] || []) if (iso >= w.ab) tage = w.tage;
+  return tage;
+}
+function naechsteTermine(n, ort) {
   const out = [];
   const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + 1);
   let guard = 0;
-  while (out.length < n && guard < 120) {
-    if (tage.includes(d.getDay())) out.push(new Date(d));
+  while (out.length < n && guard < 200) {
+    if (termintageAm(ort, isoDatum(d)).includes(d.getDay())) out.push(new Date(d));
     d.setDate(d.getDate() + 1); guard++;
   }
   return out;
@@ -1198,7 +1206,7 @@ export default function PartnerPortal() {
                           <div className="card" key={ort}>
                             <span className="badge">{ort} · max. {KAPAZITAET[ort]}/Tag</span>
                             <div style={{ marginTop: "12px" }}>
-                              {naechsteTermine(8, TERMIN_TAGE[ort]).map((d) => {
+                              {naechsteTermine(8, ort).map((d) => {
                                 const iso = isoDatum(d);
                                 const n = zaehl[ort + "|" + iso] || 0;
                                 const cap = KAPAZITAET[ort];

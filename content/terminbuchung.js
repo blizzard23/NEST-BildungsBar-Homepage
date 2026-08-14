@@ -13,7 +13,7 @@ const html = `
       <div class="hero-text">
         <span class="hero-badge">Termin buchen</span>
         <h1>Sichere dir deinen<br /><em>Beratungstermin</em></h1>
-        <p class="lead">Kostenfrei, locker und auf Augenhöhe – wähl einfach Standort, Tag und Uhrzeit. Wir beraten dich in Wuppertal und Essen (Di &amp; Do), in Solingen (Mo) und in Remscheid (Mi) – jeweils von 17 bis 19 Uhr.</p>
+        <p class="lead">Kostenfrei, locker und auf Augenhöhe – wähl einfach Standort, Tag und Uhrzeit. Wir beraten dich in Wuppertal (Di &amp; Do), in Essen (ab Oktober Mo), in Solingen (Mo) und in Remscheid (Mi) – jeweils von 17 bis 19 Uhr.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#buchen">Jetzt Termin wählen →</a>
           <a class="btn btn-ghost" href="#anfrage">Lieber anfragen</a>
@@ -113,7 +113,7 @@ const html = `
       <!-- Hinweis über dem Kalender: neue Standorte starten erst im Oktober -->
       <div class="tb-notice">
         <span class="tb-notice-ic">${IC.calendar}</span>
-        <p><strong>Solingen und Remscheid können erst ab Oktober 2026 gebucht werden.</strong> Termine im September sind an diesen beiden Standorten noch gesperrt. In Wuppertal und Essen buchst du wie gewohnt.</p>
+        <p><strong>Solingen und Remscheid können erst ab Oktober 2026 gebucht werden.</strong> Termine im September sind an diesen beiden Standorten noch gesperrt. <strong>Essen wechselt ab Oktober 2026 auf den Montag</strong> – im September finden dort keine Beratungen statt. In Wuppertal buchst du wie gewohnt.</p>
       </div>
 
       <div class="termin-wrap" id="termin-app">
@@ -141,7 +141,7 @@ const html = `
                     <button type="button" class="tb-ort" data-ort="Essen" data-adr="Kopstadtplatz 12, 45127 Essen">
                       <div class="o-header">
                         <span class="o-header-label">Essen</span>
-                        <span class="o-header-badge">Di &amp; Do · 17–19 Uhr</span>
+                        <span class="o-header-badge">ab Okt. Mo · 17–19 Uhr</span>
                       </div>
                       <div class="o-body">
                         <span class="o-city">BildungsBar Essen</span>
@@ -365,7 +365,7 @@ const html = `
         <div class="reveal">
           <div class="contact-info-card">
             <h3>Gut zu wissen</h3>
-            <div class="row"><div class="ic"></div><div><b>Wann?</b><span>Wuppertal &amp; Essen: Di &amp; Do · Solingen: Mo · Remscheid: Mi · jeweils 17–19 Uhr</span></div></div>
+            <div class="row"><div class="ic"></div><div><b>Wann?</b><span>Wuppertal: Di &amp; Do · Essen: ab Okt. Mo · Solingen: Mo · Remscheid: Mi · jeweils 17–19 Uhr</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Neu!</b><span>Solingen &amp; Remscheid sind ab Oktober buchbar</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Kosten</b><span>0 € – komplett kostenfrei</span></div></div>
             <div class="row"><div class="ic"></div><div><b>Mitbringen</b><span>nur dich – Unterlagen sind optional</span></div></div>

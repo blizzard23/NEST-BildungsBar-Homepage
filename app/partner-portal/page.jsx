@@ -55,6 +55,7 @@ function teaser(text) {
 // Auslastung: Kapazität pro Tag + nächste Di/Do-Termine
 const KAPAZITAET = { Wuppertal: 4, Essen: 2, Solingen: 2, Remscheid: 2 };
 // Beratungstage je Standort (0 = So … 6 = Sa)
+const STANDORT_ORTE = ["Wuppertal", "Solingen", "Remscheid", "Essen"];
 const TERMIN_TAGE = { Wuppertal: [2, 4], Essen: [2, 4], Solingen: [1], Remscheid: [3] };
 // Beratungstage, die ab einem Stichtag wechseln (Essen ab Okt. 2026 auf Montag).
 // Muss zu STANDORTE.tageAb in public/assets/nest-app.js passen.
@@ -77,6 +78,36 @@ function naechsteTermine(n, ort) {
 }
 function isoDatum(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
 function kurzDatum(d) { return WTAGE[d.getDay()] + ", " + ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "."; }
+
+/* Aufklappbarer Abschnitt im Admin-Bereich: Die Kopfzeile bleibt immer sichtbar,
+   der Inhalt erscheint erst auf Klick. So bleibt die Seite kurz und man sieht auf
+   einen Blick, was sich hinter jedem Block verbirgt.
+   Ohne `offen`/`onToggle` merkt sich die Komponente den Zustand selbst; mit beidem
+   steuert die Seite ihn (z. B. damit sich ein Formular beim Bearbeiten öffnet). */
+function Aufklapper({ titel, unter, meta, metaFarbe, badge, standardOffen = false, offen, onToggle, children }) {
+  const [intern, setIntern] = useState(standardOffen);
+  const gesteuert = typeof offen === "boolean";
+  const auf = gesteuert ? offen : intern;
+  function umschalten() {
+    if (gesteuert) { if (onToggle) onToggle(!offen); }
+    else setIntern((v) => !v);
+  }
+  return (
+    <div className={"pp-acc" + (auf ? " pp-acc--offen" : "")}>
+      <button type="button" className="pp-acc-head" onClick={umschalten} aria-expanded={auf}>
+        <span className="pp-acc-ic" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+        </span>
+        <span className="pp-acc-title">
+          <strong>{titel}{badge}</strong>
+          {unter ? <span>{unter}</span> : null}
+        </span>
+        {meta ? <span className="pp-acc-meta" style={metaFarbe ? { color: metaFarbe } : undefined}>{meta}</span> : null}
+      </button>
+      {auf ? <div className="pp-acc-body">{children}</div> : null}
+    </div>
+  );
+}
 
 // Status einer NEST-Explore-Buchung (Spalte `status` in messe_buchungen)
 const MESSE_STATUS = {
@@ -148,6 +179,9 @@ export default function PartnerPortal() {
   // Ansprechpartner (öffentlich lesbar, vom Admin pflegbar)
   const [ansprechpartner, setAnsprechpartner] = useState([]);
   const [apForm, setApForm] = useState(AP_LEER);
+  // Offene Aufklapper im Admin-Bereich, die die Seite selbst steuert (Formulare)
+  const [aufOffen, setAufOffen] = useState({});
+  const setzeAuf = (k) => (v) => setAufOffen((o) => ({ ...o, [k]: v }));
   const [apMsg, setApMsg] = useState("");
   const [apUploading, setApUploading] = useState(false);
 
@@ -448,6 +482,7 @@ export default function PartnerPortal() {
   function apBearbeiten(ap) {
     setApForm({ ...AP_LEER, ...ap });
     setApMsg("");
+    setAufOffen((o) => ({ ...o, apForm: true }));
     if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-ap-form"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
   }
   // Die im Code hinterlegten Standard-Kontakte in die Datenbank übernehmen,
@@ -497,6 +532,7 @@ export default function PartnerPortal() {
   function eventBearbeiten(v) {
     setEvForm({ id: v.id, titel: v.titel || "", datum: v.datum || "", uhrzeit: v.uhrzeit || "", ort: v.ort || "Wuppertal", adresse: v.adresse || "", bild_url: v.bild_url || "", beschreibung: v.beschreibung || "", slug: v.slug || "" });
     setEvMsg("");
+    setAufOffen((o) => ({ ...o, evForm: true }));
     if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-event-form"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
   }
   // Bild zur Veranstaltung hochladen (Bucket "blog")
@@ -585,6 +621,7 @@ export default function PartnerPortal() {
   function postBearbeiten(p) {
     setPoForm({ ...POST_LEER, ...p });
     setPoMsg(""); setPoVorschau(false);
+    setAufOffen((o) => ({ ...o, poForm: true }));
     if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-blog-form"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
   }
   // Formatierung in den Beitragstext einfügen (umschließt die aktuelle Auswahl)
@@ -1196,34 +1233,43 @@ export default function PartnerPortal() {
                   <h2 style={{ fontSize: "26px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 22px" }}>Admin-Bereich</h2>
 
                   {/* Auslastung der nächsten Termine */}
-                  <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Auslastung der nächsten Termine</h3>
                   {(() => {
                     const zaehl = {};
                     buchungen.forEach((b) => { if (b.datum) { const k = b.standort + "|" + b.datum; zaehl[k] = (zaehl[k] || 0) + 1; } });
+                    const ausgebucht = STANDORT_ORTE.reduce((s, ort) => s + naechsteTermine(8, ort).filter((d) => (zaehl[ort + "|" + isoDatum(d)] || 0) >= KAPAZITAET[ort]).length, 0);
                     return (
-                      <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
-                        {["Wuppertal", "Essen", "Solingen", "Remscheid"].map((ort) => (
-                          <div className="card" key={ort}>
-                            <span className="badge">{ort} · max. {KAPAZITAET[ort]}/Tag</span>
-                            <div style={{ marginTop: "12px" }}>
-                              {naechsteTermine(8, ort).map((d) => {
-                                const iso = isoDatum(d);
-                                const n = zaehl[ort + "|" + iso] || 0;
-                                const cap = KAPAZITAET[ort];
-                                const voll = n >= cap;
-                                const knapp = !voll && cap - n === 1;
-                                return (
-                                  <div key={iso} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 0", borderBottom: "1px solid var(--line)", fontSize: "14px" }}>
-                                    <span style={{ color: "var(--navy)" }}>{kurzDatum(d)}</span>
-                                    <span style={{ fontWeight: 800, color: voll ? "#c2415a" : (knapp ? "var(--gold-dark)" : "#1f9d63") }}>
-                                      {n}/{cap}{voll ? " · ausgebucht" : ""}
-                                    </span>
-                                  </div>
-                                );
-                              })}
-                            </div>
+                      <div style={{ marginBottom: "32px" }}>
+                        <Aufklapper
+                          titel="Auslastung der nächsten Termine"
+                          unter="Die jeweils nächsten acht Beratungstage je Standort"
+                          meta={ausgebucht ? ausgebucht + (ausgebucht === 1 ? " Tag ausgebucht" : " Tage ausgebucht") : "alle Tage frei"}
+                          metaFarbe={ausgebucht ? "#c2415a" : "#1f9d63"}
+                        >
+                          <div className="card-grid cols-2">
+                            {STANDORT_ORTE.map((ort) => (
+                              <div className="card" key={ort}>
+                                <span className="badge">{ort} · max. {KAPAZITAET[ort]}/Tag</span>
+                                <div style={{ marginTop: "12px" }}>
+                                  {naechsteTermine(8, ort).map((d) => {
+                                    const iso = isoDatum(d);
+                                    const n = zaehl[ort + "|" + iso] || 0;
+                                    const cap = KAPAZITAET[ort];
+                                    const voll = n >= cap;
+                                    const knapp = !voll && cap - n === 1;
+                                    return (
+                                      <div key={iso} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 0", borderBottom: "1px solid var(--line)", fontSize: "14px" }}>
+                                        <span style={{ color: "var(--navy)" }}>{kurzDatum(d)}</span>
+                                        <span style={{ fontWeight: 800, color: voll ? "#c2415a" : (knapp ? "var(--gold-dark)" : "#1f9d63") }}>
+                                          {n}/{cap}{voll ? " · ausgebucht" : ""}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </Aufklapper>
                       </div>
                     );
                   })()}
@@ -1233,50 +1279,67 @@ export default function PartnerPortal() {
                   const heuteISO = new Date().toISOString().slice(0, 10);
                   const buchungenAktiv = buchungen.filter((b) => !b.datum || b.datum >= heuteISO);
                   return (<>
-                  <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Terminbuchungen ({buchungenAktiv.length})</h3>
-                  {buchungenAktiv.length ? (() => {
-                    const groups = {};
-                    buchungenAktiv.forEach((bu) => {
-                      const k = bu.standort + "|" + (bu.datum || bu.datum_text || "");
-                      (groups[k] = groups[k] || []).push(bu);
-                    });
-                    const keys = Object.keys(groups).sort((a, b) => {
-                      const da = groups[a][0].datum || "", db = groups[b][0].datum || "";
-                      return db.localeCompare(da);
-                    });
+                  <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 4px" }}>Terminbuchungen ({buchungenAktiv.length})</h3>
+                  <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "0 0 14px" }}>Nach Standort gebündelt – ein Klick zeigt die dort gebuchten Termine.</p>
+                  {(() => {
+                    // Nach Standort bündeln; ein Standort ohne anstehende Buchungen
+                    // bleibt sichtbar, damit die vier Städte immer gleich stehen.
+                    const proOrt = {};
+                    buchungenAktiv.forEach((bu) => { (proOrt[bu.standort] = proOrt[bu.standort] || []).push(bu); });
+                    const weitere = Object.keys(proOrt).filter((o) => !STANDORT_ORTE.includes(o)).sort();
                     return (
                       <div style={{ marginBottom: "32px" }}>
-                        {keys.map((k) => {
-                          const list = groups[k];
-                          const first = list[0];
-                          const cap = KAPAZITAET[first.standort] || 0;
-                          const voll = cap && list.length >= cap;
+                        {STANDORT_ORTE.concat(weitere).map((ort) => {
+                          const liste = proOrt[ort] || [];
+                          const cap = KAPAZITAET[ort] || 0;
+                          // Innerhalb des Standorts nach Termin gruppieren, nächster zuerst
+                          const tage = {};
+                          liste.forEach((bu) => { const k = bu.datum || bu.datum_text || "ohne Datum"; (tage[k] = tage[k] || []).push(bu); });
+                          const keys = Object.keys(tage).sort((a, b) => a.localeCompare(b));
+                          const naechster = keys.length ? (tage[keys[0]][0].datum_text || keys[0]) : "";
                           return (
-                            <div className="card" key={k} style={{ marginBottom: "16px" }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px", borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
-                                <h3 style={{ margin: 0 }}>{first.datum_text || first.datum} · {first.standort}</h3>
-                                <span style={{ fontWeight: 800, color: voll ? "#c2415a" : "var(--gold-dark)" }}>{list.length}{cap ? "/" + cap : ""} belegt{voll ? " · ausgebucht" : ""}</span>
-                              </div>
-                              {list.map((bu) => (
-                                <div key={bu.id} style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
-                                  <div>
-                                    <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--navy)" }}>{bu.name} <span style={{ fontWeight: 600, color: "var(--text-mute)" }}>· {bu.uhrzeit}</span></p>
-                                    <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
-                                      {bu.email ? <a href={`mailto:${bu.email}`}>{bu.email}</a> : "—"}
-                                      {bu.telefon ? <> · <a href={`tel:${bu.telefon}`}>{bu.telefon}</a></> : ""}
-                                    </p>
-                                    {bu.schule ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>{bu.schule}</p> : null}
-                                    {bu.nachricht ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{bu.nachricht}"</p> : null}
-                                  </div>
-                                  <button className="btn btn-danger" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => buchungLoeschen(bu.id, bu.name)}>Löschen</button>
-                                </div>
-                              ))}
-                            </div>
+                            <Aufklapper
+                              key={ort}
+                              titel={ort}
+                              unter={keys.length ? "Nächster Termin: " + naechster + " · " + keys.length + (keys.length === 1 ? " Tag belegt" : " Tage belegt") : "Keine anstehenden Buchungen"}
+                              meta={liste.length ? liste.length + (liste.length === 1 ? " Gast" : " Gäste") : "frei"}
+                              metaFarbe={liste.length ? undefined : "var(--text-mute)"}
+                            >
+                              {keys.length ? keys.map((k, i) => {
+                                const list = tage[k];
+                                const first = list[0];
+                                const voll = cap && list.length >= cap;
+                                return (
+                                  <Aufklapper
+                                    key={k}
+                                    standardOffen={i === 0}
+                                    titel={first.datum_text || first.datum || "Ohne Datum"}
+                                    meta={list.length + (cap ? "/" + cap : "") + " belegt" + (voll ? " · ausgebucht" : "")}
+                                    metaFarbe={voll ? "#c2415a" : undefined}
+                                  >
+                                    {list.map((bu) => (
+                                      <div key={bu.id} style={{ display: "flex", justifyContent: "space-between", gap: "12px", padding: "10px 0", borderBottom: "1px solid var(--line)" }}>
+                                        <div>
+                                          <p style={{ margin: "0 0 2px", fontWeight: 700, color: "var(--navy)" }}>{bu.name} <span style={{ fontWeight: 600, color: "var(--text-mute)" }}>· {bu.uhrzeit}</span></p>
+                                          <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
+                                            {bu.email ? <a href={`mailto:${bu.email}`}>{bu.email}</a> : "—"}
+                                            {bu.telefon ? <> · <a href={`tel:${bu.telefon}`}>{bu.telefon}</a></> : ""}
+                                          </p>
+                                          {bu.schule ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>{bu.schule}</p> : null}
+                                          {bu.nachricht ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{bu.nachricht}"</p> : null}
+                                        </div>
+                                        <button className="btn btn-danger" style={{ flexShrink: 0, alignSelf: "flex-start" }} onClick={() => buchungLoeschen(bu.id, bu.name)}>Löschen</button>
+                                      </div>
+                                    ))}
+                                  </Aufklapper>
+                                );
+                              }) : <p style={{ color: "var(--text-soft)", margin: 0 }}>Für {ort} liegen aktuell keine anstehenden Terminbuchungen vor.</p>}
+                            </Aufklapper>
                           );
                         })}
                       </div>
                     );
-                  })() : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Keine anstehenden Terminbuchungen.</p>}
+                  })()}
                   </>);
                   })()}
 
@@ -1327,51 +1390,53 @@ export default function PartnerPortal() {
                           {kommende.map((m) => {
                             const list = proTermin[m.id] || [];
                             return (
-                              <div className="card" key={m.id} style={{ marginBottom: "16px" }}>
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px", borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
-                                  <div>
-                                    <h3 style={{ margin: 0 }}>{m.datum_text} · {m.titel}</h3>
-                                    <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>
-                                      {[m.uhrzeit, m.ort, m.klassen, m.schueler ? m.schueler + " Schüler:innen" : ""].filter(Boolean).join(" · ")}
-                                    </p>
+                              <Aufklapper
+                                key={m.id}
+                                titel={m.titel}
+                                badge={m.ausgebucht ? <span className="badge ampel-badge ampel-rot">ausgebucht</span> : null}
+                                unter={[m.datum_text, m.uhrzeit, m.ort, m.klassen, m.schueler ? m.schueler + " Schüler:innen" : ""].filter(Boolean).join(" · ")}
+                                meta={list.length + " " + (list.length === 1 ? "Unternehmen" : "Unternehmen") + (m.plaetze ? " · " + m.belegt + "/" + m.plaetze + " Plätze" : "")}
+                                metaFarbe={m.ausgebucht ? "#c2415a" : undefined}
+                              >
+                                {list.length ? (<>
+                                  <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "4px" }}>
+                                    <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => ausstellerExport(m, list)}>Ausstellerliste (CSV)</button>
                                   </div>
-                                  <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-                                    <span style={{ fontWeight: 800, color: m.ausgebucht ? "#c2415a" : "var(--gold-dark)" }}>
-                                      {list.length} {list.length === 1 ? "Unternehmen" : "Unternehmen"}
-                                      {m.plaetze ? " · " + m.belegt + "/" + m.plaetze + " Plätze belegt" : ""}
-                                    </span>
-                                    {m.ausgebucht ? <span className="badge ampel-badge ampel-rot">ausgebucht</span> : null}
-                                    {list.length ? <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => ausstellerExport(m, list)}>Ausstellerliste (CSV)</button> : null}
-                                  </div>
-                                </div>
-                                {list.length ? list.map((b) => buchungZeile(b, m)) : <p style={{ color: "var(--text-soft)", margin: 0 }}>Noch kein Unternehmen für diesen Termin gebucht.</p>}
-                              </div>
+                                  {list.map((b) => buchungZeile(b, m))}
+                                </>) : <p style={{ color: "var(--text-soft)", margin: 0 }}>Noch kein Unternehmen für diesen Termin gebucht.</p>}
+                              </Aufklapper>
                             );
                           })}
                         </div>
                       ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Aktuell sind keine kommenden NEST-Explore-Termine eingetragen.</p>}
 
                       {ohneTermin.length ? (
-                        <div className="card" style={{ marginBottom: "32px" }}>
-                          <div style={{ borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
-                            <h3 style={{ margin: 0 }}>Ohne Termin-Zuordnung ({ohneTermin.length})</h3>
-                            <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>Buchungen, deren Termin nicht (mehr) im Kalender steht.</p>
-                          </div>
-                          {ohneTermin.map((b) => (
-                            <div key={b.id}>
-                              {b.termin_text || b.schule ? <p style={{ margin: "8px 0 0", fontSize: "13px", fontWeight: 700, color: "var(--text-mute)" }}>{[b.termin_text, b.schule].filter(Boolean).join(" · ")}</p> : null}
-                              {buchungZeile(b, null)}
-                            </div>
-                          ))}
+                        <div style={{ marginBottom: "32px" }}>
+                          <Aufklapper
+                            titel="Ohne Termin-Zuordnung"
+                            unter="Buchungen, deren Termin nicht (mehr) im Kalender steht"
+                            meta={ohneTermin.length + (ohneTermin.length === 1 ? " Buchung" : " Buchungen")}
+                          >
+                            {ohneTermin.map((b) => (
+                              <div key={b.id}>
+                                {b.termin_text || b.schule ? <p style={{ margin: "8px 0 0", fontSize: "13px", fontWeight: 700, color: "var(--text-mute)" }}>{[b.termin_text, b.schule].filter(Boolean).join(" · ")}</p> : null}
+                                {buchungZeile(b, null)}
+                              </div>
+                            ))}
+                          </Aufklapper>
                         </div>
                       ) : null}
                     </>);
                   })()}
 
                   {/* Ansprechpartner verwalten */}
-                  <div className="card" style={{ marginBottom: "24px" }} id="abschnitt-ap-form">
-                    <h3>{apForm.id ? "Ansprechpartner bearbeiten" : "Ansprechpartner anlegen"}</h3>
-                    <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>Erscheint im Partner-Portal im Bereich „Ansprechpartner".</p>
+                  <div id="abschnitt-ap-form" style={{ scrollMarginTop: "84px", marginBottom: "16px" }}>
+                  <Aufklapper
+                    titel={apForm.id ? "Ansprechpartner bearbeiten" : "Ansprechpartner anlegen"}
+                    unter="Erscheint im Partner-Portal im Bereich „Ansprechpartner“."
+                    offen={!!aufOffen.apForm}
+                    onToggle={setzeAuf("apForm")}
+                  >
                     <form onSubmit={apSpeichern} className="tb-form">
                       <div className="row2">
                         <div className="field"><label>Name *</label><input value={apForm.name} onChange={apSet("name")} required /></div>
@@ -1404,11 +1469,13 @@ export default function PartnerPortal() {
                         {apForm.id ? <button type="button" className="btn btn-outline" onClick={() => { setApForm(AP_LEER); setApMsg(""); }}>Abbrechen</button> : null}
                       </div>
                     </form>
+                  </Aufklapper>
                   </div>
 
-                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 12px" }}>Alle Ansprechpartner ({ansprechpartner.length})</h3>
                   {ansprechpartner.length ? (
-                    <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
+                    <div style={{ marginBottom: "32px" }}>
+                    <Aufklapper titel="Alle Ansprechpartner" meta={ansprechpartner.length + (ansprechpartner.length === 1 ? " Person" : " Personen")}>
+                    <div className="card-grid cols-2">
                       {ansprechpartner.map((ap) => (
                         <div className="card" key={ap.id}>
                           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -1425,6 +1492,8 @@ export default function PartnerPortal() {
                         </div>
                       ))}
                     </div>
+                    </Aufklapper>
+                    </div>
                   ) : (
                     <div className="card" style={{ marginBottom: "32px" }}>
                       <p style={{ margin: "0 0 12px", color: "var(--text-soft)", fontSize: "14px" }}>
@@ -1436,8 +1505,13 @@ export default function PartnerPortal() {
                   )}
 
                   {/* Veranstaltung anlegen / bearbeiten */}
-                  <div className="card" style={{ marginBottom: "24px" }} id="abschnitt-event-form">
-                    <h3>{evForm.id ? "Veranstaltung bearbeiten" : "Veranstaltung anlegen"}</h3>
+                  <div id="abschnitt-event-form" style={{ scrollMarginTop: "84px", marginBottom: "16px" }}>
+                  <Aufklapper
+                    titel={evForm.id ? "Veranstaltung bearbeiten" : "Veranstaltung anlegen"}
+                    unter="Erscheint im Veranstaltungskalender und im Partner-Portal."
+                    offen={!!aufOffen.evForm}
+                    onToggle={setzeAuf("evForm")}
+                  >
                     <form onSubmit={eventSpeichern} className="tb-form">
                       <div className="row2">
                         <div className="field"><label>Titel *</label><input value={evForm.titel} onChange={setEv("titel")} placeholder="z. B. OpenHouse Wuppertal" required /></div>
@@ -1466,16 +1540,18 @@ export default function PartnerPortal() {
                         {evForm.id ? <button type="button" className="btn btn-outline" onClick={() => { setEvForm(EVENT_LEER); setEvMsg(""); }}>Abbrechen</button> : null}
                       </div>
                     </form>
+                  </Aufklapper>
                   </div>
 
                   {/* Alle Veranstaltungen verwalten */}
-                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 6px" }}>Alle Veranstaltungen ({adminEvents.length})</h3>
+                  <div style={{ marginBottom: "16px" }}>
+                  <Aufklapper titel="Alle Veranstaltungen" meta={adminEvents.length + (adminEvents.length === 1 ? " Termin" : " Termine")}>
                   <div className="card" style={{ marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap", padding: "14px 18px" }}>
                     <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>Der Kalender ist <strong style={{ color: "var(--navy)" }}>nicht im Menü verlinkt</strong> – verteile diesen Link direkt. Pro Veranstaltung gibt es zusätzlich einen Direktlink.</p>
                     <button type="button" className="btn btn-outline" style={{ flexShrink: 0 }} onClick={() => linkKopieren("/veranstaltungen")}>Kalender-Link kopieren</button>
                   </div>
                   {adminEvents.length ? (
-                    <div className="card-grid cols-2" style={{ marginBottom: "32px" }}>
+                    <div className="card-grid cols-2">
                       {adminEvents.map((v) => (
                         <div className="card" key={v.id}>
                           {v.bild_url ? <img src={v.bild_url} alt={v.titel} style={{ width: "100%", height: "120px", objectFit: "cover", borderRadius: "10px", marginBottom: "12px" }} /> : null}
@@ -1491,7 +1567,9 @@ export default function PartnerPortal() {
                         </div>
                       ))}
                     </div>
-                  ) : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Veranstaltungen.</p>}
+                  ) : <p style={{ color: "var(--text-soft)", margin: 0 }}>Noch keine Veranstaltungen.</p>}
+                  </Aufklapper>
+                  </div>
 
                   {/* Anmeldungen von Unternehmen zu Veranstaltungen */}
                   <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 12px" }}>Anmeldungen zu Veranstaltungen ({anmeldungen.length})</h3>
@@ -1511,13 +1589,14 @@ export default function PartnerPortal() {
                           const ev = evMap[k];
                           const personen = list.reduce((s, a) => s + (a.personen || 1), 0);
                           return (
-                            <div className="card" key={k} style={{ marginBottom: "16px" }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px", borderBottom: "2px solid var(--line)", paddingBottom: "10px", marginBottom: "10px" }}>
-                                <h3 style={{ margin: 0 }}>{ev ? ev.titel : "Veranstaltung"}{ev && ev.datum ? <span style={{ fontWeight: 600, color: "var(--text-mute)" }}> · {ev.datum}{ev.uhrzeit ? " · " + ev.uhrzeit : ""}{ev.ort ? " · " + ev.ort : ""}</span> : null}</h3>
-                                <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-                                  <span style={{ fontWeight: 800, color: "var(--gold-dark)" }}>{list.length} {list.length === 1 ? "Unternehmen" : "Unternehmen"} · {personen} {personen === 1 ? "Person" : "Personen"}</span>
-                                  <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => namensschilderExport(ev, list)}>Namensschilder (CSV)</button>
-                                </div>
+                            <Aufklapper
+                              key={k}
+                              titel={ev ? ev.titel : "Veranstaltung"}
+                              unter={ev && ev.datum ? [ev.datum, ev.uhrzeit, ev.ort].filter(Boolean).join(" · ") : null}
+                              meta={list.length + " " + (list.length === 1 ? "Unternehmen" : "Unternehmen") + " · " + personen + " " + (personen === 1 ? "Person" : "Personen")}
+                            >
+                              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "4px" }}>
+                                <button className="btn btn-outline" style={{ padding: "6px 14px" }} onClick={() => namensschilderExport(ev, list)}>Namensschilder (CSV)</button>
                               </div>
                               {list.map((a) => {
                                 const begleit = (Array.isArray(a.begleitpersonen) ? a.begleitpersonen : []).filter((bp) => bp && bp.trim());
@@ -1535,7 +1614,7 @@ export default function PartnerPortal() {
                                 </div>
                                 );
                               })}
-                            </div>
+                            </Aufklapper>
                           );
                         })}
                       </div>
@@ -1543,8 +1622,13 @@ export default function PartnerPortal() {
                   })() : <p style={{ color: "var(--text-soft)", marginBottom: "32px" }}>Noch keine Anmeldungen von Unternehmen.</p>}
 
                   {/* Blogbeitrag anlegen / bearbeiten */}
-                  <div className="card" style={{ marginBottom: "24px" }} id="abschnitt-blog-form">
-                    <h3>{poForm.id ? "Blogbeitrag bearbeiten" : "Blogbeitrag anlegen"}</h3>
+                  <div id="abschnitt-blog-form" style={{ scrollMarginTop: "84px", marginBottom: "16px" }}>
+                  <Aufklapper
+                    titel={poForm.id ? "Blogbeitrag bearbeiten" : "Blogbeitrag anlegen"}
+                    unter="Erscheint im Blog, sobald „Sofort veröffentlichen“ gesetzt ist."
+                    offen={!!aufOffen.poForm}
+                    onToggle={setzeAuf("poForm")}
+                  >
                     <form onSubmit={postSpeichern} className="tb-form">
                       <div className="row2">
                         <div className="field"><label>Titel *</label><input value={poForm.titel} onChange={setPo("titel")} required /></div>
@@ -1585,10 +1669,15 @@ export default function PartnerPortal() {
                         {poForm.id ? <button type="button" className="btn btn-outline" onClick={() => { setPoForm(POST_LEER); setPoMsg(""); setPoVorschau(false); }}>Abbrechen</button> : null}
                       </div>
                     </form>
+                  </Aufklapper>
                   </div>
 
                   {/* Alle Beiträge verwalten */}
-                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--navy)", margin: "0 0 12px" }}>Alle Beiträge ({adminPosts.length})</h3>
+                  <Aufklapper
+                    titel="Alle Beiträge"
+                    unter={adminPosts.length ? adminPosts.filter((p) => !p.published).length + " als Entwurf" : null}
+                    meta={adminPosts.length + (adminPosts.length === 1 ? " Beitrag" : " Beiträge")}
+                  >
                   {adminPosts.length ? (
                     <div className="card-grid cols-2">
                       {adminPosts.map((p) => (
@@ -1604,7 +1693,8 @@ export default function PartnerPortal() {
                         </div>
                       ))}
                     </div>
-                  ) : <p style={{ color: "var(--text-soft)" }}>Noch keine Beiträge.</p>}
+                  ) : <p style={{ color: "var(--text-soft)", margin: 0 }}>Noch keine Beiträge.</p>}
+                  </Aufklapper>
                 </div>
               )}
             </div>

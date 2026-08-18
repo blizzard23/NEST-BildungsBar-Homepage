@@ -174,6 +174,28 @@ export default function PartnerPortal() {
   const [apMsg, setApMsg] = useState("");
   const [apUploading, setApUploading] = useState(false);
 
+  // Berufsliste für das Stellen-Dropdown – aus der Berufswelt-Datenbank
+  // (window.BERUFE_KATEGORIEN, kommt über das global eingebundene nest-app.js).
+  const [berufsKategorien, setBerufsKategorien] = useState([]);
+  const [berufFrei, setBerufFrei] = useState(false); // "Anderer Beruf": Freitext statt Dropdown
+  useEffect(() => {
+    let versuche = 0;
+    const t = setInterval(() => {
+      const kats = typeof window !== "undefined" ? window.BERUFE_KATEGORIEN : null;
+      if (Array.isArray(kats) && kats.length) {
+        setBerufsKategorien(kats.map((k) => ({
+          name: k.name,
+          berufe: (k.berufe || []).map((b) => (typeof b === "string" ? b : b.name)),
+        })));
+        clearInterval(t);
+      } else if (++versuche > 40) clearInterval(t); // Bundle nicht geladen -> Freitext-Fallback
+    }, 250);
+    return () => clearInterval(t);
+  }, []);
+  // Steht der Beruf der (bearbeiteten) Stelle nicht im Katalog, bleibt es Freitext.
+  const berufImKatalog = berufsKategorien.some((k) => k.berufe.includes(form.beruf));
+  const zeigeBerufFrei = berufFrei || (!!form.beruf && !berufImKatalog);
+
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
 
   // Kurze Toast-Meldung (verschwindet nach ein paar Sekunden von selbst)
@@ -384,7 +406,7 @@ export default function PartnerPortal() {
     if (form.id) {
       const { error } = await supabase.from("stellen").update(werte).eq("id", form.id);
       if (error) { setMsg("Fehler: " + error.message); return; }
-      setForm((f) => ({ ...LEER, firma: f.firma }));
+      setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false);
       toast("Stelle aktualisiert ✅");
       ladeDaten();
       return;
@@ -392,13 +414,14 @@ export default function PartnerPortal() {
     const eintrag = { ...werte, partner_id: session.user.id, aktiviert_am: new Date().toISOString().slice(0, 10) };
     const { error } = await supabase.from("stellen").insert(eintrag);
     if (error) { setMsg("Fehler: " + error.message); return; }
-    setForm((f) => ({ ...LEER, firma: f.firma }));
+    setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false);
     toast("Stelle veröffentlicht ✅ (30 Tage sichtbar)");
     ladeDaten();
   }
   function stelleBearbeiten(s) {
     const kw = Array.isArray(s.keywords) ? s.keywords : [];
     setForm({ id: s.id, firma: s.firma || "", beruf: s.beruf || "", art: s.art || "Ausbildung", ort: s.ort || "Wuppertal", start: s.start || "", url: s.url || "", logo_url: s.logo_url || "", keyword1: kw[0] || "", keyword2: kw[1] || "", keyword3: kw[2] || "" });
+    setBerufFrei(false); // steht der Beruf nicht im Katalog, zeigt die Ableitung automatisch Freitext
     setMsg("");
     if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-stellen"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
   }
@@ -894,7 +917,35 @@ export default function PartnerPortal() {
                 <form onSubmit={speichern} className="tb-form">
                   <div className="row2">
                     <div className="field"><label>Unternehmen *</label><input value={form.firma} onChange={set("firma")} required /></div>
-                    <div className="field"><label>Beruf *</label><input value={form.beruf} onChange={set("beruf")} placeholder="z. B. Mechatroniker:in" required /></div>
+                    <div className="field"><label>Beruf *</label>
+                      {berufsKategorien.length ? (
+                        <select
+                          value={zeigeBerufFrei ? "__frei__" : form.beruf}
+                          onChange={(e) => {
+                            const wert = e.target.value;
+                            if (wert === "__frei__") { setBerufFrei(true); setForm((f) => ({ ...f, beruf: "" })); }
+                            else { setBerufFrei(false); setForm((f) => ({ ...f, beruf: wert })); }
+                          }}
+                          required={!zeigeBerufFrei}
+                        >
+                          <option value="" disabled>Beruf auswählen …</option>
+                          {berufsKategorien.map((k) => (
+                            <optgroup key={k.name} label={k.name}>
+                              {k.berufe.map((b) => <option key={b} value={b}>{b}</option>)}
+                            </optgroup>
+                          ))}
+                          <option value="__frei__">Anderer Beruf (frei eintragen)</option>
+                        </select>
+                      ) : null}
+                      {(!berufsKategorien.length || zeigeBerufFrei) ? (
+                        <input value={form.beruf} onChange={set("beruf")} placeholder="z. B. Mechatroniker:in" required style={berufsKategorien.length ? { marginTop: "8px" } : undefined} />
+                      ) : null}
+                      {berufsKategorien.length && zeigeBerufFrei ? (
+                        <p style={{ color: "var(--text-soft)", fontSize: "12px", margin: "6px 0 0" }}>
+                          Tipp: Wähle möglichst einen Beruf aus der Liste – nur dann erscheint die Stelle auch auf der passenden Berufsseite in der Berufswelt.
+                        </p>
+                      ) : null}
+                    </div>
                   </div>
                   <div className="row2">
                     <div className="field"><label>Art</label>
@@ -932,7 +983,7 @@ export default function PartnerPortal() {
                   {msg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{msg}</p> : null}
                   <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                     <button className="btn btn-primary" type="submit">{form.id ? "Änderungen speichern" : "Stelle veröffentlichen"}</button>
-                    {form.id ? <button type="button" className="btn btn-outline" onClick={() => { setForm((f) => ({ ...LEER, firma: f.firma })); setMsg(""); }}>Abbrechen</button> : null}
+                    {form.id ? <button type="button" className="btn btn-outline" onClick={() => { setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false); setMsg(""); }}>Abbrechen</button> : null}
                   </div>
                 </form>
               </div>

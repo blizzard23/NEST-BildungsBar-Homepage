@@ -668,6 +668,11 @@ function berufSlug(name) {
   return String(name)
     .toLowerCase()
     .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    // Gender-Schreibweisen vereinheitlichen, damit z. B. "Mechatroniker (m/w/d)",
+    // "Mechatroniker/in" und "Mechatroniker:in" denselben Slug ergeben.
+    .replace(/\(\s*[mwdx](\s*\/\s*[mwdx]){1,3}\s*\)/g, "")
+    .replace(/\b[mw](\s*\/\s*[mwdx]){1,3}\b/g, "")
+    .replace(/\/-?in(nen)?\b/g, "")
     .replace(/:innen|:in|:r|\*in/g, "")
     .replace(/&/g, "und")
     .replace(/[^a-z0-9]+/g, "-")
@@ -1613,11 +1618,12 @@ if (!window.STELLEN || !window.STELLEN.length) {
       : (baldAb ? '<span class="sc-flag bald">Endet bald</span>' : "");
     var restTxt = (baldAb ? "noch " + rest + (rest === 1 ? " Tag" : " Tage") : "noch " + rest + " Tage");
     var link = s.url || berufLink(s.beruf) || lKontakt();
+    var extern = /^https?:\/\//.test(link);
     var logo = s.logoUrl
       ? '<span class="sc-logo sc-logo--img"><img src="' + escA(s.logoUrl) + '" alt="' + esc(s.firma) + '" loading="lazy"></span>'
       : '<span class="sc-logo" style="' + logoStyle(s.firma) + '">' + esc(monogramm(s.firma)) + "</span>";
 
-    return '<a class="stellen-card" href="' + escA(link) + '">' +
+    return '<a class="stellen-card" href="' + escA(link) + '"' + (extern ? ' target="_blank" rel="noopener"' : "") + '>' +
       '<div class="sc-top">' + logo + flag + "</div>" +
       '<div class="sc-titel">' + esc(s.beruf) + "</div>" +
       '<div class="sc-firma">' + esc(s.firma) + "</div>" +
@@ -1649,6 +1655,12 @@ if (!window.STELLEN || !window.STELLEN.length) {
       .filter(function (s) { return tageRest(s.aktiviertAm) >= 0; })
       .sort(function (a, b) { return new Date(b.aktiviertAm) - new Date(a.aktiviertAm); });
 
+    // Auf der Startseite ist die umgebende Sektion per [hidden] ausgeblendet:
+    // ohne aktive Stellen bleibt sie unsichtbar, sonst wird sie aufgedeckt.
+    var sektion = root.closest ? root.closest("section[hidden]") : null;
+    if (!aktiv.length && sektion) return;
+    if (sektion) sektion.removeAttribute("hidden");
+
     var orte = ["*", "Wuppertal", "Essen", "Solingen", "Remscheid"];
     var ortFilter = "*";
 
@@ -1661,7 +1673,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
       '<div class="stellen-strip-head">' +
         '<div><span class="section-label">Jobbörse</span>' +
         "<h2>Aktuelle Stellen</h2>" +
-        "<p>" + aktiv.length + " offene Plätze von Unternehmen aus unserem Netzwerk · 30 Tage aktuell</p></div>" +
+        "<p>" + (aktiv.length === 1 ? "1 offener Platz" : aktiv.length + " offene Plätze") + " von Unternehmen aus unserem Netzwerk · 30 Tage aktuell</p></div>" +
         '<a class="btn btn-outline" href="' + lKoop() + '">Stelle eintragen</a>' +
       "</div>" +
       '<div class="stellen-orte">' + chips + "</div>" +

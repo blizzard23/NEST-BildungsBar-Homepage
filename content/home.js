@@ -100,6 +100,14 @@ const html = `
     </div>
   </section>
 
+  <!-- AKTUELLE STELLEN (Jobbörse) – wird per JS aus /api/stellen befüllt.
+       Bleibt komplett ausgeblendet, solange keine aktive Stelle online ist. -->
+  <section class="bg-white" hidden>
+    <div class="container">
+      <div id="stellen-section"></div>
+    </div>
+  </section>
+
   <!-- SPLIT -->
   <section class="bg-white">
     <div class="container">

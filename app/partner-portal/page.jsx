@@ -431,7 +431,14 @@ export default function PartnerPortal() {
     toast("Stelle um 30 Tage verlängert ✅");
     ladeDaten();
   }
-  async function loeschen(id, name) { if (!bestaetigeLoeschen(name || "Stelle")) return; await supabase.from("stellen").delete().eq("id", id); if (form.id === id) setForm((f) => ({ ...LEER, firma: f.firma })); toast("Stelle gelöscht"); ladeDaten(); }
+  async function loeschen(id, name) {
+    if (!bestaetigeLoeschen(name || "Stelle")) return;
+    const { error } = await supabase.from("stellen").delete().eq("id", id);
+    if (error) { toast("Fehler: " + error.message); return; }
+    if (form.id === id) setForm((f) => ({ ...LEER, firma: f.firma }));
+    toast("Stelle gelöscht");
+    ladeDaten();
+  }
 
   async function passwortReset() {
     setResetMsg("");

@@ -1382,10 +1382,14 @@ function renderBerufDetail() {
     var inner = document.getElementById("beruf-stellen-inner");
     if (!inner) return;
     var zielSlug = beruf.slug, zielName = normText(beruf.name);
+    // Exakte Zuordnung: eine Stelle erscheint nur auf der Seite des Berufs,
+    // der im Portal gewählt wurde. berufSlug() gleicht Gender-/Schreibvarianten
+    // an ("Mechatroniker (m/w/d)" == "Mechatroniker:in"). Kein Teilstring-
+    // Vergleich, sonst taucht "Mechatroniker" auch bei "Kfz-Mechatroniker:in"
+    // oder "Mechatroniker:in Kältetechnik" auf.
     function passt(s) {
-      var a = normText(s.beruf);
-      return (typeof berufSlug === "function" && berufSlug(s.beruf) === zielSlug) ||
-        a === zielName || a.indexOf(zielName) > -1 || zielName.indexOf(a) > -1;
+      if (typeof berufSlug === "function") return berufSlug(s.beruf) === zielSlug;
+      return normText(s.beruf) === zielName;
     }
     function mono(f) { var w = String(f).replace(/&/g, " ").split(/\s+/).filter(Boolean); return ((w[0] ? w[0][0] : "") + (w[1] ? w[1][0] : "")).toUpperCase() || "•"; }
     function logoStil(f) { var h = 0; for (var i = 0; i < f.length; i++) h = (h * 31 + f.charCodeAt(i)) % 360; return "background:linear-gradient(135deg,hsl(" + h + ",55%,42%),hsl(" + ((h + 30) % 360) + ",58%,30%));"; }

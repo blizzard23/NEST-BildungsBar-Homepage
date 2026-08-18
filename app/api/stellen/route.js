@@ -5,6 +5,8 @@ import { supabaseServer } from "@/lib/supabaseServer";
    Liefert ein Array im Format, das stellen-ui.js erwartet:
    { firma, beruf, art, ort, start, url, logoUrl, aktiviertAm }. */
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
 
 export async function GET() {
   const sb = supabaseServer();

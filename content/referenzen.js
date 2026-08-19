@@ -77,7 +77,7 @@ const html = `
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_03.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_04.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_05.png" alt="Partnerunternehmen" loading="lazy"></div>
-          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_06.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/bs-rollen.png" alt="BS Rollen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_07.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_08.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p2_09.png" alt="Partnerunternehmen" loading="lazy"></div>

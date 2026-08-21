@@ -150,6 +150,7 @@ const html = `
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_62.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_63.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/vorwerk-autotec.png" alt="Vorwerk Autotec" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/diakonische-altenhilfe-wuppertal.png" alt="Diakonische Altenhilfe Wuppertal" loading="lazy"></div>
         </div>
       </div>
 
@@ -187,7 +188,6 @@ const html = `
           <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_08.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_09.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/e3_10.png" alt="Einrichtung im NEST-Netzwerk" loading="lazy"></div>
-          <div class="logo-tile"><img src="/assets/img/referenzen/einrichtungen/diakonische-altenhilfe-wuppertal.png" alt="Diakonische Altenhilfe Wuppertal" loading="lazy"></div>
         </div>
       </div>
 

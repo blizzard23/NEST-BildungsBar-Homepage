@@ -101,6 +101,7 @@ git push -u origin main
    | `WHATSAPP_TEMPLATE` *(optional)* | Name des genehmigten Templates |
    | `WHATSAPP_LANG` *(optional)* | Sprachcode, z. B. `de` |
    | `NEXT_PUBLIC_TERMIN_MAIL` *(optional)* | `info@nest-bildungsbar.de` |
+   | `NEXT_PUBLIC_SITE_URL` *(empfohlen)* | `https://nest-bildungsbar.de` (Ziel der Passwort-Links) |
 4. **Deploy** klicken. Fertig – Vercel gibt dir eine `…vercel.app`-URL.
    Eigene Domain unter **Settings → Domains** verbinden.
 
@@ -131,6 +132,36 @@ Termin-, Kontakt- und Sonderanfragen werden serverseitig über die API-Route
 - `MAIL_FROM` muss zu diesem Postfach passen (sonst lehnt der Server den Versand ab).
 - Sind die SMTP-Variablen **nicht** gesetzt, fallen die Formulare automatisch auf die
   bisherige **mailto-Variante** zurück (öffnen das Mailprogramm) – nichts geht verloren.
+
+### Passwort vergessen (Partner-Portal)
+
+„Passwort vergessen?" läuft über die eigene Route **`/api/passwort-reset`** – bewusst
+**nicht** über `supabase.auth.resetPasswordForEmail()`.
+
+**Warum?** Supabase verschickt Auth-Mails über den SMTP-Server, der im Supabase-
+Dashboard hinterlegt ist. Lehnt der die Anmeldung ab (z. B. weil das Postfach-Passwort
+gewechselt wurde), antwortet `/auth/v1/recover` mit **HTTP 500 und leerem Body** – im
+Portal stand dann nur „Fehler: {}", der Recovery-Token wurde zurückgerollt und es ging
+**gar keine Mail** raus. Genau das war im August 2026 der Fall
+(`535 "5.7.8 Error: authentication failed"` in den Supabase Auth-Logs).
+
+Die eigene Route erzeugt den Link stattdessen über die **Admin-API**
+(`auth.admin.generateLink`, verschickt selbst keine Mail) und mailt ihn über **denselben
+lima-city-SMTP** wie alle anderen Formulare. Damit hängt das Zurücksetzen nicht mehr an
+der Supabase-SMTP-Konfiguration.
+
+- Pflicht dafür: `SUPABASE_SERVICE_ROLE_KEY` und die `SMTP_*`-Variablen.
+- `NEXT_PUBLIC_SITE_URL` bestimmt, wohin der Link führt (`…/partner-portal`). Ohne die
+  Variable wird der Host der Anfrage genommen.
+- Das Ziel muss in Supabase unter **Authentication → URL Configuration → Redirect URLs**
+  erlaubt sein, sonst landet der Link auf der Site-URL.
+- Die Antwort verrät nie, ob es zu einer Adresse einen Zugang gibt (keine Konto-Abfrage
+  von außen); zusätzlich greift ein Rate-Limit von 5 Anfragen pro IP je 10 Minuten.
+
+> **Achtung – davon nicht abgedeckt:** Die **Bestätigungsmail bei der Registrierung**
+> verschickt weiterhin Supabase selbst. Solange der SMTP-Zugang unter
+> **Authentication → Emails → SMTP Settings** falsche Zugangsdaten hat, kommt bei neuen
+> Unternehmen keine Bestätigungsmail an. Diese Zugangsdaten gehören dort aktualisiert.
 
 Jeder weitere `git push` deployt automatisch neu.
 

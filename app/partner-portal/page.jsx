@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { supabase, supabaseConfigured } from "@/lib/supabaseClient";
+import { supabase, supabaseConfigured, istRecoveryLink, linkFehler } from "@/lib/supabaseClient";
 import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameEditUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
 import { mapMesseTermin } from "@/lib/messeTermine";
 import { inhaltZuHtml } from "@/lib/blogFormat";
@@ -24,6 +24,34 @@ const AP_DEFAULT = [
   { id: "d5", name: "Esther Königes", rolle: "Workstadt", standort: "Wuppertal", bild_url: "", sortierung: 5, beschreibung: "Esther Königes ist Mitgründerin und Geschäftsführerin der WorkStadt GmbH in Wuppertal. Mit WorkStadt unterstützt sie Unternehmen beim Onboarding internationaler Fachkräfte – vom Ankommen in der Stadt bis zur nachhaltigen Integration ins Team." },
   { id: "d6", name: "Marc Longjaloux", rolle: "Designbüro Longjaloux", standort: "Wuppertal", bild_url: "/assets/img/team/marc.jpg", sortierung: 6, beschreibung: "Büro Longjaloux macht Corporate Design für kleine und mittelständische Unternehmen – seit 1980. Wir finden den Kern von Marken und machen ihn sichtbar. Für alle, die wissen, was sie tun, aber noch nicht, wie sie das erfolgreich kommunizieren sollen: Mit Strategie-Workshops, Corporate Design und gezielter Markenführung schaffen wir Auftritte, die nicht nur gut aussehen, sondern wirken. Geiler Scheiß für geile Leute." },
 ];
+
+const IST_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* Supabase antwortet auf Englisch. Die Meldungen, die Unternehmen im Portal
+   tatsächlich zu sehen bekommen, hier auf Deutsch übersetzen. */
+const AUTH_TEXTE = [
+  [/invalid login credentials/i, "E-Mail-Adresse oder Passwort stimmt nicht."],
+  [/email not confirmed/i, "Diese E-Mail-Adresse ist noch nicht bestätigt. Schreib uns kurz an info@nest-bildungsbar.de, dann schalten wir den Zugang frei."],
+  [/(email|token) link is invalid or has expired|token has expired or is invalid/i, "Der Link ist nicht mehr gültig – er gilt nur kurze Zeit und nur ein einziges Mal."],
+  [/user (already registered|with this email address has already)/i, "Zu dieser E-Mail-Adresse gibt es schon einen Zugang. Melde dich damit an oder setze das Passwort zurück."],
+  [/password should be at least (\d+)/i, "Das Passwort ist zu kurz."],
+  [/new password should be different/i, "Das neue Passwort muss sich vom bisherigen unterscheiden."],
+  [/for security purposes.*after (\d+) seconds/i, "Kurz durchatmen – das geht erst in einer Minute wieder."],
+  [/email rate limit exceeded|over_email_send_rate_limit/i, "Es wurden gerade zu viele E-Mails angefordert. Bitte versuch es in ein paar Minuten noch einmal."],
+  [/failed to fetch|network ?error|load failed/i, "Keine Verbindung zum Server. Bitte prüfe deine Internetverbindung."],
+];
+
+/* Lesbare Fehlermeldung aus einem Supabase-/Fetch-Fehler.
+   Antwortet Supabase Auth mit einem Serverfehler ohne Text, ist `message` leer
+   oder ein leeres Objekt – im Portal stand dann nur "Fehler: {}". Hier kommt in
+   dem Fall ein Satz heraus, mit dem Unternehmen etwas anfangen können. */
+function fehlerText(e, ersatz = "Das hat gerade nicht geklappt. Bitte versuche es später noch einmal.") {
+  const roh = (typeof e === "string" ? e : e && (e.message || e.error_description || e.error)) || "";
+  const text = String(roh).trim();
+  if (!text || text === "{}" || text === "[object Object]") return ersatz;
+  for (const [muster, deutsch] of AUTH_TEXTE) if (muster.test(text)) return deutsch;
+  return text;
+}
 
 function slugify(s) {
   return String(s).toLowerCase()
@@ -165,6 +193,8 @@ export default function PartnerPortal() {
   const [logoUploading, setLogoUploading] = useState(false);   // Logo-Upload bei der Stelle
   const [toastMsg, setToastMsg] = useState("");                 // kurze Erfolg-/Hinweis-Meldung
   const [resetMsg, setResetMsg] = useState("");                 // Passwort-Reset-Feedback
+  const [resetBusy, setResetBusy] = useState(false);            // Reset-Mail wird gerade verschickt
+  const [recovery, setRecovery] = useState(false);              // über den Passwort-Link gekommen -> neues Passwort setzen
   const [firmaMsg, setFirmaMsg] = useState("");                 // Konto: Unternehmensname-Feedback
   const [pwNeu, setPwNeu] = useState("");                       // neues Passwort (Konto)
   const [pwMsg, setPwMsg] = useState("");
@@ -233,8 +263,16 @@ export default function PartnerPortal() {
 
   useEffect(() => {
     if (!supabase) { setLoading(false); return; }
+    // Kam die Seite über den Passwort-Link, wird statt des Dashboards die Maske
+    // "neues Passwort" gezeigt. Erst hier (nicht im useState-Startwert), damit
+    // Server- und Client-Rendering identisch bleiben.
+    if (istRecoveryLink) setRecovery(true);
+    if (linkFehler) setResetMsg("Fehler: " + fehlerText(linkFehler) + " Fordere unten einfach einen neuen an.");
     supabase.auth.getSession().then(({ data }) => { setSession(data.session); setLoading(false); });
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+    const { data: sub } = supabase.auth.onAuthStateChange((e, s) => {
+      setSession(s);
+      if (e === "PASSWORD_RECOVERY") setRecovery(true);
+    });
     return () => sub.subscription.unsubscribe();
   }, []);
 
@@ -329,7 +367,7 @@ export default function PartnerPortal() {
   async function login(e) {
     e.preventDefault(); setAuthErr("");
     const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
-    if (error) setAuthErr("Login fehlgeschlagen: " + error.message);
+    if (error) setAuthErr("Login fehlgeschlagen: " + fehlerText(error, "Bitte prüfe E-Mail und Passwort."));
   }
 
   function waehleFirma(c) {
@@ -350,7 +388,7 @@ export default function PartnerPortal() {
       options: { data: { firma: firmaName, nestplay_ref: firmaRef || firmaName } },
     });
     setRegBusy(false);
-    if (error) { setAuthErr("Registrierung fehlgeschlagen: " + error.message); return; }
+    if (error) { setAuthErr("Registrierung fehlgeschlagen: " + fehlerText(error)); return; }
     if (data.session) {
       setRegMsg("Willkommen! Dein Zugang ist aktiv.");
     } else {
@@ -367,7 +405,7 @@ export default function PartnerPortal() {
     if (!name) { setFirmaMsg("Bitte ein Unternehmen wählen oder eingeben."); return; }
     const meta = session.user.user_metadata || {};
     const { error } = await supabase.auth.updateUser({ data: { ...meta, firma: name, nestplay_ref: firmaRef || name } });
-    if (error) { setFirmaMsg("Fehler: " + error.message); return; }
+    if (error) { setFirmaMsg("Fehler: " + fehlerText(error)); return; }
     // Eigene Stellen auf den neuen Namen aktualisieren
     if (!isAdmin) await supabase.from("stellen").update({ firma: name }).eq("partner_id", session.user.id);
     setForm((f) => ({ ...f, firma: name }));
@@ -378,7 +416,7 @@ export default function PartnerPortal() {
     e.preventDefault(); setPwMsg("");
     if (pwNeu.length < 8) { setPwMsg("Das Passwort muss mindestens 8 Zeichen haben."); return; }
     const { error } = await supabase.auth.updateUser({ password: pwNeu });
-    if (error) { setPwMsg("Fehler: " + error.message); return; }
+    if (error) { setPwMsg("Fehler: " + fehlerText(error)); return; }
     setPwNeu(""); setPwMsg(""); toast("Passwort geändert ✅");
   }
 
@@ -433,12 +471,43 @@ export default function PartnerPortal() {
   }
   async function loeschen(id, name) { if (!bestaetigeLoeschen(name || "Stelle")) return; await supabase.from("stellen").delete().eq("id", id); if (form.id === id) setForm((f) => ({ ...LEER, firma: f.firma })); toast("Stelle gelöscht"); ladeDaten(); }
 
+  /* Passwort vergessen: läuft über die eigene Route /api/passwort-reset.
+     Der direkte Weg über supabase.auth.resetPasswordForEmail() hängt am SMTP-
+     Server, der im Supabase-Dashboard hinterlegt ist – lehnt der die Anmeldung
+     ab, kommt von Supabase nur ein leerer 500er zurück ("Fehler: {}") und es
+     geht keine Mail raus. Die eigene Route nutzt denselben Mailversand wie die
+     übrigen Formulare und ist davon unabhängig. */
   async function passwortReset() {
-    setResetMsg("");
-    if (!email) { setResetMsg("Bitte zuerst deine E-Mail-Adresse oben eintragen."); return; }
-    const redirectTo = typeof window !== "undefined" ? window.location.origin + "/partner-portal" : undefined;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-    setResetMsg(error ? "Fehler: " + error.message : "Wir haben dir einen Link zum Zurücksetzen geschickt – schau in dein Postfach.");
+    setResetMsg(""); setAuthErr("");
+    const adresse = email.trim();
+    if (!IST_EMAIL.test(adresse)) { setResetMsg("Bitte trage oben zuerst deine E-Mail-Adresse ein."); return; }
+    setResetBusy(true);
+    try {
+      const antwort = await fetch("/api/passwort-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: adresse }),
+      });
+      const daten = await antwort.json().catch(() => ({}));
+      if (!antwort.ok || !daten.ok) throw new Error(daten.error || "");
+      // Bewusst neutral formuliert: das Formular verrät nicht, ob es zu der
+      // Adresse einen Zugang gibt.
+      setResetMsg("Wenn es zu " + adresse + " einen Zugang gibt, ist der Link zum Zurücksetzen jetzt unterwegs. Schau bitte auch im Spam-Ordner nach.");
+    } catch (e) {
+      setResetMsg("Fehler: " + fehlerText(e) + " Melde dich gern direkt bei info@nest-bildungsbar.de.");
+    } finally {
+      setResetBusy(false);
+    }
+  }
+
+  // Neues Passwort nach dem Klick auf den Link aus der Reset-Mail setzen.
+  async function passwortNeuSetzen(e) {
+    e.preventDefault(); setPwMsg("");
+    if (pwNeu.length < 8) { setPwMsg("Das Passwort muss mindestens 8 Zeichen haben."); return; }
+    const { error } = await supabase.auth.updateUser({ password: pwNeu });
+    if (error) { setPwMsg("Fehler: " + fehlerText(error)); return; }
+    setPwNeu(""); setPwMsg(""); setRecovery(false);
+    toast("Neues Passwort gespeichert ✅ Du bist jetzt angemeldet.");
   }
 
   // Optionales Firmen-Logo zur Stelle hochladen (Bucket "logos").
@@ -684,6 +753,20 @@ export default function PartnerPortal() {
             </div>
           ) : loading ? (
             <p>Lädt …</p>
+          ) : recovery && session ? (
+            /* Über den Link aus der Reset-Mail gekommen: direkt neues Passwort
+               setzen, statt im Dashboard danach suchen zu müssen. */
+            <div className="card" style={{ maxWidth: "460px", margin: "0 auto" }}>
+              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 6px" }}>Neues Passwort vergeben</h2>
+              <p style={{ fontSize: "13px", color: "var(--text-soft)", margin: "0 0 16px" }}>
+                Für <strong>{session.user.email}</strong>. Mindestens 8 Zeichen – danach bist du direkt angemeldet.
+              </p>
+              <form onSubmit={passwortNeuSetzen} className="tb-form">
+                <div className="field"><label>Neues Passwort</label><input type="password" value={pwNeu} onChange={(ev) => setPwNeu(ev.target.value)} placeholder="mindestens 8 Zeichen" autoComplete="new-password" required /></div>
+                {pwMsg ? <p style={{ color: pwMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{pwMsg}</p> : null}
+                <button className="btn btn-primary" type="submit" style={{ width: "100%", justifyContent: "center" }}>Passwort speichern</button>
+              </form>
+            </div>
           ) : !session ? (
             <div className="card" style={{ maxWidth: "460px", margin: "0 auto" }}>
               <div className="auth-tabs">
@@ -699,11 +782,11 @@ export default function PartnerPortal() {
                     <div className="field"><label>Passwort</label><input type="password" value={pass} onChange={(e) => setPass(e.target.value)} required /></div>
                     {regMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{regMsg}</p> : null}
                     {authErr ? <p style={{ color: "#c2415a", fontSize: "14px" }}>{authErr}</p> : null}
-                    {resetMsg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{resetMsg}</p> : null}
+                    {resetMsg ? <p style={{ color: resetMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{resetMsg}</p> : null}
                     <button className="btn btn-primary" type="submit" style={{ width: "100%", justifyContent: "center" }}>Anmelden</button>
                   </form>
                   <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "12px" }}>
-                    <button type="button" className="link-btn" onClick={passwortReset}>Passwort vergessen?</button>
+                    <button type="button" className="link-btn" onClick={passwortReset} disabled={resetBusy}>{resetBusy ? "Link wird verschickt …" : "Passwort vergessen?"}</button>
                   </p>
                   <p style={{ fontSize: "13px", color: "var(--text-soft)", marginTop: "4px" }}>
                     Noch kein Zugang? <button type="button" className="link-btn" onClick={() => { setAuthMode("register"); setAuthErr(""); }}>Jetzt als Unternehmen registrieren</button>.

@@ -13,7 +13,7 @@ const AP_LEER = { name: "", rolle: "", email: "", telefon: "", website: "", stan
 
 // Standard-Ansprechpartner – werden gezeigt, solange in der Tabelle `ansprechpartner`
 // noch nichts gepflegt ist (Admin kann sie im Portal überschreiben/ergänzen).
-// Bilder für die Partner:innen (Jana, Esther) werden nachgeliefert.
+// Bilder für die Partner:innen (Jana, Esther, Roman) werden nachgeliefert.
 const AP_DEFAULT = [
   // Team der BildungsBar
   { id: "d1", name: "Mike Stoeck", rolle: "Gründer & Geschäftsführer", standort: "Wuppertal", bild_url: "/assets/img/team/mike.jpg", sortierung: 1, beschreibung: "Mitgründer der BildungsBar. Mike startete selbst als Azubi zum Mechatroniker, engagierte sich früh als Jugendvertreter in Betriebsrat und Gewerkschaft und bringt seine Erfahrung heute praxisnah und auf Augenhöhe in Workshops und Coachings ein." },
@@ -23,6 +23,7 @@ const AP_DEFAULT = [
   { id: "d4", name: "Jana Kortwig", rolle: "Soulspace Wuppertal", standort: "Wuppertal", bild_url: "", sortierung: 4, beschreibung: "Jana Kortwig ist Gründerin von Soulspace, Wuppertals erstem Jugendzentrum für mentale Gesundheit. Als pädagogisch-therapeutische Beraterin schafft sie einen offenen Ort, an dem Jugendliche kostenlos und ohne Termin über ihre Sorgen sprechen können." },
   { id: "d5", name: "Esther Königes", rolle: "Workstadt", standort: "Wuppertal", bild_url: "", sortierung: 5, beschreibung: "Esther Königes ist Mitgründerin und Geschäftsführerin der WorkStadt GmbH in Wuppertal. Mit WorkStadt unterstützt sie Unternehmen beim Onboarding internationaler Fachkräfte – vom Ankommen in der Stadt bis zur nachhaltigen Integration ins Team." },
   { id: "d6", name: "Marc Longjaloux", rolle: "Designbüro Longjaloux", standort: "Wuppertal", bild_url: "/assets/img/team/marc.jpg", sortierung: 6, beschreibung: "Büro Longjaloux macht Corporate Design für kleine und mittelständische Unternehmen – seit 1980. Wir finden den Kern von Marken und machen ihn sichtbar. Für alle, die wissen, was sie tun, aber noch nicht, wie sie das erfolgreich kommunizieren sollen: Mit Strategie-Workshops, Corporate Design und gezielter Markenführung schaffen wir Auftritte, die nicht nur gut aussehen, sondern wirken. Geiler Scheiß für geile Leute." },
+  { id: "d7", name: "Roman Scholz", rolle: "Foto- & Videograf | Drohnenpilot", bild_url: "", sortierung: 7, beschreibung: "Roman Scholz ist Foto- und Videograf und Drohnenpilot. Er produziert Imagefilme, Drohnenaufnahmen, Event-Reportagen und vieles mehr – von der Idee über den Dreh bis zum fertigen Schnitt." },
 ];
 
 const IST_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

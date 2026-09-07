@@ -1042,7 +1042,9 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .ap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px; }
 @media (max-width: 760px) { .ap-grid { grid-template-columns: 1fr; } }
 .ap-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(15,33,69,0.06); }
-.ap-photo { width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: top center; display: block; }
+/* Alle Ansprechpartner-Fotos einheitlich in Graustufen – auch die, die im
+   Admin-Bereich als Farbbild hochgeladen werden. */
+.ap-photo { width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: top center; display: block; filter: grayscale(1); }
 .ap-body { padding: 16px 18px 18px; }
 .ap-topic { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 4px; }
 .ap-name { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }

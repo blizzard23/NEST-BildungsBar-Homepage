@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { clientIp, rateLimitErreicht, spamGrund } from "@/lib/spamSchutz";
+import { sendeMail, mailKonfiguriert, absender, empfaengerTeam } from "@/lib/mailer";
 
-/* Mailversand über SMTP (lima-city). Erwartet POST mit JSON:
+/* Mailversand über lib/mailer (Resend, sonst SMTP). Erwartet POST mit JSON:
    { subject, text, replyTo, hp, t } – text ist reiner Text (Zeilenumbrüche \n),
    hp ist das Honeypot-Feld, t die Ausfüllzeit in ms (Spamschutz, siehe lib/spamSchutz).
    Konfiguration über Umgebungsvariablen (siehe .env.local.example):
-   SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, MAIL_TO, MAIL_FROM */
+   RESEND_API_KEY bzw. SMTP_*, dazu MAIL_TO und MAIL_FROM */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  if (!host || !user || !pass) {
-    return NextResponse.json({ ok: false, error: "SMTP nicht konfiguriert" }, { status: 503 });
+  // Ohne Mailversand antwortet die Route mit 503 – das Formular fällt dann
+  // automatisch auf die mailto-Variante zurück.
+  if (!mailKonfiguriert()) {
+    return NextResponse.json({ ok: false, error: "Mailversand nicht konfiguriert" }, { status: 503 });
   }
 
   let body;
@@ -36,19 +35,10 @@ export async function POST(req) {
     return NextResponse.json({ ok: true });
   }
 
-  const port = Number(process.env.SMTP_PORT || 465);
-  const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465;
-  const mailTo = process.env.MAIL_TO || "info@nest-bildungsbar.de";
-  const mailFrom = process.env.MAIL_FROM || user;
-
   try {
-    const transporter = nodemailer.createTransport({
-      host, port, secure,
-      auth: { user, pass },
-    });
-    await transporter.sendMail({
-      from: `"NEST Website" <${mailFrom}>`,
-      to: mailTo,
+    await sendeMail({
+      from: absender("NEST Website"),
+      to: empfaengerTeam(),
       replyTo,
       subject,
       text,

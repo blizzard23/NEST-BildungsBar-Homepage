@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendeMail, mailKonfiguriert, absender } from "@/lib/mailer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 /* Täglicher Cron (siehe vercel.json): schickt allen, die MORGEN einen Termin
@@ -75,21 +75,14 @@ async function handle(req) {
   if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
   if (!termine || !termine.length) return NextResponse.json({ ok: true, tag, anzahl: 0 });
 
-  // SMTP einmalig vorbereiten
-  let transporter = null;
-  const host = process.env.SMTP_HOST, user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
-  if (host && user && pass) {
-    const port = Number(process.env.SMTP_PORT || 465);
-    const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465;
-    transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
-  }
-  const von = `"NEST BildungsBar" <${process.env.MAIL_FROM || user || "info@nest-bildungsbar.de"}>`;
+  const kannMailen = mailKonfiguriert();
+  const von = absender("NEST BildungsBar");
 
   let mails = 0, whatsapps = 0;
   for (const t of termine) {
     const wann = (t.datum_text || t.datum) + " um " + t.uhrzeit + " in " + t.standort;
 
-    if (transporter && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t.email || "")) {
+    if (kannMailen && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t.email || "")) {
       const text = [
         "Hallo " + t.name + ",", "",
         "kleine Erinnerung: morgen ist dein Termin bei der NEST BildungsBar 🎉", "",
@@ -100,7 +93,7 @@ async function handle(req) {
         "Dein NEST-Team",
       ].join("\n");
       try {
-        await transporter.sendMail({ from: von, to: t.email, subject: "Erinnerung: Dein Termin morgen – " + t.standort, text });
+        await sendeMail({ from: von, to: t.email, subject: "Erinnerung: Dein Termin morgen – " + t.standort, text });
         mails++;
       } catch (e) {}
     }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendeMail, mailKonfiguriert, absender, empfaengerTeam } from "@/lib/mailer";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { clientIp, rateLimitErreicht, spamGrund } from "@/lib/spamSchutz";
@@ -98,13 +98,9 @@ export async function POST(req) {
     stored = !error;
   }
 
-  // 2) E-Mail verschicken (optional, wenn SMTP konfiguriert)
-  const host = process.env.SMTP_HOST, user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
-  if (host && user && pass) {
+  // 2) E-Mail verschicken (optional, wenn ein Versandweg konfiguriert ist)
+  if (mailKonfiguriert()) {
     try {
-      const port = Number(process.env.SMTP_PORT || 465);
-      const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465;
-      const transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
       const text = [
         "Neue Terminbuchung über die Website:", "",
         "Standort: " + buchung.standort + (b.adresse ? " (" + clean(b.adresse, 120) + ")" : ""),
@@ -116,13 +112,13 @@ export async function POST(req) {
         "Schule/Klasse: " + (buchung.schule || "—"), "",
         "Nachricht: " + (buchung.nachricht || "—"),
       ].join("\n");
-      const von = `"NEST BildungsBar" <${process.env.MAIL_FROM || user}>`;
+      const von = absender("NEST BildungsBar");
       const wann = (buchung.datum_text || buchung.datum) + " um " + buchung.uhrzeit;
 
       // a) Benachrichtigung ans NEST-Team
-      await transporter.sendMail({
+      await sendeMail({
         from: von,
-        to: process.env.MAIL_TO || "info@nest-bildungsbar.de",
+        to: empfaengerTeam(),
         replyTo: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buchung.email) ? buchung.email : undefined,
         subject: "Terminbuchung – " + buchung.standort + " · " + wann,
         text,
@@ -141,7 +137,7 @@ export async function POST(req) {
           "Wir freuen uns auf dich!",
           "Dein NEST-Team",
         ].join("\n");
-        await transporter.sendMail({
+        await sendeMail({
           from: von,
           to: buchung.email,
           subject: "Dein Termin ist gebucht – " + buchung.standort + " · " + wann,

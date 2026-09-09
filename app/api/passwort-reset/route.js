@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendeMail, mailKonfiguriert, absender } from "@/lib/mailer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { clientIp, rateLimitErreicht } from "@/lib/spamSchutz";
 
@@ -13,8 +13,8 @@ import { clientIp, rateLimitErreicht } from "@/lib/spamSchutz";
    das aus, als sei das Portal kaputt.
 
    Diese Route ist davon unabhängig: sie erzeugt den Link über die Admin-API
-   (generateLink verschickt selbst keine Mail) und mailt ihn über denselben
-   SMTP-Zugang wie Kontakt-, Buchungs- und Erinnerungs-Mails.
+   (generateLink verschickt selbst keine Mail) und mailt ihn über denselben Weg
+   wie Kontakt-, Buchungs- und Erinnerungs-Mails (lib/mailer: Resend, sonst SMTP).
 
    POST { email } -> { ok: true }
    Ob es die Adresse gibt, verrät die Antwort bewusst nicht (keine Konto-Abfrage
@@ -95,9 +95,8 @@ export async function POST(req) {
     return NextResponse.json({ ok: false, error: "Passwort-Zurücksetzen ist gerade nicht möglich." }, { status: 503 });
   }
 
-  const host = process.env.SMTP_HOST, user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
-  if (!host || !user || !pass) {
-    console.error("Passwort-Reset: SMTP nicht konfiguriert");
+  if (!mailKonfiguriert()) {
+    console.error("Passwort-Reset: Mailversand nicht konfiguriert");
     return NextResponse.json({ ok: false, error: "Passwort-Zurücksetzen ist gerade nicht möglich." }, { status: 503 });
   }
 
@@ -124,13 +123,10 @@ export async function POST(req) {
     return NextResponse.json({ ok: false, error: "Passwort-Zurücksetzen ist gerade nicht möglich." }, { status: 502 });
   }
 
-  // 2) Link über den eigenen SMTP-Zugang verschicken
-  const port = Number(process.env.SMTP_PORT || 465);
-  const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465;
+  // 2) Link über den eigenen Mailversand verschicken
   try {
-    const transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
-    await transporter.sendMail({
-      from: `"NEST BildungsBar" <${process.env.MAIL_FROM || user}>`,
+    await sendeMail({
+      from: absender("NEST BildungsBar"),
       to: email,
       subject: "Neues Passwort fürs NEST-Partner-Portal",
       text: mailText(link),

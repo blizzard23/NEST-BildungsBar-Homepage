@@ -87,13 +87,14 @@ git push -u origin main
    |------|------|
    | `NEXT_PUBLIC_SUPABASE_URL` | deine Supabase Project URL |
    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | dein anon public Key |
-   | `SMTP_HOST` | `smtp.lima-city.de` |
-   | `SMTP_PORT` | `465` |
-   | `SMTP_SECURE` | `true` |
-   | `SMTP_USER` | dein lima-city Postfach (E-Mail) |
-   | `SMTP_PASS` | Postfach-Passwort |
+   | `RESEND_API_KEY` *(empfohlen)* | Resend API-Key (`re_…`) – hat Vorrang vor SMTP |
+   | `SMTP_HOST` *(Fallback)* | `smtp.lima-city.de` |
+   | `SMTP_PORT` *(Fallback)* | `465` |
+   | `SMTP_SECURE` *(Fallback)* | `true` |
+   | `SMTP_USER` *(Fallback)* | dein lima-city Postfach (E-Mail) |
+   | `SMTP_PASS` *(Fallback)* | Postfach-Passwort |
    | `MAIL_TO` | `info@nest-bildungsbar.de` |
-   | `MAIL_FROM` | dein lima-city Postfach (E-Mail) |
+   | `MAIL_FROM` | Absenderadresse (bei Resend: verifizierte Domain) |
    | `SUPABASE_SERVICE_ROLE_KEY` | service_role-Secret (für den Erinnerungs-Cron) |
    | `CRON_SECRET` | langes Zufallsgeheimnis (schützt den Cron) |
    | `WHATSAPP_TOKEN` *(optional)* | WhatsApp Cloud API Token |
@@ -109,7 +110,7 @@ git push -u origin main
 
 `vercel.json` enthält einen **täglichen Cron** (`/api/cron/erinnerungen`, 16:00 UTC).
 Er sucht alle Buchungen für **morgen** und schickt eine freundliche Erinnerung per
-**E-Mail** (SMTP) und – falls konfiguriert – per **WhatsApp**. Damit nichts doppelt
+**E-Mail** (Resend bzw. SMTP) und – falls konfiguriert – per **WhatsApp**. Damit nichts doppelt
 verschickt wird, wird je Buchung `erinnert_am` gesetzt.
 
 - Pflicht dafür: `SUPABASE_SERVICE_ROLE_KEY` (Cron liest ohne Login) und `CRON_SECRET`.
@@ -121,17 +122,34 @@ verschickt wird, wird je Buchung `erinnert_am` gesetzt.
   Ohne diese WhatsApp-Variablen wird nur die E-Mail-Erinnerung verschickt.
 - Cron testen: den Endpoint manuell aufrufen mit Header `Authorization: Bearer <CRON_SECRET>`.
 
-### Mailversand (lima-city SMTP)
+### Mailversand (Resend, sonst lima-city SMTP)
 
-Termin-, Kontakt- und Sonderanfragen werden serverseitig über die API-Route
-`/api/kontakt` mit **nodemailer** verschickt – über dein lima-city-Postfach.
+Aller Versand läuft über **`lib/mailer.js`** – Kontakt- und Sonderanfragen, Termin- und
+Veranstaltungsbestätigungen, Erinnerungs-Cron, Passwort-Reset und die
+Registrierungs-Bestätigung. Zwei Wege, **Resend hat Vorrang**:
+
+**1. Resend (empfohlen)** – aktiv, sobald `RESEND_API_KEY` gesetzt ist.
+
+- HTTPS-API (`api.resend.com`) statt SMTP. Auf Vercel der zuverlässigere Weg:
+  Serverless-Funktionen und SMTP vertragen sich schlecht (Verbindungsaufbau bei jedem
+  Aufruf, Timeouts, geblockte Ports), außerdem gibt es im Resend-Dashboard ein
+  Zustellprotokoll – man sieht also, ob eine Mail rausging und was mit ihr passiert ist.
+- **Voraussetzung:** Die Domain aus `MAIL_FROM` muss in Resend unter **Domains**
+  verifiziert sein (DNS-Einträge für SPF/DKIM). Sonst antwortet die API mit **403** und
+  es geht keine Mail raus. Ohne verifizierte Domain funktioniert nur
+  `onboarding@resend.dev` und auch nur an die eigene Konto-Adresse – reicht zum Testen.
+- Kein zusätzliches npm-Paket nötig, die Route spricht die REST-API direkt an.
+
+**2. SMTP über lima-city** – der bisherige Weg, greift automatisch, solange kein
+`RESEND_API_KEY` gesetzt ist. Damit bleibt der Versand auch ohne Resend funktionsfähig.
 
 - **Server:** `smtp.lima-city.de` · **Port 465** (SSL, `SMTP_SECURE=true`) oder
   **Port 587** (STARTTLS, `SMTP_SECURE=false`).
 - `SMTP_USER`/`SMTP_PASS` = Zugangsdaten deines lima-city-**Postfachs** (nicht der Login fürs Kundenkonto).
 - `MAIL_FROM` muss zu diesem Postfach passen (sonst lehnt der Server den Versand ab).
-- Sind die SMTP-Variablen **nicht** gesetzt, fallen die Formulare automatisch auf die
-  bisherige **mailto-Variante** zurück (öffnen das Mailprogramm) – nichts geht verloren.
+
+Ist **keiner** von beiden Wegen konfiguriert, fallen die Formulare automatisch auf die
+**mailto-Variante** zurück (öffnen das Mailprogramm) – nichts geht verloren.
 
 ### Passwort vergessen (Partner-Portal)
 
@@ -147,10 +165,11 @@ Portal stand dann nur „Fehler: {}", der Recovery-Token wurde zurückgerollt un
 
 Die eigene Route erzeugt den Link stattdessen über die **Admin-API**
 (`auth.admin.generateLink`, verschickt selbst keine Mail) und mailt ihn über **denselben
-lima-city-SMTP** wie alle anderen Formulare. Damit hängt das Zurücksetzen nicht mehr an
-der Supabase-SMTP-Konfiguration.
+Weg wie alle anderen Formulare** (`lib/mailer.js`: Resend, sonst SMTP). Damit hängt das
+Zurücksetzen nicht mehr an der Supabase-SMTP-Konfiguration.
 
-- Pflicht dafür: `SUPABASE_SERVICE_ROLE_KEY` und die `SMTP_*`-Variablen.
+- Pflicht dafür: `SUPABASE_SERVICE_ROLE_KEY` und ein konfigurierter Mailversand
+  (`RESEND_API_KEY` **oder** die `SMTP_*`-Variablen).
 - `NEXT_PUBLIC_SITE_URL` bestimmt, wohin der Link führt (`…/partner-portal`). Ohne die
   Variable wird der Host der Anfrage genommen.
 - Das Ziel muss in Supabase unter **Authentication → URL Configuration → Redirect URLs**
@@ -172,9 +191,10 @@ deshalb ebenfalls unmöglich (Supabase Auth-Log: `user_confirmation_requested` �
 `535 "5.7.8 Error: authentication failed"`, September 2026).
 
 Die eigene Route legt den Zugang über die **Admin-API** an, erzeugt den Bestätigungslink
-mit `auth.admin.generateLink` (verschickt selbst keine Mail) und mailt ihn über den
-**lima-city-SMTP**. Gleiche Voraussetzungen wie beim Passwort-Reset
-(`SUPABASE_SERVICE_ROLE_KEY`, `SMTP_*`, `NEXT_PUBLIC_SITE_URL` als erlaubte Redirect-URL).
+mit `auth.admin.generateLink` (verschickt selbst keine Mail) und mailt ihn über
+`lib/mailer.js`. Gleiche Voraussetzungen wie beim Passwort-Reset
+(`SUPABASE_SERVICE_ROLE_KEY`, Mailversand konfiguriert, `NEXT_PUBLIC_SITE_URL` als
+erlaubte Redirect-URL).
 
 - Gibt es zu der Adresse **schon einen Zugang**, wird kein zweites Konto angelegt.
   Stattdessen geht eine Mail mit Link zum Passwortsetzen raus – der bestätigt beim Klick

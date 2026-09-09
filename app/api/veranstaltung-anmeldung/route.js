@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendeMail, mailKonfiguriert, absender, empfaengerTeam } from "@/lib/mailer";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 /* Anmeldung eines Unternehmens zu einer Veranstaltung:
@@ -127,23 +127,19 @@ export async function POST(req) {
   const { error: insErr } = await sb.from("veranstaltung_anmeldungen").insert(anmeldung);
   if (insErr) return NextResponse.json({ ok: false, error: "Speichern fehlgeschlagen" }, { status: 502 });
 
-  // 2) E-Mails verschicken (optional, wenn SMTP konfiguriert)
+  // 2) E-Mails verschicken (optional, wenn ein Versandweg konfiguriert ist)
   let mailed = false;
-  const host = process.env.SMTP_HOST, user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
-  if (host && user && pass) {
+  if (mailKonfiguriert()) {
     try {
-      const port = Number(process.env.SMTP_PORT || 465);
-      const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465;
-      const transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
-      const von = `"NEST BildungsBar" <${process.env.MAIL_FROM || user}>`;
+      const von = absender("NEST BildungsBar");
       const ort = [ev.adresse, ev.ort].filter(Boolean).join(", ") || ev.ort || "—";
       const wann = ev.datum + (ev.uhrzeit ? " · " + ev.uhrzeit : "");
       const ics = baueIcs(ev);
 
       // a) Benachrichtigung ans NEST-Team
-      await transporter.sendMail({
+      await sendeMail({
         from: von,
-        to: process.env.MAIL_TO || "info@nest-bildungsbar.de",
+        to: empfaengerTeam(),
         replyTo: anmeldung.email,
         subject: "Veranstaltungs-Anmeldung – " + ev.titel + " · " + wann,
         text: [
@@ -162,7 +158,7 @@ export async function POST(req) {
       });
 
       // b) Bestätigung ans Unternehmen – mit Kalender-Anhang
-      await transporter.sendMail({
+      await sendeMail({
         from: von,
         to: anmeldung.email,
         subject: "Anmeldung bestätigt – " + ev.titel + " · " + wann,

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendeMail, mailKonfiguriert, absender } from "@/lib/mailer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { clientIp, rateLimitErreicht } from "@/lib/spamSchutz";
 
@@ -16,9 +16,9 @@ import { clientIp, rateLimitErreicht } from "@/lib/spamSchutz";
 
    Diese Route ist davon unabhängig: sie legt den Zugang über die Admin-API an
    und erzeugt den Bestätigungslink mit generateLink (verschickt selbst keine
-   Mail). Verschickt wird über denselben SMTP-Zugang wie Kontakt-, Buchungs-,
-   Erinnerungs- und Passwort-Reset-Mails. Gleiches Vorgehen wie in
-   /api/passwort-reset.
+   Mail). Verschickt wird über denselben Weg wie Kontakt-, Buchungs-,
+   Erinnerungs- und Passwort-Reset-Mails (lib/mailer: Resend, sonst SMTP).
+   Gleiches Vorgehen wie in /api/passwort-reset.
 
    POST { email, password, firma, nestplayRef } -> { ok: true }
    Ob es die Adresse schon gibt, verrät die Antwort bewusst nicht. Existiert
@@ -160,9 +160,8 @@ export async function POST(req) {
     return NextResponse.json({ ok: false, error: "Die Registrierung ist gerade nicht möglich." }, { status: 503 });
   }
 
-  const host = process.env.SMTP_HOST, user = process.env.SMTP_USER, pass = process.env.SMTP_PASS;
-  if (!host || !user || !pass) {
-    console.error("Registrierung: SMTP nicht konfiguriert");
+  if (!mailKonfiguriert()) {
+    console.error("Registrierung: Mailversand nicht konfiguriert");
     return NextResponse.json({ ok: false, error: "Die Registrierung ist gerade nicht möglich." }, { status: 503 });
   }
 
@@ -213,13 +212,10 @@ export async function POST(req) {
     return NextResponse.json({ ok: false, error: "Die Registrierung ist gerade nicht möglich." }, { status: 502 });
   }
 
-  // 2) Link über den eigenen SMTP-Zugang verschicken
-  const port = Number(process.env.SMTP_PORT || 465);
-  const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465;
+  // 2) Link über den eigenen Mailversand verschicken
   try {
-    const transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
-    await transporter.sendMail({
-      from: `"NEST BildungsBar" <${process.env.MAIL_FROM || user}>`,
+    await sendeMail({
+      from: absender("NEST BildungsBar"),
       to: email,
       subject: betreff,
       text,

@@ -151,6 +151,7 @@ const html = `
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_63.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/vorwerk-autotec.png" alt="Vorwerk Autotec" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/diakonische-altenhilfe-wuppertal.png" alt="Diakonische Altenhilfe Wuppertal" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/schulten.png" alt="Schulten Gebäudedienste" loading="lazy"></div>
         </div>
       </div>
 

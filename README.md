@@ -158,10 +158,34 @@ der Supabase-SMTP-Konfiguration.
 - Die Antwort verrät nie, ob es zu einer Adresse einen Zugang gibt (keine Konto-Abfrage
   von außen); zusätzlich greift ein Rate-Limit von 5 Anfragen pro IP je 10 Minuten.
 
-> **Achtung – davon nicht abgedeckt:** Die **Bestätigungsmail bei der Registrierung**
-> verschickt weiterhin Supabase selbst. Solange der SMTP-Zugang unter
-> **Authentication → Emails → SMTP Settings** falsche Zugangsdaten hat, kommt bei neuen
-> Unternehmen keine Bestätigungsmail an. Diese Zugangsdaten gehören dort aktualisiert.
+### Registrierung & Bestätigungsmail (Partner-Portal)
+
+Die Registrierung läuft aus demselben Grund über die eigene Route
+**`/api/registrierung`** – bewusst **nicht** über `supabase.auth.signUp()`.
+
+**Warum?** Bei `signUp()` verschickt Supabase die Bestätigungsmail selbst, über denselben
+Dashboard-SMTP. Lehnt der die Anmeldung ab, bricht der **komplette Signup** ab:
+`/auth/v1/signup` antwortet mit **HTTP 500**, der eben angelegte Benutzer wird
+zurückgerollt und es geht keine Mail raus. Für Unternehmen sah das so aus, als käme nur
+die Bestätigungsmail nicht an – tatsächlich existierte der Zugang gar nicht, ein Login war
+deshalb ebenfalls unmöglich (Supabase Auth-Log: `user_confirmation_requested` →
+`535 "5.7.8 Error: authentication failed"`, September 2026).
+
+Die eigene Route legt den Zugang über die **Admin-API** an, erzeugt den Bestätigungslink
+mit `auth.admin.generateLink` (verschickt selbst keine Mail) und mailt ihn über den
+**lima-city-SMTP**. Gleiche Voraussetzungen wie beim Passwort-Reset
+(`SUPABASE_SERVICE_ROLE_KEY`, `SMTP_*`, `NEXT_PUBLIC_SITE_URL` als erlaubte Redirect-URL).
+
+- Gibt es zu der Adresse **schon einen Zugang**, wird kein zweites Konto angelegt.
+  Stattdessen geht eine Mail mit Link zum Passwortsetzen raus – der bestätigt beim Klick
+  auch eine bisher unbestätigte Adresse. Die Antwort im Portal ist in beiden Fällen
+  identisch, verrät also nicht, ob es das Konto schon gibt.
+- Rate-Limit: 5 Anfragen pro IP je 10 Minuten.
+
+> **Hinweis:** Der SMTP-Zugang unter **Authentication → Emails → SMTP Settings** im
+> Supabase-Dashboard ist damit für Registrierung und Passwort-Reset nicht mehr nötig.
+> Er sollte trotzdem korrigiert werden, falls später weitere Auth-Mails dazukommen
+> (z. B. E-Mail-Adresse ändern, Einladungen).
 
 Jeder weitere `git push` deployt automatisch neu.
 

@@ -32,7 +32,7 @@ const IST_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
    tatsächlich zu sehen bekommen, hier auf Deutsch übersetzen. */
 const AUTH_TEXTE = [
   [/invalid login credentials/i, "E-Mail-Adresse oder Passwort stimmt nicht."],
-  [/email not confirmed/i, "Diese E-Mail-Adresse ist noch nicht bestätigt. Schreib uns kurz an info@nest-bildungsbar.de, dann schalten wir den Zugang frei."],
+  [/email not confirmed/i, "Diese E-Mail-Adresse ist noch nicht bestätigt. Klick den Link aus der Registrierungs-Mail (auch im Spam-Ordner nachsehen) – oder fordere über „Passwort vergessen\" einen neuen Link an."],
   [/(email|token) link is invalid or has expired|token has expired or is invalid/i, "Der Link ist nicht mehr gültig – er gilt nur kurze Zeit und nur ein einziges Mal."],
   [/user (already registered|with this email address has already)/i, "Zu dieser E-Mail-Adresse gibt es schon einen Zugang. Melde dich damit an oder setze das Passwort zurück."],
   [/password should be at least (\d+)/i, "Das Passwort ist zu kurz."],
@@ -378,23 +378,37 @@ export default function PartnerPortal() {
     setFirmaQuery(v); setFirmaRef(null); setFirmaOpen(true); // Freitext -> Mapping später über den Namen
   }
 
+  /* Registrierung: läuft über die eigene Route /api/registrierung.
+     Der direkte Weg über supabase.auth.signUp() hängt am SMTP-Server, der im
+     Supabase-Dashboard hinterlegt ist. Lehnt der die Anmeldung ab, bricht der
+     ganze Signup ab (HTTP 500), der Zugang wird zurückgerollt und es geht keine
+     Bestätigungsmail raus – Unternehmen können sich danach also weder bestätigen
+     noch anmelden. Die eigene Route legt den Zugang über die Admin-API an und
+     verschickt die Mail über denselben Weg wie die übrigen Formulare. */
   async function registrieren(e) {
     e.preventDefault(); setAuthErr(""); setRegMsg("");
     const firmaName = firmaQuery.trim();
     if (!firmaName) { setAuthErr("Bitte wähle oder nenne dein Unternehmen."); return; }
+    if (!IST_EMAIL.test(email.trim())) { setAuthErr("Bitte eine gültige E-Mail-Adresse angeben."); return; }
     if (pass.length < 8) { setAuthErr("Das Passwort muss mindestens 8 Zeichen haben."); return; }
     setRegBusy(true);
-    const { data, error } = await supabase.auth.signUp({
-      email, password: pass,
-      options: { data: { firma: firmaName, nestplay_ref: firmaRef || firmaName } },
-    });
-    setRegBusy(false);
-    if (error) { setAuthErr("Registrierung fehlgeschlagen: " + fehlerText(error)); return; }
-    if (data.session) {
-      setRegMsg("Willkommen! Dein Zugang ist aktiv.");
-    } else {
-      setRegMsg("Fast geschafft! Wir haben dir eine E-Mail zur Bestätigung geschickt. Bitte bestätige deine Adresse und melde dich anschließend an.");
+    try {
+      const antwort = await fetch("/api/registrierung", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password: pass, firma: firmaName, nestplayRef: firmaRef || firmaName }),
+      });
+      const daten = await antwort.json().catch(() => ({}));
+      if (!antwort.ok || !daten.ok) throw new Error(daten.error || "");
+      // Bewusst neutral formuliert: gibt es die Adresse schon, kommt statt der
+      // Bestätigung eine Mail mit Link zum Passwortsetzen – das Formular
+      // verrät aber nicht, welcher der beiden Fälle zutrifft.
+      setRegMsg("Fast geschafft! Wir haben dir eine E-Mail an " + email.trim() + " geschickt. Bitte bestätige darüber deine Adresse und melde dich anschließend an. Schau bitte auch im Spam-Ordner nach.");
       setAuthMode("login");
+    } catch (err) {
+      setAuthErr("Registrierung fehlgeschlagen: " + fehlerText(err));
+    } finally {
+      setRegBusy(false);
     }
   }
   async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setAnmeldungen([]); setAdminMesseTermine([]); setMesseBuchungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }

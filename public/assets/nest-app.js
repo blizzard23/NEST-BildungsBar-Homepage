@@ -245,6 +245,7 @@ window.BERUF_BILDER = {
   "fleischer": "assets/img/berufe/fleischer.png",
   "fliesenleger": "assets/img/berufe/fliesenleger.png",
   "gaertner-fachrichtung-garten-und-landschaftsbau": "assets/img/berufe/gaertner-fachrichtung-garten-und-landschaftsbau.webp",
+  "gebaeudereiniger": "assets/img/berufe/gebaeudereiniger.png",
   "glaser": "assets/img/berufe/glaser.webp",
   "industriemechaniker": "assets/img/berufe/industriemechaniker.png",
   "kfz-mechatroniker": "assets/img/berufe/kfz-mechatroniker.png",

@@ -1002,23 +1002,32 @@ h1, h2, h3 { hyphens: none !important; overflow-wrap: break-word; }
 .hp-partner-chip { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 8px 6px; text-align: center; font-size: 8.5px; font-weight: 700; color: var(--navy); display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(15,33,69,0.06); }
 .hp-partner-chip--wide { grid-column: span 2; font-size: 9px; }
 
-/* --- Job-Karussell: läuft nur „im Kreis", wenn der Bildbereich überschritten wird
-       (Klasse is-marquee wird per JS gesetzt, sobald mehrere Stellen überlaufen) --- */
+/* --- Job-Karussell: läuft „im Kreis", sobald die Karten den Bildbereich überschreiten
+       (Logik: window.nestStellenKarussell in nest-app.js). Der Track bleibt scrollbar,
+       damit man jederzeit selbst wischen oder mit den Pfeilen blättern kann. --- */
+.stellen-karussell { position: relative; }
 .stellen-track.is-marquee {
-  overflow: hidden;
-  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
 }
-.stellen-strip.is-marquee {
-  animation: stellenScroll 30s linear infinite;
+.stellen-track.is-marquee::-webkit-scrollbar { display: none; }
+.stellen-nav { display: none; }
+.stellen-karussell.hat-ueberlauf > .stellen-nav { display: block; }
+.stellen-pfeil {
+  position: absolute; top: 50%; z-index: 2; transform: translateY(-60%);
+  width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line);
+  background: #fff; color: var(--navy); font-size: 26px; line-height: 1; font-weight: 700;
+  display: grid; place-items: center; padding: 0 0 3px; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(15,33,69,0.15); transition: background .2s, color .2s;
 }
-.stellen-strip.is-marquee:hover { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) {
-  .stellen-strip.is-marquee { animation: none; }
-}
-@keyframes stellenScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+.stellen-pfeil:hover, .stellen-pfeil:focus-visible { background: var(--navy); color: #fff; }
+.stellen-pfeil.prev { left: -6px; }
+.stellen-pfeil.next { right: -6px; }
+@media (max-width: 600px) {
+  .stellen-pfeil { width: 34px; height: 34px; font-size: 22px; }
+  .stellen-pfeil.prev { left: 0; }
+  .stellen-pfeil.next { right: 0; }
 }
 
 /* --- Merkliste teilen Button --- */

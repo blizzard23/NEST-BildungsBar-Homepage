@@ -4,6 +4,121 @@
    Ausfüllzeit (ms) als "t" mit, die API sortiert zu schnelle Einsendungen aus. */
 window.NEST_T0 = window.NEST_T0 || Date.now();
 
+/* ===== Stellen-Karussell (Startseite + Berufswelt) =====
+   Lässt die Stellen-Karten endlos „im Kreis" laufen, sobald sie breiter sind
+   als der sichtbare Bereich. Läuft per JS über scrollLeft (statt CSS-Animation),
+   damit man zusätzlich wischen/scrollen und mit den Pfeilen blättern kann –
+   so bleibt jede Anzeige erreichbar, auch wenn das Gerät Animationen
+   reduziert (prefers-reduced-motion) oder der Nutzer gerade pausiert.
+   track = Scroll-Container (.stellen-track), strip = Kartenreihe darin. */
+window.nestStellenKarussell = function (track, strip) {
+  if (!track || !strip) return;
+  if (track._karussellStop) track._karussellStop();
+
+  var karten = Array.prototype.slice.call(strip.children);
+  var huelle = track.parentNode;
+  var TEMPO = 40; // px pro Sekunde
+  var reduziert = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var pos = 0, rest = 0, periode = 0, letzte = 0, raf = 0, pauseBis = 0, hover = false, laeuft = false, aktiv = true;
+
+  // Pfeile zum Blättern (einmal pro Hülle anlegen)
+  var nav = huelle.querySelector(":scope > .stellen-nav");
+  if (!nav) {
+    nav = document.createElement("div");
+    nav.className = "stellen-nav";
+    nav.innerHTML =
+      '<button type="button" class="stellen-pfeil prev" aria-label="Vorherige Stellen">&lsaquo;</button>' +
+      '<button type="button" class="stellen-pfeil next" aria-label="Weitere Stellen">&rsaquo;</button>';
+    huelle.insertBefore(nav, track);
+  }
+  var prev = nav.querySelector(".prev"), next = nav.querySelector(".next");
+
+  function schritt() { return karten[0] ? karten[0].getBoundingClientRect().width + 16 : 280; }
+  function pausiere(ms) { pauseBis = Math.max(pauseBis, performance.now() + ms); }
+
+  function klonEntfernen() {
+    strip.querySelectorAll(".stellen-klon").forEach(function (k) { k.parentNode.removeChild(k); });
+  }
+
+  function einrichten() {
+    klonEntfernen();
+    var ueberlauf = strip.scrollWidth > track.clientWidth + 4;
+    huelle.classList.toggle("hat-ueberlauf", ueberlauf);
+    laeuft = ueberlauf && karten.length >= 2 && !reduziert;
+    track.classList.toggle("is-marquee", laeuft);
+    if (!laeuft) { periode = 0; return; }
+    // Karten einmal duplizieren -> nahtloser Übergang vom Ende zum Anfang.
+    karten.forEach(function (k) {
+      var c = k.cloneNode(true);
+      c.classList.add("stellen-klon");
+      c.setAttribute("aria-hidden", "true");
+      c.setAttribute("tabindex", "-1");
+      strip.appendChild(c);
+    });
+    var ersterKlon = strip.querySelector(".stellen-klon");
+    periode = ersterKlon.offsetLeft - karten[0].offsetLeft;
+    pos = track.scrollLeft % periode;
+  }
+
+  function tick(t) {
+    if (!aktiv) return;
+    if (!track.isConnected) { stop(); return; }
+    var dt = letzte ? Math.min(t - letzte, 100) : 0;
+    letzte = t;
+    if (laeuft && periode > 0) {
+      // Manuelles Scrollen/Wischen übernehmen.
+      if (Math.abs(track.scrollLeft - pos) > 2) pos = track.scrollLeft;
+      if (!hover && t >= pauseBis) pos += TEMPO * dt / 1000;
+      // Pfeil-Blättern weich im selben Loop abarbeiten.
+      if (rest) { var d = Math.abs(rest) < 1 ? rest : rest * Math.min(1, dt / 90); pos += d; rest -= d; }
+      if (pos >= periode) pos -= periode;
+      if (pos < 0) pos += periode;
+      track.scrollLeft = pos;
+    }
+    raf = requestAnimationFrame(tick);
+  }
+
+  function blaettern(richtung) {
+    pausiere(4000);
+    if (laeuft && periode > 0) { rest += richtung * schritt(); return; } // Endlos-Loop übernimmt
+    track.scrollBy({ left: richtung * schritt(), behavior: reduziert ? "auto" : "smooth" });
+  }
+  function onPrev() { blaettern(-1); }
+  function onNext() { blaettern(1); }
+  function onEnter() { hover = true; }
+  function onLeave() { hover = false; }
+  function onTouch() { pausiere(3000); }
+  var resizeTimer = 0;
+  function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(einrichten, 150); }
+
+  prev.addEventListener("click", onPrev);
+  next.addEventListener("click", onNext);
+  track.addEventListener("mouseenter", onEnter);
+  track.addEventListener("mouseleave", onLeave);
+  track.addEventListener("focusin", onEnter);
+  track.addEventListener("focusout", onLeave);
+  track.addEventListener("touchstart", onTouch, { passive: true });
+  track.addEventListener("touchmove", onTouch, { passive: true });
+  track.addEventListener("wheel", onTouch, { passive: true });
+  window.addEventListener("resize", onResize);
+
+  function stop() {
+    aktiv = false;
+    cancelAnimationFrame(raf);
+    clearTimeout(resizeTimer);
+    prev.removeEventListener("click", onPrev);
+    next.removeEventListener("click", onNext);
+    window.removeEventListener("resize", onResize);
+    track._karussellStop = null;
+  }
+  track._karussellStop = stop;
+
+  einrichten();
+  raf = requestAnimationFrame(tick);
+  // Logos laden asynchron und können die Kartenbreite noch ändern.
+  window.addEventListener("load", onResize, { once: true });
+};
+
 /* ===== script.js ===== */
 /* NEST BildungsBar – Interaktionen (Stil nest-explore.de) */
 document.addEventListener('DOMContentLoaded', function () {
@@ -1143,23 +1258,11 @@ function renderBerufeUebersicht() {
     }
 
     var cards = liste.map(stKarte).join("");
-    wrap.innerHTML = head + '<div class="stellen-track" id="stellen-track"><div class="stellen-strip" id="stellen-strip">' + cards + "</div></div>";
+    wrap.innerHTML = head + '<div class="stellen-karussell"><div class="stellen-track" id="stellen-track"><div class="stellen-strip" id="stellen-strip">' + cards + "</div></div></div>";
 
-    // „Im Kreis bewegen" nur bei mehreren Stellen UND wenn der Bildbereich überschritten wird.
+    // Läuft „im Kreis", sobald die Karten den sichtbaren Bereich überschreiten.
     requestAnimationFrame(function () {
-      var strip = document.getElementById("stellen-strip");
-      var track = document.getElementById("stellen-track");
-      if (!strip || !track) return;
-      var ueberlauf = strip.scrollWidth > track.clientWidth + 4;
-      if (liste.length >= 4 && ueberlauf) {
-        strip.innerHTML = cards + cards; // duplizieren für nahtlosen Loop
-        strip.style.animationDuration = Math.max(22, Math.round(liste.length * 4.5)) + "s";
-        track.classList.add("is-marquee");
-        strip.classList.add("is-marquee");
-      } else {
-        track.classList.remove("is-marquee");
-        strip.classList.remove("is-marquee");
-      }
+      window.nestStellenKarussell(document.getElementById("stellen-track"), document.getElementById("stellen-strip"));
     });
   }
 
@@ -1684,13 +1787,17 @@ if (!window.STELLEN || !window.STELLEN.length) {
         '<a class="btn btn-outline" href="' + lKoop() + '">Stelle eintragen</a>' +
       "</div>" +
       '<div class="stellen-orte">' + chips + "</div>" +
-      '<div class="stellen-strip" id="stellen-strip"></div>';
+      '<div class="stellen-karussell"><div class="stellen-track" id="stellen-track"><div class="stellen-strip" id="stellen-strip"></div></div></div>';
 
     function zeichne() {
       var liste = aktiv.filter(function (s) { return ortFilter === "*" || s.ort === ortFilter; });
       var html = liste.length ? liste.map(karte).join("")
         : '<div class="stellen-empty">Für „' + esc(ortFilter) + "“ sind aktuell keine Stellen ausgeschrieben.</div>";
       document.getElementById("stellen-strip").innerHTML = html;
+      // Läuft „im Kreis", sobald die Karten den sichtbaren Bereich überschreiten.
+      requestAnimationFrame(function () {
+        window.nestStellenKarussell(document.getElementById("stellen-track"), document.getElementById("stellen-strip"));
+      });
     }
 
     root.querySelectorAll(".ort-chip").forEach(function (chip) {

@@ -508,7 +508,6 @@ window.UNTERNEHMEN = {
   "Stadt Wuppertal": "https://www.wuppertal.de/microsite/wuppertalent/ausbildungsberufe/",
   "Stadt Remscheid": "https://www.remscheid.de/neuigkeiten-wissenswertes/karriere/",
   "Stadtwerke Remscheid": "https://www.sr-karriere.de/ausbildung-und-berufseinstieg/ausbildungsplaetze-und-praktika/",
-  "EWR (Stadtwerke Remscheid)": "https://www.sr-karriere.de/ausbildung-und-berufseinstieg/ausbildungsplaetze-und-praktika/",
   "Wuppertaler Stadtwerke": "https://www.wsw-online.de/ueber-uns/karriere/ausbildung/ausbildungsangebote/",
   "AWG": "https://awg-wuppertal.de/karriere/ausbildung.html",
   "Wupperverband": "https://www.wupperverband.de/ueber-uns/personal/ausbildung",
@@ -612,7 +611,7 @@ window.BERUFE_KATEGORIEN = [
     beschreibung: "Anpacken, gestalten, reparieren – vielfältige Handwerksberufe mit Zukunft.",
     berufe: [
       { name: "Anlagenmechaniker:in für Sanitär-, Heizungs- und Klimatechnik", dauer: "3,5 Jahre", info: "Als Anlagenmechaniker:in SHK installierst, wartest und reparierst du moderne Anlagen und sorgst für warmes Wasser, funktionierende Heizungen und angenehme Raumtemperatur. Du verlegst Rohrleitungen und montierst Heizkörper und sanitäre Einrichtungen – zunehmend digital unterstützt.", partner: ["Peter Barth GmbH", "Stadt Wuppertal", "Alex & Greiff GmbH"] },
-      { name: "Anlagenmechaniker:in Rohrsystemtechnik", dauer: "3,5 Jahre", info: "In der Rohrsystemtechnik lernst du, Rohre zu verlegen, zu montieren und zu verschweißen sowie Anlagen zu prüfen und instand zu halten – in Heizungs-, Sanitär- und industriellen Anlagen.", partner: ["Wuppertaler Stadtwerke", "EWR (Stadtwerke Remscheid)"] },
+      { name: "Anlagenmechaniker:in Rohrsystemtechnik", dauer: "3,5 Jahre", info: "In der Rohrsystemtechnik lernst du, Rohre zu verlegen, zu montieren und zu verschweißen sowie Anlagen zu prüfen und instand zu halten – in Heizungs-, Sanitär- und industriellen Anlagen.", partner: ["Wuppertaler Stadtwerke", "Stadtwerke Remscheid"] },
       { name: "Bäcker:in", dauer: "3 Jahre", info: "Als Bäcker:in stellst du Brot, Brötchen, Kuchen und andere Backwaren her: Du wiegst und mischst Zutaten, knetest den Teig, formst ihn und überwachst den Backprozess für die richtige Kruste – oft schon früh am Morgen.", partner: ["Policks Backstube"] },
       { name: "Koch / Köchin", dauer: "3 Jahre", info: "Köch:innen bereiten Speisen in der Gastronomie zu, planen Speisepläne, kaufen Zutaten ein und richten Gerichte an: Du beachtest Hygienevorschriften und arbeitest unter Zeitdruck im Team.", partner: ["Stadt Wuppertal", "Barmenia Versicherungen", "Culinaria"] },
       { name: "Forstwirt:in", dauer: "3 Jahre", info: "Als Forstwirt:in pflegst und bewirtschaftest du Wälder: Bäume pflanzen und ernten, Wege anlegen und Naturschutz betreiben. Die Ausbildung dauert drei Jahre und wird dual durchgeführt.", partner: ["Stadt Wuppertal", "Wupperverband", "Stadt Remscheid"] },

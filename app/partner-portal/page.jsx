@@ -1172,7 +1172,7 @@ export default function PartnerPortal() {
                     <span className="np-promo-label">Für Unternehmen</span>
                     <div className="np-promo-h">NESTplay. – dein Betrieb<br /><em>im Unterricht</em></div>
                     <p className="np-promo-p">Präsentiere deinen Betrieb direkt in der Klasse als interaktives Live-Quiz. Schüler:innen spielen in Echtzeit – und erinnern sich nachhaltig an dein Unternehmen.</p>
-                    <a href="https://nestplay.de" target="_blank" rel="noopener" className="btn btn-primary" style={{ display: "inline-flex" }}>Zu NESTplay. →</a>
+                    <a href={NESTPLAY_URL} target="_blank" rel="noopener" className="btn btn-primary" style={{ display: "inline-flex" }}>Zu NESTplay. →</a>
                   </div>
                   <div className="np-promo-phone">
                     <div className="np-mini-phone">

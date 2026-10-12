@@ -106,7 +106,7 @@ const html = `
             <li>Unternehmen bleiben im Kopf – nicht Flyer</li>
             <li>kAoA-konform für alle Schulstufen</li>
           </ul>
-          <a class="btn btn-primary mt-2" href="https://nestplay.de" target="_blank" rel="noopener">Zu NESTplay. →</a>
+          <a class="btn btn-primary mt-2" href="https://nest-play.de" target="_blank" rel="noopener">Zu NESTplay. →</a>
         </div>
       </div>
     </div>

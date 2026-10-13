@@ -566,7 +566,8 @@ window.UNTERNEHMEN = {
   "Malteser": "https://jobs.malteser.de/de/",
   "BS Rollen": "https://bs-rollen.com/de/de/karriere-ausbildung/ausbildung/",
   "Diakonische Altenhilfe": "https://www.diakonie-akademie.de/ausbildung",
-  "Schulten Gebäudedienste": "https://schulten.de/ausbildung-bei-schulten/"
+  "Schulten Gebäudedienste": "https://schulten.de/ausbildung-bei-schulten/",
+  "Elektroinnung Wuppertal": "https://www.elektro-ausbildungsportal.de/"
 };
 
 /* ===== berufe-data.js ===== */

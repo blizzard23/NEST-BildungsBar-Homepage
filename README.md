@@ -68,6 +68,8 @@ git push -u origin main
      `supabase/buchungen.sql` ausführen, um Admin-Rechte und die Buchungstabelle nachzurüsten.)*
    - Danach `supabase/portal-fixes.sql` ausführen → Website-Feld für Ansprechpartner,
      Standard-Ansprechpartner in der DB (bearbeitbar) und sprechende Veranstaltungs-Links (Slugs).
+   - Danach `supabase/explore-hinweise.sql` ausführen → Angaben der Unternehmen für die
+     Hinweis-Mail bei neuen NEST-Explore-Terminen (siehe unten).
 3. **Project Settings → API** → kopiere:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` Key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -95,8 +97,8 @@ git push -u origin main
    | `SMTP_PASS` *(Fallback)* | Postfach-Passwort |
    | `MAIL_TO` | `info@nest-bildungsbar.de` |
    | `MAIL_FROM` | Absenderadresse (bei Resend: verifizierte Domain) |
-   | `SUPABASE_SERVICE_ROLE_KEY` | service_role-Secret (für den Erinnerungs-Cron) |
-   | `CRON_SECRET` | langes Zufallsgeheimnis (schützt den Cron) |
+   | `SUPABASE_SERVICE_ROLE_KEY` | service_role-Secret (für die Crons) |
+   | `CRON_SECRET` | langes Zufallsgeheimnis (schützt die Crons) |
    | `WHATSAPP_TOKEN` *(optional)* | WhatsApp Cloud API Token |
    | `WHATSAPP_PHONE_ID` *(optional)* | WhatsApp Telefonnummern-ID |
    | `WHATSAPP_TEMPLATE` *(optional)* | Name des genehmigten Templates |
@@ -122,10 +124,53 @@ verschickt wird, wird je Buchung `erinnert_am` gesetzt.
   Ohne diese WhatsApp-Variablen wird nur die E-Mail-Erinnerung verschickt.
 - Cron testen: den Endpoint manuell aufrufen mit Header `Authorization: Bearer <CRON_SECRET>`.
 
+### NEST Explore: Hinweis-Mail bei neuen Terminen (Cron)
+
+Wird auf nest-explore.de ein neuer Schultermin angelegt (Tabelle `messe_termine`), bekommen
+die Partnerunternehmen eine Mail mit allen Eckdaten (Schule, Datum, Uhrzeit, Ort, Klassen,
+freie Plätze) und dem Button **„Zum Terminkalender & anmelden"**
+(`https://nest-explore.de/terminkalender`).
+
+**Was die Unternehmen angeben** – im Partner-Portal unter *NEST Explore → Neue Termine per
+E-Mail* (Tabelle `explore_praeferenzen`):
+
+- **ob** sie überhaupt Hinweise möchten (Opt-in, standardmäßig aus),
+- **bevorzugte Orte** (Wuppertal, Solingen, Remscheid, Essen + alle Städte, in denen es schon
+  Termine gab) – nichts gewählt = alle Orte; Stadtteile zählen zur Stadt
+  („Wuppertal-Oberbarmen" → Wuppertal),
+- **bevorzugte Schulformen** (Hauptschule, Realschule, Sekundarschule, Gesamtschule,
+  Gymnasium, Berufskolleg, Förderschule, Weiterbildung) – nichts gewählt = alle.
+
+**Wie abgeglichen wird** (`lib/exploreHinweise.js`, `app/api/cron/explore-hinweise/route.js`):
+
+- `messe_termine` hat **keine Spalte für die Schulform** – sie wird aus dem Schulnamen gelesen
+  („Pina-Bausch-Gesamtschule" → Gesamtschule, „Bergische Volkshochschule" → Weiterbildung).
+  Verrät der Name sie nicht (z. B. „Albert-Einstein-Schule"), geht der Hinweis an alle, deren
+  Orte passen – lieber einmal zu viel als einen Termin zu verschweigen. Bekommt
+  `messe_termine` später eine Spalte `schulform`, wird die automatisch bevorzugt.
+- Gemeldet werden nur Termine, die **nach dem Einschalten** angelegt wurden, in der Zukunft
+  liegen, **noch freie Plätze** haben und bei denen das Unternehmen **nicht schon gebucht** hat
+  (Abgleich über E-Mail bzw. Firmenname in `messe_buchungen`).
+- Mehrere neue Termine kommen **gebündelt in einer Mail**. Jede Kombination aus Unternehmen
+  und Termin wird nur einmal verschickt (`explore_hinweise`); schlägt der Versand fehl,
+  versucht es der nächste Lauf erneut.
+- Empfänger ist die Login-Adresse des Partner-Zugangs (nur bestätigte Adressen).
+
+**Wann:** Der Cron läuft **täglich um 08:00 UTC** (9 bzw. 10 Uhr deutscher Zeit) – auf dem
+Vercel-Hobby-Tarif ist höchstens ein Lauf pro Tag erlaubt. Wer nicht warten will: Im
+**Admin-Bereich → NEST Explore – Termine & Buchungen** gibt es **„Vorschau"** (zeigt, wer welche
+Termine bekäme, verschickt nichts) und **„Jetzt verschicken"**.
+
+- Pflicht: `supabase/explore-hinweise.sql` ausgeführt, `SUPABASE_SERVICE_ROLE_KEY`,
+  `CRON_SECRET` und ein konfigurierter Mailversand.
+- `NEXT_PUBLIC_SITE_URL` bestimmt den Link zum Partner-Portal in der Mail (Angaben ändern).
+- Manuell testen: `GET /api/cron/explore-hinweise?probe=1` mit
+  `Authorization: Bearer <CRON_SECRET>` – liefert die Empfängerliste, ohne zu verschicken.
+
 ### Mailversand (Resend, sonst lima-city SMTP)
 
 Aller Versand läuft über **`lib/mailer.js`** – Kontakt- und Sonderanfragen, Termin- und
-Veranstaltungsbestätigungen, Erinnerungs-Cron, Passwort-Reset und die
+Veranstaltungsbestätigungen, Erinnerungs-Cron, NEST-Explore-Hinweise, Passwort-Reset und die
 Registrierungs-Bestätigung. Zwei Wege, **Resend hat Vorrang**:
 
 **1. Resend (empfohlen)** – aktiv, sobald `RESEND_API_KEY` gesetzt ist.

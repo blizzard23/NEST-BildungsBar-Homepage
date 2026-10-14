@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase, supabaseConfigured, istRecoveryLink, linkFehler } from "@/lib/supabaseClient";
 import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameEditUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
 import { mapMesseTermin } from "@/lib/messeTermine";
+import { SCHULFORMEN, ortOptionen } from "@/lib/exploreHinweise";
 import { inhaltZuHtml } from "@/lib/blogFormat";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
@@ -10,6 +11,7 @@ const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start:
 const EVENT_LEER = { titel: "", datum: "", uhrzeit: "", ort: "Wuppertal", adresse: "", bild_url: "", beschreibung: "" };
 const POST_LEER = { slug: "", titel: "", excerpt: "", inhalt: "", bild_url: "", published: true };
 const AP_LEER = { name: "", rolle: "", email: "", telefon: "", website: "", standort: "", bild_url: "", beschreibung: "", sortierung: 0 };
+const ABO_LEER = { aktiv: false, orte: [], schulformen: [] };
 
 // Standard-Ansprechpartner – werden gezeigt, solange in der Tabelle `ansprechpartner`
 // noch nichts gepflegt ist (Admin kann sie im Portal überschreiben/ergänzen).
@@ -170,6 +172,11 @@ export default function PartnerPortal() {
   const [stellen, setStellen] = useState([]);
   const [events, setEvents] = useState([]);
   const [messeTermine, setMesseTermine] = useState([]); // kommende NEST-Explore-Termine (live aus Supabase)
+  // NEST Explore: Hinweis-Mail bei neuen Terminen – eigene Angaben des Unternehmens
+  const [abo, setAbo] = useState(ABO_LEER);
+  const [aboBusy, setAboBusy] = useState(false);
+  const [aboMsg, setAboMsg] = useState("");
+  const [exploreOrtZeilen, setExploreOrtZeilen] = useState([]); // Orte aller Explore-Termine (für die Auswahl)
   const [nestplaySpiele, setNestplaySpiele] = useState(0);
   const [nestplayGames, setNestplayGames] = useState([]);
   const [netzStellen, setNetzStellen] = useState(0);
@@ -184,6 +191,8 @@ export default function PartnerPortal() {
   const [anmeldungen, setAnmeldungen] = useState([]); // Unternehmens-Anmeldungen zu Veranstaltungen
   const [adminMesseTermine, setAdminMesseTermine] = useState([]); // alle NEST-Explore-Termine
   const [messeBuchungen, setMesseBuchungen] = useState([]);       // Unternehmen, die einen Explore-Termin gebucht haben
+  const [hinweisBusy, setHinweisBusy] = useState(false);          // Explore-Hinweise: Vorschau/Versand läuft
+  const [hinweisVorschau, setHinweisVorschau] = useState(null);   // Explore-Hinweise: wer bekäme welche Termine
   const [evForm, setEvForm] = useState(EVENT_LEER);
   const [evMsg, setEvMsg] = useState("");
   const [evUploading, setEvUploading] = useState(false);
@@ -313,6 +322,15 @@ export default function PartnerPortal() {
       .gte("datum", heute).order("datum", { ascending: true });
     setMesseTermine((mt || []).map(mapMesseTermin));
 
+    // NEST Explore: eigene Angaben für die Hinweis-Mail bei neuen Terminen und
+    // die Orte aller bisherigen Termine (füllen die Orts-Auswahl auf).
+    const { data: orte } = await supabase.from("messe_termine").select("ort");
+    setExploreOrtZeilen(orte || []);
+    const { data: praef } = await supabase
+      .from("explore_praeferenzen").select("aktiv, orte, schulformen")
+      .eq("user_id", session.user.id).maybeSingle();
+    setAbo(praef ? { aktiv: !!praef.aktiv, orte: praef.orte || [], schulformen: praef.schulformen || [] } : ABO_LEER);
+
     // Ansprechpartner (öffentlich lesbar) – Admin pflegt sie im Admin-Bereich.
     const { data: ap } = await supabase
       .from("ansprechpartner").select("*")
@@ -411,7 +429,7 @@ export default function PartnerPortal() {
       setRegBusy(false);
     }
   }
-  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setAnmeldungen([]); setAdminMesseTermine([]); setMesseBuchungen([]); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
+  async function logout() { await supabase.auth.signOut(); setStellen([]); setEvents([]); setAdminEvents([]); setAdminPosts([]); setBuchungen([]); setAnmeldungen([]); setAdminMesseTermine([]); setMesseBuchungen([]); setHinweisVorschau(null); setAbo(ABO_LEER); setNestplayGames([]); setNestplaySpiele(0); setNetzStellen(0); setNetzSpiele(0); }
 
   // ---- Konto: Unternehmensname & Passwort ändern ----
   async function firmaSpeichern(e) {
@@ -449,6 +467,48 @@ export default function PartnerPortal() {
     if (platzFrei) await supabase.from("messe_termine").update({ belegt: m.belegt - 1 }).eq("id", m.id);
     toast("Explore-Buchung gelöscht" + (platzFrei ? " · Platz wieder frei" : ""));
     ladeAdmin();
+  }
+
+  // ---- NEST Explore: Hinweis-Mail bei neuen Terminen ----
+  // Ort bzw. Schulform an- oder abwählen (nichts gewählt = alle)
+  const aboUmschalten = (feld, wert) => setAbo((a) => ({
+    ...a, [feld]: a[feld].includes(wert) ? a[feld].filter((x) => x !== wert) : [...a[feld], wert],
+  }));
+  async function aboSpeichern(e) {
+    e.preventDefault(); setAboMsg(""); setAboBusy(true);
+    // aktiv_seit setzt die Datenbank selbst (Trigger in supabase/explore-hinweise.sql)
+    const { error } = await supabase.from("explore_praeferenzen").upsert(
+      { user_id: session.user.id, aktiv: abo.aktiv, orte: abo.orte, schulformen: abo.schulformen },
+      { onConflict: "user_id" },
+    );
+    setAboBusy(false);
+    if (error) { setAboMsg("Fehler: " + fehlerText(error)); return; }
+    toast(abo.aktiv ? "Gespeichert ✅ Ihr bekommt neue Termine per E-Mail." : "Gespeichert – keine Hinweise zu neuen Terminen.");
+  }
+  // Admin: Hinweise sofort prüfen (probe = nur Vorschau) bzw. verschicken,
+  // statt auf den täglichen Cron zu warten.
+  async function exploreHinweise(probe) {
+    if (!probe && !window.confirm("Neue NEST-Explore-Termine jetzt an alle passenden Unternehmen schicken?")) return;
+    setHinweisBusy(true);
+    try {
+      const { data: s } = await supabase.auth.getSession();
+      const antwort = await fetch("/api/cron/explore-hinweise" + (probe ? "?probe=1" : ""), {
+        method: "POST",
+        headers: { Authorization: "Bearer " + (s.session?.access_token || "") },
+      });
+      const daten = await antwort.json().catch(() => ({}));
+      if (!antwort.ok || !daten.ok) throw new Error(daten.error || "");
+      if (probe) { setHinweisVorschau(daten); return; }
+      setHinweisVorschau(null);
+      toast((daten.mails
+        ? `${daten.mails} ${daten.mails === 1 ? "Mail" : "Mails"} mit ${daten.gemeldet} ${daten.gemeldet === 1 ? "Termin" : "Terminen"} verschickt ✅`
+        : "Nichts Neues – keine Mail verschickt")
+        + (daten.fehler ? ` · ${daten.fehler} fehlgeschlagen` : ""));
+    } catch (err) {
+      toast("Fehler: " + fehlerText(err));
+    } finally {
+      setHinweisBusy(false);
+    }
   }
 
   async function speichern(e) {
@@ -1269,6 +1329,48 @@ export default function PartnerPortal() {
                 ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Termine eingetragen.</p>}
               </div>
 
+              {/* NEST Explore: Hinweis-Mail bei neuen Terminen (Orte + Schulformen) */}
+              {!isAdmin && (
+                <div id="abschnitt-explore-hinweise" className="card" style={{ marginTop: "18px", marginBottom: "36px", scrollMarginTop: "84px" }}>
+                  <h3>Neue Termine per E-Mail</h3>
+                  <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "0 0 14px" }}>
+                    Sobald ein neuer NEST-Explore-Termin eingetragen wird, der zu euch passt, bekommt ihr eine E-Mail an <strong>{session.user.email}</strong> –
+                    mit allen Infos und dem direkten Link zum Terminkalender, damit ihr euch gleich anmelden könnt.
+                  </p>
+                  <form onSubmit={aboSpeichern} className="tb-form">
+                    <label className="tb-check" style={{ display: "flex" }}>
+                      <input type="checkbox" checked={abo.aktiv} onChange={(e) => setAbo((a) => ({ ...a, aktiv: e.target.checked }))} />
+                      Ja, informiert uns über neue NEST-Explore-Termine
+                    </label>
+                    {abo.aktiv ? (<>
+                      <div className="field" style={{ marginTop: "16px" }}>
+                        <label>Bevorzugte Orte</label>
+                        <div className="stellen-orte" style={{ marginBottom: "6px" }}>
+                          {ortOptionen(exploreOrtZeilen, abo.orte).map((o) => (
+                            <button type="button" key={o} className={"ort-chip" + (abo.orte.includes(o) ? " active" : "")} aria-pressed={abo.orte.includes(o)} onClick={() => aboUmschalten("orte", o)}>{o}</button>
+                          ))}
+                        </div>
+                        <p style={{ fontSize: "12px", color: "var(--text-mute)", margin: 0 }}>{abo.orte.length ? "Nur Termine in: " + abo.orte.join(", ") : "Nichts ausgewählt = alle Orte"}</p>
+                      </div>
+                      <div className="field">
+                        <label>Bevorzugte Schulformen</label>
+                        <div className="stellen-orte" style={{ marginBottom: "6px" }}>
+                          {SCHULFORMEN.map((f) => (
+                            <button type="button" key={f.wert} className={"ort-chip" + (abo.schulformen.includes(f.wert) ? " active" : "")} aria-pressed={abo.schulformen.includes(f.wert)} onClick={() => aboUmschalten("schulformen", f.wert)}>{f.label}</button>
+                          ))}
+                        </div>
+                        <p style={{ fontSize: "12px", color: "var(--text-mute)", margin: 0 }}>
+                          {abo.schulformen.length ? "Nur: " + abo.schulformen.join(", ") + "." : "Nichts ausgewählt = alle Schulformen."}
+                          {" "}Lässt sich die Schulform eines Termins nicht erkennen, sagen wir euch sicherheitshalber trotzdem Bescheid.
+                        </p>
+                      </div>
+                    </>) : null}
+                    {aboMsg ? <p style={{ color: "#c2415a", fontWeight: 700, fontSize: "14px" }}>{aboMsg}</p> : null}
+                    <button className="btn btn-primary" type="submit" disabled={aboBusy} style={{ marginTop: abo.aktiv ? 0 : "16px" }}>{aboBusy ? "Wird gespeichert …" : "Speichern"}</button>
+                  </form>
+                </div>
+              )}
+
               <div id="abschnitt-team" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* Ansprechpartner */}
               <div style={{ marginBottom: "36px" }}>
@@ -1511,6 +1613,36 @@ export default function PartnerPortal() {
                         Wer ist bei welchem Schultermin dabei? Die Termine selbst werden auf{" "}
                         <a href="https://nest-explore.de" target="_blank" rel="noopener">nest-explore.de</a> gepflegt – Buchungen kannst du hier direkt löschen, der Platz wird dann wieder frei.
                       </p>
+                      <div className="card" style={{ marginBottom: "18px", padding: "16px 20px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                          <div style={{ flex: "1 1 320px" }}>
+                            <strong style={{ color: "var(--navy)" }}>Hinweis-Mails an Unternehmen</strong>
+                            <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>
+                              Neue Termine gehen jeden Vormittag automatisch an alle Unternehmen, die das im Portal eingeschaltet haben und deren Orte/Schulformen passen.
+                              Hier siehst du vorab, wer was bekäme – oder verschickst sofort.
+                            </p>
+                          </div>
+                          <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
+                            <button className="btn btn-outline" style={{ padding: "8px 16px" }} onClick={() => exploreHinweise(true)} disabled={hinweisBusy}>Vorschau</button>
+                            <button className="btn btn-primary" style={{ padding: "8px 16px" }} onClick={() => exploreHinweise(false)} disabled={hinweisBusy}>{hinweisBusy ? "Läuft …" : "Jetzt verschicken"}</button>
+                          </div>
+                        </div>
+                        {hinweisVorschau ? (
+                          <div style={{ marginTop: "12px", paddingTop: "10px", borderTop: "1px solid var(--line)", fontSize: "14px" }}>
+                            <p style={{ margin: "0 0 6px", color: "var(--text-soft)" }}>
+                              {hinweisVorschau.abonnenten} {hinweisVorschau.abonnenten === 1 ? "Unternehmen hat" : "Unternehmen haben"} die Hinweise eingeschaltet –{" "}
+                              {hinweisVorschau.empfaenger.length ? hinweisVorschau.empfaenger.length + " bekämen jetzt eine Mail:" : "aktuell gibt es nichts Neues zu verschicken."}
+                            </p>
+                            {hinweisVorschau.empfaenger.map((e) => (
+                              <p key={e.email} style={{ margin: "0 0 4px" }}>
+                                <strong style={{ color: "var(--navy)" }}>{e.firma || e.email}</strong>
+                                {e.firma ? <span style={{ color: "var(--text-mute)" }}> ({e.email})</span> : null}:{" "}
+                                {e.termine.map((t) => t.schule + " · " + kartenDatum(t.datum)).join(", ")}
+                              </p>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
                       {kommende.length ? (
                         <div style={{ marginBottom: "32px" }}>
                           {kommende.map((m) => {

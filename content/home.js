@@ -48,50 +48,77 @@ const html = `
     </div>
   </section>
 
-  <!-- KENNZAHLEN · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
+  <!-- KENNZAHLEN · Gold-Band wie im vorherigen Design, schließt an die Gold-Kante des Hero an -->
   <div class="bb-trust">
     <div class="container">
-      <p class="bb-trust__title">Über 500 Gäste pro Jahr – allein in Wuppertal</p>
       <div class="bb-trust__row">
+        <div class="bb-trust__item"><b>500+</b><span>Gäste pro Jahr in Wuppertal</span></div>
         <div class="bb-trust__item"><b>70+</b><span>Unternehmen im Netzwerk</span></div>
         <div class="bb-trust__item"><b>150+</b><span>Ausbildungsberufe in der Beratung</span></div>
         <div class="bb-trust__item"><b>4</b><span>Standorte von Essen bis Remscheid</span></div>
-        <div class="bb-trust__item"><b>0 €</b><span>für dich – die Beratung ist kostenfrei</span></div>
       </div>
     </div>
   </div>
 
-  <!-- ANGEBOT · Vorlage: Brilliant „Supercharge your learning" -->
+  <!-- ANGEBOT · Bento-Raster (Windsurf, FLORA) mit großer Navy-Kachel -->
   <section class="bb-sec">
     <div class="container">
-      <div class="bb-split">
-        <div>
-          <h2 class="bb-h2">Deine Berufsorientierung auf Augenhöhe</h2>
-          <p class="bb-lead" style="margin-top:16px;">In der BildungsBar bekommst du kostenfreie Unterstützung rund um Ausbildung und Karriereplanung. Wir nehmen uns Zeit für dich – ganz ohne Druck.</p>
-          <ul class="bb-ilist">
-            <li><span class="bb-ilist__ic">${IC.compass}</span><div><b>Berufe entdecken</b><span>Wir finden gemeinsam deine Stärken und Motive heraus – und welche Berufsfelder wirklich zu dir passen.</span></div></li>
-            <li><span class="bb-ilist__ic">${IC.file}</span><div><b>Bewerbung meistern</b><span>Vom Anschreiben bis zum Lebenslauf: Wir helfen dir, überzeugende Bewerbungsunterlagen zu erstellen.</span></div></li>
-            <li><span class="bb-ilist__ic">${IC.people}</span><div><b>Vorstellungsgespräch üben</b><span>In simulierten Gesprächen üben wir den Ernstfall – für mehr Sicherheit und Selbstvertrauen.</span></div></li>
-            <li><span class="bb-ilist__ic">${IC.network}</span><div><b>Direkte Kontakte zu Betrieben</b><span>Wir vernetzen dich mit regionalen Unternehmen – komplett kostenfrei und ohne Hintergedanken.</span></div></li>
+      <div class="bb-head bb-head--split">
+        <h2 class="bb-h2">Deine Berufsorientierung auf Augenhöhe</h2>
+        <p class="bb-lead">In der BildungsBar bekommst du kostenfreie Unterstützung rund um Ausbildung und Karriereplanung. Wir nehmen uns Zeit für dich – ganz ohne Druck.</p>
+      </div>
+      <div class="bb-bento">
+        <div class="bb-bento__tile bb-bento__main bb-dark">
+          <span class="bb-bento__num" aria-hidden="true">150+</span>
+          <span class="bb-kicker">Für Schüler:innen und junge Menschen</span>
+          <h3>Wir zeigen dir, was möglich ist</h3>
+          <p>Über 150 Ausbildungsberufe und duale Studiengänge – von Gesundheit über Handwerk bis IT. Wir helfen dir, im Dschungel der Möglichkeiten den richtigen Weg zu finden.</p>
+          <ul class="bb-chips" aria-label="Berufsfelder">
+            <li><a href="/berufswelt?feld=Gesundheitswesen">Gesundheit</a></li>
+            <li><a href="/berufswelt?feld=Handwerk">Handwerk</a></li>
+            <li><a href="/berufswelt?feld=Technische%20Berufe">Technik &amp; IT</a></li>
+            <li><a href="/berufswelt?feld=Sozialer%20Bereich">Soziales</a></li>
+            <li><a href="/berufswelt?feld=Verkauf%20und%20Vertrieb">Verkauf</a></li>
+            <li><a href="/berufswelt?feld=Wirtschaft%20%26%20Verwaltung">Wirtschaft &amp; Verwaltung</a></li>
           </ul>
-          <div class="bb-actions"><a class="bb-btn bb-btn--gold" href="/terminbuchung">Termin buchen</a></div>
+          <div class="bb-actions"><a class="bb-btn bb-btn--gold" href="/berufswelt">Berufe entdecken</a></div>
         </div>
-        <div class="bb-frame bb-frame--43"><img src="/assets/img/team/story-patrick-mike.jpg" alt="Patrick und Mike, die Gründer von NEST, in der BildungsBar" loading="lazy"></div>
+        <div class="bb-bento__tile bb-bento__a">
+          <span class="bb-ilist__ic">${IC.compass}</span>
+          <h3>Stärken finden</h3>
+          <p>Im Persönlichkeitscheck finden wir gemeinsam deine Stärken und Motive heraus – und welche Berufsfelder wirklich zu dir passen.</p>
+        </div>
+        <div class="bb-bento__tile bb-bento__b">
+          <span class="bb-ilist__ic">${IC.file}</span>
+          <h3>Bewerbung meistern</h3>
+          <p>Vom Anschreiben bis zum Lebenslauf: Wir helfen dir, überzeugende Bewerbungsunterlagen zu erstellen.</p>
+        </div>
+        <div class="bb-bento__tile bb-bento__c">
+          <span class="bb-ilist__ic">${IC.people}</span>
+          <h3>Vorstellungsgespräch üben</h3>
+          <p>In simulierten Gesprächen üben wir den Ernstfall – für mehr Sicherheit und Selbstvertrauen.</p>
+        </div>
+        <div class="bb-bento__tile bb-bento__free">
+          <div>
+            <h3>Komplett kostenfrei – ohne Hintergedanken.</h3>
+            <p>Wir bringen dich mit regionalen Unternehmen aus unserem Netzwerk zusammen – für Praktikum oder Ausbildung.</p>
+          </div>
+          <div class="bb-bento__price" aria-hidden="true"><b>0 €</b><span>für dich</span></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- BERUFE · Vorlage: Brilliant „What can they learn on Brilliant?" -->
-  <section class="bb-sec bb-sec--flush-top">
+  <!-- BERUFE · dunkle Sektion mit Karten (Linear „features") -->
+  <section class="bb-sec bb-sec--dark">
     <div class="container">
-      <div class="bb-ruled">
-        <div class="bb-head bb-head--row">
-          <div>
-            <h2 class="bb-h2">Was kannst du bei uns entdecken?</h2>
-            <p class="bb-lead" style="margin-top:14px;max-width:640px;">Über 150 Ausbildungsberufe und duale Studiengänge – von Gesundheit über Handwerk bis IT. Wir helfen dir, im Dschungel der Möglichkeiten den richtigen Weg zu finden.</p>
-          </div>
-          <a class="bb-btn bb-btn--light" href="/berufswelt">Zur Berufswelt</a>
+      <div class="bb-head bb-head--row">
+        <div>
+          <h2 class="bb-h2">Was kannst du bei uns <span class="bb-hl">entdecken?</span></h2>
+          <p class="bb-lead" style="margin-top:18px;max-width:620px;">Eine Auswahl aus über 150 Ausbildungsberufen und dualen Studiengängen – sortiert nach Berufsfeldern.</p>
         </div>
+        <a class="bb-btn bb-btn--light" href="/berufswelt">Zur Berufswelt</a>
+      </div>
         <div class="bb-catalog">
         <div class="bb-catalog__group">
           <h3>Gesundheit</h3>
@@ -178,15 +205,14 @@ const html = `
           <a class="bb-link bb-catalog__more" href="/berufswelt?feld=Wirtschaft%20%26%20Verwaltung">Alle 33 Berufe ansehen</a>
         </div>
         </div>
-      </div>
     </div>
   </section>
 
-  <!-- ABLAUF · Vorlage: Brilliant „How educators like you use Brilliant" -->
-  <section class="bb-sec bb-sec--band">
+  <!-- ABLAUF · Reiter mit Bild -->
+  <section class="bb-sec">
     <div class="container">
-      <div class="bb-head bb-head--center">
-        <h2 class="bb-h2">In drei Schritten zu <span class="bb-hl">deiner Ausbildung</span></h2>
+      <div class="bb-head bb-head--split">
+        <h2 class="bb-h2">In drei Schritten zu deiner Ausbildung</h2>
         <p class="bb-lead">Von der Terminbuchung bis zum passenden Betrieb – so einfach läuft deine Beratung in der BildungsBar.</p>
       </div>
       <div class="bb-tabs">
@@ -215,74 +241,84 @@ const html = `
 
   <!-- AKTUELLE STELLEN (Jobbörse) – wird per JS aus /api/stellen befüllt.
        Bleibt komplett ausgeblendet, solange keine aktive Stelle online ist. -->
-  <section class="bb-sec" hidden>
+  <section class="bb-sec bb-sec--band" hidden>
     <div class="container">
       <div id="stellen-section"></div>
     </div>
   </section>
 
-  <!-- STANDORTE · Vorlage: Brilliant Kurskatalog (Kachel + Bildunterschrift) -->
+  <!-- STANDORTE · dunkle Sektion mit Bildkarten (Runway) -->
+  <section class="bb-sec bb-sec--dark">
+    <div class="container">
+      <div class="bb-head bb-head--split">
+        <h2 class="bb-h2">Komm vorbei – in <span class="bb-hl">deiner Nähe</span></h2>
+        <p class="bb-lead">Vier BildungsBars, eine Idee: entspannte Atmosphäre, ehrliche Beratung und Zeit für deine Fragen.</p>
+      </div>
+      <div class="bb-cards">
+        <div class="bb-card">
+          <span class="bb-card__tile"><img src="/assets/img/standort-wuppertal.jpg" alt="BildungsBar Wuppertal (Innenansicht)" loading="lazy"></span>
+          <span class="bb-card__title">Wuppertal</span>
+          <span class="bb-card__meta">Hochstraße 65<br>Di &amp; Do · 17–19 Uhr</span>
+          <span class="bb-card__links"><a class="bb-link" href="/terminbuchung">Termin buchen</a><a class="bb-link" href="https://www.google.com/maps/search/?api=1&amp;query=Hochstra%C3%9Fe%2065%2C%20Wuppertal" target="_blank" rel="noopener">Route</a></span>
+        </div>
+        <div class="bb-card">
+          <span class="bb-card__tile"><img src="/assets/img/standort-essen.png" alt="BildungsBar Essen (Innenansicht)" loading="lazy"></span>
+          <span class="bb-card__title">Essen</span>
+          <span class="bb-card__meta">Kopstadtplatz 12<br>Mo · 17–19 Uhr</span>
+          <span class="bb-card__links"><a class="bb-link" href="/terminbuchung">Termin buchen</a><a class="bb-link" href="https://www.google.com/maps/search/?api=1&amp;query=Kopstadtplatz%2012%2C%20Essen" target="_blank" rel="noopener">Route</a></span>
+        </div>
+        <div class="bb-card">
+          <span class="bb-card__tile"><img src="/assets/img/standort-solingen.jpg" alt="BildungsBar Solingen im Gründerzentrum" loading="lazy"></span>
+          <span class="bb-card__title">Solingen</span>
+          <span class="bb-card__meta">Grünewalder Straße 29-31 · im Gründerzentrum<br>Mo · 17–19 Uhr</span>
+          <span class="bb-card__links"><a class="bb-link" href="/terminbuchung">Termin buchen</a><a class="bb-link" href="https://www.google.com/maps/search/?api=1&amp;query=Gr%C3%BCnewalder%20Stra%C3%9Fe%2029%2C%20Solingen" target="_blank" rel="noopener">Route</a></span>
+        </div>
+        <div class="bb-card">
+          <span class="bb-card__tile"><img src="/assets/img/standort-remscheid.webp" alt="BildungsBar Remscheid in der Gründerschmiede" loading="lazy"></span>
+          <span class="bb-card__title">Remscheid</span>
+          <span class="bb-card__meta">Hindenburgstraße 10a · in der Gründerschmiede<br>Mi · 17–19 Uhr</span>
+          <span class="bb-card__links"><a class="bb-link" href="/terminbuchung">Termin buchen</a><a class="bb-link" href="https://www.google.com/maps/search/?api=1&amp;query=Hindenburgstra%C3%9Fe%2010a%2C%20Remscheid" target="_blank" rel="noopener">Route</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ZIELGRUPPEN · Kacheln in Navy, Gold und Hell (vorheriges Design, Maze) -->
   <section class="bb-sec">
     <div class="container">
       <div class="bb-head">
-        <h2 class="bb-h2">Vier BildungsBars in deiner Nähe</h2>
-        <p class="bb-lead">Komm vorbei: Wir sind von 17 bis 19 Uhr für dich da.</p>
+        <h2 class="bb-h2">Gemeinsam für die Ausbildung</h2>
       </div>
-      <div class="bb-cards">
-        <a class="bb-card" href="/terminbuchung">
-          <span class="bb-card__tile bb-tile bb-tile--link"><img src="/assets/img/standort-wuppertal.jpg" alt="BildungsBar Wuppertal (Innenansicht)" loading="lazy"></span>
-          <span class="bb-card__title">Wuppertal</span>
-          <span class="bb-card__meta">Hochstraße 65</span>
+      <div class="bb-aud">
+        <a class="bb-aud__card bb-aud__card--navy" href="/berufswelt">
+          <span class="bb-aud__ic">${IC.cap}</span>
+          <h3>Schüler:innen</h3>
+          <p>Kostenfreie Orientierung, Bewerbungshilfe und der direkte Draht zu Ausbildungsbetrieben.</p>
+          <span class="bb-aud__go">Mehr erfahren ${IC.arrow}</span>
         </a>
-        <a class="bb-card" href="/terminbuchung">
-          <span class="bb-card__tile bb-tile bb-tile--link"><img src="/assets/img/standort-essen.png" alt="BildungsBar Essen (Innenansicht)" loading="lazy"></span>
-          <span class="bb-card__title">Essen</span>
-          <span class="bb-card__meta">Kopstadtplatz 12</span>
+        <a class="bb-aud__card bb-aud__card--gold" href="/fuer-schulen">
+          <span class="bb-aud__ic">${IC.building}</span>
+          <h3>Schulen</h3>
+          <p>Workshops und Berufsorientierung, die kAoA-Kriterien erfüllen – jugendgerecht und gamifiziert.</p>
+          <span class="bb-aud__go">Für Schulen ${IC.arrow}</span>
         </a>
-        <a class="bb-card" href="/terminbuchung">
-          <span class="bb-card__tile bb-tile bb-tile--link"><img src="/assets/img/standort-solingen.jpg" alt="BildungsBar Solingen im Gründerzentrum" loading="lazy"></span>
-          <span class="bb-card__title">Solingen</span>
-          <span class="bb-card__meta">Grünewalder Straße 29-31 · im Gründerzentrum</span>
-        </a>
-        <a class="bb-card" href="/terminbuchung">
-          <span class="bb-card__tile bb-tile bb-tile--link"><img src="/assets/img/standort-remscheid.webp" alt="BildungsBar Remscheid in der Gründerschmiede" loading="lazy"></span>
-          <span class="bb-card__title">Remscheid</span>
-          <span class="bb-card__meta">Hindenburgstraße 10a · in der Gründerschmiede</span>
+        <a class="bb-aud__card bb-aud__card--light" href="/kooperation">
+          <span class="bb-aud__ic">${IC.briefcase}</span>
+          <h3>Unternehmen</h3>
+          <p>Werdet sichtbar bei motivierten Talenten und gestaltet die Ausbildung von morgen mit.</p>
+          <span class="bb-aud__go">Kooperieren ${IC.arrow}</span>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ZIELGRUPPEN · Vorlage: Brilliant „Brilliant Premium is a great gift for …" -->
-  <section class="bb-sec bb-sec--flush-top">
-    <div class="container">
-      <div class="bb-ruled">
-        <div class="bb-head">
-          <h2 class="bb-h2">Gemeinsam für die Ausbildung</h2>
-        </div>
-        <div class="bb-cols">
-          <a class="bb-col" href="/berufswelt">
-            <span class="bb-col__media"><img src="/assets/img/standort-solingen.jpg" alt="Sitzecke in der BildungsBar Solingen" loading="lazy"></span>
-            <div class="bb-col__body"><h3>Schüler:innen</h3><p>Kostenfreie Orientierung, Bewerbungshilfe und der direkte Draht zu Ausbildungsbetrieben.</p><span class="bb-link">Mehr erfahren</span></div>
-          </a>
-          <a class="bb-col" href="/fuer-schulen">
-            <span class="bb-col__media"><img src="/assets/img/nest-explore.png" alt="Schüler:innen an einem NEST-Explore-Stand" loading="lazy"></span>
-            <div class="bb-col__body"><h3>Schulen</h3><p>Workshops und Berufsorientierung, die kAoA-Kriterien erfüllen – jugendgerecht &amp; gamifiziert.</p><span class="bb-link">Für Schulen</span></div>
-          </a>
-          <a class="bb-col" href="/kooperation">
-            <span class="bb-col__media"><img src="/assets/img/team/bildungsbar-aussen.jpg" alt="Eingang der NEST BildungsBar" loading="lazy"></span>
-            <div class="bb-col__body"><h3>Unternehmen</h3><p>Werdet sichtbar bei motivierten Talenten und gestaltet die Ausbildung von morgen mit.</p><span class="bb-link">Kooperieren</span></div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ · Vorlage: Brilliant „FAQs" -->
+  <!-- FAQ · Dovetail (Titel links, Fragen rechts) -->
   <section class="bb-sec bb-sec--band bb-faq">
     <div class="container">
-      <div class="bb-head bb-head--center">
+      <div class="bb-head">
         <h2 class="bb-h2">Häufig gestellte Fragen</h2>
+        <p class="bb-lead">Deine Frage ist nicht dabei? Schreib uns einfach – wir melden uns schnell bei dir.</p>
+        <div class="bb-actions"><a class="bb-btn bb-btn--light" href="/kontakt">Kontakt aufnehmen</a></div>
       </div>
       <div class="faq-list">
         <div class="faq-item"><button class="faq-question"><span>Was kostet die Beratung?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Die Beratung in der BildungsBar ist für Schüler:innen und junge Menschen komplett kostenfrei.</div></div></div>
@@ -293,12 +329,12 @@ const html = `
     </div>
   </section>
 
-  <!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
+  <!-- ABSCHLUSS · Navy-Karte mit Gold-Kante (vorheriges Design, Stripe) -->
   <section class="bb-sec">
     <div class="container">
       <div class="bb-cta">
         <div>
-          <h2 class="bb-h2">Bereit, deinen Partner zu entdecken?</h2>
+          <h2 class="bb-h2">Bereit, deinen <span class="bb-hl">Partner</span> zu entdecken?</h2>
           <p class="bb-lead">Buch dir einen kostenfreien Termin in der BildungsBar in Wuppertal, Essen, Solingen oder Remscheid – wir freuen uns auf dich!</p>
           <div class="bb-actions"><a class="bb-btn bb-btn--gold" href="/terminbuchung">Termin buchen</a><a class="bb-btn bb-btn--light" href="/kontakt">Kontakt aufnehmen</a></div>
         </div>

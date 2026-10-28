@@ -1,8 +1,7 @@
 /* =========================================================
    NEST BildungsBar – Terminbuchung
-   Vorlage: Brilliant (über Mobbin) – Kursseite mit weißer Karte
-   und Seitenleiste, Onboarding mit Fortschrittsbalken und
-   Auswahl-Pills, Kurs-Kacheln mit fühlbarer Unterkante.
+   Weiße Karte mit Seitenleiste, Fortschrittsbalken und Auswahl-
+   Pills; flach ohne Schatten, Zusammenfassung als Navy-Karte.
    Grundbausteine (bb-tile, bb-btn, bb-form) stehen in bb.css.
    ========================================================= */
 
@@ -10,7 +9,7 @@
 
 /* ── Fortschritt (Brilliant Onboarding: schmaler Balken oben) ── */
 .tb-progress { margin: 0 0 28px; }
-.tb-progress__track { height: 10px; border-radius: 9999px; background: #e3e6eb; overflow: hidden; }
+.tb-progress__track { height: 6px; border-radius: 9999px; background: #e3e7ee; overflow: hidden; }
 .tb-progress__fill { display: block; height: 100%; width: 6%; border-radius: 9999px; background: var(--bb-gold); transition: width .35s ease; }
 /* :where() hält die Spezifität gleich, damit die Reihenfolge entscheidet */
 #termin-app:has(:where(.tb-ort.active)) .tb-progress__fill { width: 28%; }
@@ -19,7 +18,7 @@
 #termin-app:has(:where(#tb-bottom-cta:not([hidden]))) .tb-progress__fill,
 #termin-app:has(:where(.tb-success.show)) .tb-progress__fill { width: 100%; }
 .tb-progress__steps { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
-.tb-prog { font-size: 13px; font-weight: 700; color: var(--bb-muted); transition: color .25s ease; }
+.tb-prog { font-size: 13.5px; font-weight: 600; color: var(--bb-muted); transition: color .25s ease; }
 .tb-prog:not(:first-child) { text-align: center; }
 .tb-prog:last-child { text-align: right; }
 #termin-app:has(:where(.tb-ort.active)) .tb-prog--ort,
@@ -41,20 +40,20 @@
 .tb-step-head { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
 .tb-step-n {
   position: relative; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%;
-  border: 2px solid var(--bb-ink); color: var(--bb-ink); background: #fff;
-  display: grid; place-items: center; font-size: 15px; font-weight: 700;
+  border: 1px solid var(--bb-line-2); color: var(--bb-ink); background: #fff;
+  display: grid; place-items: center; font-size: 15px; font-weight: 600;
 }
 .tb-step-title { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.tb-step-kicker { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--bb-hl); }
-.tb-step-head h3 { font-size: 20px; font-weight: 700; color: var(--bb-ink); margin: 0; line-height: 1.25; }
+.tb-step-kicker { font-size: 13px; font-weight: 600; color: var(--bb-hl); }
+.tb-step-head h3 { font-size: 21px; font-weight: 600; color: var(--bb-ink); margin: 0; line-height: 1.25; letter-spacing: -0.01em; }
 .tb-step-head .tb-hint {
-  margin-left: auto; font-size: 12px; font-weight: 700; color: var(--bb-ink);
-  background: #e8ecf4; padding: 4px 11px; border-radius: 9999px; white-space: nowrap;
+  margin-left: auto; font-size: 12.5px; font-weight: 600; color: var(--bb-ink);
+  background: #f1f3f8; padding: 5px 12px; border-radius: 9999px; white-space: nowrap;
 }
 /* erledigte Schritte: gefüllter Kreis mit Haken */
 #step-ort:has(.tb-ort.active) .tb-step-n,
 #step-date:has(.tb-cal-day--selected) .tb-step-n,
-#step-time:not(.tb-locked):has(.tb-time.active) .tb-step-n { background: var(--bb-ink); color: transparent; }
+#step-time:not(.tb-locked):has(.tb-time.active) .tb-step-n { background: var(--bb-navy); border-color: var(--bb-navy); color: transparent; }
 #step-ort:has(.tb-ort.active) .tb-step-n::after,
 #step-date:has(.tb-cal-day--selected) .tb-step-n::after,
 #step-time:not(.tb-locked):has(.tb-time.active) .tb-step-n::after {
@@ -64,76 +63,75 @@
 .tb-locked { opacity: .4; pointer-events: none; }
 .tb-need { font-size: 13px; color: var(--bb-muted); font-style: italic; }
 
-/* ── Standorte als Kurs-Kacheln ─────────────────────────── */
+/* ── Standorte als Bildkarten ───────────────────────────── */
 .tb-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
 .tb-ort {
   position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 3px;
   padding: 0; border: 0; background: none; text-align: left; cursor: pointer; font-family: var(--font); color: inherit;
 }
 .tb-ort .o-photo {
-  position: relative; display: block; width: 100%; aspect-ratio: 1 / 1; padding: 6px; margin-bottom: 10px;
-  background: #fff; border: 1px solid var(--bb-line); border-radius: 16px; box-shadow: 0 4px 0 var(--bb-line);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  position: relative; display: block; width: 100%; aspect-ratio: 1 / 1; padding: 0; margin-bottom: 12px;
+  background: #f1f3f8; border-radius: 16px; outline: 2px solid transparent; outline-offset: 3px;
+  transition: outline-color .15s ease;
 }
-.tb-ort .o-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 11px; display: block; }
-.tb-ort:hover .o-photo { transform: translateY(-2px); box-shadow: 0 6px 0 var(--bb-line-2); border-color: var(--bb-line-2); }
-.tb-ort.active .o-photo { border: 2px solid var(--bb-ink); box-shadow: 0 4px 0 var(--bb-ink); padding: 5px; }
+.tb-ort .o-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; display: block; transition: opacity .15s ease; }
+.tb-ort:hover .o-photo img { opacity: .9; }
+.tb-ort.active .o-photo { outline-color: var(--bb-navy); }
 .tb-ort.active .o-photo::after {
-  content: ''; position: absolute; top: -9px; right: -9px; width: 26px; height: 26px; border-radius: 50%;
+  content: ''; position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 50%;
   background: var(--bb-gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F2145' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") no-repeat center / 14px;
-  border: 2px solid var(--bb-ink);
 }
 .tb-ort:focus-visible { outline: none; }
-.tb-ort:focus-visible .o-photo { outline: 3px solid var(--bb-gold); outline-offset: 3px; }
-.tb-ort .o-header-label { font-size: 16px; font-weight: 700; color: var(--bb-ink); line-height: 1.25; }
+.tb-ort:focus-visible .o-photo { outline-color: var(--bb-gold); }
+.tb-ort .o-header-label { font-size: 17px; font-weight: 600; color: var(--bb-ink); line-height: 1.25; }
 .tb-ort .o-adr { font-size: 12.5px; line-height: 1.45; color: var(--bb-muted); }
 .tb-ort .o-header-badge {
-  margin-top: 6px; font-size: 11px; font-weight: 700; color: var(--bb-ink);
-  background: #e8ecf4; padding: 3px 9px; border-radius: 9999px; white-space: nowrap;
+  margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--bb-ink);
+  background: #f1f3f8; padding: 4px 10px; border-radius: 9999px; white-space: nowrap;
 }
 @media (max-width: 760px) { .tb-choices { grid-template-columns: 1fr 1fr; gap: 20px 14px; } }
 
 /* ── Kalender ───────────────────────────────────────────── */
-.tb-cal-wrap { background: #fff; border: 1px solid var(--bb-line); border-radius: 16px; overflow: hidden; }
+.tb-cal-wrap { background: #fff; border: 1px solid var(--bb-line); border-radius: 20px; overflow: hidden; }
 .tb-cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--bb-line); }
-.tb-cal-month-label { font-size: 17px; font-weight: 700; color: var(--bb-ink); }
+.tb-cal-month-label { font-size: 17px; font-weight: 600; color: var(--bb-ink); }
 .tb-cal-arrows { display: flex; gap: 6px; }
 .tb-cal-btn {
   width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--bb-line-2); background: #fff;
   color: var(--bb-ink); font-size: 20px; line-height: 1; cursor: pointer; font-family: var(--font);
-  display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 0 var(--bb-line-2);
+  display: flex; align-items: center; justify-content: center;
 }
-.tb-cal-btn:hover { background: var(--bb-band); }
+.tb-cal-btn:hover { border-color: var(--bb-navy); }
 .tb-cal-btn:disabled { opacity: .35; cursor: not-allowed; }
 .tb-cal-body { padding: 16px; }
 .tb-cal-wd-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
-.tb-cal-wd { font-size: 12px; font-weight: 700; color: var(--bb-muted); padding: 2px 4px; }
+.tb-cal-wd { font-size: 12.5px; font-weight: 600; color: var(--bb-muted); padding: 2px 4px; }
 .tb-cal-weeks { display: flex; flex-direction: column; gap: 10px; }
 .tb-cal-week { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .tb-cal-day {
   position: relative; display: flex; align-items: baseline; gap: 6px; min-height: 60px; padding: 14px;
-  border-radius: 12px; cursor: pointer; font-family: var(--font);
-  background: #fff; border: 1px solid var(--bb-line); box-shadow: 0 3px 0 var(--bb-line); color: var(--bb-ink);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  border-radius: 14px; cursor: pointer; font-family: var(--font);
+  background: #fff; border: 1px solid var(--bb-line-2); color: var(--bb-ink);
+  transition: border-color .12s ease, background-color .12s ease;
 }
 .dido-n { font-size: 22px; font-weight: 700; line-height: 1; color: inherit; }
 .dido-mon { font-size: 13px; font-weight: 600; color: var(--bb-muted); }
 .dido-rest {
-  margin-left: auto; align-self: center; font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
-  padding: 3px 8px; border-radius: 9999px; background: var(--bb-band); color: var(--bb-muted); white-space: nowrap;
+  margin-left: auto; align-self: center; font-size: 12px; font-weight: 600;
+  padding: 3px 9px; border-radius: 9999px; background: #f1f3f8; color: var(--bb-muted); white-space: nowrap;
 }
 .tb-cal-day--empty { background: none; border-color: transparent; box-shadow: none; cursor: default; }
 .tb-cal-day--past { background: transparent; border-color: transparent; box-shadow: none; color: #c3c8d2; cursor: not-allowed; }
 .tb-cal-day--past .dido-mon { color: #cfd3db; }
-.tb-cal-day--blocked { background: var(--bb-band); border-color: transparent; box-shadow: none; color: #9aa0ae; cursor: not-allowed; }
+.tb-cal-day--blocked { background: #f1f3f8; border-color: transparent; box-shadow: none; color: #9aa0ae; cursor: not-allowed; }
 .tb-cal-day--available .dido-rest { background: #e3f3ea; color: #17603f; }
-.tb-cal-day--available:hover, .tb-cal-day--knapp:hover { transform: translateY(-2px); box-shadow: 0 5px 0 var(--bb-line-2); border-color: var(--bb-line-2); }
+.tb-cal-day--available:hover, .tb-cal-day--knapp:hover { border-color: var(--bb-navy); }
 .tb-cal-day--knapp .dido-rest { background: #fdf0cf; color: #865600; }
-.tb-cal-day--full { background: #fafbfc; box-shadow: none; color: #b5bbc6; cursor: not-allowed; }
+.tb-cal-day--full { background: #fafbfc; border-color: var(--bb-line); color: #b5bbc6; cursor: not-allowed; }
 .tb-cal-day--full .dido-n { text-decoration: line-through; }
 .tb-cal-day--full .dido-rest { background: #fbe9ec; color: #a8344b; }
 .tb-cal-day--selected,
-.tb-cal-day--selected:hover { background: var(--bb-ink); border-color: var(--bb-ink); color: #fff; box-shadow: 0 3px 0 #000; transform: none; }
+.tb-cal-day--selected:hover { background: var(--bb-navy); border-color: var(--bb-navy); color: #fff; }
 .tb-cal-day--selected .dido-mon { color: var(--bb-gold); }
 .tb-cal-day--selected .dido-rest { background: rgba(255,255,255,0.14); color: #fff; }
 .tb-cal-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--bb-line); }
@@ -150,8 +148,8 @@
 
 /* ── Datumsliste (Fallback, standardmäßig ausgeblendet) ── */
 .tb-dates { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px; }
-.tb-date { cursor: pointer; background: #fff; border: 1px solid var(--bb-line); border-radius: 12px; padding: 14px 10px; text-align: center; font-family: var(--font); box-shadow: 0 3px 0 var(--bb-line); }
-.tb-date.active { background: var(--bb-ink); border-color: var(--bb-ink); }
+.tb-date { cursor: pointer; background: #fff; border: 1px solid var(--bb-line-2); border-radius: 14px; padding: 14px 10px; text-align: center; font-family: var(--font); }
+.tb-date.active { background: var(--bb-navy); border-color: var(--bb-navy); }
 .tb-date .d-wday { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--bb-hl); }
 .tb-date .d-day { font-size: 26px; font-weight: 700; color: var(--bb-ink); line-height: 1.1; margin: 4px 0; }
 .tb-date.active .d-day, .tb-date.active .d-wday { color: #fff; }
@@ -161,16 +159,16 @@
 .tb-date--full { cursor: not-allowed; opacity: .5; }
 .tb-date--full .d-full { margin-top: 5px; font-size: 9px; font-weight: 800; text-transform: uppercase; color: #a8344b; }
 
-/* ── Uhrzeit (Brilliant Auswahl-Pill) ───────────────────── */
+/* ── Uhrzeit (Auswahl-Pill) ─────────────────────────────── */
 .tb-times { display: flex; flex-wrap: wrap; gap: 10px; }
 .tb-time {
   cursor: pointer; min-height: 46px; padding: 0 24px; border-radius: 9999px; font-family: var(--font);
-  font-size: 16px; font-weight: 700; color: var(--bb-ink); background: #eef0f3; border: 0;
+  font-size: 16px; font-weight: 600; color: var(--bb-ink); background: #fff; border: 1px solid var(--bb-line-2);
   display: inline-flex; align-items: center; gap: 8px;
 }
 .tb-time .tb-time-sub { font-size: 12px; font-weight: 600; color: var(--bb-muted); }
-.tb-time:hover { background: #e3e6eb; }
-.tb-time.active { background: var(--bb-ink); color: #fff; }
+.tb-time:hover { border-color: var(--bb-navy); }
+.tb-time.active { background: var(--bb-navy); border-color: var(--bb-navy); color: #fff; }
 .tb-time.active .tb-time-sub { color: rgba(255,255,255,0.65); }
 
 /* ── Formulare (gemeinsame Basis, auch Partner-Portal & Veranstaltungen) ── */
@@ -200,29 +198,33 @@
 @media (min-width: 861px) {
   .tb-bottom-cta:not([hidden]) {
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
-    margin: 0 32px 32px; padding: 18px 20px;
-    background: var(--bb-band); border-radius: 14px;
+    margin: 0 32px 32px; padding: 20px 22px;
+    background: #f1f3f8; border-radius: 16px;
   }
 }
 .tb-bottom-cta-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.tb-bottom-cta-label { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--bb-hl); }
-.tb-bottom-cta-recap { font-size: 15.5px; font-weight: 700; color: var(--bb-ink); }
-.tb-err { width: 100%; margin: 12px 0 0; color: #a8344b; background: #fbe9ec; border-radius: 10px; padding: 9px 12px; font-size: 13.5px; }
+.tb-bottom-cta-label { font-size: 13px; font-weight: 600; color: var(--bb-hl); }
+.tb-bottom-cta-recap { font-size: 16px; font-weight: 600; color: var(--bb-ink); }
+.tb-err { width: 100%; margin: 12px 0 0; color: #a8344b; background: #fbe9ec; border-radius: 12px; padding: 10px 12px; font-size: 13.5px; }
 
-/* ── Zusammenfassung (Brilliant Preiskarte: Kopfband + Inhalt) ── */
-.tb-summary { position: sticky; top: 130px; overflow: hidden; }
-.tb-summary__head { margin: 0; padding: 14px 20px; background: #e9ecf1; font-size: 15px; font-weight: 700; color: var(--bb-ink); text-align: center; }
-.tb-summary__body { padding: 8px 20px 22px; }
-.tb-sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--bb-line); font-size: 14.5px; }
-.tb-sum-row .k { color: var(--bb-muted); font-size: 14px; }
-.tb-sum-row .v { font-weight: 700; color: var(--bb-ink); text-align: right; }
-.tb-sum-row .v.empty { color: #a3a9b6; font-weight: 500; font-style: italic; }
-.tb-summary .bb-btn { margin-top: 20px; }
-.tb-summary__note { margin: 14px 0 0; font-size: 13px; line-height: 1.5; color: var(--bb-muted); text-align: center; }
+/* ── Zusammenfassung als Navy-Karte ────────────────────── */
+/* .bb-tile steht in bb.css (lädt später) – daher die doppelte Klasse */
+.tb-summary.bb-tile { position: sticky; top: 130px; overflow: hidden; background: var(--bb-navy); border-color: var(--bb-navy); border-radius: 22px; color: #fff; }
+.tb-summary__head { margin: 0; padding: 24px 24px 6px; background: none; font-size: 18px; font-weight: 600; color: #fff; text-align: left; }
+.tb-summary__body { padding: 4px 24px 24px; }
+.tb-sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.12); font-size: 14.5px; }
+.tb-sum-row .k { color: rgba(255,255,255,0.56); font-size: 14px; }
+.tb-sum-row .v { font-weight: 600; color: #fff; text-align: right; }
+.tb-sum-row .v.empty { color: rgba(255,255,255,0.38); font-weight: 500; font-style: italic; }
+.tb-summary .bb-btn { margin-top: 22px; }
+.tb-summary .bb-btn--ink { background: var(--bb-gold); color: var(--bb-navy); }
+.tb-summary .bb-btn--ink:hover { background: var(--bb-gold-hover); color: var(--bb-navy); }
+.tb-summary .tb-err { background: rgba(232,64,85,0.16); color: #ffb3bf; }
+.tb-summary__note { margin: 14px 0 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.56); text-align: center; }
 
 @media (max-width: 860px) {
   .tb-grid { grid-template-columns: 1fr; }
-  .tb-summary { position: static; }
+  .tb-summary.bb-tile { position: static; }
   .tb-step { padding: 24px 18px; }
 }
 @media (max-width: 520px) {
@@ -231,15 +233,15 @@
   .tb-prog { font-size: 11.5px; }
 }
 
-/* ── Erfolg (Brilliant „Lesson complete!") ───────────────── */
+/* ── Erfolg ─────────────────────────────────────────────── */
 .tb-success { display: none; max-width: 640px; margin: 0 auto; padding: 48px 32px; text-align: center; }
 .tb-success.show { display: block; }
 .tb-success-icon {
   width: 72px; height: 72px; margin: 0 auto 22px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--bb-gold); color: var(--bb-ink); border: 2px solid var(--bb-ink); box-shadow: 4px 4px 0 var(--bb-ink);
+  background: var(--bb-gold); color: var(--bb-navy);
 }
 .tb-success-icon svg { width: 34px; height: 34px; }
-.tb-success h3 { font-size: 30px; font-weight: 700; color: var(--bb-ink); margin: 0 0 10px; letter-spacing: -0.015em; }
+.tb-success h3 { font-size: 32px; font-weight: 700; color: var(--bb-ink); margin: 0 0 10px; letter-spacing: -0.02em; }
 .tb-success p { color: var(--bb-text); line-height: 1.65; margin: 0 auto 24px; font-size: 16px; max-width: 460px; }
 .tb-success .tb-recap { text-align: left; max-width: 420px; margin: 0 auto 28px; border-top: 1px solid var(--bb-line); }
 .tb-success .tb-recap div { font-size: 15px; padding: 11px 0; color: var(--bb-ink); border-bottom: 1px solid var(--bb-line); }

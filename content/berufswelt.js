@@ -43,14 +43,14 @@ const html = `
     </div>
   </section>
 
-  <!-- EINSTIEG · Vorlage: Brilliant „A solution for diverse educational settings" -->
+  <!-- EINSTIEG · Spalten mit Trennlinien (Linear) -->
   <section class="bb-sec">
     <div class="container">
-      <div class="bb-head bb-head--center">
+      <div class="bb-head bb-head--split">
         <h2 class="bb-h2">Finde heraus, <span class="bb-hl">was zu dir passt</span></h2>
         <p class="bb-lead">Die Auswahl ist riesig – über 150 Ausbildungsberufe und zahlreiche duale Studiengänge. Wir helfen dir, den Überblick zu behalten und den richtigen Weg einzuschlagen.</p>
       </div>
-      <div class="bb-cols bb-cols--center">
+      <div class="bb-cols">
         <a class="bb-col" href="#felder"><span class="bb-col__ic">${IC.compass}</span><div class="bb-col__body"><h3>Was passt zu mir?</h3><p>Wähl im Berufsfinder einfach aus, worauf du Lust hast – wir zeigen dir passende Berufe.</p><span class="bb-link">Jetzt ausprobieren</span></div></a>
         <div class="bb-col"><span class="bb-col__ic">${IC.layers}</span><div class="bb-col__body"><h3>150+ Berufe</h3><p>Eine umfassende Datenbank über alle Branchen hinweg – von A wie Anlagenmechaniker bis Z.</p></div></div>
         <div class="bb-col"><span class="bb-col__ic">${IC.cap}</span><div class="bb-col__body"><h3>Duales Studium</h3><p>Zahlreiche Bachelor-Optionen, die Theorie und Praxis im Betrieb verbinden.</p></div></div>
@@ -58,21 +58,19 @@ const html = `
     </div>
   </section>
 
-  <!-- BERUFE-BROWSER · Vorlage: Brilliant „Browse all 70+ courses" + „Learning paths" (inkl. aktuelle Stellen unter dem Suchfeld) -->
-  <section class="bb-sec bb-sec--flush-top" id="felder">
+  <!-- BERUFE-BROWSER · dunkle Sektion, Bildkarten ohne Kästen (Runway) – inkl. aktuelle Stellen unter dem Suchfeld -->
+  <section class="bb-sec bb-sec--dark" id="felder">
     <div class="container">
-      <div class="bb-ruled">
-        <div class="bb-head">
-          <h2 class="bb-h2">Finde deinen Beruf</h2>
-          <p class="bb-lead">Durchsuche unsere komplette Liste an Ausbildungsberufen und dualen Studiengängen oder filtere nach Berufsfeld. Klick auf einen Beruf für Details.</p>
-        </div>
-        <div id="berufe-browser"></div>
+      <div class="bb-head bb-head--split">
+        <h2 class="bb-h2">Finde deinen <span class="bb-hl">Beruf</span></h2>
+        <p class="bb-lead">Durchsuche unsere komplette Liste an Ausbildungsberufen und dualen Studiengängen oder filtere nach Berufsfeld. Klick auf einen Beruf für Details.</p>
       </div>
+      <div id="berufe-browser"></div>
     </div>
   </section>
 
-  <!-- BEGLEITUNG · Vorlage: Brilliant „Careers" (gerahmtes Bild + Text) -->
-  <section class="bb-sec bb-sec--band">
+  <!-- BEGLEITUNG · Bild + Text -->
+  <section class="bb-sec">
     <div class="container">
       <div class="bb-split">
         <div class="bb-frame bb-frame--43"><img src="/assets/img/standort-essen.png" alt="Beratungsraum der BildungsBar Essen" loading="lazy"></div>
@@ -93,8 +91,8 @@ const html = `
   <!-- Merkliste share toast (hidden, shown by JS) -->
   <div class="merk-share-toast" id="merk-share-toast">Link kopiert – teile deine Merkliste!</div>
 
-  <!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
-  <section class="bb-sec">
+  <!-- ABSCHLUSS · Navy-Karte mit Gold-Kante -->
+  <section class="bb-sec bb-sec--flush-top">
     <div class="container">
       <div class="bb-cta">
         <div>

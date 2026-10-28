@@ -1454,7 +1454,7 @@ function renderBerufDetail() {
     "</div></div></section>";
 
   var cta =
-    '<section class="bb-sec bb-sec--band"><div class="container"><div class="bb-cta">' +
+    '<section class="bb-sec bb-sec--flush-top"><div class="container"><div class="bb-cta">' +
     '<div><h2 class="bb-h2">Starte mit „' + escHtml(beruf.name) + '“</h2>' +
     '<p class="bb-lead">Buch dir einen kostenfreien Termin in der BildungsBar – wir finden gemeinsam heraus, ob dieser Weg zu dir passt.</p>' +
     '<div class="bb-actions"><a class="bb-btn bb-btn--gold" href="' + linkKontaktTermin() + '">Termin buchen</a>' +

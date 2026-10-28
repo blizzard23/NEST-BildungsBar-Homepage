@@ -59,7 +59,7 @@ const html = `
     </div></div>
   </section>
 
-  <!-- NESTplay · Vorlage: Brilliant „Level up with Premium" (Handy-Mock mit hartem Schatten) -->
+  <!-- NESTplay · Handy-Mock + Liste -->
   <section class="bb-sec" id="nestplay">
     <div class="container">
       <div class="bb-head bb-head--center">
@@ -95,8 +95,8 @@ const html = `
     </div>
   </section>
 
-  <!-- NEST EXPLORE · Vorlage: Brilliant „Careers" (Text + gerahmtes Bild) -->
-  <section class="bb-sec bb-sec--band" id="nestmesse">
+  <!-- NEST EXPLORE · dunkle Sektion, Bild + Text -->
+  <section class="bb-sec bb-sec--dark" id="nestmesse">
     <div class="container">
       <div class="bb-split bb-split--rev">
         <div class="bb-frame bb-frame--43"><img src="/assets/img/nest-explore.png" alt="NEST Explore – Schüler:innen entdecken Berufe an einem interaktiven NEST-Stand" loading="lazy"></div>
@@ -115,7 +115,7 @@ const html = `
     </div>
   </section>
 
-  <!-- WORKSHOPS · Vorlage: Brilliant „Learning paths" -->
+  <!-- WORKSHOPS · Liste mit Trennlinien -->
   <section class="bb-sec" id="workshops">
     <div class="container">
       <div class="bb-head bb-head--row">
@@ -147,8 +147,8 @@ const html = `
     </div>
   </section>
 
-  <!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
-  <section class="bb-sec bb-sec--band">
+  <!-- ABSCHLUSS · Navy-Karte mit Gold-Kante -->
+  <section class="bb-sec bb-sec--flush-top">
     <div class="container">
       <div class="bb-cta">
         <div>

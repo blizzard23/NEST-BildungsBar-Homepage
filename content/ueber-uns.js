@@ -45,7 +45,7 @@ const html = `
 
 </div>
 
-<!-- GESCHICHTE · Vorlage: Brilliant „About us" -->
+<!-- GESCHICHTE · Text + Bild -->
 <section class="bb-sec">
   <div class="container">
     <div class="bb-split">
@@ -62,8 +62,8 @@ const html = `
   </div>
 </section>
 
-<!-- ZITAT · Vorlage: Brilliant Bewertungen -->
-<section class="bb-sec bb-sec--band bb-sec--tight">
+<!-- ZITAT · dunkle Sektion -->
+<section class="bb-sec bb-sec--dark bb-sec--tight">
   <div class="container">
     <figure class="bb-quote" style="margin:0;">
       <blockquote>„Gute Ausbildung lebt von Menschen, die sich verstehen, unterstützen und gemeinsam wachsen.“</blockquote>
@@ -72,7 +72,7 @@ const html = `
   </div>
 </section>
 
-<!-- GRÜNDER · Vorlage: Brilliant „What kinds of people work at Brilliant?" -->
+<!-- GRÜNDER · Bild + Text -->
 <section class="bb-sec">
   <div class="container">
     <div class="bb-head">
@@ -96,7 +96,7 @@ const html = `
   </div>
 </section>
 
-<!-- ZAHLEN · Vorlage: Brilliant Vertrauensleiste -->
+<!-- ZAHLEN · Gold-Band -->
 <div class="bb-trust">
   <div class="container">
     <p class="bb-trust__title">NEST in Zahlen</p>
@@ -108,10 +108,10 @@ const html = `
   </div>
 </div>
 
-<!-- WERTE · Vorlage: Brilliant „About Brilliant" -->
+<!-- WERTE · Karten im Raster (Linear „features") -->
 <section class="bb-sec">
   <div class="container">
-    <div class="bb-ruled">
+    <div>
       <div class="bb-head">
         <h2 class="bb-h2">Werte, die wir wirklich leben.</h2>
         <p class="bb-lead">Keine leeren Versprechen – Grundsätze, nach denen wir täglich arbeiten.</p>
@@ -126,10 +126,10 @@ const html = `
   </div>
 </section>
 
-<!-- TEAM · Vorlage: Brilliant „Team" -->
-<section class="bb-sec bb-sec--flush-top">
+<!-- TEAM · dunkle Sektion (Linear „Team", Origin) -->
+<section class="bb-sec bb-sec--dark">
   <div class="container">
-    <div class="bb-ruled">
+    <div>
       <div class="bb-head">
         <h2 class="bb-h2">Starke Köpfe hinter NEST.</h2>
         <p class="bb-lead">Neben unseren Gründern arbeitet ein engagiertes Team täglich daran, das NEST-Ökosystem weiterzuentwickeln.</p>
@@ -144,8 +144,8 @@ const html = `
   </div>
 </section>
 
-<!-- STANDORTE · Vorlage: Brilliant Kurskatalog -->
-<section class="bb-sec bb-sec--band">
+<!-- STANDORTE · Bildkarten (Runway) -->
+<section class="bb-sec">
   <div class="container">
     <div class="bb-head">
       <h2 class="bb-h2">Unsere Standorte</h2>
@@ -176,8 +176,8 @@ const html = `
   </div>
 </section>
 
-<!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
-<section class="bb-sec">
+<!-- ABSCHLUSS · Navy-Karte mit Gold-Kante -->
+<section class="bb-sec bb-sec--flush-top">
   <div class="container">
     <div class="bb-cta">
       <div>

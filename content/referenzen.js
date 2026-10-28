@@ -40,14 +40,14 @@ const html = `
     </div></div>
   </section>
 
-  <!-- PARTNERARTEN · Vorlage: Brilliant „A solution for diverse educational settings" -->
+  <!-- PARTNERARTEN · Spalten mit Trennlinien (Linear) -->
   <section class="bb-sec">
     <div class="container">
-      <div class="bb-head bb-head--center">
+      <div class="bb-head bb-head--split">
         <h2 class="bb-h2">Die Herausforderungen meistern wir <span class="bb-hl">gemeinsam</span></h2>
         <p class="bb-lead">Mit den folgenden Kooperationspartnern verbindet uns eine vertrauensvolle und langfristige Zusammenarbeit. Die Herausforderungen der modernen Ausbildung und Ausbildungssuche bewältigen wir am besten gemeinsam.</p>
       </div>
-      <div class="bb-cols bb-cols--center">
+      <div class="bb-cols">
         <div class="bb-col"><span class="bb-col__ic">${IC.briefcase}</span><div class="bb-col__body"><h3>Unternehmen</h3><p>Regionale Betriebe aus Handwerk, Technik, Wirtschaft und mehr – unsere Basis für passgenaue Vernetzung.</p></div></div>
         <div class="bb-col"><span class="bb-col__ic">${IC.building}</span><div class="bb-col__body"><h3>Einrichtungen</h3><p>Bildungs- und soziale Einrichtungen, mit denen wir Hand in Hand junge Menschen begleiten.</p></div></div>
         <div class="bb-col"><span class="bb-col__ic">${IC.globe}</span><div class="bb-col__body"><h3>Institutionen</h3><p>Öffentliche Einrichtungen, Kammern und Verbände, die die Ausbildung in der Region mitgestalten und unterstützen.</p></div></div>
@@ -55,7 +55,7 @@ const html = `
     </div>
   </section>
 
-  <!-- LOGOS · Vorlage: Brilliant Katalog-Gruppen (Titel + Linie) mit Logo-Kacheln -->
+  <!-- LOGOS · Logo-Raster (Linear „Customers") -->
   <section class="bb-sec bb-sec--band" id="partner">
     <div class="container">
       <div class="bb-head">
@@ -196,7 +196,7 @@ const html = `
     </div>
   </section>
 
-  <!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
+  <!-- ABSCHLUSS · Navy-Karte mit Gold-Kante -->
   <section class="bb-sec">
     <div class="container">
       <div class="bb-cta">

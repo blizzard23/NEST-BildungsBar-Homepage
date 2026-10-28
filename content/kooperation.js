@@ -13,13 +13,13 @@ const html = `
     </div>
   </section>
 
-  <!-- DREI SÄULEN · Vorlage: Brilliant „About Brilliant" / „Careers" (Linie, Titel links, Absätze rechts) -->
+  <!-- DREI SÄULEN · Linie, Titel links, Angebots-Karten rechts -->
   <section class="bb-sec">
     <div class="container">
 
       <div class="bb-pillar">
         <div class="bb-pillar__head">
-          <span class="bb-pillar__n">1</span>
+          <span class="bb-pillar__n">01</span>
           <h2 class="bb-h2">Gemeinwohl</h2>
           <p class="bb-p">Mehr als Marketing: Ihr gestaltet aktiv die Ausbildungskultur in der Region und übernehmt gesellschaftliche Verantwortung.</p>
         </div>
@@ -32,7 +32,7 @@ const html = `
 
       <div class="bb-pillar">
         <div class="bb-pillar__head">
-          <span class="bb-pillar__n">2</span>
+          <span class="bb-pillar__n">02</span>
           <h2 class="bb-h2">Außenwirkung</h2>
           <p class="bb-p">Werdet sichtbar, wo die Jugend ist – digital, in den sozialen Medien und direkt im Unterricht.</p>
         </div>
@@ -44,7 +44,7 @@ const html = `
         </ul>
       </div>
 
-      <!-- Stellenseite · Vorlage: Brilliant „How educators like you use Brilliant" (Fenster-Mock) -->
+      <!-- Stellenseite · Fenster-Ausschnitt + Liste -->
       <div class="bb-split bb-feature-row">
         <div class="bb-frame bb-window bb-frame--wide">
           <div class="bb-window__bar"><i></i><i></i><i></i><span>nest-bildungsbar.de/berufswelt</span></div>
@@ -63,7 +63,7 @@ const html = `
 
       <div class="bb-pillar">
         <div class="bb-pillar__head">
-          <span class="bb-pillar__n">3</span>
+          <span class="bb-pillar__n">03</span>
           <h2 class="bb-h2">Netzwerk</h2>
           <p class="bb-p">Ihr seid nie allein mit den Herausforderungen der Ausbildung – wir bringen die Partner regelmäßig zusammen.</p>
         </div>
@@ -76,7 +76,7 @@ const html = `
     </div>
   </section>
 
-  <!-- ERGEBNIS · Vorlage: Brilliant Vertrauensleiste -->
+  <!-- ERGEBNIS · Gold-Band -->
   <div class="bb-trust">
     <div class="container">
       <p class="bb-trust__title">Alle drei Säulen aus einer Hand – gemeinsam für die Ausbildung</p>
@@ -88,21 +88,21 @@ const html = `
     </div>
   </div>
 
-  <!-- ABLAUF · Vorlage: Brilliant „Careers at Brilliant" (drei Spalten) -->
+  <!-- ABLAUF · Spalten mit Trennlinien (Linear) -->
   <section class="bb-sec">
     <div class="container">
       <div class="bb-head">
         <h2 class="bb-h2">In drei Schritten zur Kooperation</h2>
       </div>
       <div class="bb-cols">
-        <div class="bb-col"><span class="bb-num-tile bb-tile">1</span><div class="bb-col__body"><h3>Kennenlernen</h3><p>Wir besprechen eure Ziele und finden das passende Kooperationspaket für euren Betrieb.</p><span class="bb-badge bb-badge--soft" style="margin-top:12px;">unverbindlich</span></div></div>
-        <div class="bb-col"><span class="bb-num-tile bb-tile">2</span><div class="bb-col__body"><h3>Sichtbar werden</h3><p>Ihr werdet Teil unseres Netzwerks: Workshops, Stellenseite, Social Media und NESTplay.</p><span class="bb-badge bb-badge--soft" style="margin-top:12px;">erlebbar</span></div></div>
-        <div class="bb-col"><span class="bb-num-tile bb-tile">3</span><div class="bb-col__body"><h3>Talente finden</h3><p>Wir vernetzen motivierte junge Menschen direkt mit euch – für Praktikum und Ausbildung.</p><span class="bb-badge bb-badge--soft" style="margin-top:12px;">passgenau</span></div></div>
+        <div class="bb-col"><span class="bb-num-tile">1</span><div class="bb-col__body"><h3>Kennenlernen</h3><p>Wir besprechen eure Ziele und finden das passende Kooperationspaket für euren Betrieb.</p><span class="bb-badge bb-badge--soft" style="margin-top:12px;">unverbindlich</span></div></div>
+        <div class="bb-col"><span class="bb-num-tile">2</span><div class="bb-col__body"><h3>Sichtbar werden</h3><p>Ihr werdet Teil unseres Netzwerks: Workshops, Stellenseite, Social Media und NESTplay.</p><span class="bb-badge bb-badge--soft" style="margin-top:12px;">erlebbar</span></div></div>
+        <div class="bb-col"><span class="bb-num-tile">3</span><div class="bb-col__body"><h3>Talente finden</h3><p>Wir vernetzen motivierte junge Menschen direkt mit euch – für Praktikum und Ausbildung.</p><span class="bb-badge bb-badge--soft" style="margin-top:12px;">passgenau</span></div></div>
       </div>
     </div>
   </section>
 
-  <!-- PAKETE · Vorlage: Brilliant „Give the gift of learning" (Karten auf Navy) -->
+  <!-- PAKETE · dunkle Karten (Spline, Epidemic Sound) -->
   <section class="bb-sec bb-sec--ink" id="preise">
     <div class="container">
       <div class="bb-head">
@@ -136,7 +136,7 @@ const html = `
     </div>
   </section>
 
-  <!-- VERGLEICH · Vorlage: Brilliant „No commitment, cancel anytime" (Free vs. Premium) -->
+  <!-- VERGLEICH · Tabelle mit hervorgehobener Spalte -->
   <section class="bb-sec">
     <div class="container">
       <div class="bb-head bb-head--center">
@@ -156,7 +156,7 @@ const html = `
     </div>
   </section>
 
-  <!-- FAQ · Vorlage: Brilliant „FAQs" -->
+  <!-- FAQ · Dovetail (Titel links, Fragen rechts) -->
   <section class="bb-sec bb-sec--band bb-faq">
     <div class="container">
       <div class="bb-head bb-head--center">
@@ -171,7 +171,7 @@ const html = `
     </div>
   </section>
 
-  <!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
+  <!-- ABSCHLUSS · Navy-Karte mit Gold-Kante -->
   <section class="bb-sec">
     <div class="container">
       <div class="bb-cta">

@@ -25,10 +25,10 @@ const html = `
   .nest-legal .nest-hero h1 em { color: #EFA500; font-style: normal; }
   .nest-legal .nest-hero p { font-size: clamp(15px, 2vw, 17px); color: rgba(255,255,255,.72); line-height: 1.7; max-width: 540px; }
 
-  /* INHALT · Vorlage: Brilliant „Terms of Service" (Textspalte, Trennlinien, keine Karten) */
+  /* INHALT · Textspalte mit Trennlinien, keine Karten */
   .nest-legal .page-body { max-width: 800px; margin: 0 auto; padding: 96px 20px 110px; }
   .nest-legal .toc {
-    background: #fff; border: 1px solid #e1e4ea; border-radius: 16px; box-shadow: 0 4px 0 #e1e4ea;
+    background: #f4f6fa; border: 0; border-radius: 20px;
     padding: 26px 30px; margin-bottom: 56px;
   }
   .nest-legal .toc h3 { color: #0f2145; font-size: 17px; font-weight: 700; margin-bottom: 14px; }
@@ -38,7 +38,7 @@ const html = `
   .nest-legal .toc a:hover { text-decoration-color: #0f2145; }
 
   .nest-legal .dse-section { padding: 32px 0; border-top: 1px solid #e1e4ea; scroll-margin-top: 120px; }
-  .nest-legal .dse-section:first-of-type, .nest-legal .toc + .dse-section { border-top: 1.5px solid #0f2145; }
+  .nest-legal .dse-section:first-of-type, .nest-legal .toc + .dse-section { border-top: 1px solid #d3d9e3; }
   .nest-legal .section-heading {
     font-size: clamp(20px, 2.4vw, 24px); font-weight: 700; line-height: 1.3; color: #0f2145; margin-bottom: 14px;
     display: flex; align-items: baseline; gap: 12px; letter-spacing: -0.01em;

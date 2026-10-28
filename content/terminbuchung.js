@@ -80,14 +80,14 @@ const html = `
     </div></div>
   </section>
 
-  <!-- SO LÄUFT'S · Vorlage: Brilliant „A solution for diverse educational settings" -->
+  <!-- SO LÄUFT'S · Spalten mit Trennlinien (Linear) -->
   <section class="bb-sec">
     <div class="container">
-      <div class="bb-head bb-head--center">
+      <div class="bb-head bb-head--split">
         <h2 class="bb-h2">In wenigen Klicks <span class="bb-hl">zum Termin</span></h2>
         <p class="bb-lead">Kein langes Formular, kein Account. Du wählst aus, was dir passt – den Rest klären wir gemeinsam vor Ort.</p>
       </div>
-      <div class="bb-cols bb-cols--center">
+      <div class="bb-cols">
         <div class="bb-col"><span class="bb-col__ic">${IC.pin}</span><div class="bb-col__body"><h3>Standort wählen</h3><p>Wuppertal, Essen, Solingen oder Remscheid – such dir aus, wo du uns am liebsten triffst.</p></div></div>
         <div class="bb-col"><span class="bb-col__ic">${IC.calendar}</span><div class="bb-col__body"><h3>Tag &amp; Uhrzeit</h3><p>Je nach Standort sind wir montags bis donnerstags da. Pick dir einen freien Slot.</p></div></div>
         <div class="bb-col"><span class="bb-col__ic">${IC.user}</span><div class="bb-col__body"><h3>Kurz Daten rein</h3><p>Name &amp; E-Mail genügen. Wir bestätigen deinen Termin schnellstmöglich.</p></div></div>
@@ -95,7 +95,7 @@ const html = `
     </div>
   </section>
 
-  <!-- BUCHUNG · Vorlage: Brilliant Kursseite (Karte + Seitenleiste) und Onboarding (Fortschrittsbalken, Auswahl-Pills) -->
+  <!-- BUCHUNG · Karte + Seitenleiste, Fortschrittsbalken, Auswahl-Pills -->
   <section class="bb-sec bb-sec--band tb-section" id="buchen">
     <div class="container">
       <div class="bb-head bb-head--row">
@@ -239,7 +239,7 @@ const html = `
                 </div>
               </div>
 
-              <!-- Zusammenfassung · Vorlage: Brilliant Geschenk-/Preiskarte -->
+              <!-- Zusammenfassung · Navy-Karte -->
               <aside>
                 <div class="tb-summary bb-tile">
                   <h4 class="tb-summary__head">Deine Auswahl</h4>
@@ -259,7 +259,7 @@ const html = `
           </div>
         </form>
 
-        <!-- Erfolg / Senden · Vorlage: Brilliant „Lesson complete!" -->
+        <!-- Erfolg / Senden -->
         <div class="tb-success bb-tile" id="tb-success">
           <div class="tb-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -277,8 +277,8 @@ const html = `
     </div>
   </section>
 
-  <!-- SONDERANFRAGE · Vorlage: Brilliant „Supercharge your learning" (Liste) + Registrierungsformular -->
-  <section class="bb-sec" id="anfrage">
+  <!-- SONDERANFRAGE · dunkle Sektion, Formular in Karte (Attio) -->
+  <section class="bb-sec bb-sec--dark" id="anfrage">
     <div class="container">
       <div class="bb-split bb-split--top">
         <div>
@@ -295,7 +295,7 @@ const html = `
 
         <div class="bb-tile tb-ask-card">
           <form id="anfrage-form" class="bb-form">
-            <div class="form-note" hidden>Danke! Wir melden uns bald. ✅ <a id="an-send-mail" href="#" style="color:var(--gold-dark);font-weight:700;">Anfrage senden</a></div>
+            <div class="form-note" hidden>Danke! Wir melden uns bald. ✅ <a id="an-send-mail" href="#" style="color:inherit;font-weight:700;">Anfrage senden</a></div>
             <div class="bb-row">
               <div class="bb-field"><label for="an-name">Name *</label><input type="text" id="an-name" placeholder="Vor- und Nachname" autocomplete="name" required></div>
               <div class="bb-field"><label for="an-email">E-Mail *</label><input type="email" id="an-email" placeholder="dein@email.de" autocomplete="email" required></div>

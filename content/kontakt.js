@@ -34,7 +34,7 @@ const html = `
     </div></div>
   </section>
 
-  <!-- KONTAKT · Vorlage: Brilliant „Supercharge your learning" (Liste) + Registrierungsformular -->
+  <!-- KONTAKT · Liste + Formular in Karte -->
   <section class="bb-sec" id="termin">
     <div class="container">
       <div class="bb-split bb-split--top">
@@ -72,8 +72,8 @@ const html = `
     </div>
   </section>
 
-  <!-- STANDORTE · Vorlage: Brilliant Kurskatalog -->
-  <section class="bb-sec bb-sec--band">
+  <!-- STANDORTE · dunkle Sektion mit Bildkarten (Runway) -->
+  <section class="bb-sec bb-sec--dark">
     <div class="container">
       <div class="bb-head">
         <h2 class="bb-h2">Komm vorbei</h2>
@@ -108,7 +108,7 @@ const html = `
     </div>
   </section>
 
-  <!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
+  <!-- ABSCHLUSS · Navy-Karte mit Gold-Kante -->
   <section class="bb-sec">
     <div class="container">
       <div class="bb-cta">

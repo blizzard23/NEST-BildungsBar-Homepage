@@ -45,7 +45,7 @@ const html = `
             <li><span class="bb-ilist__ic">${IC.mail}</span><div><b>E-Mail</b><span><a class="bb-link" href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a></span></div></li>
             <li><span class="bb-ilist__ic">${IC.phone}</span><div><b>Telefon</b><span><a class="bb-link" href="tel:017641933496">0176 419 334 96</a></span></div></li>
             <li><span class="bb-ilist__ic">${IC.chat}</span><div><b>WhatsApp</b><span><a class="bb-link" href="https://wa.me/4915753934038">01575 393 4038</a></span></div></li>
-            <li><span class="bb-ilist__ic">${IC.clock}</span><div><b>Öffnungszeiten</b><span>Wuppertal: Di &amp; Do · Essen: ab Okt. Mo · Solingen: Mo · Remscheid: Mi · 17–19 Uhr</span></div></li>
+            <li><span class="bb-ilist__ic">${IC.clock}</span><div><b>Öffnungszeiten</b><span>Wuppertal: Di &amp; Do · Essen: Mo · Solingen: Mo · Remscheid: Mi · 17–19 Uhr</span></div></li>
             <li><span class="bb-ilist__ic">${IC.instagram}</span><div><b>Social Media</b><span>Instagram · Facebook · LinkedIn</span></div></li>
           </ul>
         </div>
@@ -89,19 +89,19 @@ const html = `
         <div class="bb-card">
           <span class="bb-card__tile bb-tile"><img src="/assets/img/standort-essen.png" alt="BildungsBar Essen – Innenansicht" loading="lazy"></span>
           <span class="bb-card__title">Essen</span>
-          <span class="bb-card__meta">Kopstadtplatz 12, 45127 Essen<br>Ab Oktober 2026: Mo · 17–19 Uhr</span>
+          <span class="bb-card__meta">Kopstadtplatz 12, 45127 Essen<br>Mo · 17–19 Uhr</span>
           <a class="bb-link bb-card__link" href="/terminbuchung">Termin Essen</a>
         </div>
         <div class="bb-card">
           <span class="bb-card__tile bb-tile"><img src="/assets/img/standort-solingen.jpg" alt="BildungsBar Solingen – im Gründerzentrum" loading="lazy"></span>
           <span class="bb-card__title">Solingen</span>
-          <span class="bb-card__meta">Grünewalder Straße 29-31, 42657 Solingen · im Gründerzentrum<br>Mo · 17–19 Uhr · buchbar ab Oktober</span>
+          <span class="bb-card__meta">Grünewalder Straße 29-31, 42657 Solingen · im Gründerzentrum<br>Mo · 17–19 Uhr</span>
           <a class="bb-link bb-card__link" href="/terminbuchung">Termin Solingen</a>
         </div>
         <div class="bb-card">
           <span class="bb-card__tile bb-tile"><img src="/assets/img/standort-remscheid.webp" alt="BildungsBar Remscheid – in der Gründerschmiede" loading="lazy"></span>
           <span class="bb-card__title">Remscheid</span>
-          <span class="bb-card__meta">Hindenburgstraße 10a, 42853 Remscheid · in der Gründerschmiede<br>Mi · 17–19 Uhr · buchbar ab Oktober</span>
+          <span class="bb-card__meta">Hindenburgstraße 10a, 42853 Remscheid · in der Gründerschmiede<br>Mi · 17–19 Uhr</span>
           <a class="bb-link bb-card__link" href="/terminbuchung">Termin Remscheid</a>
         </div>
       </div>

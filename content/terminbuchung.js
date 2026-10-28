@@ -8,7 +8,7 @@ const html = `
       <div class="hero-text">
         <span class="hero-badge">Termin buchen</span>
         <h1>Sichere dir deinen<br /><em>Beratungstermin</em></h1>
-        <p class="lead">Kostenfrei, locker und auf Augenhöhe – wähl einfach Standort, Tag und Uhrzeit. Wir beraten dich in Wuppertal (Di &amp; Do), in Essen (ab Oktober Mo), in Solingen (Mo) und in Remscheid (Mi) – jeweils von 17 bis 19 Uhr.</p>
+        <p class="lead">Kostenfrei, locker und auf Augenhöhe – wähl einfach Standort, Tag und Uhrzeit. Wir beraten dich in Wuppertal (Di &amp; Do), in Essen (Mo), in Solingen (Mo) und in Remscheid (Mi) – jeweils von 17 bis 19 Uhr.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#buchen">Jetzt Termin wählen →</a>
           <a class="btn btn-ghost" href="#anfrage">Lieber anfragen</a>
@@ -137,7 +137,7 @@ const html = `
                       <span class="o-photo"><img src="/assets/img/standort-essen.png" alt="" loading="lazy"></span>
                       <span class="o-header-label">Essen</span>
                       <span class="o-adr">Kopstadtplatz 12 · 45127 Essen</span>
-                      <span class="o-header-badge">ab Okt. Mo · 17–19 Uhr</span>
+                      <span class="o-header-badge">Mo · 17–19 Uhr</span>
                     </button>
                     <button type="button" class="tb-ort" data-ort="Solingen" data-adr="Grünewalder Straße 29-31, 42657 Solingen (im Gründerzentrum)">
                       <span class="o-photo"><img src="/assets/img/standort-solingen.jpg" alt="" loading="lazy"></span>
@@ -285,7 +285,7 @@ const html = `
           <h2 class="bb-h2">Passt kein Termin? Stell uns deine Anfrage</h2>
           <p class="bb-lead" style="margin-top:16px;">Kein passender Slot dabei, eine Frage vorab oder ein anderes Anliegen? Schreib uns einfach – wir melden uns zeitnah bei dir zurück.</p>
           <ul class="bb-ilist">
-            <li><span class="bb-ilist__ic">${IC.clock}</span><div><b>Wann?</b><span>Wuppertal: Di &amp; Do · Essen: ab Okt. Mo · Solingen: Mo · Remscheid: Mi · jeweils 17–19 Uhr</span></div></li>
+            <li><span class="bb-ilist__ic">${IC.clock}</span><div><b>Wann?</b><span>Wuppertal: Di &amp; Do · Essen: Mo · Solingen: Mo · Remscheid: Mi · jeweils 17–19 Uhr</span></div></li>
             <li><span class="bb-ilist__ic">${IC.euro}</span><div><b>Kosten</b><span>0 € – komplett kostenfrei</span></div></li>
             <li><span class="bb-ilist__ic">${IC.bag}</span><div><b>Mitbringen</b><span>nur dich – Unterlagen sind optional</span></div></li>
             <li><span class="bb-ilist__ic">${IC.phone}</span><div><b>Telefon</b><span><a class="bb-link" href="tel:017641933496">0176 419 334 96</a></span></div></li>

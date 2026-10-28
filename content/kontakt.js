@@ -1,3 +1,5 @@
+import IC from "./icons";
+
 const html = `
 
   <section class="hero">
@@ -32,104 +34,95 @@ const html = `
     </div></div>
   </section>
 
-  <section class="bg-white" id="termin">
+  <!-- KONTAKT · Vorlage: Brilliant „Supercharge your learning" (Liste) + Registrierungsformular -->
+  <section class="bb-sec" id="termin">
     <div class="container">
-      <div class="contact-grid">
-        <div class="reveal">
-          <span class="section-label">Schreib uns</span>
-          <h2 style="font-size:clamp(24px,3.4vw,32px);font-weight:800;color:var(--navy);margin-bottom:8px;">Kontaktformular</h2>
-          <p style="color:var(--text-soft);margin-bottom:24px;">Wir melden uns schnellstmöglich bei dir zurück.</p>
+      <div class="bb-split bb-split--top">
+        <div>
+          <h2 class="bb-h2">Schreib uns</h2>
+          <p class="bb-lead" style="margin-top:16px;">Wir melden uns schnellstmöglich bei dir zurück. Oder du erreichst uns direkt:</p>
+          <ul class="bb-ilist">
+            <li><span class="bb-ilist__ic">${IC.mail}</span><div><b>E-Mail</b><span><a class="bb-link" href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a></span></div></li>
+            <li><span class="bb-ilist__ic">${IC.phone}</span><div><b>Telefon</b><span><a class="bb-link" href="tel:017641933496">0176 419 334 96</a></span></div></li>
+            <li><span class="bb-ilist__ic">${IC.chat}</span><div><b>WhatsApp</b><span><a class="bb-link" href="https://wa.me/4915753934038">01575 393 4038</a></span></div></li>
+            <li><span class="bb-ilist__ic">${IC.clock}</span><div><b>Öffnungszeiten</b><span>Wuppertal: Di &amp; Do · Essen: ab Okt. Mo · Solingen: Mo · Remscheid: Mi · 17–19 Uhr</span></div></li>
+            <li><span class="bb-ilist__ic">${IC.instagram}</span><div><b>Social Media</b><span>Instagram · Facebook · LinkedIn</span></div></li>
+          </ul>
+        </div>
 
-          <form id="contact-form">
+        <div class="bb-tile tb-ask-card">
+          <form id="contact-form" class="bb-form">
             <div class="form-note" hidden>Danke für deine Nachricht! Wir melden uns bald bei dir. ✅</div>
-            <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" placeholder="Vor- und Nachname" required /></div>
-            <div class="field"><label for="email">E-Mail</label><input id="email" name="email" type="email" placeholder="dein@email.de" required /></div>
+            <div class="bb-row">
+              <div class="bb-field"><label for="name">Name</label><input id="name" name="name" type="text" placeholder="Vor- und Nachname" autocomplete="name" required /></div>
+              <div class="bb-field"><label for="email">E-Mail</label><input id="email" name="email" type="email" placeholder="dein@email.de" autocomplete="email" required /></div>
+            </div>
             <!-- Honeypot (Spamschutz): für Menschen unsichtbar, Bots füllen es aus -->
             <div style="position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden;" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
-            <div class="field"><label for="phone">Telefon</label><input id="phone" name="phone" type="tel" placeholder="optional" /></div>
-            <div class="field"><label for="subject">Betreff</label><input id="subject" name="subject" type="text" placeholder="Worum geht's?" /></div>
-            <div class="field"><label for="message">Nachricht</label><textarea id="message" name="message" placeholder="Deine Nachricht (optional)"></textarea></div>
-            <div class="checkbox-row"><input type="checkbox" id="privacy" required /><label for="privacy" style="font-weight:400;color:var(--text-soft);">Ich stimme der Verarbeitung meiner Daten gemäß Datenschutzerklärung zu.</label></div>
-            <button class="btn btn-primary" type="submit">Nachricht senden</button>
+            <div class="bb-row">
+              <div class="bb-field"><label for="phone">Telefon</label><input id="phone" name="phone" type="tel" placeholder="optional" autocomplete="tel" /></div>
+              <div class="bb-field"><label for="subject">Betreff</label><input id="subject" name="subject" type="text" placeholder="Worum geht's?" /></div>
+            </div>
+            <div class="bb-field"><label for="message">Nachricht</label><textarea id="message" name="message" placeholder="Deine Nachricht (optional)"></textarea></div>
+            <label class="bb-check"><input type="checkbox" id="privacy" required /> Ich stimme der Verarbeitung meiner Daten gemäß Datenschutzerklärung zu.</label>
+            <div><button class="bb-btn bb-btn--ink" type="submit">Nachricht senden</button></div>
           </form>
         </div>
-
-        <div class="reveal">
-          <div class="contact-info-card">
-            <h3>So erreichst du uns</h3>
-            <div class="row"><div class="ic" data-icon="briefcase" data-icon-size="18"></div><div><b>E-Mail</b><a href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a></div></div>
-            <div class="row"><div class="ic" data-icon="people" data-icon-size="18"></div><div><b>Telefon</b><a href="tel:017641933496">0176 419 334 96</a></div></div>
-            <div class="row"><div class="ic" data-icon="chat" data-icon-size="18"></div><div><b>WhatsApp</b><a href="https://wa.me/4915753934038">01575 393 4038</a></div></div>
-            <div class="row"><div class="ic" data-icon="clock" data-icon-size="18"></div><div><b>Öffnungszeiten</b><span>Wuppertal: Di &amp; Do · Essen: ab Okt. Mo · Solingen: Mo · Remscheid: Mi · 17–19 Uhr</span></div></div>
-            <div class="row"><div class="ic" data-icon="pin" data-icon-size="18"></div><div><b>Social Media</b><span>Instagram · Facebook · LinkedIn</span></div></div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
 
-  <section class="bg-light">
+  <!-- STANDORTE · Vorlage: Brilliant Kurskatalog -->
+  <section class="bb-sec bb-sec--band">
     <div class="container">
-      <div class="section-head centered reveal">
-        <span class="section-label">Unsere Standorte</span>
-        <h2>Komm vorbei</h2>
-        <p>Buch dir einen Termin – je nach Standort montags bis donnerstags von 17 bis 19 Uhr.</p>
+      <div class="bb-head">
+        <h2 class="bb-h2">Komm vorbei</h2>
+        <p class="bb-lead">Buch dir einen Termin – je nach Standort montags bis donnerstags von 17 bis 19 Uhr.</p>
       </div>
-      <div class="card-grid cols-2">
-        <div class="loc-card reveal">
-          <div style="border-radius:12px;overflow:hidden;margin-bottom:14px;aspect-ratio:16/9;">
-            <img src="/assets/img/standort-wuppertal.jpg" alt="BildungsBar Wuppertal – Innenansicht" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
-          </div>
-          <span class="tag">Standort Wuppertal</span>
-          <h3>Wuppertal</h3>
-          <p>Hochstraße 65, 42105 Wuppertal</p>
-          <p>Di &amp; Do · 17–19 Uhr</p>
-          <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Wuppertal</a>
+      <div class="bb-cards">
+        <div class="bb-card">
+          <span class="bb-card__tile bb-tile"><img src="/assets/img/standort-wuppertal.jpg" alt="BildungsBar Wuppertal – Innenansicht" loading="lazy"></span>
+          <span class="bb-card__title">Wuppertal</span>
+          <span class="bb-card__meta">Hochstraße 65, 42105 Wuppertal<br>Di &amp; Do · 17–19 Uhr</span>
+          <a class="bb-link bb-card__link" href="/terminbuchung">Termin Wuppertal</a>
         </div>
-        <div class="loc-card reveal">
-          <div style="border-radius:12px;overflow:hidden;margin-bottom:14px;aspect-ratio:16/9;">
-            <img src="/assets/img/standort-essen.png" alt="BildungsBar Essen – Innenansicht" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
-          </div>
-          <span class="tag">Standort Essen</span>
-          <h3>Essen</h3>
-          <p>Kopstadtplatz 12, 45127 Essen</p>
-          <p>Ab Oktober 2026: Mo · 17–19 Uhr</p>
-          <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Essen</a>
+        <div class="bb-card">
+          <span class="bb-card__tile bb-tile"><img src="/assets/img/standort-essen.png" alt="BildungsBar Essen – Innenansicht" loading="lazy"></span>
+          <span class="bb-card__title">Essen</span>
+          <span class="bb-card__meta">Kopstadtplatz 12, 45127 Essen<br>Ab Oktober 2026: Mo · 17–19 Uhr</span>
+          <a class="bb-link bb-card__link" href="/terminbuchung">Termin Essen</a>
         </div>
-        <div class="loc-card reveal">
-          <div style="border-radius:12px;overflow:hidden;margin-bottom:14px;aspect-ratio:16/9;">
-            <img src="/assets/img/standort-solingen.jpg" alt="BildungsBar Solingen – im Gründerzentrum" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
-          </div>
-          <span class="tag">Standort Solingen</span>
-          <h3>Solingen</h3>
-          <p>Grünewalder Straße 29-31, 42657 Solingen · im Gründerzentrum</p>
-          <p>Mo · 17–19 Uhr · buchbar ab Oktober</p>
-          <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Solingen</a>
+        <div class="bb-card">
+          <span class="bb-card__tile bb-tile"><img src="/assets/img/standort-solingen.jpg" alt="BildungsBar Solingen – im Gründerzentrum" loading="lazy"></span>
+          <span class="bb-card__title">Solingen</span>
+          <span class="bb-card__meta">Grünewalder Straße 29-31, 42657 Solingen · im Gründerzentrum<br>Mo · 17–19 Uhr · buchbar ab Oktober</span>
+          <a class="bb-link bb-card__link" href="/terminbuchung">Termin Solingen</a>
         </div>
-        <div class="loc-card reveal">
-          <div style="border-radius:12px;overflow:hidden;margin-bottom:14px;aspect-ratio:16/9;">
-            <img src="/assets/img/standort-remscheid.webp" alt="BildungsBar Remscheid – in der Gründerschmiede" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
-          </div>
-          <span class="tag">Standort Remscheid</span>
-          <h3>Remscheid</h3>
-          <p>Hindenburgstraße 10a, 42853 Remscheid · in der Gründerschmiede</p>
-          <p>Mi · 17–19 Uhr · buchbar ab Oktober</p>
-          <a class="btn btn-outline mt-2" href="/terminbuchung">Termin Remscheid</a>
+        <div class="bb-card">
+          <span class="bb-card__tile bb-tile"><img src="/assets/img/standort-remscheid.webp" alt="BildungsBar Remscheid – in der Gründerschmiede" loading="lazy"></span>
+          <span class="bb-card__title">Remscheid</span>
+          <span class="bb-card__meta">Hindenburgstraße 10a, 42853 Remscheid · in der Gründerschmiede<br>Mi · 17–19 Uhr · buchbar ab Oktober</span>
+          <a class="bb-link bb-card__link" href="/terminbuchung">Termin Remscheid</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="cta-section on-light">
-    <div class="container"><div class="cta-inner">
-      <span class="section-label" style="display:flex;justify-content:center;">Wir freuen uns auf dich</span>
-      <h2>Bereit für deinen <em>nächsten Schritt?</em></h2>
-      <p>Egal ob Schüler:in, Schule oder Unternehmen – melde dich und wir finden gemeinsam den passenden Weg.</p>
-      <div class="cta-actions">
-        <a class="btn btn-primary" href="mailto:info@nest-bildungsbar.de">E-Mail schreiben</a>
-        <a class="btn btn-ghost" href="tel:017641933496">Jetzt anrufen</a>
+  <!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
+  <section class="bb-sec">
+    <div class="container">
+      <div class="bb-cta">
+        <div>
+          <h2 class="bb-h2">Bereit für deinen nächsten Schritt?</h2>
+          <p class="bb-lead">Egal ob Schüler:in, Schule oder Unternehmen – melde dich und wir finden gemeinsam den passenden Weg.</p>
+          <div class="bb-actions"><a class="bb-btn bb-btn--gold" href="mailto:info@nest-bildungsbar.de">E-Mail schreiben</a><a class="bb-btn bb-btn--light" href="tel:017641933496">Jetzt anrufen</a></div>
+        </div>
+        <div class="bb-cta__side">
+          <div class="bb-cta__item"><a href="https://wa.me/4915753934038"><small>WhatsApp</small><b>01575 393 4038</b></a><span>Schreib uns einfach</span></div>
+          <div class="bb-cta__item"><a href="/terminbuchung"><small>Online</small><b>Termin buchen</b></a><span>Kostenfrei</span></div>
+        </div>
       </div>
-    </div></div>
+    </div>
   </section>
 
 

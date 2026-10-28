@@ -1,0 +1,780 @@
+/* =========================================================
+   NEST BildungsBar – Seitenaufbau unterhalb der Heros
+   Vorlage: Brilliant (brilliant.org) über Mobbin. Übernommen
+   werden Aufbau und Details der Brilliant-Sektionen, die Farben
+   bleiben NEST: Navy ersetzt Brilliants Schwarz, Gold das Grün.
+
+   Merkmale der Vorlage:
+   - linksbündige, fette Überschriften; Trennlinien in voller
+     Inhaltsbreite statt Deko-Elementen
+   - Bilder in Rahmen mit hartem, versetztem Schatten
+   - Pill-Buttons mit dunkler Unterkante
+   - Kacheln mit 1px-Rand und fühlbarer Unterkante
+   - abwechselnd weiße und hellgraue Bänder
+   Die Heros, der Header und die Ökosystem-Leiste sind davon
+   ausgenommen und behalten ihre bisherigen Styles.
+   ========================================================= */
+
+:root {
+  --bb-ink: #0F2145;
+  --bb-text: #3d4455;
+  --bb-muted: #697186;
+  --bb-line: #e1e4ea;
+  --bb-line-2: #cfd4dc;
+  --bb-band: #f4f5f7;
+  --bb-gold: #EFA500;
+  --bb-gold-hover: #f6b323;
+  --bb-hl: #a96b00;      /* Akzentwörter in großen Überschriften */
+  --bb-ok: #1f8f5a;
+  --bb-bad: #b8bdc8;
+}
+
+/* ---------- Grundgerüst ---------- */
+.bb-sec { padding: 96px 0; background: #fff; }
+.bb-sec--band { background: var(--bb-band); }
+.bb-sec--ink { background: var(--bb-ink); color: #fff; }
+.bb-sec--flush-top { padding-top: 0; }
+.bb-sec--tight { padding: 64px 0; }
+@media (max-width: 760px) {
+  .bb-sec { padding: 64px 0; }
+  .bb-sec--tight { padding: 48px 0; }
+}
+
+/* Linie über einer Sektion (Brilliant: „About", „Careers", „Team") */
+.bb-ruled { border-top: 1.5px solid var(--bb-ink); padding-top: 56px; }
+@media (max-width: 760px) { .bb-ruled { padding-top: 40px; } }
+
+.bb-h2 {
+  font-family: var(--font); font-size: clamp(28px, 3.3vw, 40px); font-weight: 700;
+  line-height: 1.15; letter-spacing: -0.015em; color: var(--bb-ink); margin: 0;
+}
+.bb-sec--ink .bb-h2 { color: #fff; }
+.bb-h3 { font-family: var(--font); font-size: 20px; font-weight: 700; line-height: 1.3; color: var(--bb-ink); margin: 0; }
+.bb-hl { color: var(--bb-hl); }
+.bb-sec--ink .bb-hl { color: var(--bb-gold); }
+.bb-lead { font-size: 18px; line-height: 1.6; color: var(--bb-text); margin: 0; }
+.bb-p { font-size: 16px; line-height: 1.65; color: var(--bb-text); margin: 0; }
+.bb-p + .bb-p { margin-top: 14px; }
+.bb-small { font-size: 14px; line-height: 1.55; color: var(--bb-muted); }
+.bb-sec--ink .bb-lead, .bb-sec--ink .bb-p { color: rgba(255,255,255,0.78); }
+
+.bb-head { margin-bottom: 44px; }
+.bb-head .bb-lead { margin-top: 14px; max-width: 640px; }
+.bb-head--center { text-align: center; }
+.bb-head--center .bb-lead { margin-left: auto; margin-right: auto; }
+.bb-head--row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+@media (max-width: 760px) { .bb-head--row { flex-direction: column; align-items: flex-start; } }
+
+/* ---------- Buttons (Brilliant: Pill mit Unterkante) ---------- */
+.bb-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 28px 3px; border-radius: 9999px; border: 0;
+  font-family: var(--font); font-size: 15px; font-weight: 700; line-height: 1.2;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: background-color .15s ease, transform .08s ease, box-shadow .08s ease;
+}
+.bb-btn:active { transform: translateY(2px); }
+.bb-btn--gold { background: var(--bb-gold); color: var(--bb-ink); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.17); }
+.bb-btn--gold:hover { background: var(--bb-gold-hover); color: var(--bb-ink); }
+.bb-btn--gold:active { box-shadow: inset 0 -2px 0 rgba(0,0,0,0.17); }
+.bb-btn--ink { background: var(--bb-ink); color: #fff; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.4); }
+.bb-btn--ink:hover { background: #18305e; color: #fff; }
+.bb-btn--ink:active { box-shadow: inset 0 -2px 0 rgba(0,0,0,0.4); }
+.bb-btn--light {
+  background: #fff; color: var(--bb-ink); padding-bottom: 0;
+  border: 1px solid var(--bb-line-2); box-shadow: 0 3px 0 var(--bb-line-2);
+}
+.bb-btn--light:hover { background: #fafbfc; color: var(--bb-ink); }
+.bb-btn--light:active { box-shadow: 0 1px 0 var(--bb-line-2); }
+.bb-btn--block { width: 100%; }
+.bb-btn--sm { min-height: 40px; padding: 0 18px 2px; font-size: 14px; }
+.bb-btn--light.bb-btn--sm { padding-bottom: 0; }
+.bb-btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+.bb-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+.bb-link {
+  color: var(--bb-ink); font-weight: 700; text-decoration: underline;
+  text-decoration-thickness: 1.5px; text-underline-offset: 4px;
+}
+.bb-link:hover { color: var(--bb-hl); }
+.bb-sec--ink .bb-link { color: #fff; }
+
+/* ---------- Medienrahmen (Brilliant: harter, versetzter Schatten) ---------- */
+.bb-frame {
+  position: relative; background: #fff; border: 2px solid var(--bb-ink); border-radius: 14px;
+  overflow: hidden; box-shadow: 8px 8px 0 var(--bb-ink);
+}
+.bb-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.bb-frame--43 { aspect-ratio: 4 / 3; }
+.bb-frame--sq { aspect-ratio: 1 / 1; }
+.bb-frame--wide { aspect-ratio: 16 / 10; }
+@media (max-width: 760px) { .bb-frame { box-shadow: 6px 6px 0 var(--bb-ink); } }
+
+/* Fenster-Mock mit Leiste (Brilliant „How educators like you use Brilliant") */
+.bb-window { display: flex; flex-direction: column; }
+.bb-window__bar {
+  position: relative; display: flex; align-items: center; gap: 5px; height: 30px; padding: 0 12px;
+  border-bottom: 2px solid var(--bb-ink); background: #fff; flex-shrink: 0;
+}
+.bb-window__bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--bb-ink); }
+.bb-window__bar span {
+  position: absolute; left: 50%; transform: translateX(-50%); max-width: 60%; overflow: hidden; text-overflow: ellipsis;
+  background: var(--bb-ink); color: #fff; border-radius: 9999px; padding: 3px 18px;
+  font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+}
+.bb-window__body { flex: 1; min-height: 0; }
+.bb-window__body img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+
+/* ---------- Kacheln und Marken ---------- */
+.bb-tile {
+  background: #fff; border: 1px solid var(--bb-line); border-radius: 16px;
+  box-shadow: 0 4px 0 var(--bb-line);
+}
+a.bb-tile, .bb-tile--link { transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease; }
+a.bb-tile:hover, .bb-tile--link:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--bb-line-2); border-color: var(--bb-line-2); }
+
+.bb-badge {
+  display: inline-block; padding: 3px 8px; border-radius: 9999px;
+  font-size: 10px; font-weight: 800; line-height: 1.3; letter-spacing: .06em; text-transform: uppercase;
+  background: var(--bb-gold); color: var(--bb-ink);
+}
+.bb-badge--soft { background: #e8ecf4; color: var(--bb-ink); }
+.bb-badge--ink { background: var(--bb-ink); color: #fff; }
+
+/* ---------- Vertrauensleiste (Brilliant „Join over 10 million people …") ---------- */
+.bb-trust { background: var(--bb-band); padding: 52px 0 56px; }
+.bb-trust__title { text-align: center; font-size: 20px; font-weight: 700; color: var(--bb-ink); margin: 0 0 28px; }
+.bb-trust__row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.bb-trust__row--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 900px; margin: 0 auto; }
+.bb-trust__item { text-align: center; padding: 6px 20px; border-left: 1px solid var(--bb-line-2); }
+.bb-trust__item:first-child { border-left: 0; }
+.bb-trust__item b { display: block; font-family: var(--font); font-size: 32px; font-weight: 700; line-height: 1.1; color: var(--bb-ink); letter-spacing: -0.02em; }
+.bb-trust__item span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.45; color: var(--bb-muted); }
+@media (max-width: 760px) {
+  .bb-trust__row { grid-template-columns: 1fr 1fr; row-gap: 24px; }
+  .bb-trust__item:nth-child(odd) { border-left: 0; }
+  .bb-trust__row--3 { grid-template-columns: 1fr; }
+  .bb-trust__row--3 .bb-trust__item { border-left: 0; }
+}
+
+/* ---------- Zweispalter Liste + Bild (Brilliant „Supercharge your learning") ---------- */
+.bb-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }
+.bb-split--rev > :first-child { order: 2; }
+.bb-split--top { align-items: start; }
+@media (max-width: 900px) {
+  .bb-split { grid-template-columns: 1fr; gap: 48px; }
+  .bb-split--rev > :first-child { order: 0; }
+}
+
+.bb-ilist { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+.bb-ilist li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 14px; align-items: start; }
+.bb-ilist__ic { width: 28px; height: 28px; color: var(--bb-ink); }
+.bb-ilist__ic svg { width: 24px; height: 24px; display: block; margin-top: 1px; }
+.bb-ilist b { display: block; font-size: 16px; color: var(--bb-ink); font-weight: 700; }
+.bb-ilist span { display: block; font-size: 15px; line-height: 1.55; color: var(--bb-text); margin-top: 2px; }
+
+/* Einfache Aufzählung (Brilliant „Individuals at Brilliant have:") */
+.bb-bullets { margin: 18px 0 0; padding-left: 20px; }
+.bb-bullets li { font-size: 15.5px; line-height: 1.6; color: var(--bb-text); margin-bottom: 8px; }
+.bb-bullets li::marker { color: var(--bb-ink); }
+
+/* ---------- Katalog (Brilliant „What can they learn on Brilliant?") ---------- */
+.bb-catalog { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 56px; }
+.bb-catalog__group h3 { font-size: 22px; font-weight: 700; color: var(--bb-ink); margin: 0; padding-bottom: 14px; border-bottom: 1px solid var(--bb-line-2); }
+.bb-catalog__group ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 24px; }
+.bb-catalog__group li a {
+  display: flex; align-items: flex-start; gap: 9px; font-size: 14.5px; line-height: 1.4; color: var(--bb-ink); text-decoration: none;
+}
+.bb-catalog__group li a::before {
+  content: ''; width: 7px; height: 7px; margin-top: 6px; flex-shrink: 0; border-radius: 2px; background: var(--bb-gold);
+}
+.bb-catalog__group li a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.bb-catalog__more { display: inline-block; margin-top: 16px; font-size: 14.5px; }
+@media (max-width: 900px) { .bb-catalog { grid-template-columns: 1fr; gap: 40px; } }
+@media (max-width: 420px) { .bb-catalog__group ul { grid-template-columns: 1fr; } }
+
+/* ---------- Reiter mit Rahmenbild (Brilliant „How educators like you use Brilliant") ---------- */
+.bb-tabs { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 64px; align-items: center; }
+.bb-tabs__list { display: flex; flex-direction: column; }
+.bb-tab { border-top: 1px solid var(--bb-line-2); }
+.bb-tab:last-child { border-bottom: 1px solid var(--bb-line-2); }
+.bb-tab[open] { border-top: 2px solid var(--bb-ink); }
+.bb-tab summary {
+  list-style: none; cursor: pointer; padding: 18px 0; display: flex; align-items: baseline; gap: 12px;
+  font-size: 19px; font-weight: 700; color: #8b91a1; transition: color .15s ease;
+}
+.bb-tab summary::-webkit-details-marker { display: none; }
+.bb-tab summary:hover, .bb-tab[open] summary { color: var(--bb-ink); }
+.bb-tab summary small { font-size: 13px; font-weight: 700; color: inherit; opacity: .8; min-width: 22px; }
+.bb-tab__body { padding: 0 0 22px 34px; }
+.bb-tab__body p { font-size: 16px; line-height: 1.6; color: var(--bb-text); margin: 0; }
+.bb-tab__body .bb-badge { margin-top: 12px; }
+.bb-tab summary:focus-visible { outline: 2px solid var(--bb-gold); outline-offset: 4px; border-radius: 4px; }
+@media (max-width: 900px) { .bb-tabs { grid-template-columns: 1fr; gap: 44px; } }
+
+/* ---------- Drei Spalten (Brilliant „Brilliant Premium is a great gift for …") ---------- */
+.bb-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.bb-cols--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.bb-col__media { display: block; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; background: var(--bb-band); margin-bottom: 20px; }
+.bb-col__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+a.bb-col:hover .bb-col__media img { transform: scale(1.03); }
+.bb-col__ic { display: block; width: 40px; height: 40px; color: var(--bb-ink); margin-bottom: 18px; }
+.bb-col__ic svg { width: 40px; height: 40px; stroke-width: 1.6; }
+.bb-col__body { border-top: 1px solid var(--bb-line-2); padding-top: 16px; }
+.bb-col h3 { font-size: 22px; font-weight: 700; color: var(--bb-ink); margin: 0 0 8px; line-height: 1.25; }
+.bb-col p { font-size: 15px; line-height: 1.6; color: var(--bb-text); margin: 0; }
+.bb-col .bb-link { display: inline-block; margin-top: 12px; font-size: 15px; }
+a.bb-col { text-decoration: none; color: inherit; display: block; }
+a.bb-col:hover h3 { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+.bb-cols--center { text-align: center; }
+.bb-cols--center .bb-col__ic { margin-left: auto; margin-right: auto; }
+.bb-cols--center .bb-col__body { border-top: 0; padding-top: 0; }
+@media (max-width: 900px) {
+  .bb-cols, .bb-cols--4 { grid-template-columns: 1fr; gap: 40px; }
+  .bb-cols--4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) { .bb-cols--4 { grid-template-columns: 1fr; } }
+
+/* ---------- Kachel-Raster mit Bildunterschrift (Brilliant Kurskatalog) ---------- */
+.bb-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 20px; }
+.bb-cards--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.bb-card { display: block; text-decoration: none; color: inherit; }
+.bb-card__tile { position: relative; display: block; aspect-ratio: 4 / 3; padding: 8px; }
+.bb-card__tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; display: block; }
+.bb-card__tile .bb-badge { position: absolute; top: -8px; right: 12px; }
+.bb-card__title { display: block; margin-top: 14px; font-size: 17px; font-weight: 700; color: var(--bb-ink); line-height: 1.3; }
+.bb-card__meta { display: block; margin-top: 3px; font-size: 14px; line-height: 1.5; color: var(--bb-muted); }
+.bb-card__link { display: inline-block; margin-top: 8px; font-size: 14.5px; }
+a.bb-card:hover .bb-card__title { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 900px) { .bb-cards, .bb-cards--3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .bb-cards, .bb-cards--3 { grid-template-columns: 1fr; } }
+
+/* ---------- Pfadliste (Brilliant „Learning paths") ---------- */
+.bb-paths { border-top: 1px solid var(--bb-line); }
+.bb-path {
+  display: grid; grid-template-columns: 64px minmax(0, 220px) minmax(0, 1fr) auto; gap: 24px; align-items: center;
+  padding: 26px 0; border-bottom: 1px solid var(--bb-line);
+}
+.bb-path__ic { width: 64px; height: 64px; display: grid; place-items: center; color: var(--bb-ink); }
+.bb-path__ic svg { width: 40px; height: 40px; stroke-width: 1.6; }
+.bb-path__title b { display: block; font-size: 18px; font-weight: 700; color: var(--bb-ink); line-height: 1.3; }
+.bb-path__title .bb-badge { margin-bottom: 6px; }
+.bb-path__desc { font-size: 15px; line-height: 1.6; color: var(--bb-text); }
+@media (max-width: 860px) {
+  .bb-path { grid-template-columns: 48px minmax(0, 1fr); gap: 8px 18px; }
+  .bb-path__ic { width: 48px; height: 48px; grid-row: span 3; align-self: start; }
+  .bb-path__ic svg { width: 32px; height: 32px; }
+  .bb-path > .bb-btn { justify-self: start; margin-top: 8px; }
+}
+
+/* ---------- Absätze mit Symbol (Brilliant „About Brilliant") ---------- */
+.bb-about { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 26px; }
+.bb-about li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 18px; align-items: start; }
+.bb-about__ic { color: var(--bb-ink); }
+.bb-about__ic svg { width: 22px; height: 22px; display: block; margin-top: 2px; }
+.bb-about p { margin: 0; font-size: 16px; line-height: 1.65; color: var(--bb-text); }
+.bb-about p b { color: var(--bb-ink); }
+
+/* ---------- Zitate (Brilliant Bewertungen) ---------- */
+.bb-quote { max-width: 820px; }
+.bb-quote blockquote { margin: 0; font-size: clamp(22px, 2.6vw, 30px); font-weight: 600; line-height: 1.4; color: var(--bb-ink); letter-spacing: -0.01em; }
+.bb-quote figcaption { margin-top: 18px; font-size: 15px; color: var(--bb-muted); }
+
+/* ---------- Team (Brilliant „Team") ---------- */
+.bb-team { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 24px; text-align: center; }
+.bb-person img {
+  width: 132px; height: 132px; border-radius: 50%; object-fit: cover; object-position: top center;
+  display: block; margin: 0 auto 16px; background: var(--bb-band);
+}
+.bb-person b { display: block; font-size: 16px; font-weight: 700; color: var(--bb-ink); }
+.bb-person span { display: block; font-size: 14px; color: var(--bb-muted); margin-top: 2px; }
+@media (max-width: 760px) { .bb-team { grid-template-columns: 1fr 1fr; } .bb-person img { width: 112px; height: 112px; } }
+
+/* Gründer: Bild + Text (Brilliant „What kinds of people work at Brilliant?") */
+.bb-founders { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+.bb-founder .bb-frame { margin-bottom: 28px; max-width: 420px; }
+.bb-founder .bb-frame img { object-position: top center; }
+.bb-founder__role { display: block; font-size: 14px; color: var(--bb-muted); margin: 4px 0 14px; }
+@media (max-width: 860px) { .bb-founders { grid-template-columns: 1fr; gap: 56px; } }
+
+/* ---------- Vergleich (Brilliant „No commitment, cancel anytime") ---------- */
+.bb-compare { width: 100%; max-width: 860px; margin: 0 auto; border-collapse: separate; border-spacing: 0; }
+.bb-compare th, .bb-compare td { padding: 18px 16px; border-bottom: 1px solid var(--bb-line); text-align: left; vertical-align: middle; }
+.bb-compare thead th { border-bottom: 1px solid var(--bb-line-2); font-size: 18px; font-weight: 700; color: var(--bb-ink); text-align: center; padding-top: 20px; }
+.bb-compare thead th:first-child { text-align: left; }
+.bb-compare td:not(:first-child) { text-align: center; font-size: 14px; color: var(--bb-muted); }
+.bb-compare td:nth-child(2) { width: 34%; }
+.bb-compare td:nth-child(3) { width: 22%; }
+.bb-compare td:nth-child(2) > span:last-child { display: block; max-width: 230px; margin: 6px auto 0; }
+.bb-compare td b { display: block; font-size: 15.5px; color: var(--bb-ink); }
+.bb-compare td span { display: block; font-size: 14px; color: var(--bb-muted); margin-top: 3px; line-height: 1.5; }
+.bb-compare .is-us { background: rgba(239,165,0,0.13); }
+.bb-compare thead .is-us { border-radius: 14px 14px 0 0; }
+.bb-compare tbody tr:last-child .is-us { border-radius: 0 0 14px 14px; }
+.bb-compare tbody tr:last-child td { border-bottom: 0; }
+.bb-yes, .bb-no { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; }
+.bb-yes { background: var(--bb-ink); }
+.bb-no { background: var(--bb-bad); }
+.bb-yes svg, .bb-no svg { width: 13px; height: 13px; }
+@media (max-width: 640px) {
+  .bb-compare th, .bb-compare td { padding: 14px 8px; }
+  .bb-compare td:nth-child(3) { width: 64px; }
+  .bb-compare thead th { font-size: 14px; }
+}
+
+/* ---------- Pakete auf Navy (Brilliant „Give the gift of learning") ---------- */
+.bb-plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; max-width: 920px; }
+.bb-plan { background: #fff; border-radius: 14px; overflow: hidden; text-align: center; color: var(--bb-ink); }
+.bb-plan__head { background: #e9ecf1; padding: 12px 16px; font-size: 15px; font-weight: 700; }
+.bb-plan__body { padding: 26px 20px 24px; }
+.bb-plan__price { font-family: var(--font); font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+.bb-plan__price small { font-size: 14px; font-weight: 500; color: var(--bb-muted); letter-spacing: 0; }
+.bb-plan__who { font-size: 14px; color: var(--bb-muted); margin: 4px 0 20px; }
+.bb-included { margin-top: 44px; max-width: 920px; border-top: 1px solid rgba(255,255,255,0.18); padding-top: 28px; }
+.bb-included b { display: block; font-size: 16px; color: #fff; margin-bottom: 14px; }
+.bb-included ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 28px; }
+.bb-included li { display: flex; align-items: center; gap: 9px; font-size: 15px; color: rgba(255,255,255,0.82); }
+.bb-included li::before { content: ''; width: 7px; height: 7px; border-radius: 2px; background: var(--bb-gold); }
+@media (max-width: 860px) { .bb-plans { grid-template-columns: 1fr; max-width: 420px; } }
+
+/* ---------- FAQ (Brilliant „FAQs" auf grauem Band) ---------- */
+.bb-faq .faq-list { max-width: 780px; margin: 0 auto; }
+.bb-faq .faq-item {
+  background: #fff; border: 1px solid var(--bb-line); border-radius: 14px; margin-bottom: 12px;
+  box-shadow: 0 3px 0 var(--bb-line); overflow: hidden;
+}
+.bb-faq .faq-item.active { border-color: var(--bb-line-2); }
+.bb-faq .faq-question {
+  padding: 20px 22px; font-size: 17px; font-weight: 700; color: var(--bb-ink); background: none;
+  font-family: var(--font); gap: 20px;
+}
+.bb-faq .faq-question:hover { background: none; }
+.bb-faq .faq-toggle {
+  width: 26px; height: 26px; background: none; color: var(--bb-ink); font-size: 0; position: relative; border-radius: 0;
+}
+.bb-faq .faq-toggle::before {
+  content: ''; position: absolute; left: 7px; top: 5px; width: 9px; height: 9px;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg);
+  transition: transform .2s ease, top .2s ease;
+}
+.bb-faq .faq-item.active .faq-toggle { transform: none; background: none; color: var(--bb-ink); }
+.bb-faq .faq-item.active .faq-toggle::before { transform: rotate(-135deg); top: 10px; }
+.bb-faq .faq-answer { font-size: 15.5px; line-height: 1.65; color: var(--bb-text); }
+.bb-faq .faq-answer-inner { padding: 0 22px 22px; }
+
+/* ---------- Abschluss (Brilliant „Join over 10 million people learning on Brilliant") ---------- */
+.bb-cta { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+.bb-cta .bb-h2 { font-size: clamp(30px, 3.6vw, 44px); }
+.bb-cta .bb-lead { margin-top: 16px; max-width: 520px; }
+.bb-cta__side { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.bb-cta__item { text-align: center; }
+.bb-cta__item a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 64px;
+  padding: 10px 10px; border: 1px solid var(--bb-line-2); border-radius: 12px; box-shadow: 0 3px 0 var(--bb-line-2);
+  text-decoration: none; color: var(--bb-ink); background: #fff; transition: transform .12s ease;
+}
+.bb-cta__item a:hover { transform: translateY(-2px); }
+.bb-cta__item a small { font-size: 12px; color: var(--bb-muted); }
+.bb-cta__item a b { font-size: 15px; font-weight: 700; overflow-wrap: anywhere; }
+.bb-cta__item > span { display: block; margin-top: 10px; font-size: 13.5px; color: var(--bb-muted); }
+@media (max-width: 860px) { .bb-cta { grid-template-columns: 1fr; gap: 36px; } }
+@media (max-width: 420px) { .bb-cta__side { grid-template-columns: 1fr; } }
+
+/* ---------- Formulare (Brilliant Registrierung) ---------- */
+.bb-form { display: flex; flex-direction: column; gap: 18px; }
+.bb-form .bb-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.bb-field label, .bb-field legend { display: block; font-size: 14px; font-weight: 600; color: var(--bb-ink); margin-bottom: 7px; padding: 0; }
+.bb-field legend small { font-weight: 500; color: var(--bb-muted); margin-left: 6px; }
+.bb-field input, .bb-field textarea, .bb-field select {
+  width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid var(--bb-line-2); border-radius: 10px;
+  font-family: var(--font); font-size: 15.5px; color: var(--bb-ink); background: #fff;
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+.bb-field textarea { min-height: 112px; resize: vertical; line-height: 1.5; }
+.bb-field select {
+  -webkit-appearance: none; appearance: none; padding-right: 40px; cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F2145' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 14px center / 14px;
+}
+.bb-field input::placeholder, .bb-field textarea::placeholder { color: #9aa1b0; }
+.bb-field input:focus, .bb-field textarea:focus, .bb-field select:focus {
+  outline: none; border-color: var(--bb-ink); box-shadow: inset 0 0 0 1px var(--bb-ink);
+}
+fieldset.bb-field { border: 0; margin: 0; padding: 0; min-width: 0; }
+.bb-check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.55; color: var(--bb-text); cursor: pointer; }
+.bb-check input { width: 18px; height: 18px; margin: 1px 0 0; flex-shrink: 0; accent-color: var(--bb-ink); }
+.bb-form .form-note { margin: 0; background: #eaf6ef; border: 0; border-radius: 10px; color: #17603f; }
+.bb-form__legal { font-size: 13px; color: var(--bb-muted); margin: 0; }
+@media (max-width: 640px) { .bb-form .bb-row { grid-template-columns: 1fr; } }
+
+/* Auswahl-Pills (Brilliant „Which describes you best?") */
+.bb-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.bb-pill { position: relative; display: inline-flex; cursor: pointer; }
+.bb-pill input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.bb-pill span {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 9999px;
+  background: #eef0f3; color: var(--bb-ink); font-size: 14px; font-weight: 600; transition: background .12s ease, color .12s ease;
+}
+.bb-pill:hover span { background: #e3e6eb; }
+.bb-pill input:checked + span { background: var(--bb-ink); color: #fff; }
+.bb-pill input:focus-visible + span { outline: 2px solid var(--bb-gold); outline-offset: 2px; }
+
+/* ---------- Bild-Mock eines Handys (Brilliant „Level up with Premium") ---------- */
+.bb-phone {
+  width: 280px; max-width: 100%; margin: 0 auto; border: 3px solid var(--bb-ink); border-radius: 36px;
+  background: #fff; padding: 14px; box-shadow: 10px 10px 0 var(--bb-ink);
+}
+.bb-phone__screen { border-radius: 24px; background: var(--bb-band); padding: 22px 16px 18px; min-height: 440px; display: flex; flex-direction: column; gap: 12px; }
+.bb-phone__notch { width: 70px; height: 6px; border-radius: 9999px; background: var(--bb-ink); margin: -8px auto 6px; }
+
+/* ---------- Kleinteile ---------- */
+.bb-center { text-align: center; }
+.bb-mt-0 { margin-top: 0 !important; }
+.bb-note { font-size: 14px; color: var(--bb-muted); margin-top: 14px; }
+.bb-split .bb-frame { max-width: 560px; justify-self: center; width: 100%; }
+
+/* Reveal-Effekt der alten Seiten auf den neuen Sektionen nicht nötig */
+.bb-sec .reveal { opacity: 1; transform: none; }
+
+/* Katalog auf dem Handy kürzen: vier Berufe je Feld, der Link führt zu allen */
+@media (max-width: 520px) { .bb-catalog__group li:nth-child(n+5) { display: none; } }
+
+/* NESTplay-Quiz im Handy-Mock */
+.np-q { background: #fff; border-radius: 14px; padding: 14px; border: 1px solid var(--bb-line); }
+.np-q small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--bb-hl); margin-bottom: 6px; }
+.np-q b { display: block; font-size: 15px; line-height: 1.35; color: var(--bb-ink); }
+.np-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.np-answers span { background: #fff; border: 1px solid var(--bb-line); box-shadow: 0 3px 0 var(--bb-line); border-radius: 10px; padding: 10px 8px; text-align: center; font-size: 13px; font-weight: 700; color: var(--bb-ink); }
+.np-answers .is-right { background: var(--bb-gold); border-color: var(--bb-ink); box-shadow: 0 3px 0 var(--bb-ink); }
+.np-score { display: flex; justify-content: space-between; align-items: center; background: var(--bb-ink); color: #fff; border-radius: 10px; padding: 9px 12px; font-size: 13px; }
+.np-score b { color: var(--bb-gold); }
+.np-rank { background: #fff; border-radius: 12px; border: 1px solid var(--bb-line); padding: 4px 12px; margin-top: auto; }
+.np-rank div { display: flex; justify-content: space-between; padding: 7px 0; font-size: 13px; color: var(--bb-ink); border-bottom: 1px solid var(--bb-line); }
+.np-rank div:last-child { border-bottom: 0; }
+.np-rank b { font-weight: 800; }
+
+/* ---------- Säulen (Kooperation): Linie, Titel links, Angebote rechts ---------- */
+.bb-pillar { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); gap: 32px 64px; border-top: 1.5px solid var(--bb-ink); padding: 48px 0 64px; }
+.bb-pillar:last-child { padding-bottom: 0; }
+.bb-pillar__n { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--bb-ink); font-weight: 700; color: var(--bb-ink); margin-bottom: 16px; }
+.bb-pillar__head .bb-p { margin-top: 14px; }
+.bb-offers { list-style: none; margin: 0; padding: 0; }
+.bb-offers li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--bb-line); }
+.bb-offers li:first-child { padding-top: 4px; }
+.bb-offers li:last-child { border-bottom: 0; }
+.bb-offers__ic { color: var(--bb-ink); }
+.bb-offers__ic svg { width: 24px; height: 24px; display: block; margin-top: 2px; }
+.bb-offers b { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 18px; color: var(--bb-ink); }
+.bb-offers p { margin: 6px 0 0; font-size: 15.5px; line-height: 1.6; color: var(--bb-text); }
+.bb-offers .bb-link { display: inline-block; margin-top: 10px; font-size: 15px; }
+.bb-feature-row { padding: 8px 0 72px; }
+.bb-feature-row .bb-bullets li b { color: var(--bb-ink); }
+@media (max-width: 860px) { .bb-pillar { grid-template-columns: 1fr; padding: 40px 0 48px; } }
+
+/* Zahl als Kachel (statt Illustration) */
+.bb-num-tile { display: grid; place-items: center; width: 72px; height: 72px; margin-bottom: 20px; font-size: 30px; font-weight: 700; color: var(--bb-ink); }
+.bb-compare td .bb-no + span { font-size: 13px; line-height: 1.45; }
+.bb-compare td .bb-yes, .bb-compare td .bb-no { display: inline-grid; margin: 0; }
+
+/* ---------- Logo-Wand (Referenzen) ---------- */
+.bb-logos-group { margin-top: 48px; }
+.bb-logos-group:first-of-type { margin-top: 0; }
+.bb-logos-group h3 { font-size: 22px; font-weight: 700; color: var(--bb-ink); margin: 0 0 20px; padding-bottom: 14px; border-bottom: 1px solid var(--bb-line-2); }
+.bb-logos { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.bb-logo {
+  display: flex; align-items: center; justify-content: center; height: 96px; padding: 14px 16px;
+  background: #fff; border: 1px solid var(--bb-line); border-radius: 12px; box-shadow: 0 3px 0 var(--bb-line);
+}
+.bb-logo img { display: block; max-width: 100%; max-height: 62px; width: auto; height: auto; object-fit: contain; }
+@media (max-width: 900px) { .bb-logos { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .bb-logos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } .bb-logo { padding: 8px; height: 72px; } .bb-logo img { max-height: 44px; } }
+
+/* Formular in einer Kachel (Kontakt, Sonderanfrage) */
+.tb-ask-card { padding: 32px; }
+@media (max-width: 520px) { .tb-ask-card { padding: 22px 18px; } }
+
+/* =========================================================
+   Berufe-Browser (wird von nest-app.js erzeugt)
+   Vorlage: Brilliant „Browse all 70+ courses" (Suchfeld, Pills,
+   Kachel-Raster) und „Learning paths" (Gruppen mit grauem Feld)
+   ========================================================= */
+#berufe-browser .berufe-tools { background: none; border: 0; border-radius: 0; padding: 0; margin: 0 0 40px; box-shadow: none; }
+#berufe-browser .bt-searchrow { gap: 10px; margin-bottom: 16px; }
+#berufe-browser .berufe-search input {
+  min-height: 48px; padding: 12px 16px 12px 44px; border: 1px solid transparent; border-radius: 12px; background: #f1f2f5;
+  font-size: 15.5px; color: var(--bb-ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23697186' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 15px center; background-size: 18px;
+}
+#berufe-browser .berufe-search input:focus { border-color: var(--bb-ink); box-shadow: inset 0 0 0 1px var(--bb-ink); background-color: #fff; }
+#berufe-browser .merk-toggle {
+  min-height: 48px; padding: 0 18px; border: 1px solid var(--bb-line-2); border-radius: 9999px; box-shadow: 0 3px 0 var(--bb-line-2);
+  font-size: 14px; color: var(--bb-ink); background: #fff;
+}
+#berufe-browser .merk-toggle b { background: var(--bb-ink); }
+#berufe-browser .merk-toggle.active { background: var(--bb-ink); color: #fff; border-color: var(--bb-ink); box-shadow: 0 3px 0 #000; }
+#berufe-browser .merk-toggle.active b { background: var(--bb-gold); color: var(--bb-ink); }
+#berufe-browser .berufe-interests { gap: 8px; margin-bottom: 14px; padding-bottom: 6px; }
+#berufe-browser .interest-tag {
+  padding: 8px 15px; background: #fff; border: 1px solid var(--bb-line-2); border-radius: 9999px;
+  font-size: 14px; font-weight: 600; color: var(--bb-ink);
+}
+#berufe-browser .interest-tag:hover { border-color: var(--bb-ink); }
+#berufe-browser .interest-tag.active { background: #fff; border: 2px solid var(--bb-ink); padding: 7px 14px; color: var(--bb-ink); font-weight: 700; }
+#berufe-browser .bt-filterrow { border-top: 0; padding-top: 0; gap: 8px; }
+#berufe-browser .select-wrap select {
+  padding: 8px 32px 8px 15px; border: 1px solid var(--bb-line-2); border-radius: 9999px; font-size: 14px; color: var(--bb-ink);
+}
+#berufe-browser .select-wrap select:focus { border-color: var(--bb-ink); }
+#berufe-browser .reset-btn { color: var(--bb-ink); text-decoration: underline; text-underline-offset: 3px; }
+#berufe-browser .berufe-count { color: var(--bb-muted); font-size: 14px; }
+#berufe-browser .filter-chip { background: var(--bb-ink); padding: 7px 13px; }
+#berufe-browser .merk-share-btn { background: var(--bb-ink); margin-top: 0; min-height: 48px; }
+
+/* Gruppen wie Brilliant „Learning paths": Kopfzeile + graues Feld mit Kacheln */
+#berufe-browser .beruf-cat { margin-bottom: 40px; }
+#berufe-browser .beruf-cat-head { border-bottom: 0; padding-bottom: 0; margin-bottom: 18px; gap: 16px; align-items: baseline; flex-wrap: wrap; }
+#berufe-browser .beruf-cat-head h3 { font-size: 21px; font-weight: 700; color: var(--bb-ink); }
+#berufe-browser .beruf-cat-head p { font-size: 14.5px; color: var(--bb-muted); margin: 0; }
+#berufe-browser .beruf-cat-head > div:not(.ic) { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+#berufe-browser .beruf-cat-head .ic { display: none; }
+#berufe-browser .beruf-cat-head .cat-count { background: none; color: var(--bb-muted); padding: 0; font-size: 13.5px; font-weight: 600; }
+#berufe-browser .beruf-grid {
+  background: var(--bb-band); border-radius: 20px; padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 22px 16px;
+}
+#berufe-browser .beruf-link { background: none; border: 0; border-radius: 0; overflow: visible; }
+#berufe-browser .beruf-link:hover { transform: none; box-shadow: none; }
+#berufe-browser .beruf-thumb {
+  min-height: 0; aspect-ratio: 1 / 1; padding: 6px; background: #fff; border: 1px solid var(--bb-line);
+  border-radius: 16px; box-shadow: 0 4px 0 var(--bb-line); transition: transform .12s ease, box-shadow .12s ease;
+}
+#berufe-browser .beruf-thumb img { border-radius: 11px; }
+#berufe-browser .beruf-link:hover .beruf-thumb { transform: translateY(-2px); box-shadow: 0 6px 0 var(--bb-line-2); }
+#berufe-browser .beruf-link .bl-body { padding: 12px 2px 0; justify-content: center; text-align: center; }
+#berufe-browser .beruf-link .bl-name { font-size: 14px; font-weight: 600; color: var(--bb-ink); }
+#berufe-browser .beruf-link .bl-typ { font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--bb-muted); }
+#berufe-browser .beruf-link .bl-arrow { display: none; }
+#berufe-browser .merk-heart {
+  top: 12px; right: 12px; width: 30px; height: 30px; background: #fff; color: var(--bb-ink);
+  border: 1px solid var(--bb-line-2); box-shadow: 0 2px 0 var(--bb-line-2); font-size: 16px;
+}
+#berufe-browser .merk-heart.on { background: var(--bb-gold); border-color: var(--bb-ink); box-shadow: 0 2px 0 var(--bb-ink); color: var(--bb-ink); }
+#berufe-browser .beruf-empty { background: var(--bb-band); border-radius: 16px; padding: 36px 20px; color: var(--bb-text); }
+@media (max-width: 560px) {
+  #berufe-browser .beruf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 14px; gap: 18px 12px; }
+  #berufe-browser .beruf-card-wrap, #berufe-browser .beruf-link { min-width: 0; }
+  #berufe-browser .beruf-link .bl-name { overflow-wrap: anywhere; hyphens: auto; }
+}
+
+/* Stellenleiste (Startseite, Berufswelt, Beruf-Detail) */
+.stellen-strip-head h2 { font-size: clamp(24px, 2.6vw, 30px); font-weight: 700; color: var(--bb-ink); margin: 0 0 6px; letter-spacing: -0.01em; }
+.stellen-strip-head p { font-size: 15px; color: var(--bb-muted); }
+.stellen-card {
+  border: 1px solid var(--bb-line); border-radius: 16px; box-shadow: 0 4px 0 var(--bb-line); padding: 18px;
+}
+.stellen-card:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--bb-line-2); border-color: var(--bb-line-2); }
+.sc-titel { font-weight: 700; color: var(--bb-ink); }
+.sc-art.art-azubi { color: var(--bb-ink); background: #e8ecf4; }
+.sc-go { color: var(--bb-ink); text-decoration: underline; text-underline-offset: 3px; }
+.ort-chip { border: 1px solid var(--bb-line-2); color: var(--bb-ink); font-weight: 600; }
+.ort-chip.active { background: #fff; color: var(--bb-ink); border: 2px solid var(--bb-ink); }
+.stellen-empty { background: var(--bb-band); border: 0; border-radius: 16px; }
+.stellen-empty-h { font-weight: 700; color: var(--bb-ink); }
+
+/* =========================================================
+   Beruf-Detailseite (wird von nest-app.js erzeugt)
+   Vorlage: Brilliant Kursseite (Inhalt + Steckbrief-Karte)
+   ========================================================= */
+#beruf-detail .beruf-layout { grid-template-columns: minmax(0, 1fr) 320px; gap: 64px; }
+#beruf-detail .beruf-hero-img {
+  max-width: 380px; border: 2px solid var(--bb-ink); border-radius: 14px; box-shadow: 8px 8px 0 var(--bb-ink); margin-bottom: 44px;
+}
+#beruf-detail .beruf-main h2 {
+  font-size: 24px; font-weight: 700; color: var(--bb-ink); letter-spacing: -0.01em;
+  margin: 40px 0 14px; padding-top: 28px; border-top: 1px solid var(--bb-line-2);
+}
+#beruf-detail .beruf-main h2:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+#beruf-detail .beruf-main p { font-size: 16px; line-height: 1.7; color: var(--bb-text); }
+#beruf-detail .beruf-main .list-check li { font-size: 15.5px; color: var(--bb-text); padding-left: 30px; }
+#beruf-detail .beruf-main .list-check li::before { background: none; color: var(--bb-ink); content: '\2713'; width: 20px; height: 20px; top: 2px; font-size: 14px; }
+#beruf-detail .partner-chip { background: #fff; border: 1px solid var(--bb-line-2); box-shadow: 0 2px 0 var(--bb-line-2); color: var(--bb-ink); font-size: 14px; }
+#beruf-detail .partner-chip.is-link:hover { border-color: var(--bb-ink); color: var(--bb-ink); }
+#beruf-detail .steckbrief {
+  border: 1px solid var(--bb-line); border-radius: 16px; box-shadow: 0 4px 0 var(--bb-line); padding: 0; overflow: hidden; top: 130px;
+}
+#beruf-detail .steckbrief h3 { margin: 0; padding: 14px 20px; background: #e9ecf1; text-align: center; font-size: 15px; font-weight: 700; color: var(--bb-ink); }
+#beruf-detail .steckbrief .sb-row { margin: 0 20px; padding: 13px 0; padding-left: 0; flex-direction: column; gap: 2px; }
+#beruf-detail .steckbrief .sb-row::before { display: none; }
+#beruf-detail .steckbrief .sb-row .lbl { font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--bb-muted); }
+#beruf-detail .steckbrief .sb-row .val { font-size: 15px; font-weight: 700; color: var(--bb-ink); }
+#beruf-detail .steckbrief .bb-btn:first-of-type { margin-top: 18px; }
+#beruf-detail .steckbrief .bb-btn { width: calc(100% - 40px); margin-left: 20px; margin-right: 20px; }
+#beruf-detail .steckbrief .bb-btn:last-child { margin-bottom: 20px; }
+#beruf-detail .detail-merk.on { background: var(--bb-gold); }
+#beruf-detail .beruf-stellen-leer { background: #fff; border: 1px solid var(--bb-line); border-radius: 16px; box-shadow: 0 4px 0 var(--bb-line); color: var(--bb-text); padding: 32px; }
+@media (max-width: 860px) { #beruf-detail .beruf-layout { grid-template-columns: 1fr; gap: 44px; } }
+
+/* ---------- Veranstaltungen · Vorlage: Brilliant „Courses" (Kachel-Kalender + Liste) ---------- */
+.bb-events .kal-layout { grid-template-columns: minmax(300px, 380px) 1fr; gap: 40px; }
+.bb-events .kal-card { padding: 0; border-radius: 16px; overflow: hidden; }
+.bb-events .kal-head { margin: 0; padding: 14px 16px; border-bottom: 1px solid var(--bb-line); }
+.bb-events .kal-head strong { font-family: var(--font); font-size: 17px; font-weight: 700; color: var(--bb-ink); }
+.bb-events .kal-nav {
+  width: 36px; height: 36px; border-radius: 9999px; border: 1px solid var(--bb-line-2); background: #fff;
+  box-shadow: 0 2px 0 var(--bb-line-2); font-size: 20px; color: var(--bb-ink);
+}
+.bb-events .kal-nav:hover { background: var(--bb-band); border-color: var(--bb-line-2); }
+.bb-events .kal-weekdays { margin: 14px 14px 6px; }
+.bb-events .kal-card > .kal-grid:not(.kal-weekdays) { margin: 0 14px 6px; gap: 6px; }
+.bb-events .kal-wd { font-size: 12px; font-weight: 700; color: var(--bb-muted); text-transform: none; letter-spacing: 0; }
+.bb-events .kal-cell {
+  border-radius: 10px; background: transparent; color: #a3a9b6; font-weight: 600; font-size: 14px;
+}
+.bb-events .kal-cell.kal-has {
+  background: #fff; color: var(--bb-ink); font-weight: 700; border: 1px solid var(--bb-line-2);
+  box-shadow: 0 3px 0 var(--bb-line-2); transition: transform .1s ease, box-shadow .1s ease;
+}
+.bb-events .kal-cell.kal-has:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 5px 0 var(--bb-line-2); }
+.bb-events .kal-cell.kal-today { box-shadow: inset 0 0 0 1.5px var(--bb-ink); color: var(--bb-ink); }
+.bb-events .kal-cell.kal-has.kal-today { box-shadow: inset 0 0 0 1.5px var(--bb-ink), 0 3px 0 var(--bb-line-2); }
+.bb-events .kal-cell.kal-active,
+.bb-events .kal-cell.kal-active:hover { background: var(--bb-ink); border-color: var(--bb-ink); color: #fff; box-shadow: 0 3px 0 #000; transform: none; }
+.bb-events .kal-dot { width: 5px; height: 5px; bottom: 5px; background: var(--bb-gold); }
+.bb-events .kal-legend { margin: 0; padding: 12px 16px; border-top: 1px solid var(--bb-line); background: var(--bb-band); font-size: 13px; color: var(--bb-muted); }
+.bb-events .link-btn { color: var(--bb-ink); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+.bb-events .kal-bild { border: 2px solid var(--bb-ink); border-radius: 14px; box-shadow: 6px 6px 0 var(--bb-ink); }
+.bb-events .kal-bild img { border-bottom: 2px solid var(--bb-ink); }
+.bb-events .kal-bild figcaption strong { color: var(--bb-ink); font-weight: 700; }
+.bb-events .kal-bild figcaption span { color: var(--bb-muted); font-weight: 500; }
+
+.bb-events__title { font-size: clamp(24px, 2.6vw, 32px); padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1.5px solid var(--bb-ink); }
+.bb-events .messe-termine { gap: 14px; }
+.bb-events .messe-termin { gap: 20px; padding: 18px 20px; border-radius: 16px; box-shadow: 0 4px 0 var(--bb-line); }
+.bb-events .messe-termin-date {
+  width: 64px; height: 68px; border-radius: 12px; background: #fff; color: var(--bb-ink);
+  border: 1.5px solid var(--bb-ink); overflow: hidden; justify-content: flex-start;
+}
+.bb-events .messe-termin-date .mt-mon {
+  order: -1; width: 100%; margin: 0 0 6px; padding: 4px 0; text-align: center; background: var(--bb-ink); color: #fff;
+  font-size: 10.5px; letter-spacing: .08em;
+}
+.bb-events .messe-termin-date .mt-day { font-family: var(--font); font-size: 24px; font-weight: 800; color: var(--bb-ink); }
+.bb-events .messe-termin-body h4 { font-size: 17px; font-weight: 700; color: var(--bb-ink); margin-bottom: 4px; }
+.bb-events .messe-termin-meta { font-size: 14px; font-weight: 600; color: var(--bb-text); }
+.bb-events .messe-termin-info { font-size: 14px; color: var(--bb-muted); line-height: 1.5; }
+.bb-events .messe-termin-info a { color: var(--bb-ink); font-weight: 600; }
+.bb-events .messe-termin .bb-btn { flex-shrink: 0; }
+@media (max-width: 600px) { .bb-events .messe-termin .bb-btn { width: 100%; } }
+
+.bb-events__none { padding: 22px 24px; margin: 0; color: var(--bb-muted); font-size: 15px; }
+.bb-events__empty { padding: 28px 30px; max-width: 640px; }
+.bb-events__empty .bb-p { margin-top: 8px; }
+.bb-events__form { margin-top: 28px; padding: 28px; border: 2px solid var(--bb-ink); box-shadow: 8px 8px 0 var(--bb-ink); }
+.bb-events__form a { color: var(--bb-ink); font-weight: 600; }
+.bb-events__err { margin: 0; color: #a8344b; font-size: 14px; font-weight: 600; }
+.bb-events__ok { margin: 0; padding: 12px 14px; border-radius: 10px; background: #eaf6ef; color: #17603f; font-size: 14px; font-weight: 600; }
+@media (max-width: 860px) { .bb-events .kal-layout { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .bb-events__form { padding: 22px 18px; box-shadow: 6px 6px 0 var(--bb-ink); } }
+@media (max-width: 600px) { .bb-events .messe-termin { align-items: flex-start; } }
+
+/* ---------- Blog · Vorlage: Brilliant „Blog" ---------- */
+.bb-posts .bb-card__tile { aspect-ratio: 16 / 10; }
+.bb-posts__ph {
+  display: grid; place-items: center; width: 100%; height: 100%; border-radius: 10px; background: var(--bb-band);
+  font-weight: 800; letter-spacing: .14em; color: #c3c8d2;
+}
+.bb-posts__date { display: block; margin-top: 16px; font-size: 14px; font-weight: 600; color: var(--bb-muted); }
+.bb-posts .bb-card__title { margin-top: 4px; font-size: 19px; }
+.bb-empty { max-width: 640px; padding: 30px; }
+.bb-empty .bb-p { margin-top: 8px; }
+
+.bb-article { max-width: 760px; }
+.bb-article__img { margin-bottom: 40px; }
+.bb-article .blog-content { font-size: 18px; line-height: 1.75; color: var(--bb-text); }
+.bb-article .blog-content h2 { font-size: clamp(24px, 2.6vw, 30px); font-weight: 700; color: var(--bb-ink); letter-spacing: -0.01em; margin: 1.8em 0 .5em; }
+.bb-article .blog-content h3 { font-size: 21px; font-weight: 700; color: var(--bb-ink); }
+.bb-article .blog-content a { color: var(--bb-ink); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+.bb-article .blog-content a:hover { color: var(--bb-hl); }
+.bb-article .blog-content blockquote { margin: 1.4em 0; padding: 4px 0 4px 20px; border-left: 3px solid var(--bb-gold); color: var(--bb-ink); font-weight: 600; }
+.bb-article .blog-content img { border-radius: 12px; border: 1px solid var(--bb-line); }
+.bb-article__foot { margin-top: 48px; padding-top: 22px; border-top: 1.5px solid var(--bb-ink); }
+
+/* ---------- 404 ---------- */
+.bb-notfound__code { margin: 0 0 12px; font-size: 15px; font-weight: 700; color: var(--bb-hl); }
+
+/* ---------- Footer · Vorlage: Teachable-Footer (Mobbin) ----------
+   Brilliant zeigt auf Mobbin keinen Footer; Teachable (ebenfalls
+   Lernplattform) liefert den Aufbau: Logo, Text und runde Social-Icons
+   links, Linkspalten rechts, darunter Copyright und Rechtliches. Dunkel,
+   weil das NEST-Logo weiße Schrift hat. */
+.nest-footer { background: var(--bb-ink); color: rgba(255,255,255,0.72); }
+.nest-footer__inner { grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: 48px; padding: 88px 40px 64px; }
+.nest-footer h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 18px; letter-spacing: 0; }
+.nest-footer__logo { margin-bottom: 20px; }
+.nest-footer__logo-img { height: 46px; }
+.nest-footer__desc { font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.72); max-width: 40ch; }
+.nest-footer__social { gap: 10px; margin-top: 24px; }
+.nest-footer__social a {
+  width: 38px; height: 38px; border-radius: 9999px; background: transparent; border: 1.5px solid rgba(255,255,255,0.75);
+  color: #fff; transition: background .15s, color .15s;
+}
+.nest-footer__social a:hover { background: #fff; color: var(--bb-ink); transform: none; }
+.nest-footer__social svg { width: 16px; height: 16px; }
+.nest-footer__links li { margin-bottom: 12px; }
+.nest-footer__links a, .nest-footer__contact-line a { color: #fff; font-size: 15px; text-underline-offset: 3px; }
+.nest-footer__links a:hover, .nest-footer__contact-line a:hover { color: #fff; text-decoration: underline; }
+.nest-footer__contact-line { font-size: 15px; margin-bottom: 12px; color: rgba(255,255,255,0.72); }
+.nest-footer__bottom { border-top: 1px solid rgba(255,255,255,0.14); padding: 22px 40px 28px; font-size: 13.5px; }
+.nest-footer__bottom p { color: rgba(255,255,255,0.6); }
+.nest-footer__badge { background: none; border: 0; padding: 0; border-radius: 0; color: rgba(255,255,255,0.6); font-size: 13.5px; font-weight: 500; letter-spacing: 0; }
+.nest-footer__bottom-links { gap: 20px; flex-wrap: wrap; }
+.nest-footer__bottom-links a { color: rgba(255,255,255,0.85); }
+.nest-footer__bottom-links a:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 860px) {
+  .nest-footer__inner { grid-template-columns: 1fr 1fr; gap: 36px 24px; padding: 64px 24px 44px; }
+  .nest-footer__inner > :first-child { grid-column: 1 / -1; }
+  .nest-footer__bottom { padding: 20px 24px 26px; }
+}
+@media (max-width: 420px) { .nest-footer__inner { grid-template-columns: 1fr; } }
+
+/* ---------- Partner-Portal · gleiche Bausteine, nur per CSS übertragen ----------
+   Die Portal-Logik bleibt unverändert; Karten, Buttons und Felder
+   übernehmen die Kachel-, Pill- und Formular-Stile von oben. */
+.bb-portal { background: var(--bb-band); }
+.bb-portal .card {
+  border: 1px solid var(--bb-line); border-left: 1px solid var(--bb-line); border-radius: 16px;
+  box-shadow: 0 4px 0 var(--bb-line); transition: none;
+}
+.bb-portal .card:hover { box-shadow: 0 4px 0 var(--bb-line); transform: none; }
+.bb-portal .card h2, .bb-portal .card h3 { color: var(--bb-ink); font-weight: 700; letter-spacing: -0.01em; }
+.bb-portal .section-label { font-size: 14px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--bb-muted); }
+.bb-portal .btn { min-height: 44px; padding: 0 24px 3px; border: 0; justify-content: center; transition: background-color .15s ease, transform .08s ease; }
+.bb-portal .btn:hover { transform: none; }
+.bb-portal .btn:active { transform: translateY(2px); }
+.bb-portal .btn-primary { background: var(--bb-gold); color: var(--bb-ink); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.17); }
+.bb-portal .btn-primary:hover { background: var(--bb-gold-hover); color: var(--bb-ink); }
+.bb-portal .btn-navy { background: var(--bb-ink); color: #fff; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.4); }
+.bb-portal .btn-outline { padding-bottom: 0; background: #fff; color: var(--bb-ink); border: 1px solid var(--bb-line-2); box-shadow: 0 3px 0 var(--bb-line-2); }
+.bb-portal .btn-outline:hover { background: #fafbfc; color: var(--bb-ink); border-color: var(--bb-line-2); }
+.bb-portal .btn-danger { padding-bottom: 0; background: #fff; color: #a8344b; border: 1px solid #e7b9c3; box-shadow: 0 3px 0 #e7b9c3; }
+.bb-portal .btn-danger:hover { background: #a8344b; color: #fff; border-color: #a8344b; }
+.bb-portal .btn[disabled] { opacity: .45; cursor: not-allowed; }
+.bb-portal .tb-form label, .bb-portal .field label { font-size: 14px; font-weight: 600; color: var(--bb-ink); }
+.bb-portal .tb-form input, .bb-portal .tb-form textarea, .bb-portal .tb-form select,
+.bb-portal .field input, .bb-portal .field textarea, .bb-portal .field select {
+  min-height: 46px; border: 1px solid var(--bb-line-2); border-radius: 10px; color: var(--bb-ink); font-size: 15px;
+}
+.bb-portal .tb-form input:focus, .bb-portal .tb-form textarea:focus, .bb-portal .tb-form select:focus,
+.bb-portal .field input:focus, .bb-portal .field textarea:focus, .bb-portal .field select:focus {
+  outline: none; border-color: var(--bb-ink); box-shadow: inset 0 0 0 1px var(--bb-ink);
+}
+.bb-portal .tb-form input[type="checkbox"], .bb-portal .field input[type="checkbox"],
+.bb-portal .tb-form input[type="radio"], .bb-portal .field input[type="radio"] { min-height: 0; accent-color: var(--bb-ink); }
+.bb-portal .auth-tabs { background: #eef0f3; border-radius: 9999px; padding: 4px; }
+.bb-portal .auth-tab { border-radius: 9999px; font-weight: 700; color: var(--bb-muted); }
+.bb-portal .auth-tab.active { background: var(--bb-ink); color: #fff; box-shadow: none; }
+@media (max-width: 420px) {
+  .bb-compare th, .bb-compare td { padding: 12px 6px; overflow-wrap: anywhere; hyphens: auto; }
+  .bb-compare td b { font-size: 14.5px; }
+  .bb-compare td span, .bb-compare td:not(:first-child) { font-size: 13px; }
+}

@@ -1,7 +1,7 @@
 const html = `
 <style>
   .nest-legal *, .nest-legal *::before, .nest-legal *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  .nest-legal { font-family: 'Jost', sans-serif; color: #333; background: #f8faff; }
+  .nest-legal { font-family: 'Jost', sans-serif; color: #333; background: #fff; }
 
   @keyframes nestSlideInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
 
@@ -25,35 +25,59 @@ const html = `
   .nest-legal .nest-hero h1 em { color: #EFA500; font-style: normal; }
   .nest-legal .nest-hero p { font-size: clamp(15px, 2vw, 17px); color: rgba(255,255,255,.72); line-height: 1.7; max-width: 540px; }
 
-  /* CONTENT */
-  .nest-legal .page-body { max-width: 900px; margin: 0 auto; padding: clamp(50px, 7vw, 80px) 20px clamp(60px, 8vw, 100px); }
-  .nest-legal .dse-section { margin-bottom: 40px; animation: nestSlideInLeft .7s ease-out both; }
+  /* INHALT · Vorlage: Brilliant „Terms of Service" (Textspalte, Trennlinien, keine Karten) */
+  .nest-legal .page-body { max-width: 800px; margin: 0 auto; padding: 96px 20px 110px; }
+  .nest-legal .toc {
+    background: #fff; border: 1px solid #e1e4ea; border-radius: 16px; box-shadow: 0 4px 0 #e1e4ea;
+    padding: 26px 30px; margin-bottom: 56px;
+  }
+  .nest-legal .toc h3 { color: #0f2145; font-size: 17px; font-weight: 700; margin-bottom: 14px; }
+  .nest-legal .toc ol { margin: 0 0 0 22px; columns: 2; column-gap: 32px; }
+  .nest-legal .toc li { margin-bottom: 8px; color: #697186; font-size: 15px; break-inside: avoid; }
+  .nest-legal .toc a { color: #0f2145; font-size: 15px; font-weight: 600; text-decoration: underline; text-decoration-color: #cfd4dc; text-underline-offset: 3px; }
+  .nest-legal .toc a:hover { text-decoration-color: #0f2145; }
+
+  .nest-legal .dse-section { padding: 32px 0; border-top: 1px solid #e1e4ea; scroll-margin-top: 120px; }
+  .nest-legal .dse-section:first-of-type, .nest-legal .toc + .dse-section { border-top: 1.5px solid #0f2145; }
   .nest-legal .section-heading {
-    font-size: clamp(1.05rem, 3vw, 1.25rem); font-weight: 800; color: #0f2145; margin-bottom: 14px;
-    display: flex; align-items: center; gap: 10px;
+    font-size: clamp(20px, 2.4vw, 24px); font-weight: 700; line-height: 1.3; color: #0f2145; margin-bottom: 14px;
+    display: flex; align-items: baseline; gap: 12px; letter-spacing: -0.01em;
   }
-  .nest-legal .section-heading::before {
-    content: ''; display: block; width: 4px; height: 22px;
-    background: linear-gradient(180deg, #EFA500, #f5b830); border-radius: 2px; flex-shrink: 0;
-  }
-  .nest-legal .card {
-    background: white; border-radius: 14px; box-shadow: 0 4px 20px rgba(15,33,69,.07);
-    padding: clamp(22px, 4vw, 32px); line-height: 1.85;
-  }
-  .nest-legal .card p { color: #555; font-size: clamp(14px, 1.8vw, 15.5px); margin-bottom: 14px; }
+  .nest-legal .section-heading .num { color: #a96b00; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+  .nest-legal .card { background: none; border: 0; border-radius: 0; box-shadow: none; padding: 0; line-height: 1.75; transition: none; }
+  .nest-legal .card:hover { box-shadow: none; transform: none; }
+  .nest-legal .card p { color: #3d4455; font-size: 16px; margin-bottom: 14px; }
   .nest-legal .card p:last-child { margin-bottom: 0; }
   .nest-legal .card strong { color: #0f2145; }
-  .nest-legal .card ul { margin: 10px 0 14px 22px; }
-  .nest-legal .card li { color: #555; font-size: clamp(14px, 1.8vw, 15.5px); margin-bottom: 8px; line-height: 1.7; }
-  .nest-legal .card a { color: #EFA500; text-decoration: none; font-weight: 600; transition: color .2s; }
-  .nest-legal .card a:hover { color: #0f2145; }
-  .nest-legal .info-box {
-    background: linear-gradient(135deg, rgba(239,165,0,.08) 0%, rgba(100,200,255,.08) 100%);
-    border-left: 4px solid #EFA500; border-radius: 12px; padding: 20px 24px; margin-top: 40px;
-  }
-  .nest-legal .info-box p { margin: 0; color: #555; font-size: .88rem; line-height: 1.8; }
-  .nest-legal .info-box strong { color: #0f2145; }
+  .nest-legal .card ul, .nest-legal .card ol { margin: 10px 0 16px 22px; }
+  .nest-legal .card li { color: #3d4455; font-size: 16px; margin-bottom: 8px; line-height: 1.65; }
+  .nest-legal .card a { color: #0f2145; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+  .nest-legal .card a:hover { color: #a96b00; }
 
+  .nest-legal .rights-grid { display: grid; gap: 0; margin: 14px 0; border: 1px solid #e1e4ea; border-radius: 14px; overflow: hidden; }
+  .nest-legal .right-row { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border-top: 1px solid #e1e4ea; }
+  .nest-legal .right-row:first-child { border-top: 0; }
+  .nest-legal .right-tag {
+    background: #e8ecf4; color: #0f2145; font-size: 12px; font-weight: 700;
+    padding: 3px 10px; border-radius: 9999px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+  }
+  .nest-legal .right-desc { font-size: 15px; color: #3d4455; line-height: 1.6; }
+  .nest-legal .right-desc strong { color: #0f2145; font-size: 15px; }
+
+  .nest-legal .info-box { background: #f4f5f7; border-radius: 14px; padding: 22px 26px; margin-top: 40px; }
+  .nest-legal .info-box p { margin: 0; color: #3d4455; font-size: 15px; line-height: 1.7; }
+  .nest-legal .info-box strong { color: #0f2145; }
+  .nest-legal .info-box a { color: #0f2145; font-weight: 600; }
+  .nest-legal .question-box { margin-top: 28px; padding-top: 24px; border-top: 1px solid #e1e4ea; }
+  .nest-legal .question-box p { margin: 0; color: #3d4455; font-size: 16px; line-height: 1.7; }
+  .nest-legal .question-box strong { color: #0f2145; font-size: 17px; }
+  .nest-legal .question-box a { color: #0f2145; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+  @media (max-width: 760px) {
+    .nest-legal .page-body { padding: 64px 20px 80px; }
+    .nest-legal .toc ol { columns: 1; }
+    .nest-legal .right-row { flex-direction: column; gap: 6px; }
+  }
   @media (max-width: 768px) { .nest-legal .nest-hero { padding: 80px 24px 110px; } }
 </style>
 

@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href={`/assets/styles.css?v=${V}`} />
         <link rel="stylesheet" href={`/assets/ablauf.css?v=${V}`} />
         <link rel="stylesheet" href={`/assets/termin.css?v=${V}`} />
-        <link rel="stylesheet" href={`/assets/home.css?v=${V}`} />
+        <link rel="stylesheet" href={`/assets/bb.css?v=${V}`} />
         <Script id="nest-config" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: CONFIG }} />
       </head>
       <body>

@@ -1235,9 +1235,9 @@ function renderBerufeUebersicht() {
       ? (n ? (n + " passende" + (n === 1 ? "r Platz" : " Plätze") + " zu deiner Auswahl · jederzeit unverbindlich")
            : "Gerade kein passender Platz online – aber kein Stress, lies einfach weiter.")
       : "Eine Auswahl offener Plätze aus unserem Netzwerk. Dein Wunschberuf ist (noch) nicht dabei? Kein Stress – scroll dich durch alle 150+ Berufe oder lass uns gemeinsam suchen.";
-    var head = '<div class="stellen-strip-head"><div><span class="section-label">Direkt offen</span>' +
+    var head = '<div class="stellen-strip-head"><div>' +
       "<h2>Aktuelle Ausbildungsplätze</h2><p>" + sub + "</p></div>" +
-      '<a class="btn btn-outline" href="#beruf-list">Alle Berufe ansehen</a></div>';
+      '<a class="bb-btn bb-btn--light bb-btn--sm" href="#beruf-list">Alle Berufe ansehen</a></div>';
 
     if (!liste.length) {
       var suchwort = state.q ? '„' + escHtml(state.q) + '"'
@@ -1249,8 +1249,8 @@ function renderBerufeUebersicht() {
           '<p class="stellen-empty-h">Für ' + suchwort + ' ist gerade kein Platz online – das heißt aber nicht, dass es keinen gibt!</p>' +
           '<p class="stellen-empty-p">Wir kennen über 70 Partnerbetriebe und viele Plätze, die nie öffentlich ausgeschrieben werden. Schau dir unten in Ruhe alle Berufe an oder buch dir eine kostenlose Beratung – wir finden gemeinsam deinen Weg.</p>' +
           '<div class="stellen-empty-cta">' +
-            '<a class="btn btn-primary" href="#beruf-list">Alle Berufe ansehen</a>' +
-            '<a class="btn btn-outline" href="' + beratung + '">Kostenlose Beratung</a>' +
+            '<a class="bb-btn bb-btn--ink bb-btn--sm" href="#beruf-list">Alle Berufe ansehen</a>' +
+            '<a class="bb-btn bb-btn--light bb-btn--sm" href="' + beratung + '">Kostenlose Beratung</a>' +
           "</div>" +
         "</div>";
       return;
@@ -1395,10 +1395,10 @@ function renderBerufDetail() {
   if (!beruf) {
     document.title = "Beruf nicht gefunden – NEST BildungsBar";
     root.innerHTML =
-      '<section class="bg-white"><div class="container" style="text-align:center;padding:40px 0;">' +
-      "<h1 style='color:var(--navy);'>Beruf nicht gefunden</h1>" +
-      "<p>Diesen Beruf konnten wir leider nicht finden.</p>" +
-      '<a class="btn btn-primary" href="' + linkZukunft() + '">Zur Berufsübersicht</a>' +
+      '<section class="bb-sec"><div class="container" style="text-align:center;">' +
+      "<h1 class='bb-h2'>Beruf nicht gefunden</h1>" +
+      "<p class='bb-lead' style='margin:14px 0 28px;'>Diesen Beruf konnten wir leider nicht finden.</p>" +
+      '<a class="bb-btn bb-btn--gold" href="' + linkZukunft() + '">Zur Berufsübersicht</a>' +
       "</div></section>";
     return;
   }
@@ -1423,7 +1423,7 @@ function renderBerufDetail() {
     "</div></div></div></section>";
 
   var body =
-    '<section class="bg-white"><div class="container"><div class="beruf-layout">' +
+    '<section class="bb-sec"><div class="container"><div class="beruf-layout">' +
     '<div class="beruf-main">' +
     berufBildHtml(beruf, "beruf-hero-img", 56) +
     "<h2>Worum geht's?</h2><p>" + intro + "</p>" +
@@ -1448,25 +1448,26 @@ function renderBerufDetail() {
     sbRow("compass", "Berufsfeld", beruf.kategorie) +
     sbRow("clock", "Dauer", dauer) +
     sbRow("pin", "Standorte", standorte) +
-    '<a class="btn btn-primary" href="' + linkKontaktTermin() + '">Termin buchen</a>' +
-    '<button class="btn btn-outline detail-merk" style="width:100%;justify-content:center;margin-top:8px;">' + ic("heart", 16) + "<span>" + (gem ? "Gemerkt" : "Merken") + "</span></button>" +
+    '<a class="bb-btn bb-btn--gold bb-btn--block" href="' + linkKontaktTermin() + '">Termin buchen</a>' +
+    '<button class="bb-btn bb-btn--light bb-btn--block detail-merk" style="margin-top:12px;">' + ic("heart", 16) + "<span>" + (gem ? "Gemerkt" : "Merken") + "</span></button>" +
     "</div></aside>" +
     "</div></div></section>";
 
   var cta =
-    '<section class="cta-section on-white"><div class="container"><div class="cta-inner">' +
-    '<span class="section-label" style="display:flex;justify-content:center;">Interesse geweckt?</span>' +
-    "<h2>Starte mit „<em>" + escHtml(beruf.name) + "</em>“</h2>" +
-    "<p>Buch dir einen kostenfreien Termin in der BildungsBar – wir finden gemeinsam heraus, ob dieser Weg zu dir passt.</p>" +
-    '<div class="cta-actions"><a class="btn btn-primary" href="' + linkKontaktTermin() + '">Termin buchen</a>' +
-    '<a class="btn btn-ghost" href="' + linkZukunft() + '">Weitere Berufe</a></div>' +
-    "</div></div></section>";
+    '<section class="bb-sec bb-sec--band"><div class="container"><div class="bb-cta">' +
+    '<div><h2 class="bb-h2">Starte mit „' + escHtml(beruf.name) + '“</h2>' +
+    '<p class="bb-lead">Buch dir einen kostenfreien Termin in der BildungsBar – wir finden gemeinsam heraus, ob dieser Weg zu dir passt.</p>' +
+    '<div class="bb-actions"><a class="bb-btn bb-btn--gold" href="' + linkKontaktTermin() + '">Termin buchen</a>' +
+    '<a class="bb-btn bb-btn--light" href="' + linkZukunft() + '">Weitere Berufe</a></div></div>' +
+    '<div class="bb-cta__side">' +
+    '<div class="bb-cta__item"><a href="https://wa.me/4915753934038"><small>WhatsApp</small><b>01575 393 4038</b></a><span>Schreib uns einfach</span></div>' +
+    '<div class="bb-cta__item"><a href="tel:017641933496"><small>Telefon</small><b>0176 419 334 96</b></a><span>Ruf uns an</span></div>' +
+    "</div></div></div></section>";
 
   // Platz für die offenen Stellen dieses Berufs (wird asynchron befüllt)
   var stellenSlot =
-    '<section class="bg-light" id="beruf-stellen"><div class="container">' +
-    '<div class="section-head"><span class="section-label">Jobbörse</span>' +
-    '<h2>Offene Stellen als <em>' + escHtml(beruf.name) + '</em></h2></div>' +
+    '<section class="bb-sec bb-sec--band bb-sec--tight" id="beruf-stellen"><div class="container">' +
+    '<div class="bb-head"><h2 class="bb-h2">Offene Stellen als ' + escHtml(beruf.name) + '</h2></div>' +
     '<div id="beruf-stellen-inner"><p style="color:var(--text-mute);">Lädt …</p></div>' +
     "</div></section>";
 
@@ -1522,7 +1523,7 @@ function renderBerufDetail() {
       } else {
         inner.innerHTML = '<div class="beruf-stellen-leer">Aktuell sind für diesen Beruf keine Stellen ausgeschrieben. ' +
           'Wir vernetzen dich trotzdem gern mit passenden Betrieben.<br>' +
-          '<a class="btn btn-primary" style="margin-top:14px;" href="' + linkKontaktTermin() + '">Kostenfreie Beratung buchen →</a></div>';
+          '<a class="bb-btn bb-btn--gold" style="margin-top:16px;" href="' + linkKontaktTermin() + '">Kostenfreie Beratung buchen</a></div>';
       }
     }
     var api = window.NEST_STELLEN_API;
@@ -1780,10 +1781,10 @@ if (!window.STELLEN || !window.STELLEN.length) {
 
     root.innerHTML =
       '<div class="stellen-strip-head">' +
-        '<div><span class="section-label">Jobbörse</span>' +
+        '<div>' +
         "<h2>Aktuelle Stellen</h2>" +
         "<p>" + (aktiv.length === 1 ? "1 offener Platz" : aktiv.length + " offene Plätze") + " von Unternehmen aus unserem Netzwerk · 30 Tage aktuell</p></div>" +
-        '<a class="btn btn-outline" href="' + lKoop() + '">Stelle eintragen</a>' +
+        '<a class="bb-btn bb-btn--light bb-btn--sm" href="' + lKoop() + '">Stelle eintragen</a>' +
       "</div>" +
       '<div class="stellen-orte">' + chips + "</div>" +
       '<div class="stellen-karussell"><div class="stellen-track" id="stellen-track"><div class="stellen-strip" id="stellen-strip"></div></div></div>';

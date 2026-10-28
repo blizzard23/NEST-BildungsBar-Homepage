@@ -759,7 +759,8 @@ export default function PartnerPortal() {
         </div></div></div>
       </section>
 
-      <section className="bg-light">
+      {/* Portal · Kacheln, Pill-Buttons und Felder wie im Brilliant-System (bb.css, .bb-portal) */}
+      <section className="bg-light bb-portal">
         <div className="container" style={{ maxWidth: "920px" }}>
 
           {!supabaseConfigured ? (

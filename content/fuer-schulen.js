@@ -1,9 +1,4 @@
-const IC = {
-  compass: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
-  briefcase: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`,
-  gamepad: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="10" r="1"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>`,
-  globe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
-};
+import IC from "./icons";
 
 const html = `
 
@@ -64,126 +59,109 @@ const html = `
     </div></div>
   </section>
 
-  <!-- ====== NESTplay ====== -->
-  <section class="bg-white" id="nestplay">
+  <!-- NESTplay · Vorlage: Brilliant „Level up with Premium" (Handy-Mock mit hartem Schatten) -->
+  <section class="bb-sec" id="nestplay">
     <div class="container">
-      <div class="section-head centered reveal">
-        <span class="section-label" style="color:var(--gold-dark);">Innovation</span>
-        <h2>NESTplay. – Berufsorientierung <em>neu denken</em></h2>
-        <p>Mit NESTplay präsentieren Unternehmen ihren Betrieb direkt im Unterricht – als interaktives Live-Quiz, das Schüler:innen aktiviert und nachhaltig im Gedächtnis bleibt.</p>
+      <div class="bb-head bb-head--center">
+        <h2 class="bb-h2">NESTplay. – Berufsorientierung <span class="bb-hl">neu denken</span></h2>
+        <p class="bb-lead">Mit NESTplay präsentieren Unternehmen ihren Betrieb direkt im Unterricht – als interaktives Live-Quiz, das Schüler:innen aktiviert und nachhaltig im Gedächtnis bleibt.</p>
       </div>
-
-      <div class="split" style="margin-bottom:0;">
-        <div class="hero-visual hero-visual--phone" style="background:none;">
-          <div class="hero-phone">
-            <span class="hp-notch"></span>
-            <div class="hp-screen">
-              <span class="hp-badge">NESTplay</span>
-              <div class="hp-title">Live-Quiz · Frage 2 / 5</div>
-              <div style="background:#fff;border-radius:9px;padding:9px 10px;">
-                <div style="font-size:9px;font-weight:800;color:var(--gold-dark);letter-spacing:1px;margin-bottom:4px;">MAIER &amp; SÖHNE</div>
-                <div style="font-size:11px;font-weight:700;color:var(--navy);line-height:1.4;">Wie lange dauert die Ausbildung zum Mechatroniker?</div>
-              </div>
-              <div class="hp-grid" style="gap:6px;">
-                <div style="background:rgba(194,65,90,0.15);color:#c2415a;border-radius:8px;padding:8px 6px;font-size:9.5px;font-weight:800;text-align:center;">2 Jahre</div>
-                <div style="background:var(--navy);color:var(--gold);border-radius:8px;padding:8px 6px;font-size:9.5px;font-weight:800;text-align:center;">3,5 Jahre ✓</div>
-                <div style="background:#fff;border:1px solid var(--line);color:var(--text-mute);border-radius:8px;padding:8px 6px;font-size:9.5px;font-weight:700;text-align:center;">4 Jahre</div>
-                <div style="background:#fff;border:1px solid var(--line);color:var(--text-mute);border-radius:8px;padding:8px 6px;font-size:9.5px;font-weight:700;text-align:center;">5 Jahre</div>
-              </div>
-              <div style="background:var(--navy);border-radius:8px;padding:7px 11px;display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:9px;color:rgba(255,255,255,0.6);">Team Fuchs</span>
-                <span style="font-size:12px;font-weight:900;color:var(--gold);">20 Pkt.</span>
-              </div>
+      <div class="bb-split">
+        <div class="bb-phone" aria-hidden="true">
+          <div class="bb-phone__screen">
+            <div class="bb-phone__notch"></div>
+            <span class="bb-badge bb-badge--soft" style="align-self:flex-start;">Live-Quiz · Frage 2 / 5</span>
+            <div class="np-q"><small>Maier &amp; Söhne</small><b>Wie lange dauert die Ausbildung zum Mechatroniker?</b></div>
+            <div class="np-answers"><span>2 Jahre</span><span class="is-right">3,5 Jahre</span><span>4 Jahre</span><span>5 Jahre</span></div>
+            <div class="np-score"><span>Team Fuchs</span><b>20 Pkt.</b></div>
+            <div class="np-rank">
+              <div><span>Team Fuchs</span><b>40</b></div>
+              <div><span>Team Wolf</span><b>35</b></div>
+              <div><span>Team Adler</span><b>28</b></div>
             </div>
           </div>
         </div>
-        <div class="split-text reveal">
-          <span class="section-label">Für Schulen &amp; Unternehmen</span>
-          <h2>Spielerisch in <em>die Klasse</em></h2>
-          <p>Schüler:innen spielen ein Live-Quiz zu echten Unternehmen und lernen spielerisch alles über Ausbildungsberufe – kAoA-konform und vollständig gamifiziert.</p>
-          <ul class="list-check">
-            <li>Live-Quiz aktiviert die gesamte Klasse</li>
-            <li>Unternehmen bleiben im Kopf – nicht Flyer</li>
-            <li>kAoA-konform für alle Schulstufen</li>
+        <div>
+          <h3 class="bb-h2" style="font-size:clamp(24px,2.6vw,32px);">Spielerisch in die Klasse</h3>
+          <p class="bb-lead" style="margin-top:14px;">Schüler:innen spielen ein Live-Quiz zu echten Unternehmen und lernen spielerisch alles über Ausbildungsberufe – kAoA-konform und vollständig gamifiziert.</p>
+          <ul class="bb-ilist">
+            <li><span class="bb-ilist__ic">${IC.people}</span><div><b>Die ganze Klasse spielt mit</b><span>Das Live-Quiz aktiviert alle Schüler:innen gleichzeitig.</span></div></li>
+            <li><span class="bb-ilist__ic">${IC.target}</span><div><b>Unternehmen bleiben im Kopf</b><span>Statt Flyern erleben die Schüler:innen echte Betriebe aus der Region.</span></div></li>
+            <li><span class="bb-ilist__ic">${IC.cap}</span><div><b>kAoA-konform</b><span>Für alle Schulstufen geeignet.</span></div></li>
           </ul>
-          <a class="btn btn-primary mt-2" href="https://nest-play.de" target="_blank" rel="noopener">Zu NESTplay. →</a>
+          <div class="bb-actions"><a class="bb-btn bb-btn--ink" href="https://nest-play.de" target="_blank" rel="noopener">Zu NESTplay.</a></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ====== NEST MESSE ====== -->
-  <section class="bg-light" id="nestmesse" style="padding-top:80px;">
+  <!-- NEST EXPLORE · Vorlage: Brilliant „Careers" (Text + gerahmtes Bild) -->
+  <section class="bb-sec bb-sec--band" id="nestmesse">
     <div class="container">
-      <div class="section-head centered reveal">
-        <span class="section-label">NEST Explore</span>
-        <h2>NEST Explore – Ausbildung <em>live erleben</em></h2>
-        <p>NEST Explore bringt Schüler:innen, Schulen und Unternehmen zusammen – ein besonderes Format für echte Begegnungen auf Augenhöhe.</p>
-      </div>
-
-      <div class="split rev" style="margin-bottom:0;">
-        <div class="split-text reveal">
-          <span class="section-label">NEST Explore</span>
-          <h2>NEST Explore kommt <em>zu euch</em></h2>
-          <p>NEST Explore bringt regionale Unternehmen direkt in eure Schule – spielerisch, strukturiert und komplett von uns organisiert. Für Schulen kostenfrei.</p>
-          <ul class="list-check">
+      <div class="bb-split bb-split--rev">
+        <div class="bb-frame bb-frame--43"><img src="/assets/img/nest-explore.png" alt="NEST Explore – Schüler:innen entdecken Berufe an einem interaktiven NEST-Stand" loading="lazy"></div>
+        <div>
+          <h2 class="bb-h2">NEST Explore – Ausbildung <span class="bb-hl">live erleben</span></h2>
+          <p class="bb-lead" style="margin-top:16px;">NEST Explore bringt regionale Unternehmen direkt in eure Schule – spielerisch, strukturiert und komplett von uns organisiert. Für Schulen kostenfrei.</p>
+          <ul class="bb-bullets">
             <li>6 regionale Unternehmen kommen direkt in eure Schule</li>
             <li>Komplett von NEST organisiert – keine Vorbereitung nötig</li>
             <li>Spielerisches Format – aktiviert auch ruhige Schüler:innen</li>
             <li>Kostenfrei · ab Klasse 9 · 60 Min pro Klasse</li>
           </ul>
-          <a class="btn btn-navy mt-2" href="https://nest-explore.de" target="_blank" rel="noopener">Zu NEST Explore →</a>
-        </div>
-        <div class="split-media is-photo">
-          <div class="explore-foto">
-            <img src="/assets/img/nest-explore.png" alt="NEST Explore – Schüler:innen entdecken Berufe an einem interaktiven NEST-Stand" loading="lazy">
-          </div>
+          <div class="bb-actions"><a class="bb-btn bb-btn--ink" href="https://nest-explore.de" target="_blank" rel="noopener">Zu NEST Explore</a></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ====== WORKSHOPS ====== -->
-  <section class="bg-white" id="workshops" style="padding-top:80px;">
+  <!-- WORKSHOPS · Vorlage: Brilliant „Learning paths" -->
+  <section class="bb-sec" id="workshops">
     <div class="container">
-      <div class="section-head centered reveal">
-        <span class="section-label">Workshops</span>
-        <h2>Konkrete Angebote <em>für Schulen</em></h2>
-        <p>Unsere Workshops laufen 45–90 Minuten direkt bei euch in der Klasse oder als Tagesworkshop an der Junioruni.</p>
-      </div>
-
-      <div class="card-grid cols-2">
-        <div class="card reveal"><div class="icon icon-svg">${IC.compass}</div><h3>Persönlichkeitscheck</h3><p>„Welches Berufsfeld passt zu mir?" – Schüler:innen lernen ihre Stärken kennen und entdecken passende Berufsperspektiven.</p><span class="badge">Berufsorientierung</span><span class="badge" style="margin-left:6px;background:rgba(239,165,0,0.1);color:var(--gold-dark);">45–90 Min.</span></div>
-        <div class="card reveal"><div class="icon icon-svg">${IC.briefcase}</div><h3>Bewerbungstraining</h3><p>„Fit für die Jobsuche" – von der Bewerbung bis zum Vorstellungsgespräch werden Schüler:innen praxisnah vorbereitet.</p><span class="badge">Bewerbung</span><span class="badge" style="margin-left:6px;background:rgba(239,165,0,0.1);color:var(--gold-dark);">45–90 Min.</span></div>
-      </div>
-
-      <div style="background:var(--bg-light);border-radius:14px;padding:28px 32px;margin-top:20px;" class="reveal">
-        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-          <div class="icon icon-svg" style="flex-shrink:0;">${IC.globe}</div>
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:4px;">Enge Zusammenarbeit</div>
-            <h3 style="margin:0 0 6px;font-size:18px;">Junioruni und regionale Partner</h3>
-            <p style="margin:0;color:var(--text-soft);font-size:14px;">Unsere Workshops führen wir in Kooperation mit der Junioruni Wuppertal und der Junioruni Essen durch – als Tagesworkshop oder mehrstündiges Format. Zusätzlich arbeiten wir eng mit Schulen, der IHK und weiteren regionalen Bildungseinrichtungen zusammen.</p>
-          </div>
+      <div class="bb-head bb-head--row">
+        <div>
+          <h2 class="bb-h2">Konkrete Angebote für Schulen</h2>
+          <p class="bb-lead" style="margin-top:14px;max-width:640px;">Unsere Workshops laufen 45–90 Minuten direkt bei euch in der Klasse oder als Tagesworkshop an der Junioruni.</p>
         </div>
       </div>
-
-      <div class="text-center" style="margin-top:28px;">
-        <a class="btn btn-primary" href="/kontakt#termin">Workshop für Ihre Schule anfragen →</a>
+      <div class="bb-paths">
+        <div class="bb-path">
+          <span class="bb-path__ic">${IC.compass}</span>
+          <div class="bb-path__title"><span class="bb-badge bb-badge--soft">45–90 Min.</span><b>Persönlichkeitscheck</b></div>
+          <p class="bb-path__desc">„Welches Berufsfeld passt zu mir?“ – Schüler:innen lernen ihre Stärken kennen und entdecken passende Berufsperspektiven.</p>
+          <a class="bb-btn bb-btn--light bb-btn--sm" href="/kontakt#termin">Anfragen</a>
+        </div>
+        <div class="bb-path">
+          <span class="bb-path__ic">${IC.file}</span>
+          <div class="bb-path__title"><span class="bb-badge bb-badge--soft">45–90 Min.</span><b>Bewerbungstraining</b></div>
+          <p class="bb-path__desc">„Fit für die Jobsuche“ – von der Bewerbung bis zum Vorstellungsgespräch werden Schüler:innen praxisnah vorbereitet.</p>
+          <a class="bb-btn bb-btn--light bb-btn--sm" href="/kontakt#termin">Anfragen</a>
+        </div>
+        <div class="bb-path">
+          <span class="bb-path__ic">${IC.globe}</span>
+          <div class="bb-path__title"><span class="bb-badge bb-badge--soft">Partner</span><b>Junioruni und regionale Partner</b></div>
+          <p class="bb-path__desc">Unsere Workshops führen wir in Kooperation mit der Junioruni Wuppertal und der Junioruni Essen durch – als Tagesworkshop oder mehrstündiges Format. Zusätzlich arbeiten wir eng mit Schulen, der IHK und weiteren regionalen Bildungseinrichtungen zusammen.</p>
+          <span></span>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="cta-section on-white">
-    <div class="container"><div class="cta-inner">
-      <span class="section-label" style="display:flex;justify-content:center;">Für Lehrkräfte</span>
-      <h2>Workshop für Ihre <em>Schule</em> anfragen</h2>
-      <p>Bringen Sie moderne, erlebbare Berufsorientierung in Ihre Klassen. Wir freuen uns auf Ihre Anfrage.</p>
-      <div class="cta-actions">
-        <a class="btn btn-primary" href="/kontakt#termin">Jetzt anfragen</a>
-        <a class="btn btn-ghost" href="/kooperation">Für Unternehmen</a>
+  <!-- ABSCHLUSS · Vorlage: Brilliant „Join over 10 million people learning on Brilliant" -->
+  <section class="bb-sec bb-sec--band">
+    <div class="container">
+      <div class="bb-cta">
+        <div>
+          <h2 class="bb-h2">Workshop für Ihre Schule anfragen</h2>
+          <p class="bb-lead">Bringen Sie moderne, erlebbare Berufsorientierung in Ihre Klassen. Wir freuen uns auf Ihre Anfrage.</p>
+          <div class="bb-actions"><a class="bb-btn bb-btn--gold" href="/kontakt#termin">Jetzt anfragen</a><a class="bb-btn bb-btn--light" href="/kooperation">Für Unternehmen</a></div>
+        </div>
+        <div class="bb-cta__side">
+          <div class="bb-cta__item"><a href="mailto:info@nest-bildungsbar.de"><small>E-Mail</small><b>info@nest-bildungsbar.de</b></a><span>Schreiben Sie uns</span></div>
+          <div class="bb-cta__item"><a href="tel:017641933496"><small>Telefon</small><b>0176 419 334 96</b></a><span>Rufen Sie uns an</span></div>
+        </div>
       </div>
-    </div></div>
+    </div>
   </section>
 
 

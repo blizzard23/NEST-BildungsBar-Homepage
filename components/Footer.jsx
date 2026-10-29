@@ -14,7 +14,7 @@ export default function Footer() {
             <a href="https://www.linkedin.com/company/89189682/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
             </a>
-            <a href="https://www.instagram.com/nest_bildungsbar.wuppertal" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+            <a href="https://www.instagram.com/nest_bildungsbar.bergischland" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
             </a>
             <a href="mailto:info@nest-bildungsbar.de" title="E-Mail" aria-label="E-Mail">

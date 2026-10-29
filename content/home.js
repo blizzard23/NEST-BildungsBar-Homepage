@@ -109,103 +109,50 @@ const html = `
     </div>
   </section>
 
-  <!-- BERUFE · dunkle Sektion mit Karten (Linear „features") -->
+  <!-- BERUFSFELDER · dunkle Sektion mit Kacheln -->
   <section class="bb-sec bb-sec--dark">
     <div class="container">
       <div class="bb-head bb-head--row">
         <div>
           <h2 class="bb-h2">Was kannst du bei uns <span class="bb-hl">entdecken?</span></h2>
-          <p class="bb-lead" style="margin-top:18px;max-width:620px;">Eine Auswahl aus über 150 Ausbildungsberufen und dualen Studiengängen – sortiert nach Berufsfeldern.</p>
+          <p class="bb-lead" style="margin-top:18px;max-width:620px;">Über 150 Ausbildungsberufe und duale Studiengänge in sechs Berufsfeldern. Wähle ein Feld und entdecke alle Berufe dazu.</p>
         </div>
         <a class="bb-btn bb-btn--light" href="/berufswelt">Zur Berufswelt</a>
       </div>
-        <div class="bb-catalog">
-        <div class="bb-catalog__group">
-          <h3>Gesundheit</h3>
-          <ul>
-            <li><a href="/beruf?b=medizinische-fachangestellte">Medizinische:r Fachangestellte:r</a></li>
-            <li><a href="/beruf?b=pflegefachkraft">Pflegefachkraft</a></li>
-            <li><a href="/beruf?b=physiotherapeut">Physiotherapeut:in</a></li>
-            <li><a href="/beruf?b=notfallsanitaeter">Notfallsanitäter:in</a></li>
-            <li><a href="/beruf?b=augenoptiker">Augenoptiker:in</a></li>
-            <li><a href="/beruf?b=hoergeraeteakustiker">Hörgeräteakustiker:in</a></li>
-            <li><a href="/beruf?b=operationstechnische-assistent">Operationstechnische:r Assistent:in</a></li>
-            <li><a href="/beruf?b=kaufleute-im-gesundheitswesen">Kaufleute im Gesundheitswesen</a></li>
-          </ul>
-          <a class="bb-link bb-catalog__more" href="/berufswelt?feld=Gesundheitswesen">Alle 15 Berufe ansehen</a>
-        </div>
-        <div class="bb-catalog__group">
-          <h3>Handwerk</h3>
-          <ul>
-            <li><a href="/beruf?b=kfz-mechatroniker">Kfz-Mechatroniker:in</a></li>
-            <li><a href="/beruf?b=tischler">Tischler:in</a></li>
-            <li><a href="/beruf?b=elektroniker-energie-und-gebaeudetechnik">Elektroniker:in Energie- und Gebäudetechnik</a></li>
-            <li><a href="/beruf?b=anlagenmechaniker-fuer-sanitaer-heizungs-und-klimatechnik">Anlagenmechaniker:in für Sanitär-, Heizungs- und Klimatechnik</a></li>
-            <li><a href="/beruf?b=dachdecker">Dachdecker:in</a></li>
-            <li><a href="/beruf?b=baecker">Bäcker:in</a></li>
-            <li><a href="/beruf?b=koch-koechin">Koch / Köchin</a></li>
-            <li><a href="/beruf?b=gaertner-fachrichtung-garten-und-landschaftsbau">Gärtner:in – Fachrichtung Garten- und Landschaftsbau</a></li>
-          </ul>
-          <a class="bb-link bb-catalog__more" href="/berufswelt?feld=Handwerk">Alle 32 Berufe ansehen</a>
-        </div>
-        <div class="bb-catalog__group">
-          <h3>Soziales</h3>
-          <ul>
-            <li><a href="/beruf?b=erzieher">Erzieher:in</a></li>
-            <li><a href="/beruf?b=heilerziehungspfleger">Heilerziehungspfleger:in</a></li>
-            <li><a href="/beruf?b=kinderpfleger">Kinderpfleger:in</a></li>
-            <li><a href="/beruf?b=sozialassistent">Sozialassistent:in</a></li>
-            <li><a href="/beruf?b=hauswirtschafter">Hauswirtschafter:in</a></li>
-            <li><a href="/beruf?b=tierpfleger">Tierpfleger:in</a></li>
-            <li><a href="/beruf?b=freiwilligendienst">Freiwilligendienst</a></li>
-            <li><a href="/beruf?b=studium-soziale-arbeit">Studium Soziale Arbeit</a></li>
-          </ul>
-          <a class="bb-link bb-catalog__more" href="/berufswelt?feld=Sozialer%20Bereich">Alle 8 Berufe ansehen</a>
-        </div>
-        <div class="bb-catalog__group">
-          <h3>Technik &amp; IT</h3>
-          <ul>
-            <li><a href="/beruf?b=fachinformatiker-anwendungsentwicklung">Fachinformatiker:in Anwendungsentwicklung</a></li>
-            <li><a href="/beruf?b=fachinformatiker-systemintegration">Fachinformatiker:in Systemintegration</a></li>
-            <li><a href="/beruf?b=industriemechaniker">Industriemechaniker:in</a></li>
-            <li><a href="/beruf?b=it-systemelektroniker">IT-Systemelektroniker:in</a></li>
-            <li><a href="/beruf?b=geomatiker">Geomatiker:in</a></li>
-            <li><a href="/beruf?b=fachkraft-fuer-veranstaltungstechnik">Fachkraft für Veranstaltungstechnik</a></li>
-            <li><a href="/beruf?b=duales-studium-informatik">Duales Studium Informatik</a></li>
-            <li><a href="/beruf?b=duales-studium-maschinenbau">Duales Studium Maschinenbau</a></li>
-          </ul>
-          <a class="bb-link bb-catalog__more" href="/berufswelt?feld=Technische%20Berufe">Alle 54 Berufe ansehen</a>
-        </div>
-        <div class="bb-catalog__group">
-          <h3>Verkauf &amp; Vertrieb</h3>
-          <ul>
-            <li><a href="/beruf?b=einzelhandelskaufleute">Einzelhandelskaufleute</a></li>
-            <li><a href="/beruf?b=automobilkaufleute">Automobilkaufleute</a></li>
-            <li><a href="/beruf?b=kaufleute-im-e-commerce">Kaufleute im E-Commerce</a></li>
-            <li><a href="/beruf?b=hotelfachleute">Hotelfachleute</a></li>
-            <li><a href="/beruf?b=veranstaltungskaufleute">Veranstaltungskaufleute</a></li>
-            <li><a href="/beruf?b=kaufleute-marketingkommunikation">Kaufleute Marketingkommunikation</a></li>
-            <li><a href="/beruf?b=kaufleute-spedition-logistikdienstleistung">Kaufleute Spedition / Logistikdienstleistung</a></li>
-            <li><a href="/beruf?b=fachverkaeufer-lebensmittelhandwerk">Fachverkäufer:in Lebensmittelhandwerk</a></li>
-          </ul>
-          <a class="bb-link bb-catalog__more" href="/berufswelt?feld=Verkauf%20und%20Vertrieb">Alle 12 Berufe ansehen</a>
-        </div>
-        <div class="bb-catalog__group">
-          <h3>Wirtschaft &amp; Verwaltung</h3>
-          <ul>
-            <li><a href="/beruf?b=kaufleute-bueromanagement">Kaufleute Büromanagement</a></li>
-            <li><a href="/beruf?b=bankkaufleute">Bankkaufleute</a></li>
-            <li><a href="/beruf?b=verwaltungsfachangestellte">Verwaltungsfachangestellte</a></li>
-            <li><a href="/beruf?b=fachkraft-fuer-lagerlogistik">Fachkraft für Lagerlogistik</a></li>
-            <li><a href="/beruf?b=kaufleute-fuer-versicherungen-und-finanzanlagen">Kaufleute für Versicherungen und Finanzanlagen</a></li>
-            <li><a href="/beruf?b=kaufleute-fuer-digitalisierungsmanagement">Kaufleute für Digitalisierungsmanagement</a></li>
-            <li><a href="/beruf?b=duales-studium-bwl">Duales Studium BWL</a></li>
-            <li><a href="/beruf?b=duales-studium-bachelor-of-laws">Duales Studium Bachelor of Laws</a></li>
-          </ul>
-          <a class="bb-link bb-catalog__more" href="/berufswelt?feld=Wirtschaft%20%26%20Verwaltung">Alle 33 Berufe ansehen</a>
-        </div>
-        </div>
-    </div>
+      <!-- Berufsfelder als Kacheln (Vorlage: Webflow „Browse lesson topics") -->
+      <div class="bb-fields">
+        <a class="bb-field bb-field--coral" href="/berufswelt?feld=Gesundheitswesen">
+          <span class="bb-field__orb">${IC.heart}</span>
+          <span class="bb-field__name">Gesundheit</span>
+          <span class="bb-field__count">15 Berufe</span>
+        </a>
+        <a class="bb-field bb-field--gold" href="/berufswelt?feld=Handwerk">
+          <span class="bb-field__orb">${IC.tool}</span>
+          <span class="bb-field__name">Handwerk</span>
+          <span class="bb-field__count">32 Berufe</span>
+        </a>
+        <a class="bb-field bb-field--pink" href="/berufswelt?feld=Sozialer%20Bereich">
+          <span class="bb-field__orb">${IC.people}</span>
+          <span class="bb-field__name">Soziales</span>
+          <span class="bb-field__count">8 Berufe</span>
+        </a>
+        <a class="bb-field bb-field--blue" href="/berufswelt?feld=Technische%20Berufe">
+          <span class="bb-field__orb">${IC.monitor}</span>
+          <span class="bb-field__name">Technik &amp; IT</span>
+          <span class="bb-field__count">54 Berufe</span>
+        </a>
+        <a class="bb-field bb-field--green" href="/berufswelt?feld=Verkauf%20und%20Vertrieb">
+          <span class="bb-field__orb">${IC.bag}</span>
+          <span class="bb-field__name">Verkauf &amp; Vertrieb</span>
+          <span class="bb-field__count">12 Berufe</span>
+        </a>
+        <a class="bb-field bb-field--violet" href="/berufswelt?feld=Wirtschaft%20%26%20Verwaltung">
+          <span class="bb-field__orb">${IC.briefcase}</span>
+          <span class="bb-field__name">Wirtschaft &amp; Verwaltung</span>
+          <span class="bb-field__count">33 Berufe</span>
+        </a>
+      </div>
+      </div>
   </section>
 
   <!-- ABLAUF · Reiter mit Bild -->

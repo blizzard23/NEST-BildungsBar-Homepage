@@ -263,16 +263,23 @@ a.bb-tile:hover, .bb-tile--link:hover { border-color: var(--bb-line-2); }
 }
 
 /* ---------- Katalog in Karten (Linear „features") ---------- */
-.bb-catalog { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.bb-catalog__group { display: flex; flex-direction: column; padding: 28px; border-radius: 20px; background: var(--bb-card); border: 1px solid var(--bb-card-line); }
-.bb-catalog__group h3 { font-size: 20px; font-weight: 600; color: var(--bb-ink); margin: 0 0 16px; letter-spacing: -0.01em; }
-.bb-catalog__group ul { list-style: none; margin: 0 0 20px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.bb-catalog__group li a { display: block; font-size: 15px; line-height: 1.4; color: var(--bb-text); text-decoration: none; transition: color .15s; }
-.bb-catalog__group li a:hover { color: var(--bb-ink); }
-.bb-catalog__more { margin-top: auto; align-self: flex-start; font-size: 15px; }
-@media (max-width: 980px) { .bb-catalog { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 640px) { .bb-catalog { grid-template-columns: 1fr; } }
-@media (max-width: 520px) { .bb-catalog__group li:nth-child(n+5) { display: none; } }
+/* Berufsfelder als Kacheln mit Farbkugel (Webflow „Browse lesson topics") */
+.bb-fields { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.bb-field { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 26px 14px 22px; border-radius: 20px; background: var(--bb-card); border: 1px solid var(--bb-card-line); color: var(--bb-ink); text-decoration: none; transition: transform .2s ease, border-color .2s ease, background-color .2s ease; }
+.bb-field:hover { transform: translateY(-4px); border-color: rgba(239,165,0,0.45); background: rgba(255,255,255,0.07); color: var(--bb-ink); }
+.bb-field__orb { display: grid; place-items: center; width: 84px; height: 84px; margin-bottom: 12px; border-radius: 50%; color: #fff; box-shadow: inset 0 -10px 20px rgba(0,0,0,0.12), 0 12px 28px rgba(0,0,0,0.28); transition: transform .2s ease; }
+.bb-field:hover .bb-field__orb { transform: scale(1.06); }
+.bb-field__orb svg { width: 32px; height: 32px; stroke-width: 1.8; }
+.bb-field__name { font-size: 16px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; color: var(--bb-ink); }
+.bb-field__count { font-size: 13px; color: var(--bb-muted); }
+.bb-field--coral  .bb-field__orb { background: linear-gradient(145deg, #ffb3a0 0%, #e8607a 100%); }
+.bb-field--gold   .bb-field__orb { background: linear-gradient(145deg, #ffd36a 0%, #e89a00 100%); }
+.bb-field--pink   .bb-field__orb { background: linear-gradient(145deg, #f9b8dc 0%, #d9468f 100%); }
+.bb-field--blue   .bb-field__orb { background: linear-gradient(145deg, #9cc8ff 0%, #4f6ff0 100%); }
+.bb-field--green  .bb-field__orb { background: linear-gradient(145deg, #8eedb6 0%, #12a596 100%); }
+.bb-field--violet .bb-field__orb { background: linear-gradient(145deg, #c9b8ff 0%, #7c4ef0 100%); }
+@media (max-width: 1040px) { .bb-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .bb-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .bb-field__orb { width: 68px; height: 68px; } .bb-field__orb svg { width: 26px; height: 26px; } }
 
 /* ---------- Reiter mit Bild ---------- */
 .bb-tabs { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 72px; align-items: center; }

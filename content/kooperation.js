@@ -1,5 +1,5 @@
 // Partnerseite für Unternehmen: zwei Kernpunkte (Azubis finden / Azubis halten)
-// im Kreislauf, Partner-Login, die drei Angebote, Pakete und FAQ.
+// als ansteigende Kurve mit vier Stationen, Partner-Login, die drei Angebote, Pakete und FAQ.
 // Gestaltung nach dem Redesign (public/assets/bb.css) plus partner.css.
 // NEST Explore und NEST AzubiConnect sind exklusiv für Partner und werden
 // zusätzlich zum Partnerbeitrag gebucht.
@@ -58,50 +58,52 @@ const html = `
     </div></div>
   </section>
 
-  <!-- KREISLAUF: ZWEI KERNPUNKTE, VIER STATIONEN -->
-  <section class="bb-sec bb-sec--band" id="kreislauf">
+  <!-- WEG DER PARTNERSCHAFT: ansteigende Kurve mit vier Stationen (Vorlage: Circle) -->
+  <section class="bb-sec bb-sec--dark np-curve-sec" id="kreislauf">
     <div class="container">
-      <div class="bb-head bb-head--split">
-        <div>
-          <span class="bb-kicker">Zwei Kernpunkte, ein Kreislauf</span>
-          <h2 class="bb-h2">Vom Klassenzimmer bis in eure <span class="bb-hl">Ausbildung</span></h2>
-        </div>
-        <p class="bb-lead">An den Schulen lernen euch Schüler:innen kennen, in der BildungsBar wird daraus eine Bewerbung, und in eurer Ausbildung sorgen wir mit euch dafür, dass die Azubis bleiben. Ihr steht im Zentrum, wir kümmern uns um die Wege dazwischen.</p>
+      <div class="np-curve-head">
+        <span class="bb-kicker">Zwei Kernpunkte, ein Weg</span>
+        <h2 class="bb-h2">Vom Klassenzimmer bis in eure <span class="bb-hl">Ausbildung</span></h2>
+        <p class="bb-lead">An den Schulen lernen euch Schüler:innen kennen, in der BildungsBar wird daraus eine Bewerbung, und in eurer Ausbildung sorgen wir mit euch dafür, dass die Azubis bleiben. Wir kümmern uns um die Wege dazwischen.</p>
       </div>
 
-      <div class="np-cycle">
-        <div class="np-ring-wrap">
-          <svg class="np-ring" viewBox="0 0 400 400" role="img" aria-labelledby="npRingTitle npRingDesc">
-            <title id="npRingTitle">Kreislauf der NEST-Partnerschaft</title>
-            <desc id="npRingDesc">Rechte Hälfte: Azubis finden mit 1 an Schulen und 2 in der BildungsBar. Linke Hälfte: Azubis halten mit 3 in eurer Ausbildung und 4 im Netzwerk. In der Mitte euer Betrieb.</desc>
-            <defs>
-              <path id="npArcFinden" d="M 200 50 A 150 150 0 0 1 200 350" />
-              <path id="npArcHalten" d="M 200 350 A 150 150 0 0 1 200 50" />
-            </defs>
-            <circle class="np-ring-net" cx="200" cy="200" r="188" />
-            <path class="np-arc np-arc--finden" d="M 200 50 A 150 150 0 0 1 200 350" />
-            <path class="np-arc np-arc--halten" d="M 200 350 A 150 150 0 0 1 200 50" />
-            <text class="np-arc-label np-arc-label--finden"><textPath href="#npArcFinden" startOffset="50%" text-anchor="middle">AZUBIS FINDEN</textPath></text>
-            <text class="np-arc-label np-arc-label--halten"><textPath href="#npArcHalten" startOffset="50%" text-anchor="middle">AZUBIS HALTEN</textPath></text>
-            <path class="np-arrow" d="M 193 39 L 209 50 L 193 61 Z" />
-            <path class="np-arrow" d="M 207 339 L 191 350 L 207 361 Z" />
-            <g class="np-node np-node--finden"><circle cx="306" cy="94" r="19" /><text x="306" y="94">1</text></g>
-            <g class="np-node np-node--finden"><circle cx="306" cy="306" r="19" /><text x="306" y="306">2</text></g>
-            <g class="np-node np-node--halten"><circle cx="94" cy="306" r="19" /><text x="94" y="306">3</text></g>
-            <g class="np-node np-node--halten"><circle cx="94" cy="94" r="19" /><text x="94" y="94">4</text></g>
-            <circle class="np-core" cx="200" cy="200" r="104" />
-            <text class="np-core-kicker" x="200" y="164">NEST-PARTNER</text>
-            <text class="np-core-title" x="200" y="200">Euer Betrieb</text>
-            <text class="np-core-sub" x="200" y="232">Ihr bildet aus,</text>
-            <text class="np-core-sub" x="200" y="252">wir kümmern uns um den Rest.</text>
-          </svg>
-          <div class="np-legend"><span>${TAG_INKL} im Partnerbeitrag enthalten</span><span>${TAG_ZU} exklusiv für Partner zubuchbar</span></div>
-        </div>
+      <div class="np-curve" aria-hidden="true">
+        <svg class="np-curve-svg" viewBox="0 0 1052 280" preserveAspectRatio="xMidYMid meet" focusable="false">
+          <defs>
+            <linearGradient id="npCurveGrad" gradientUnits="userSpaceOnUse" x1="-260" y1="0" x2="1312" y2="0">
+              <stop offset="0" stop-color="#EFA500" stop-opacity="0" />
+              <stop offset="0.14" stop-color="#EFA500" />
+              <stop offset="0.40" stop-color="#FFC94A" />
+              <stop offset="0.50" stop-color="#8DB7FF" />
+              <stop offset="1" stop-color="#C7DAFF" stop-opacity="0.55" />
+            </linearGradient>
+            <filter id="npCurveGlow" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6" /></filter>
+          </defs>
+          <path class="np-curve-glow" d="M-260 262.0 L-244 262.0 L-228 261.9 L-212 261.8 L-196 261.6 L-180 261.4 L-164 261.1 L-148 260.8 L-132 260.4 L-116 259.9 L-100 259.5 L-84 258.9 L-68 258.3 L-52 257.7 L-36 257.0 L-20 256.3 L-4 255.5 L12 254.6 L28 253.7 L44 252.8 L60 251.8 L76 250.8 L92 249.7 L108 248.5 L124 247.3 L140 246.1 L156 244.8 L172 243.4 L188 242.0 L204 240.6 L220 239.1 L236 237.5 L252 235.9 L268 234.2 L284 232.5 L300 230.8 L316 229.0 L332 227.1 L348 225.2 L364 223.2 L380 221.2 L396 219.2 L412 217.0 L428 214.9 L444 212.7 L460 210.4 L476 208.1 L492 205.7 L508 203.3 L524 200.8 L540 198.3 L556 195.7 L572 193.1 L588 190.4 L604 187.7 L620 184.9 L636 182.1 L652 179.2 L668 176.3 L684 173.3 L700 170.3 L716 167.2 L732 164.0 L748 160.9 L764 157.6 L780 154.3 L796 151.0 L812 147.6 L828 144.2 L844 140.7 L860 137.1 L876 133.5 L892 129.9 L908 126.2 L924 122.4 L940 118.7 L956 114.8 L972 110.9 L988 107.0 L1004 103.0 L1020 98.9 L1036 94.8 L1052 90.6 L1068 86.4 L1084 82.2 L1100 77.9 L1116 73.5 L1132 69.1 L1148 64.7 L1164 60.1 L1180 55.6 L1196 51.0 L1212 46.3 L1228 41.6 L1244 36.8 L1260 32.0 L1276 27.1 L1292 22.2 L1308 17.3" stroke="url(#npCurveGrad)" filter="url(#npCurveGlow)" />
+          <path class="np-curve-line" d="M-260 262.0 L-244 262.0 L-228 261.9 L-212 261.8 L-196 261.6 L-180 261.4 L-164 261.1 L-148 260.8 L-132 260.4 L-116 259.9 L-100 259.5 L-84 258.9 L-68 258.3 L-52 257.7 L-36 257.0 L-20 256.3 L-4 255.5 L12 254.6 L28 253.7 L44 252.8 L60 251.8 L76 250.8 L92 249.7 L108 248.5 L124 247.3 L140 246.1 L156 244.8 L172 243.4 L188 242.0 L204 240.6 L220 239.1 L236 237.5 L252 235.9 L268 234.2 L284 232.5 L300 230.8 L316 229.0 L332 227.1 L348 225.2 L364 223.2 L380 221.2 L396 219.2 L412 217.0 L428 214.9 L444 212.7 L460 210.4 L476 208.1 L492 205.7 L508 203.3 L524 200.8 L540 198.3 L556 195.7 L572 193.1 L588 190.4 L604 187.7 L620 184.9 L636 182.1 L652 179.2 L668 176.3 L684 173.3 L700 170.3 L716 167.2 L732 164.0 L748 160.9 L764 157.6 L780 154.3 L796 151.0 L812 147.6 L828 144.2 L844 140.7 L860 137.1 L876 133.5 L892 129.9 L908 126.2 L924 122.4 L940 118.7 L956 114.8 L972 110.9 L988 107.0 L1004 103.0 L1020 98.9 L1036 94.8 L1052 90.6 L1068 86.4 L1084 82.2 L1100 77.9 L1116 73.5 L1132 69.1 L1148 64.7 L1164 60.1 L1180 55.6 L1196 51.0 L1212 46.3 L1228 41.6 L1244 36.8 L1260 32.0 L1276 27.1 L1292 22.2 L1308 17.3" stroke="url(#npCurveGrad)" />
+          <text class="np-curve-label np-curve-label--finden" x="145" y="221.7" text-anchor="middle">AZUBIS FINDEN</text>
+          <text class="np-curve-label np-curve-label--halten" x="687" y="148.7" text-anchor="middle">AZUBIS HALTEN</text>
+            <line class="np-drop" x1="10" y1="268.7" x2="10" y2="280" />
+            <circle class="np-dot-halo np-dot-halo--finden" cx="10" cy="254.7" r="16" />
+            <circle class="np-dot np-dot--finden" cx="10" cy="254.7" r="8" />
+            <line class="np-drop" x1="281" y1="246.9" x2="281" y2="280" />
+            <circle class="np-dot-halo np-dot-halo--finden" cx="281" cy="232.9" r="16" />
+            <circle class="np-dot np-dot--finden" cx="281" cy="232.9" r="8" />
+            <line class="np-drop" x1="552" y1="210.4" x2="552" y2="280" />
+            <circle class="np-dot-halo np-dot-halo--halten" cx="552" cy="196.4" r="16" />
+            <circle class="np-dot np-dot--halten" cx="552" cy="196.4" r="8" />
+            <line class="np-drop" x1="823" y1="159.2" x2="823" y2="280" />
+            <circle class="np-dot-halo np-dot-halo--halten" cx="823" cy="145.2" r="16" />
+            <circle class="np-dot np-dot--halten" cx="823" cy="145.2" r="8" />
+        </svg>
+      </div>
 
+      <div class="np-stops">
         <!-- 1 · An Schulen -->
-        <article class="np-station np-station--finden np-station--1">
-          <div class="np-station-top"><span class="np-station-ic">${IC.cap}</span><span class="np-station-kicker">1 · Azubis finden · An Schulen</span></div>
-          <h3>Schüler:innen lernen euch kennen</h3>
+        <article class="np-stop np-stop--finden">
+          <span class="np-stop-kicker">1 · Azubis finden</span>
+          <h3>An Schulen</h3>
+          <p class="np-stop-lead">Schüler:innen lernen euch kennen.</p>
           <ul class="np-offers">
             <li><div><b>NEST Explore</b> ${TAG_ZU}</div><span>Ihr trefft eine Schule, Ablauf und Moderation übernehmen wir.</span></li>
             <li><div><b>NESTplay</b> ${TAG_INKL}</div><span>Euer Quiz läuft im Unterricht, auch wenn ihr nicht dabei seid.</span></li>
@@ -111,9 +113,10 @@ const html = `
         </article>
 
         <!-- 2 · In der BildungsBar -->
-        <article class="np-station np-station--finden np-station--2">
-          <div class="np-station-top"><span class="np-station-ic">${IC.coffee}</span><span class="np-station-kicker">2 · Azubis finden · In der BildungsBar</span></div>
-          <h3>Aus Interesse wird eine Bewerbung</h3>
+        <article class="np-stop np-stop--finden">
+          <span class="np-stop-kicker">2 · Azubis finden</span>
+          <h3>In der BildungsBar</h3>
+          <p class="np-stop-lead">Aus Interesse wird eine Bewerbung.</p>
           <ul class="np-offers">
             <li><div><b>Beratung</b> ${TAG_INKL}</div><span>Wir beraten junge Menschen und bereiten Bewerbungen mit ihnen vor.</span></li>
             <li><div><b>Vernetzen</b> ${TAG_INKL}</div><span>Wir vernetzen passende Bewerbende mit euch und euren Ausbildungsplätzen.</span></li>
@@ -123,9 +126,10 @@ const html = `
         </article>
 
         <!-- 3 · In eurer Ausbildung -->
-        <article class="np-station np-station--halten np-station--3">
-          <div class="np-station-top"><span class="np-station-ic">${IC.people}</span><span class="np-station-kicker">3 · Azubis halten · In eurer Ausbildung</span></div>
-          <h3>Eure Azubis bleiben</h3>
+        <article class="np-stop np-stop--halten">
+          <span class="np-stop-kicker">3 · Azubis halten</span>
+          <h3>In eurer Ausbildung</h3>
+          <p class="np-stop-lead">Eure Azubis bleiben.</p>
           <ul class="np-offers">
             <li><div><b>Workshops für Azubis</b> ${TAG_ZU}</div><span>Zum Beispiel Resilienz, Lernmotivation oder Kommunikation.</span></li>
             <li><div><b>Workshops für Ausbildende</b> ${TAG_ZU}</div><span>Die Generation Z verstehen und Azubis langfristig binden.</span></li>
@@ -135,9 +139,10 @@ const html = `
         </article>
 
         <!-- 4 · Im Netzwerk -->
-        <article class="np-station np-station--halten np-station--4">
-          <div class="np-station-top"><span class="np-station-ic">${IC.network}</span><span class="np-station-kicker">4 · Azubis halten · Im Netzwerk</span></div>
-          <h3>Ihr seid nicht allein</h3>
+        <article class="np-stop np-stop--halten">
+          <span class="np-stop-kicker">4 · Azubis halten</span>
+          <h3>Im Netzwerk</h3>
+          <p class="np-stop-lead">Ihr seid nicht allein.</p>
           <ul class="np-offers">
             <li><div><b>Ausbildungsdialog</b> ${TAG_INKL}</div><span>Fachliche Themen rund um Ausbildung, mit Input von Expert:innen.</span></li>
             <li><div><b>Netzwerktreffen</b> ${TAG_INKL}</div><span>Viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.</span></li>
@@ -146,6 +151,7 @@ const html = `
           <div class="np-station-links"><a class="bb-link" href="/veranstaltungen">Nächste Veranstaltungen</a></div>
         </article>
       </div>
+      <div class="np-legend"><span>${TAG_INKL} im Partnerbeitrag enthalten</span><span>${TAG_ZU} exklusiv für Partner zubuchbar</span></div>
 
       <!-- PARTNER-LOGIN -->
       <div class="np-login" id="partner-login">

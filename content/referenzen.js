@@ -113,7 +113,7 @@ const html = `
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_24.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_25.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_26.png" alt="Partnerunternehmen" loading="lazy"></div>
-          <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_27.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="logo-tile"><img src="/assets/img/referenzen/partner/stadtwerke-remscheid.png" alt="Stadtwerke Remscheid Verbund" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_28.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_29.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="logo-tile"><img src="/assets/img/referenzen/partner/p1_30.png" alt="Partnerunternehmen" loading="lazy"></div>

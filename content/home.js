@@ -158,7 +158,7 @@ const html = `
       <div class="card-grid cols-3">
         <div class="card reveal"><div class="icon icon-svg">${IC.cap}</div><h3>Schüler:innen</h3><p>Kostenfreie Orientierung, Bewerbungshilfe und der direkte Draht zu Ausbildungsbetrieben.</p><a class="badge link" href="/berufswelt">Mehr erfahren →</a></div>
         <div class="card reveal"><div class="icon icon-svg">${IC.building}</div><h3>Schulen</h3><p>Workshops und Berufsorientierung, die kAoA-Kriterien erfüllen – jugendgerecht &amp; gamifiziert.</p><a class="badge link" href="/fuer-schulen">Für Schulen →</a></div>
-        <div class="card reveal"><div class="icon icon-svg">${IC.briefcase}</div><h3>Unternehmen</h3><p>Werdet sichtbar bei motivierten Talenten und gestaltet die Ausbildung von morgen mit.</p><a class="badge link" href="/kooperation">Kooperieren →</a></div>
+        <div class="card reveal"><div class="icon icon-svg">${IC.briefcase}</div><h3>Unternehmen</h3><p>Als NEST-Partner findet ihr passende Azubis und haltet sie im Betrieb. Wir nehmen euch die Arbeit dabei ab.</p><a class="badge link" href="/kooperation">NEST-Partner werden →</a></div>
       </div>
     </div>
   </section>

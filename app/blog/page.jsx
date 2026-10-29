@@ -32,29 +32,33 @@ export default async function BlogPage() {
         </div></div></div>
       </section>
 
-      <section className="bg-white">
+      {/* Beiträge · Vorlage: Brilliant „Blog" (Kachelbild, Datum, Titel, Anriss) */}
+      <section className="bb-sec">
         <div className="container">
           {posts.length ? (
-            <div className="card-grid cols-3">
-              {posts.map((p) => (
-                <a key={p.slug} className="card reveal in" href={`/blog/${p.slug}`} style={{ textDecoration: "none" }}>
-                  {p.bild_url ? (
-                    <div className="beruf-thumb" style={{ borderRadius: "10px", marginBottom: "14px" }}>
-                      <img src={p.bild_url} alt={p.titel} />
-                    </div>
-                  ) : null}
-                  <span className="num-label">{fmtDate(p.veroeffentlicht_am)}</span>
-                  <h3>{p.titel}</h3>
-                  <p>{p.excerpt}</p>
-                  <span className="badge link">Weiterlesen →</span>
-                </a>
-              ))}
-            </div>
+            <>
+              <div className="bb-head">
+                <h2 className="bb-h2">Neueste Beiträge</h2>
+              </div>
+              <div className="bb-cards bb-cards--3 bb-posts">
+                {posts.map((p) => (
+                  <a key={p.slug} className="bb-card" href={`/blog/${p.slug}`}>
+                    <span className="bb-card__tile bb-tile">
+                      {p.bild_url ? <img src={p.bild_url} alt={p.titel} /> : <span className="bb-posts__ph" aria-hidden="true">NEST</span>}
+                    </span>
+                    <span className="bb-posts__date">{fmtDate(p.veroeffentlicht_am)}</span>
+                    <span className="bb-card__title">{p.titel}</span>
+                    {p.excerpt ? <span className="bb-card__meta">{p.excerpt}</span> : null}
+                    <span className="bb-link bb-card__link">Weiterlesen</span>
+                  </a>
+                ))}
+              </div>
+            </>
           ) : (
-            <div className="section-head centered">
-              <span className="section-label">Bald mehr</span>
-              <h2>Noch keine Beiträge</h2>
-              <p>Sobald im Supabase-Backend Beiträge angelegt sind, erscheinen sie hier automatisch.</p>
+            <div className="bb-tile bb-empty">
+              <h2 className="bb-h3">Noch keine Beiträge</h2>
+              <p className="bb-p">Sobald im Supabase-Backend Beiträge angelegt sind, erscheinen sie hier automatisch.</p>
+              <div className="bb-actions"><a className="bb-btn bb-btn--light" href="/berufswelt">Berufe entdecken</a></div>
             </div>
           )}
         </div>

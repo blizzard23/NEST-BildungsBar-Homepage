@@ -173,3 +173,12 @@
   .wf-stats { grid-template-columns: 1fr; }
   .wf-stat { border-right: none; border-bottom: 1px solid var(--wf-border); }
 }
+
+/* Kopfbereich der Kooperationsseite als Hero: gleiche Gold-Kante wie die
+   übrigen Heros, darunter folgen die hellen Sektionen aus bb.css. */
+.wf--hero { padding-bottom: 150px; }
+.wf--hero .wf-header { margin-bottom: 0; }
+.wf--hero::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 70px; z-index: 2;
+  background: var(--wf-gold); clip-path: polygon(0 100%, 100% 35%, 100% 100%);
+}

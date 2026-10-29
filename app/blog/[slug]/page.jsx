@@ -39,13 +39,14 @@ export default async function PostPage({ params }) {
         </div></div></div>
       </section>
 
-      <section className="bg-white">
-        <div className="container" style={{ maxWidth: "760px" }}>
+      {/* Artikel · Vorlage: Brilliant „Blog post" (schmale Spalte, gerahmtes Titelbild) */}
+      <section className="bb-sec">
+        <div className="container bb-article">
           {post.bild_url ? (
-            <img src={post.bild_url} alt={post.titel} style={{ width: "100%", borderRadius: "14px", marginBottom: "28px" }} />
+            <div className="bb-frame bb-frame--wide bb-article__img"><img src={post.bild_url} alt={post.titel} /></div>
           ) : null}
           <div className="blog-content" dangerouslySetInnerHTML={{ __html: inhaltZuHtml(post.inhalt) }} />
-          <p style={{ marginTop: "32px" }}><a className="btn btn-ghost" href="/blog">← Zurück zum Blog</a></p>
+          <div className="bb-article__foot"><a className="bb-link" href="/blog">Zurück zum Blog</a></div>
         </div>
       </section>
     </div>

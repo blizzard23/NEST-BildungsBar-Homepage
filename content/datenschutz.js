@@ -1,7 +1,7 @@
 const html = `
 <style>
   .nest-legal *, .nest-legal *::before, .nest-legal *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  .nest-legal { font-family: 'Jost', sans-serif; color: #333; background: #f8faff; }
+  .nest-legal { font-family: 'Jost', sans-serif; color: #333; background: #fff; }
 
   @keyframes nestSlideInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
 
@@ -25,65 +25,59 @@ const html = `
   .nest-legal .nest-hero h1 em { color: #EFA500; font-style: normal; }
   .nest-legal .nest-hero p { font-size: clamp(15px, 2vw, 17px); color: rgba(255,255,255,.72); line-height: 1.7; max-width: 540px; }
 
-  /* CONTENT */
-  .nest-legal .page-body { max-width: 900px; margin: 0 auto; padding: clamp(50px, 7vw, 80px) 20px clamp(60px, 8vw, 100px); }
-
+  /* INHALT · Textspalte mit Trennlinien, keine Karten */
+  .nest-legal .page-body { max-width: 800px; margin: 0 auto; padding: 96px 20px 110px; }
   .nest-legal .toc {
-    background: linear-gradient(135deg, rgba(239,165,0,.08) 0%, rgba(100,200,255,.08) 100%);
-    border-left: 4px solid #EFA500; border-radius: 12px; padding: 24px 28px; margin-bottom: 48px;
+    background: #f4f6fa; border: 0; border-radius: 20px;
+    padding: 26px 30px; margin-bottom: 56px;
   }
-  .nest-legal .toc h3 { color: #0f2145; font-size: 1rem; font-weight: 800; margin-bottom: 12px; }
-  .nest-legal .toc ol { margin: 0 0 0 20px; }
-  .nest-legal .toc li { margin-bottom: 7px; }
-  .nest-legal .toc a { color: #EFA500; text-decoration: none; font-size: .88rem; font-weight: 600; transition: color .2s; }
-  .nest-legal .toc a:hover { color: #0f2145; text-decoration: underline; }
+  .nest-legal .toc h3 { color: #0f2145; font-size: 17px; font-weight: 700; margin-bottom: 14px; }
+  .nest-legal .toc ol { margin: 0 0 0 22px; columns: 2; column-gap: 32px; }
+  .nest-legal .toc li { margin-bottom: 8px; color: #697186; font-size: 15px; break-inside: avoid; }
+  .nest-legal .toc a { color: #0f2145; font-size: 15px; font-weight: 600; text-decoration: underline; text-decoration-color: #cfd4dc; text-underline-offset: 3px; }
+  .nest-legal .toc a:hover { text-decoration-color: #0f2145; }
 
-  .nest-legal .dse-section { margin-bottom: 48px; animation: nestSlideInLeft .7s ease-out both; }
+  .nest-legal .dse-section { padding: 32px 0; border-top: 1px solid #e1e4ea; scroll-margin-top: 120px; }
+  .nest-legal .dse-section:first-of-type, .nest-legal .toc + .dse-section { border-top: 1px solid #d3d9e3; }
   .nest-legal .section-heading {
-    font-size: clamp(1.1rem, 3vw, 1.35rem); font-weight: 800; color: #0f2145; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px;
+    font-size: clamp(20px, 2.4vw, 24px); font-weight: 700; line-height: 1.3; color: #0f2145; margin-bottom: 14px;
+    display: flex; align-items: baseline; gap: 12px; letter-spacing: -0.01em;
   }
-  .nest-legal .section-heading .num {
-    background: linear-gradient(135deg, #EFA500, #f5b830); color: white; font-size: .78rem; font-weight: 900;
-    width: 28px; height: 28px; border-radius: 8px;
-    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .nest-legal .card {
-    background: white; border-radius: 14px; box-shadow: 0 4px 20px rgba(15,33,69,.07);
-    padding: clamp(24px, 4vw, 36px); line-height: 1.85;
-  }
-  .nest-legal .card p { color: #555; font-size: clamp(14px, 1.8vw, 15.5px); margin-bottom: 16px; }
+  .nest-legal .section-heading .num { color: #a96b00; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+  .nest-legal .card { background: none; border: 0; border-radius: 0; box-shadow: none; padding: 0; line-height: 1.75; transition: none; }
+  .nest-legal .card:hover { box-shadow: none; transform: none; }
+  .nest-legal .card p { color: #3d4455; font-size: 16px; margin-bottom: 14px; }
   .nest-legal .card p:last-child { margin-bottom: 0; }
   .nest-legal .card strong { color: #0f2145; }
-  .nest-legal .card ul, .nest-legal .card ol { margin: 12px 0 16px 24px; }
-  .nest-legal .card li { color: #555; font-size: clamp(14px, 1.8vw, 15.5px); margin-bottom: 10px; line-height: 1.7; }
-  .nest-legal .card a { color: #EFA500; text-decoration: none; font-weight: 600; transition: color .2s; }
-  .nest-legal .card a:hover { color: #0f2145; }
+  .nest-legal .card ul, .nest-legal .card ol { margin: 10px 0 16px 22px; }
+  .nest-legal .card li { color: #3d4455; font-size: 16px; margin-bottom: 8px; line-height: 1.65; }
+  .nest-legal .card a { color: #0f2145; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+  .nest-legal .card a:hover { color: #a96b00; }
 
-  .nest-legal .rights-grid { display: grid; gap: 10px; margin: 12px 0; }
-  .nest-legal .right-row { display: flex; gap: 10px; align-items: flex-start; }
+  .nest-legal .rights-grid { display: grid; gap: 0; margin: 14px 0; border: 1px solid #e1e4ea; border-radius: 14px; overflow: hidden; }
+  .nest-legal .right-row { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border-top: 1px solid #e1e4ea; }
+  .nest-legal .right-row:first-child { border-top: 0; }
   .nest-legal .right-tag {
-    background: rgba(239,165,0,.12); color: #0f2145; font-size: .72rem; font-weight: 700;
-    padding: 3px 10px; border-radius: 100px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+    background: #e8ecf4; color: #0f2145; font-size: 12px; font-weight: 700;
+    padding: 3px 10px; border-radius: 9999px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
   }
-  .nest-legal .right-desc { font-size: .88rem; color: #555; line-height: 1.6; }
-  .nest-legal .right-desc strong { color: #0f2145; font-size: .78rem; }
+  .nest-legal .right-desc { font-size: 15px; color: #3d4455; line-height: 1.6; }
+  .nest-legal .right-desc strong { color: #0f2145; font-size: 15px; }
 
-  .nest-legal .info-box {
-    background: linear-gradient(135deg, rgba(239,165,0,.08) 0%, rgba(100,200,255,.08) 100%);
-    border-left: 4px solid #EFA500; border-radius: 12px; padding: 20px 24px; margin-top: 32px;
+  .nest-legal .info-box { background: #f4f5f7; border-radius: 14px; padding: 22px 26px; margin-top: 40px; }
+  .nest-legal .info-box p { margin: 0; color: #3d4455; font-size: 15px; line-height: 1.7; }
+  .nest-legal .info-box strong { color: #0f2145; }
+  .nest-legal .info-box a { color: #0f2145; font-weight: 600; }
+  .nest-legal .question-box { margin-top: 28px; padding-top: 24px; border-top: 1px solid #e1e4ea; }
+  .nest-legal .question-box p { margin: 0; color: #3d4455; font-size: 16px; line-height: 1.7; }
+  .nest-legal .question-box strong { color: #0f2145; font-size: 17px; }
+  .nest-legal .question-box a { color: #0f2145; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+  @media (max-width: 760px) {
+    .nest-legal .page-body { padding: 64px 20px 80px; }
+    .nest-legal .toc ol { columns: 1; }
+    .nest-legal .right-row { flex-direction: column; gap: 6px; }
   }
-  .nest-legal .info-box p { margin: 0; color: #555; font-size: .88rem; line-height: 1.8; }
-  .nest-legal .info-box a { color: #EFA500; font-weight: 600; text-decoration: none; }
-
-  .nest-legal .question-box {
-    background: linear-gradient(135deg, rgba(100,200,255,.08) 0%, rgba(239,165,0,.08) 100%);
-    border-left: 4px solid #64C8FF; border-radius: 12px; padding: 22px 26px; margin-top: 20px;
-  }
-  .nest-legal .question-box p { margin: 0; color: #555; font-size: .88rem; line-height: 1.8; }
-  .nest-legal .question-box strong { color: #0f2145; }
-  .nest-legal .question-box a { color: #EFA500; text-decoration: none; font-weight: 600; }
-
   @media (max-width: 768px) { .nest-legal .nest-hero { padding: 80px 24px 110px; } }
 </style>
 
@@ -100,7 +94,7 @@ const html = `
   <div class="page-body">
 
     <div class="toc">
-      <h3>📋 Inhaltsverzeichnis</h3>
+      <h3>Inhaltsverzeichnis</h3>
       <ol>
         <li><a href="#verantwortliche">Verantwortliche Stelle</a></li>
         <li><a href="#datenerfassung">Erfassung und Verarbeitung personenbezogener Daten</a></li>
@@ -262,7 +256,7 @@ const html = `
         <strong>Fragen zum Datenschutz?</strong><br>
         Wenn Sie Fragen zu dieser Datenschutzerklärung oder unseren Datenschutzpraktiken haben, kontaktieren Sie uns jederzeit unter
         <a href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a>.
-        Wir helfen gerne weiter! 📧
+        Wir helfen gerne weiter!
       </p>
     </div>
 

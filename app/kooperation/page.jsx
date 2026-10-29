@@ -12,8 +12,7 @@ const V = (process.env.VERCEL_GIT_COMMIT_SHA || "dev").slice(0, 8);
 export default function Page() {
   return (
     <>
-      {/* Gestaltung nach dem Redesign (bb.css) plus seitenspezifische Ergänzungen */}
-      <link rel="stylesheet" href={`/assets/bb.css?v=${V}`} />
+      {/* bb.css lädt das Root-Layout; hier nur die seitenspezifischen Ergänzungen */}
       <link rel="stylesheet" href={`/assets/partner.css?v=${V}`} />
       <div dangerouslySetInnerHTML={{ __html: html }} />
     </>

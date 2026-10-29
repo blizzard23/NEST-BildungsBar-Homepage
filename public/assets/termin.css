@@ -1,114 +1,177 @@
 /* =========================================================
    NEST BildungsBar – Terminbuchung
+   Weiße Karte mit Seitenleiste, Fortschrittsbalken und Auswahl-
+   Pills; flach ohne Schatten, Zusammenfassung als Navy-Karte.
+   Grundbausteine (bb-tile, bb-btn, bb-form) stehen in bb.css.
    ========================================================= */
 
-.termin-wrap { max-width: 940px; margin: 0 auto; }
+.termin-wrap { max-width: none; }
 
-/* ── Step Block ─────────────────────────────────────────── */
-.tb-step { margin-bottom: 20px; }
-.tb-step-head {
-  display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
-  padding: 16px 20px; background: #fff; border-radius: 18px;
-  border: 1.5px solid var(--line); box-shadow: 0 2px 10px rgba(15,33,69,0.05);
-}
+/* ── Fortschritt (Brilliant Onboarding: schmaler Balken oben) ── */
+.tb-progress { margin: 0 0 28px; }
+.tb-progress__track { height: 6px; border-radius: 9999px; background: #e3e7ee; overflow: hidden; }
+.tb-progress__fill { display: block; height: 100%; width: 6%; border-radius: 9999px; background: var(--bb-gold); transition: width .35s ease; }
+/* :where() hält die Spezifität gleich, damit die Reihenfolge entscheidet */
+#termin-app:has(:where(.tb-ort.active)) .tb-progress__fill { width: 28%; }
+#termin-app:has(:where(.tb-cal-day--selected)) .tb-progress__fill { width: 52%; }
+#termin-app:has(:where(#step-time:not(.tb-locked) .tb-time.active)) .tb-progress__fill { width: 76%; }
+#termin-app:has(:where(#tb-bottom-cta:not([hidden]))) .tb-progress__fill,
+#termin-app:has(:where(.tb-success.show)) .tb-progress__fill { width: 100%; }
+.tb-progress__steps { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
+.tb-prog { font-size: 13.5px; font-weight: 600; color: var(--bb-muted); transition: color .25s ease; }
+.tb-prog:not(:first-child) { text-align: center; }
+.tb-prog:last-child { text-align: right; }
+#termin-app:has(:where(.tb-ort.active)) .tb-prog--ort,
+#termin-app:has(:where(.tb-cal-day--selected)) .tb-prog--tag,
+#termin-app:has(:where(#step-time:not(.tb-locked) .tb-time.active)) .tb-prog--zeit,
+#termin-app:has(:where(#tb-bottom-cta:not([hidden]))) .tb-prog--daten,
+#termin-app:has(:where(.tb-success.show)) .tb-prog { color: var(--bb-ink); }
+
+/* ── Layout: Auswahl-Karte + Zusammenfassung ─────────────── */
+.tb-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+/* Die Spalte muss die volle Zeilenhöhe bekommen, sonst hat position:sticky
+   in .tb-summary keinen Spielraum und die Karte scrollt oben weg. */
+.tb-grid > aside { align-self: stretch; }
+.tb-main { overflow: hidden; }
+
+/* ── Schritte ───────────────────────────────────────────── */
+.tb-step { padding: 32px; border-bottom: 1px solid var(--bb-line); transition: opacity .25s ease; }
+#step-form { border-bottom: 0; }
+.tb-step-head { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
 .tb-step-n {
-  width: 46px; height: 46px; flex-shrink: 0; border-radius: 13px;
-  background: var(--navy); color: #fff; font-weight: 800; font-size: 14px;
-  display: grid; place-items: center;
+  position: relative; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%;
+  border: 1px solid var(--bb-line-2); color: var(--bb-ink); background: #fff;
+  display: grid; place-items: center; font-size: 15px; font-weight: 600;
 }
-.tb-step.done .tb-step-n { background: #1f9d63; }
-.tb-step-head h3 { font-size: 17px; font-weight: 800; color: var(--navy); margin: 0; }
+.tb-step-title { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.tb-step-kicker { font-size: 13px; font-weight: 600; color: var(--bb-hl); }
+.tb-step-head h3 { font-size: 21px; font-weight: 600; color: var(--bb-ink); margin: 0; line-height: 1.25; letter-spacing: -0.01em; }
 .tb-step-head .tb-hint {
-  margin-left: auto; font-size: 11px; color: var(--navy); font-weight: 800;
-  background: var(--gold-soft); padding: 5px 12px; border-radius: 20px; white-space: nowrap;
-  border: 1.5px solid rgba(239,165,0,0.35);
+  margin-left: auto; font-size: 12.5px; font-weight: 600; color: var(--bb-ink);
+  background: #f1f3f8; padding: 5px 12px; border-radius: 9999px; white-space: nowrap;
 }
-.tb-step.done .tb-step-head { border-color: #1f9d63; background: #f0faf5; }
-.tb-step.done .tb-step-head h3 { color: #1a8550; }
+/* erledigte Schritte: gefüllter Kreis mit Haken */
+#step-ort:has(.tb-ort.active) .tb-step-n,
+#step-date:has(.tb-cal-day--selected) .tb-step-n,
+#step-time:not(.tb-locked):has(.tb-time.active) .tb-step-n { background: var(--bb-navy); border-color: var(--bb-navy); color: transparent; }
+#step-ort:has(.tb-ort.active) .tb-step-n::after,
+#step-date:has(.tb-cal-day--selected) .tb-step-n::after,
+#step-time:not(.tb-locked):has(.tb-time.active) .tb-step-n::after {
+  content: ''; position: absolute; left: 10px; top: 7px; width: 7px; height: 12px;
+  border-right: 2.5px solid var(--bb-gold); border-bottom: 2.5px solid var(--bb-gold); transform: rotate(45deg);
+}
+.tb-locked { opacity: .4; pointer-events: none; }
+.tb-need { font-size: 13px; color: var(--bb-muted); font-style: italic; }
 
-/* ── Location Cards ─────────────────────────────────────── */
-.tb-choices { display: flex; flex-wrap: wrap; gap: 14px; }
-
+/* ── Standorte als Bildkarten ───────────────────────────── */
+.tb-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
 .tb-ort {
-  flex: 1; min-width: 220px; text-align: left; cursor: pointer;
-  background: #fff; border: 2px solid var(--line); border-radius: 18px;
-  padding: 0; overflow: hidden;
-  transition: border-color .2s, box-shadow .2s, transform .15s;
-  font-family: var(--font);
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 3px;
+  padding: 0; border: 0; background: none; text-align: left; cursor: pointer; font-family: var(--font); color: inherit;
 }
-.tb-ort:hover { border-color: rgba(239,165,0,0.5); transform: translateY(-3px); box-shadow: 0 10px 28px rgba(15,33,69,0.1); }
-.tb-ort.active { border-color: var(--gold); box-shadow: 0 10px 28px rgba(239,165,0,0.2); }
-
-.tb-ort .o-header {
-  height: 68px; background: linear-gradient(135deg, #0F2145 0%, #162d5e 100%);
-  display: flex; align-items: center; padding: 0 20px; gap: 12px;
-  transition: background .2s;
+.tb-ort .o-photo {
+  position: relative; display: block; width: 100%; aspect-ratio: 1 / 1; padding: 0; margin-bottom: 12px;
+  background: #f1f3f8; border-radius: 16px; outline: 2px solid transparent; outline-offset: 3px;
+  transition: outline-color .15s ease;
 }
-.tb-ort.active .o-header { background: linear-gradient(135deg, #b06800 0%, #EFA500 100%); }
-.tb-ort .o-emoji { font-size: 26px; line-height: 1; }
-.tb-ort .o-header-label { font-size: 17px; font-weight: 900; color: #fff; letter-spacing: -0.02em; }
+.tb-ort .o-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; display: block; transition: opacity .15s ease; }
+.tb-ort:hover .o-photo img { opacity: .9; }
+.tb-ort.active .o-photo { outline-color: var(--bb-navy); }
+.tb-ort.active .o-photo::after {
+  content: ''; position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bb-gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F2145' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") no-repeat center / 14px;
+}
+.tb-ort:focus-visible { outline: none; }
+.tb-ort:focus-visible .o-photo { outline-color: var(--bb-gold); }
+.tb-ort .o-header-label { font-size: 17px; font-weight: 600; color: var(--bb-ink); line-height: 1.25; }
+.tb-ort .o-adr { font-size: 12.5px; line-height: 1.45; color: var(--bb-muted); }
 .tb-ort .o-header-badge {
-  margin-left: auto; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);
-  font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+  margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--bb-ink);
+  background: #f1f3f8; padding: 4px 10px; border-radius: 9999px; white-space: nowrap;
 }
-.tb-ort.active .o-header-badge { background: rgba(255,255,255,0.25); color: #fff; }
+@media (max-width: 760px) { .tb-choices { grid-template-columns: 1fr 1fr; gap: 20px 14px; } }
 
-.tb-ort .o-body { padding: 14px 20px 16px; }
-.tb-ort .o-city { font-size: 15px; font-weight: 800; color: var(--navy); display: block; }
-.tb-ort .o-adr { font-size: 13px; color: var(--text-soft); margin-top: 3px; display: block; }
-.tb-ort .o-soon {
-  display: inline-flex; margin-top: 8px; font-size: 11px; font-weight: 800;
-  color: var(--navy); background: var(--gold-soft); padding: 3px 10px;
-  border-radius: 20px; border: 1px solid rgba(239,165,0,0.35);
+/* ── Kalender ───────────────────────────────────────────── */
+.tb-cal-wrap { background: #fff; border: 1px solid var(--bb-line); border-radius: 20px; overflow: hidden; }
+.tb-cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--bb-line); }
+.tb-cal-month-label { font-size: 17px; font-weight: 600; color: var(--bb-ink); }
+.tb-cal-arrows { display: flex; gap: 6px; }
+.tb-cal-btn {
+  width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--bb-line-2); background: #fff;
+  color: var(--bb-ink); font-size: 20px; line-height: 1; cursor: pointer; font-family: var(--font);
+  display: flex; align-items: center; justify-content: center;
 }
-.tb-ort .o-check {
-  display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
-  font-weight: 800; font-size: 11px; color: var(--gold-dark);
-  background: var(--gold-soft); padding: 4px 10px; border-radius: 20px;
-  border: 1px solid rgba(239,165,0,0.3); opacity: 0; transition: opacity .2s;
+.tb-cal-btn:hover { border-color: var(--bb-navy); }
+.tb-cal-btn:disabled { opacity: .35; cursor: not-allowed; }
+.tb-cal-body { padding: 16px; }
+.tb-cal-wd-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+.tb-cal-wd { font-size: 12.5px; font-weight: 600; color: var(--bb-muted); padding: 2px 4px; }
+.tb-cal-weeks { display: flex; flex-direction: column; gap: 10px; }
+.tb-cal-week { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tb-cal-day {
+  position: relative; display: flex; align-items: baseline; gap: 6px; min-height: 60px; padding: 14px;
+  border-radius: 14px; cursor: pointer; font-family: var(--font);
+  background: #fff; border: 1px solid var(--bb-line-2); color: var(--bb-ink);
+  transition: border-color .12s ease, background-color .12s ease;
 }
-.tb-ort.active .o-check { opacity: 1; }
+.dido-n { font-size: 22px; font-weight: 700; line-height: 1; color: inherit; }
+.dido-mon { font-size: 13px; font-weight: 600; color: var(--bb-muted); }
+.dido-rest {
+  margin-left: auto; align-self: center; font-size: 12px; font-weight: 600;
+  padding: 3px 9px; border-radius: 9999px; background: #f1f3f8; color: var(--bb-muted); white-space: nowrap;
+}
+.tb-cal-day--empty { background: none; border-color: transparent; box-shadow: none; cursor: default; }
+.tb-cal-day--past { background: transparent; border-color: transparent; box-shadow: none; color: #c3c8d2; cursor: not-allowed; }
+.tb-cal-day--past .dido-mon { color: #cfd3db; }
+.tb-cal-day--blocked { background: #f1f3f8; border-color: transparent; box-shadow: none; color: #9aa0ae; cursor: not-allowed; }
+.tb-cal-day--available .dido-rest { background: #e3f3ea; color: #17603f; }
+.tb-cal-day--available:hover, .tb-cal-day--knapp:hover { border-color: var(--bb-navy); }
+.tb-cal-day--knapp .dido-rest { background: #fdf0cf; color: #865600; }
+.tb-cal-day--full { background: #fafbfc; border-color: var(--bb-line); color: #b5bbc6; cursor: not-allowed; }
+.tb-cal-day--full .dido-n { text-decoration: line-through; }
+.tb-cal-day--full .dido-rest { background: #fbe9ec; color: #a8344b; }
+.tb-cal-day--selected,
+.tb-cal-day--selected:hover { background: var(--bb-navy); border-color: var(--bb-navy); color: #fff; }
+.tb-cal-day--selected .dido-mon { color: var(--bb-gold); }
+.tb-cal-day--selected .dido-rest { background: rgba(255,255,255,0.14); color: #fff; }
+.tb-cal-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--bb-line); }
+.tb-cal-legend-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--bb-muted); }
+.tb-cal-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.tb-cal-legend-dot--free { background: #2f9e67; }
+.tb-cal-legend-dot--knapp { background: #e9a100; }
+.tb-cal-legend-dot--full { background: #c2415a; }
+@media (max-width: 460px) {
+  .tb-cal-body { padding: 12px; }
+  .tb-cal-day { flex-wrap: wrap; row-gap: 6px; padding: 12px; }
+  .tb-cal-day .dido-rest { margin-left: 0; flex-basis: 100%; text-align: center; }
+}
 
-/* ── Date Cards ─────────────────────────────────────────── */
+/* ── Datumsliste (Fallback, standardmäßig ausgeblendet) ── */
 .tb-dates { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px; }
-.tb-date {
-  cursor: pointer; background: #fff; border: 2px solid var(--line); border-radius: 16px;
-  padding: 16px 10px; text-align: center; transition: all .18s; font-family: var(--font);
-}
-.tb-date:hover { border-color: rgba(239,165,0,0.5); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,33,69,0.09); }
-.tb-date.active { border-color: var(--gold); background: var(--navy); box-shadow: 0 8px 22px rgba(15,33,69,0.2); }
-.tb-date .d-wday { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--gold-dark); }
-.tb-date.active .d-wday { color: var(--gold); }
-.tb-date .d-day { font-size: 28px; font-weight: 900; color: var(--navy); line-height: 1.1; margin: 4px 0; }
-.tb-date.active .d-day { color: #fff; }
-.tb-date .d-mon { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-mute); }
-.tb-date.active .d-mon { color: rgba(255,255,255,0.65); }
-.tb-date .d-rest { margin-top: 6px; font-size: 9.5px; font-weight: 800; color: #1f9d63; }
-.tb-date .d-rest--knapp { color: #d4920a; }
-.tb-date.active .d-rest { color: #8fe0b5; }
-.tb-date.active .d-rest--knapp { color: var(--gold); }
-.tb-date--full { cursor: not-allowed; opacity: .5; background: var(--bg-light); border-style: dashed; }
-.tb-date--full:hover { transform: none; border-color: var(--line); box-shadow: none; }
-.tb-date--full .d-full { margin-top: 5px; font-size: 9px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #c2415a; }
+.tb-date { cursor: pointer; background: #fff; border: 1px solid var(--bb-line-2); border-radius: 14px; padding: 14px 10px; text-align: center; font-family: var(--font); }
+.tb-date.active { background: var(--bb-navy); border-color: var(--bb-navy); }
+.tb-date .d-wday { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--bb-hl); }
+.tb-date .d-day { font-size: 26px; font-weight: 700; color: var(--bb-ink); line-height: 1.1; margin: 4px 0; }
+.tb-date.active .d-day, .tb-date.active .d-wday { color: #fff; }
+.tb-date .d-mon { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--bb-muted); }
+.tb-date .d-rest { margin-top: 6px; font-size: 10px; font-weight: 800; color: #17603f; }
+.tb-date .d-rest--knapp { color: #865600; }
+.tb-date--full { cursor: not-allowed; opacity: .5; }
+.tb-date--full .d-full { margin-top: 5px; font-size: 9px; font-weight: 800; text-transform: uppercase; color: #a8344b; }
 
-/* ── Time Slots ─────────────────────────────────────────── */
-.tb-times { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+/* ── Uhrzeit (Auswahl-Pill) ─────────────────────────────── */
+.tb-times { display: flex; flex-wrap: wrap; gap: 10px; }
 .tb-time {
-  cursor: pointer; background: #fff; border: 2px solid var(--line); border-radius: 16px;
-  padding: 18px 12px; font-weight: 800; font-size: 17px; color: var(--navy);
-  text-align: center; transition: all .18s; font-family: var(--font);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  cursor: pointer; min-height: 46px; padding: 0 24px; border-radius: 9999px; font-family: var(--font);
+  font-size: 16px; font-weight: 600; color: var(--bb-ink); background: #fff; border: 1px solid var(--bb-line-2);
+  display: inline-flex; align-items: center; gap: 8px;
 }
-.tb-time .tb-time-sub { font-size: 10.5px; font-weight: 600; color: var(--text-mute); }
-.tb-time:hover { border-color: rgba(239,165,0,0.6); background: var(--gold-soft); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(239,165,0,0.15); }
-.tb-time.active { border-color: var(--gold); background: var(--navy); color: #fff; box-shadow: 0 6px 18px rgba(15,33,69,0.22); }
-.tb-time.active .tb-time-sub { color: rgba(255,255,255,0.6); }
+.tb-time .tb-time-sub { font-size: 12px; font-weight: 600; color: var(--bb-muted); }
+.tb-time:hover { border-color: var(--bb-navy); }
+.tb-time.active { background: var(--bb-navy); border-color: var(--bb-navy); color: #fff; }
+.tb-time.active .tb-time-sub { color: rgba(255,255,255,0.65); }
 
-/* ── Locked / Disabled ──────────────────────────────────── */
-.tb-locked { opacity: .38; pointer-events: none; }
-.tb-need { font-size: 13px; color: var(--text-mute); font-style: italic; }
-
-/* ── Form ───────────────────────────────────────────────── */
+/* ── Formulare (gemeinsame Basis, auch Partner-Portal & Veranstaltungen) ── */
 .tb-form { margin-top: 6px; }
 .tb-form .field { margin-bottom: 18px; }
 .tb-form .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -124,38 +187,7 @@
 .tb-form textarea { min-height: 90px; resize: vertical; }
 .tb-check { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); }
 .tb-check input { width: auto; margin-top: 3px; flex-shrink: 0; }
-
-/* ── Summary Sidebar ────────────────────────────────────── */
-.tb-summary {
-  background: var(--navy); color: #fff; border-radius: 20px; padding: 24px;
-  position: sticky; top: 90px;
-}
-.tb-summary h4 {
-  color: #fff; font-size: 15px; font-weight: 800; margin: 0 0 16px;
-  padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.tb-sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; }
-.tb-sum-row:last-of-type { border-bottom: none; }
-.tb-sum-row .k { color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; align-self: center; }
-.tb-sum-row .v { font-weight: 700; text-align: right; font-size: 14px; }
-.tb-sum-row .v.empty { color: rgba(255,255,255,0.28); font-weight: 500; font-style: italic; font-size: 13px; }
-.tb-summary .btn { width: 100%; justify-content: center; margin-top: 20px; font-size: 15px; padding: 14px; }
-.tb-summary .btn[disabled] { opacity: .4; cursor: not-allowed; }
-
-/* ── Hinweis über dem Kalender ───────────────────────────── */
-.tb-notice {
-  display: flex; align-items: flex-start; gap: 14px;
-  max-width: 760px; margin: 0 auto 28px; padding: 16px 20px;
-  background: var(--gold-soft); border: 1.5px solid var(--gold); border-radius: 14px;
-}
-.tb-notice p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--navy); }
-.tb-notice strong { font-weight: 800; }
-.tb-notice-ic { flex-shrink: 0; display: grid; place-items: center; width: 22px; height: 22px; color: var(--gold-dark); }
-.tb-notice-ic svg { width: 20px; height: 20px; }
-@media (max-width: 600px) {
-  .tb-notice { gap: 10px; padding: 14px 16px; }
-  .tb-notice p { font-size: 14px; }
-}
+@media (max-width: 860px) { .tb-form .row2 { grid-template-columns: 1fr; } }
 
 /* ── Buchen am Formularende ──────────────────────────────── */
 /* Zweiter „Jetzt verbindlich buchen"-Button unter den Kontaktdaten. Er wird
@@ -165,60 +197,58 @@
 .tb-bottom-cta { display: none; }
 @media (min-width: 861px) {
   .tb-bottom-cta:not([hidden]) {
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 16px;
-    margin-top: 24px; padding: 18px 22px;
-    background: var(--gold-soft); border: 1.5px solid var(--gold); border-radius: 16px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    margin: 0 32px 32px; padding: 20px 22px;
+    background: #f1f3f8; border-radius: 16px;
   }
 }
 .tb-bottom-cta-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.tb-bottom-cta-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gold-dark); }
-.tb-bottom-cta-recap { font-size: 15px; font-weight: 700; color: var(--navy); }
-.tb-bottom-cta .btn { flex-shrink: 0; padding: 14px 26px; font-size: 15px; }
-.tb-bottom-cta .btn[disabled] { opacity: .4; cursor: not-allowed; }
-.tb-bottom-cta-err { width: 100%; margin: 0; color: #c2415a; background: #fdeaed; border-radius: 8px; padding: 8px 12px; font-size: 13px; }
+.tb-bottom-cta-label { font-size: 13px; font-weight: 600; color: var(--bb-hl); }
+.tb-bottom-cta-recap { font-size: 16px; font-weight: 600; color: var(--bb-ink); }
+.tb-err { width: 100%; margin: 12px 0 0; color: #a8344b; background: #fbe9ec; border-radius: 12px; padding: 10px 12px; font-size: 13.5px; }
 
-/* ── Layout ─────────────────────────────────────────────── */
-.tb-grid { display: grid; grid-template-columns: 1fr 310px; gap: 32px; align-items: start; }
-/* Die Spalte muss die volle Zeilenhöhe bekommen, sonst hat position:sticky
-   in .tb-summary keinen Spielraum und die Karte scrollt oben weg. */
-.tb-grid > aside { align-self: stretch; }
+/* ── Zusammenfassung als Navy-Karte ────────────────────── */
+/* .bb-tile steht in bb.css (lädt später) – daher die doppelte Klasse */
+.tb-summary.bb-tile { position: sticky; top: 130px; overflow: hidden; background: var(--bb-navy); border-color: var(--bb-navy); border-radius: 22px; color: #fff; }
+.tb-summary__head { margin: 0; padding: 24px 24px 6px; background: none; font-size: 18px; font-weight: 600; color: #fff; text-align: left; }
+.tb-summary__body { padding: 4px 24px 24px; }
+.tb-sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.12); font-size: 14.5px; }
+.tb-sum-row .k { color: rgba(255,255,255,0.56); font-size: 14px; }
+.tb-sum-row .v { font-weight: 600; color: #fff; text-align: right; }
+.tb-sum-row .v.empty { color: rgba(255,255,255,0.38); font-weight: 500; font-style: italic; }
+.tb-summary .bb-btn { margin-top: 22px; }
+.tb-summary .bb-btn--ink { background: var(--bb-gold); color: var(--bb-navy); }
+.tb-summary .bb-btn--ink:hover { background: var(--bb-gold-hover); color: var(--bb-navy); }
+.tb-summary .tb-err { background: rgba(232,64,85,0.16); color: #ffb3bf; }
+.tb-summary__note { margin: 14px 0 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.56); text-align: center; }
+
 @media (max-width: 860px) {
   .tb-grid { grid-template-columns: 1fr; }
-  .tb-summary { position: static; }
-  .tb-form .row2 { grid-template-columns: 1fr; }
-  .tb-times { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
-  .tb-time { padding: 14px 10px; font-size: 15px; }
+  .tb-summary.bb-tile { position: static; }
+  .tb-step { padding: 24px 18px; }
+}
+@media (max-width: 520px) {
+  .tb-step-head { flex-wrap: wrap; }
+  .tb-step-head .tb-hint { margin-left: 48px; }
+  .tb-prog { font-size: 11.5px; }
 }
 
-/* ── Success Screen ──────────────────────────────────────── */
-.tb-success {
-  display: none;
-  background: linear-gradient(145deg, #0F2145 0%, #1a3570 100%);
-  border-radius: 24px; padding: 48px 36px; text-align: center;
-  box-shadow: 0 16px 48px rgba(15,33,69,0.28);
-}
+/* ── Erfolg ─────────────────────────────────────────────── */
+.tb-success { display: none; max-width: 640px; margin: 0 auto; padding: 48px 32px; text-align: center; }
 .tb-success.show { display: block; }
 .tb-success-icon {
-  width: 76px; height: 76px;
-  background: linear-gradient(135deg, #c47d00 0%, #EFA500 100%);
-  border-radius: 50%; margin: 0 auto 22px;
-  display: grid; place-items: center;
-  box-shadow: 0 8px 24px rgba(239,165,0,0.4);
+  width: 72px; height: 72px; margin: 0 auto 22px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--bb-gold); color: var(--bb-navy);
 }
-.tb-success-icon svg { width: 38px; height: 38px; color: #fff; }
-.tb-success h3 { font-size: 28px; font-weight: 900; color: #fff; margin: 0 0 12px; letter-spacing: -0.03em; }
-.tb-success p { color: rgba(255,255,255,0.72); line-height: 1.75; margin: 0 0 24px; font-size: 15px; max-width: 460px; margin-left: auto; margin-right: auto; }
-.tb-success .tb-recap {
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px; padding: 18px 24px; margin: 0 auto 28px;
-  text-align: left; max-width: 420px;
-}
-.tb-success .tb-recap div { font-size: 14px; padding: 5px 0; color: rgba(255,255,255,0.88); }
-.tb-success .tb-recap b { color: var(--gold); font-weight: 800; }
+.tb-success-icon svg { width: 34px; height: 34px; }
+.tb-success h3 { font-size: 32px; font-weight: 700; color: var(--bb-ink); margin: 0 0 10px; letter-spacing: -0.02em; }
+.tb-success p { color: var(--bb-text); line-height: 1.65; margin: 0 auto 24px; font-size: 16px; max-width: 460px; }
+.tb-success .tb-recap { text-align: left; max-width: 420px; margin: 0 auto 28px; border-top: 1px solid var(--bb-line); }
+.tb-success .tb-recap div { font-size: 15px; padding: 11px 0; color: var(--bb-ink); border-bottom: 1px solid var(--bb-line); }
+.tb-success .tb-recap b { color: var(--bb-muted); font-weight: 600; margin-right: 6px; }
 .tb-success .tb-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
 
-/* ── Step Icon (SVG override) ────────────────────────────── */
-.tb-step-n.step-icon { font-size: 0 !important; display: grid; place-items: center; }
-.tb-step-n.step-icon svg { width: 22px; height: 22px; color: #fff; }
-.tb-step.done .tb-step-n.step-icon svg { color: #fff; }
+/* ── Sonderanfrage ───────────────────────────────────────── */
+.tb-ask-card { padding: 32px; }
+.bb-form .bb-row--end { align-items: end; }
+@media (max-width: 520px) { .tb-ask-card { padding: 22px 18px; } }

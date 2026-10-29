@@ -201,19 +201,20 @@ export default function VeranstaltungenView({ initialEventId = null }) {
         </div></div></div>
       </section>
 
-      <section className="bg-light">
+      {/* Termine · Vorlage: Brilliant „Courses" (Kalender-Kachel links, Liste rechts) */}
+      <section className="bb-sec bb-events">
         <div className="container">
           {!supabaseConfigured ? (
-            <div className="card"><h3>Supabase noch nicht verbunden</h3>
-              <p>Sobald das Backend verbunden ist, erscheinen hier die kommenden Veranstaltungen.</p>
+            <div className="bb-tile bb-events__empty"><h3 className="bb-h3">Supabase noch nicht verbunden</h3>
+              <p className="bb-p">Sobald das Backend verbunden ist, erscheinen hier die kommenden Veranstaltungen.</p>
             </div>
           ) : loading ? (
-            <p>Lädt …</p>
+            <p className="bb-p">Lädt …</p>
           ) : (
             <div className="kal-layout">
               {/* Linke Spalte: Kalender + Veranstaltungsbilder */}
               <div className="kal-col-left">
-              <div className="kal-card">
+              <div className="kal-card bb-tile">
                 <div className="kal-head">
                   <button type="button" className="kal-nav" aria-label="Vorheriger Monat" onClick={() => monatWechseln(-1)}>‹</button>
                   <strong>{MONATE[cursor.monat]} {cursor.jahr}</strong>
@@ -270,7 +271,7 @@ export default function VeranstaltungenView({ initialEventId = null }) {
 
               {/* Liste der Veranstaltungen */}
               <div className="kal-list">
-                <h2 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "0 0 16px" }}>
+                <h2 className="bb-h2 bb-events__title">
                   {selectedDay ? fmtLang(selectedDay) : `Termine im ${MONATE[cursor.monat]}`}
                 </h2>
                 {liste.length ? (
@@ -279,7 +280,7 @@ export default function VeranstaltungenView({ initialEventId = null }) {
                       const [j, m, t] = String(ev.datum).split("-").map(Number);
                       const n = anzahl[ev.id] || 0;
                       return (
-                        <div className="messe-termin" key={ev.id}>
+                        <div className="messe-termin bb-tile" key={ev.id}>
                           <div className="messe-termin-date">
                             <span className="mt-day">{String(t).padStart(2, "0")}</span>
                             <span className="mt-mon">{MONATE[m - 1].slice(0, 3)}</span>
@@ -291,46 +292,46 @@ export default function VeranstaltungenView({ initialEventId = null }) {
                             </p>
                             {ev.adresse ? (
                               <p className="messe-termin-info" style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: "2px", color: "var(--gold-dark)" }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: "2px", color: "var(--bb-hl)" }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                 <span>{ev.adresse} · <a href={mapsUrl(ev.adresse)} target="_blank" rel="noopener">Karte ↗</a></span>
                               </p>
                             ) : null}
                             {ev.beschreibung ? <p className="messe-termin-info">{ev.beschreibung}</p> : null}
-                            {n > 0 ? <p className="messe-termin-info" style={{ color: "var(--gold-dark)", fontWeight: 700 }}>{n} {n === 1 ? "Unternehmen" : "Unternehmen"} angemeldet</p> : null}
+                            {n > 0 ? <p className="messe-termin-info" style={{ color: "var(--bb-hl)", fontWeight: 700 }}>{n} {n === 1 ? "Unternehmen" : "Unternehmen"} angemeldet</p> : null}
                           </div>
-                          <button className="btn btn-primary" onClick={() => anmeldenOeffnen(ev)}>Anmelden</button>
+                          <button className="bb-btn bb-btn--gold bb-btn--sm" onClick={() => anmeldenOeffnen(ev)}>Anmelden</button>
                         </div>
                       );
                     })}
                   </div>
                 ) : (
-                  <p style={{ color: "var(--text-soft)" }}>
+                  <p className="bb-tile bb-events__none">
                     {selectedDay ? "An diesem Tag ist keine Veranstaltung geplant." : "In diesem Monat sind keine Veranstaltungen eingetragen."}
                   </p>
                 )}
 
                 {/* Anmeldeformular für Unternehmen */}
                 {aktivesEvent ? (
-                  <div className="card" id="anmeldung-form" style={{ marginTop: "26px", borderColor: "var(--gold)" }}>
+                  <div className="bb-tile bb-events__form" id="anmeldung-form">
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
                       <div>
-                        <span className="section-label">Als Unternehmen anmelden</span>
-                        <h3 style={{ margin: "4px 0 2px" }}>{aktivesEvent.titel}</h3>
-                        <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: 0 }}>{fmtLang(aktivesEvent.datum)}{aktivesEvent.uhrzeit ? " · " + aktivesEvent.uhrzeit : ""}{aktivesEvent.ort ? " · " + aktivesEvent.ort : ""}</p>
-                        {aktivesEvent.adresse ? <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "2px 0 0" }}>{aktivesEvent.adresse} · <a href={mapsUrl(aktivesEvent.adresse)} target="_blank" rel="noopener">Karte ↗</a></p> : null}
+                        <p className="bb-small" style={{ margin: 0 }}>Als Unternehmen anmelden</p>
+                        <h3 className="bb-h3" style={{ margin: "4px 0 4px" }}>{aktivesEvent.titel}</h3>
+                        <p className="bb-small" style={{ margin: 0 }}>{fmtLang(aktivesEvent.datum)}{aktivesEvent.uhrzeit ? " · " + aktivesEvent.uhrzeit : ""}{aktivesEvent.ort ? " · " + aktivesEvent.ort : ""}</p>
+                        {aktivesEvent.adresse ? <p className="bb-small" style={{ margin: "2px 0 0" }}>{aktivesEvent.adresse} · <a href={mapsUrl(aktivesEvent.adresse)} target="_blank" rel="noopener">Karte ↗</a></p> : null}
                       </div>
                       <button type="button" className="kal-nav" aria-label="Schließen" onClick={() => setAktivesEvent(null)}>×</button>
                     </div>
-                    <form onSubmit={anmeldenSenden} className="tb-form" style={{ marginTop: "16px" }}>
-                      <div className="row2">
-                        <div className="field"><label>Unternehmen *</label><input value={form.firma} onChange={set("firma")} required /></div>
-                        <div className="field"><label>Ansprechpartner:in *</label><input value={form.name} onChange={set("name")} required /></div>
+                    <form onSubmit={anmeldenSenden} className="bb-form" style={{ marginTop: "22px" }}>
+                      <div className="bb-row">
+                        <div className="bb-field"><label>Unternehmen *</label><input value={form.firma} onChange={set("firma")} required /></div>
+                        <div className="bb-field"><label>Ansprechpartner:in *</label><input value={form.name} onChange={set("name")} required /></div>
                       </div>
-                      <div className="row2">
-                        <div className="field"><label>E-Mail *</label><input type="email" value={form.email} onChange={set("email")} required /></div>
-                        <div className="field"><label>Telefon</label><input value={form.telefon} onChange={set("telefon")} /></div>
+                      <div className="bb-row">
+                        <div className="bb-field"><label>E-Mail *</label><input type="email" value={form.email} onChange={set("email")} required /></div>
+                        <div className="bb-field"><label>Telefon</label><input value={form.telefon} onChange={set("telefon")} /></div>
                       </div>
-                      <div className="field" style={{ maxWidth: "220px" }}>
+                      <div className="bb-field" style={{ maxWidth: "220px" }}>
                         <label>Anzahl Personen (max. {MAX_PERSONEN})</label>
                         <select value={form.personen} onChange={set("personen")}>
                           <option value={1}>1 Person</option>
@@ -338,17 +339,17 @@ export default function VeranstaltungenView({ initialEventId = null }) {
                         </select>
                       </div>
                       {Number(form.personen) > 1 ? Array.from({ length: Number(form.personen) - 1 }).map((_, i) => (
-                        <div className="field" key={i}>
+                        <div className="bb-field" key={i}>
                           <label>Name der Begleitperson{Number(form.personen) - 1 > 1 ? " " + (i + 1) : ""} *</label>
                           <input value={form.begleitpersonen[i] || ""} onChange={setBegleit(i)} placeholder="Vor- und Nachname" required />
                         </div>
                       )) : null}
-                      <div className="field"><label>Nachricht (optional)</label><textarea value={form.nachricht} onChange={set("nachricht")} placeholder="Wünsche, Fragen, …"></textarea></div>
-                      {err ? <p style={{ color: "#c2415a", fontSize: "14px" }}>{err}</p> : null}
-                      {msg ? <p style={{ color: "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{msg}</p> : null}
+                      <div className="bb-field"><label>Nachricht (optional)</label><textarea value={form.nachricht} onChange={set("nachricht")} placeholder="Wünsche, Fragen, …"></textarea></div>
+                      {err ? <p className="bb-events__err">{err}</p> : null}
+                      {msg ? <p className="bb-events__ok">{msg}</p> : null}
                       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                        <button className="btn btn-primary" type="submit" disabled={busy}>{busy ? "Wird gesendet …" : "Anmeldung absenden"}</button>
-                        <button type="button" className="btn btn-outline" onClick={() => setAktivesEvent(null)}>Abbrechen</button>
+                        <button className="bb-btn bb-btn--ink" type="submit" disabled={busy}>{busy ? "Wird gesendet …" : "Anmeldung absenden"}</button>
+                        <button type="button" className="bb-btn bb-btn--light" onClick={() => setAktivesEvent(null)}>Abbrechen</button>
                       </div>
                     </form>
                   </div>

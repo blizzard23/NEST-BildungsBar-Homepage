@@ -10,30 +10,50 @@ const TAG_ZU = `<span class="np-tag np-tag--zu">zubuchbar</span>`;
 
 const html = `
 
-  <!-- HERO -->
+  <!-- HERO (wie Startseite und Schulen: Text links, Phone-Mockup rechts) -->
   <section class="hero np-hero">
     <div class="container"><div class="hero-inner">
       <div class="hero-text">
-        <span class="hero-badge">Für Unternehmen · NEST-Partner</span>
-        <h1>Ihr bildet aus.<br /><em>Wir kümmern uns um den Rest.</em></h1>
+        <span class="hero-badge">Unternehmen</span>
+        <h1>Ihr bildet aus.<br /><em>Wir machen den Rest.</em></h1>
         <p class="lead">Als NEST-Partner findet ihr passende Azubis und haltet sie im Betrieb. Wir nehmen euch die Arbeit dabei ab: von der Schule über die Bewerbung bis in eure Ausbildung.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/kontakt#termin">Gespräch vereinbaren →</a>
           <a class="btn btn-ghost" href="#kreislauf">So greift alles ineinander</a>
         </div>
+        <div class="np-hero-points">
+          <a class="np-hero-point" href="#kreislauf"><span class="np-hero-n">1</span><span><b>Azubis finden</b><small>Schulen · Explore · NESTplay</small></span></a>
+          <a class="np-hero-point np-hero-point--halten" href="#kreislauf"><span class="np-hero-n">2</span><span><b>Azubis halten</b><small>Workshops · Dialog · Netzwerk</small></span></a>
+        </div>
       </div>
-      <div class="hero-visual np-glance" aria-label="Die NEST-Partnerschaft auf einen Blick">
-        <div class="np-glance-title">Die Partnerschaft auf einen Blick</div>
-        <a class="np-glance-item np-glance-item--finden" href="#kreislauf">
-          <span class="np-glance-n">1</span>
-          <span><b>Azubis finden</b><small>NEST Explore · NESTplay · Workshops an Schulen · Vernetzung</small></span>
+      <div class="hero-visual hero-visual--phone np-hero-visual">
+        <a class="hero-phone" href="#partner-login" aria-label="Partner-Login: alle Angebote, Buchungen und Ansprechpartner auf einen Blick">
+          <span class="hp-notch"></span>
+          <div class="hp-screen np-hp">
+            <span class="hp-badge">Partner-Login</span>
+            <div class="hp-title">Alles auf einen Blick</div>
+            <div class="np-hp-booking">
+              <div class="np-hp-booking-top"><span class="np-hp-ok">${IC.check} Gebucht</span><span>Do · 19.11.</span></div>
+              <b>NEST Explore</b>
+              <small>Schulbesuch · 8:30 Uhr</small>
+            </div>
+            <div class="np-hp-label">Angebote buchen</div>
+            <div class="np-hp-tiles">
+              <span class="np-hp-tile">${IC.compass}<b>Explore</b></span>
+              <span class="np-hp-tile">${IC.play}<b>NESTplay</b></span>
+              <span class="np-hp-tile">${IC.people}<b>Workshops</b></span>
+              <span class="np-hp-tile">${IC.briefcase}<b>Stellen</b></span>
+            </div>
+            <div class="np-hp-contact">
+              <span class="np-hp-avatar">${IC.user}</span>
+              <span class="np-hp-contact-tx"><b>Euer Ansprechpartner</b><small>Direkt erreichbar</small></span>
+              <span class="np-hp-contact-btn">${IC.chat}</span>
+            </div>
+            <div class="np-hp-ask">Frag unseren Assistenten …</div>
+          </div>
         </a>
-        <a class="np-glance-item np-glance-item--halten" href="#kreislauf">
-          <span class="np-glance-n">2</span>
-          <span><b>Azubis halten</b><small>Workshops · Ausbildungsdialog · Netzwerk · Partner-Login</small></span>
-        </a>
-        <div class="np-glance-price"><span>ab</span> 79,90 €<small> / Monat</small></div>
-        <div class="np-glance-note">NEST Explore und NEST AzubiConnect sind <b>exklusiv für Partner</b> und zubuchbar.</div>
+        <div class="np-float np-float--top" aria-hidden="true"><span class="np-float-ic">${IC.calendar}</span><span><b>Termin bestätigt</b><small>NEST Explore · 19.11.</small></span></div>
+        <div class="np-float np-float--bottom" aria-hidden="true"><span class="np-float-ic np-float-ic--navy">${IC.chat}</span><span><b>Neue Nachricht</b><small>von eurem Ansprechpartner</small></span></div>
       </div>
     </div></div>
   </section>
@@ -128,7 +148,7 @@ const html = `
       </div>
 
       <!-- PARTNER-LOGIN -->
-      <div class="np-login">
+      <div class="np-login" id="partner-login">
         <div class="np-login-text">
           <span class="bb-kicker">Euer Partner-Login</span>
           <h3 class="np-login-h">Alles auf einen Blick</h3>

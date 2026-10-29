@@ -220,7 +220,7 @@ const html = `
         <p><b>So zählen wir:</b> Maßgeblich sind die Auszubildenden, die bereits in eurem Betrieb beschäftigt sind, nicht die Ausbildungsplätze, die ihr sucht.</p>
       </div>
 
-      <div class="bb-plans">
+      <div class="bb-plans np-plans">
         <div class="bb-plan">
           <div class="bb-plan__head">Kleine Partnerschaft</div>
           <div class="bb-plan__body">
@@ -234,7 +234,7 @@ const html = `
           <div class="bb-plan__body">
             <div class="bb-plan__price">139,90 € <small>/ Monat</small></div>
             <div class="np-plan-seats"><b>6 bis 10</b> Azubis im Betrieb</div>
-            <a class="bb-btn bb-btn--gold" href="/kontakt#termin">Anfragen</a>
+            <a class="bb-btn bb-btn--light" href="/kontakt#termin">Anfragen</a>
           </div>
         </div>
         <div class="bb-plan">

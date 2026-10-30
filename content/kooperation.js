@@ -105,7 +105,7 @@ const html = `
         <article class="np-stop np-stop--finden">
           <span class="np-stop-kicker">2 · Azubis finden</span>
           <h3>In der BildungsBar</h3>
-          <p class="np-stop-lead">Aus Interesse wird eine Bewerbung.</p>
+          <p class="np-stop-lead">Beratung fürs Gemeinwohl.</p>
           <ul class="np-offers">
             <li><div><b>Beratung</b> ${TAG_INKL}</div><span>Wir beraten junge Menschen und bereiten Bewerbungen vor.</span></li>
             <li><div><b>Vernetzen</b> ${TAG_INKL}</div><span>Wir bringen passende Bewerbende mit euch zusammen.</span></li>

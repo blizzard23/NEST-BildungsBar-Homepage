@@ -649,13 +649,45 @@ fieldset.bb-field { border: 0; margin: 0; padding: 0; min-width: 0; }
 #berufe-browser .merk-toggle .ic-svg { color: var(--bb-muted); }
 #berufe-browser .merk-toggle b { background: var(--bb-gold); color: var(--bb-navy); }
 #berufe-browser .merk-toggle.active { background: var(--bb-solid); color: var(--bb-on-solid); border-color: var(--bb-solid); }
-#berufe-browser .berufe-interests { gap: 8px; margin-bottom: 16px; padding-bottom: 6px; }
+/* Interessen-Leiste (Vorlage: TIDAL, Higgsfield, ElevenLabs auf Mobbin):
+   gefüllte Chips, kein Scrollbalken, runde Pfeile links/rechts mit weichem Ausblenden am Rand */
+#berufe-browser .interests-wrap { position: relative; margin-bottom: 16px; }
+#berufe-browser .berufe-interests {
+  gap: 8px; margin: 0; padding: 3px 0; scrollbar-width: none; scroll-behavior: smooth;
+}
+#berufe-browser .berufe-interests::-webkit-scrollbar { display: none; }
+#berufe-browser .interests-wrap.kann-vor .berufe-interests {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 96px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 96px), transparent);
+}
+#berufe-browser .interests-wrap.kann-zurueck .berufe-interests {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 96px);
+  mask-image: linear-gradient(to right, transparent, #000 96px);
+}
+#berufe-browser .interests-wrap.kann-zurueck.kann-vor .berufe-interests {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 96px, #000 calc(100% - 96px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 96px, #000 calc(100% - 96px), transparent);
+}
+#berufe-browser .int-pfeil {
+  position: absolute; top: 50%; z-index: 2; transform: translateY(-50%);
+  width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center;
+  background: #fff; color: var(--bb-navy); cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+  opacity: 0; visibility: hidden; transition: opacity .2s ease, visibility .2s ease, background-color .15s ease;
+}
+#berufe-browser .int-pfeil.prev { left: 0; }
+#berufe-browser .int-pfeil.next { right: 0; }
+#berufe-browser .int-pfeil svg { display: block; }
+#berufe-browser .int-pfeil:hover { background: var(--bb-gold); }
+#berufe-browser .int-pfeil:focus-visible { outline: 2px solid var(--bb-gold); outline-offset: 2px; }
+#berufe-browser .interests-wrap.kann-zurueck .int-pfeil.prev,
+#berufe-browser .interests-wrap.kann-vor .int-pfeil.next { opacity: 1; visibility: visible; }
 #berufe-browser .interest-tag {
-  padding: 9px 16px; background: transparent; border: 1px solid var(--bb-line-2); border-radius: 9999px;
-  font-size: 14px; font-weight: 500; color: var(--bb-ink);
+  padding: 10px 18px; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.16); border-radius: 9999px;
+  font-size: 14px; font-weight: 600; color: #fff; transition: background-color .15s ease, border-color .15s ease, color .15s ease;
 }
 #berufe-browser .interest-tag .ic-svg { color: var(--bb-hl); }
-#berufe-browser .interest-tag:hover { border-color: var(--bb-ink); }
+#berufe-browser .interest-tag:hover { background: rgba(255,255,255,0.17); border-color: rgba(255,255,255,0.34); }
+#berufe-browser .interest-tag:focus-visible { outline: 2px solid var(--bb-gold); outline-offset: -2px; }
 #berufe-browser .interest-tag.active { background: var(--bb-gold); border-color: var(--bb-gold); color: var(--bb-navy); }
 #berufe-browser .interest-tag.active .ic-svg { color: var(--bb-navy); }
 #berufe-browser .bt-filterrow { border-top: 0; padding-top: 0; gap: 8px; }
@@ -719,6 +751,23 @@ fieldset.bb-field { border: 0; margin: 0; padding: 0; min-width: 0; }
 .ort-chip.active { background: var(--bb-solid); color: var(--bb-on-solid); border-color: var(--bb-solid); }
 .stellen-empty { background: var(--bb-card); border: 1px solid var(--bb-card-line); border-radius: 20px; }
 .stellen-empty-h { font-weight: 600; color: var(--bb-ink); }
+/* Stellenkarten auf dunklem Grund: Firmenname, Tags und Restlaufzeit gut lesbar,
+   Art als Gold-Tag statt dunkler Fläche, Link-Ziel in Gold */
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .stellen-card { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.14); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .stellen-card:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.28); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-firma { color: rgba(255,255,255,0.82); font-size: 14px; font-weight: 500; }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-meta .sc-tag { background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.88); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-meta .sc-tag .ic-svg { color: rgba(255,255,255,0.6); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-art { background: transparent; box-shadow: inset 0 0 0 1px currentColor; }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-art.art-azubi { color: var(--bb-gold); background: transparent; }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-art.art-dual { color: #a9c1ff; background: transparent; }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-art.art-prakt { color: #d3bcff; background: transparent; }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-flag.neu { color: #6fdca2; background: rgba(46,190,115,0.18); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-flag.bald { color: #ff9cb0; background: rgba(240,90,120,0.18); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-foot { border-top-color: rgba(255,255,255,0.14); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-rest { color: rgba(255,255,255,0.72); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-rest .ic-svg { color: rgba(255,255,255,0.5); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .sc-go { color: var(--bb-gold); }
 
 /* =========================================================
    Beruf-Detailseite (wird von nest-app.js erzeugt)

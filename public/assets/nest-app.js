@@ -1021,7 +1021,13 @@ function renderBerufeUebersicht() {
           '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
           'Teilen</button>' +
       "</div>" +
-      '<div class="berufe-interests" id="berufe-interests">' + interestTags + "</div>" +
+      '<div class="interests-wrap" id="interests-wrap">' +
+        '<button type="button" class="int-pfeil prev" aria-label="Vorherige Interessen">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>' +
+        '<div class="berufe-interests" id="berufe-interests">' + interestTags + "</div>" +
+        '<button type="button" class="int-pfeil next" aria-label="Weitere Interessen">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>' +
+      "</div>" +
       '<div class="bt-filterrow">' +
         '<div class="select-wrap">' + ic("briefcase", 15, "sel-ic") + '<select id="f-cat" aria-label="Berufsfeld">' + catOptions + "</select></div>" +
         '<div class="select-wrap">' + ic("cap", 15, "sel-ic") + '<select id="f-art" aria-label="Art">' + artOptions + "</select></div>" +
@@ -1206,7 +1212,7 @@ function renderBerufeUebersicht() {
       '<span class="sc-tag">' + ic("pin", 13) + escHtml(s.ort) + "</span>" +
       (s.start ? '<span class="sc-tag">' + ic("calendar", 13) + escHtml(s.start) + "</span>" : "") + "</div>" +
       '<div class="sc-foot"><span class="sc-rest">' + ic("clock", 13) + restTxt + "</span>" +
-      '<span class="sc-go">Mehr erfahren &rarr;</span></div></a>';
+      '<span class="sc-go">' + (extern ? "Zur Karriereseite" : "Mehr erfahren") + ' &rarr;</span></div></a>';
   }
 
   function drawStellen() {
@@ -1286,6 +1292,28 @@ function renderBerufeUebersicht() {
     var chip = e.target.closest(".filter-chip");
     if (chip) filterEntfernen(chip.getAttribute("data-fk"));
   });
+
+  // Interessen-Leiste: ohne Scrollbalken, stattdessen Pfeile links/rechts.
+  // Ein Pfeil erscheint nur, wenn es in diese Richtung noch etwas zu sehen gibt.
+  (function () {
+    var wrap = document.getElementById("interests-wrap");
+    var leiste = document.getElementById("berufe-interests");
+    if (!wrap || !leiste) return;
+    function pfeile() {
+      var max = leiste.scrollWidth - leiste.clientWidth;
+      wrap.classList.toggle("kann-zurueck", max > 2 && leiste.scrollLeft > 2);
+      wrap.classList.toggle("kann-vor", max > 2 && leiste.scrollLeft < max - 2);
+    }
+    function blaettern(richtung) {
+      leiste.scrollBy({ left: richtung * Math.max(160, leiste.clientWidth * 0.6), behavior: "smooth" });
+    }
+    wrap.querySelector(".prev").addEventListener("click", function () { blaettern(-1); });
+    wrap.querySelector(".next").addEventListener("click", function () { blaettern(1); });
+    leiste.addEventListener("scroll", pfeile, { passive: true });
+    window.addEventListener("resize", pfeile);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(pfeile);
+    pfeile();
+  })();
 
   root.querySelectorAll(".interest-tag").forEach(function (tag) {
     tag.addEventListener("click", function () {

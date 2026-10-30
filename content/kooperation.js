@@ -256,7 +256,7 @@ const html = `
       <div class="bb-trust__row bb-trust__row--3">
         <div class="bb-trust__item"><b>70+</b><span>Unternehmen im Netzwerk</span></div>
         <div class="bb-trust__item"><b>500+</b><span>junge Menschen pro Jahr</span></div>
-        <div class="bb-trust__item"><b>4</b><span>Standorte: Wuppertal · Essen · Solingen · Remscheid</span></div>
+        <div class="bb-trust__item"><b>4</b><span>Standorte</span></div>
       </div>
     </div>
   </section>

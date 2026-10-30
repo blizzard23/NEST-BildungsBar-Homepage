@@ -95,9 +95,9 @@ const html = `
           <h3>An Schulen</h3>
           <p class="np-stop-lead">Schüler:innen lernen euch kennen.</p>
           <ul class="np-offers">
-            <li><div><b>NEST Explore</b> ${TAG_ZU}</div><span>Ihr trefft eine Schule, Ablauf und Moderation machen wir.</span></li>
             <li><div><b>NESTplay</b> ${TAG_INKL}</div><span>Euer Quiz läuft im Unterricht, auch ohne euch vor Ort.</span></li>
             <li><div><b>Schul-Workshops</b> ${TAG_INKL}</div><span>In Berufsfelderkundungen machen wir auf euch aufmerksam.</span></li>
+            <li><div><b>NEST Explore</b> ${TAG_ZU}</div><span>Ihr trefft eine Schule, Ablauf und Moderation machen wir.</span></li>
           </ul>
           <div class="np-station-links"><a class="bb-link" href="https://nest-explore.de" target="_blank" rel="noopener">nest-explore.de</a><a class="bb-link" href="https://nest-play.de" target="_blank" rel="noopener">nest-play.de</a></div>
         </article>
@@ -121,9 +121,9 @@ const html = `
           <h3>In eurer Ausbildung</h3>
           <p class="np-stop-lead">Eure Azubis bleiben.</p>
           <ul class="np-offers">
-            <li><div><b>Workshops</b> ${TAG_ZU}</div><span>Für Azubis und Ausbildende, z. B. Resilienz oder Generation Z.</span></li>
             <li><div><b>Ansprechpartner</b> ${TAG_INKL}</div><span>Ein fester Kontakt für alle Fragen, direkt im Partner-Login.</span></li>
             <li><div><b>Chatbot</b> ${TAG_INKL}</div><span>Antworten aus unserer Erfahrung, jederzeit im Partner-Login.</span></li>
+            <li><div><b>Workshops</b> ${TAG_ZU}</div><span>Für Azubis und Ausbildende, z. B. Resilienz oder Generation Z.</span></li>
           </ul>
           <div class="np-station-links"><a class="bb-link" href="https://nest-azubiconnect.de" target="_blank" rel="noopener">nest-azubiconnect.de</a></div>
         </article>
@@ -134,9 +134,9 @@ const html = `
           <h3>Im Netzwerk</h3>
           <p class="np-stop-lead">Ihr seid nicht allein.</p>
           <ul class="np-offers">
-            <li><div><b>Offene Workshops</b> ${TAG_ZU}</div><span>Einzelne Azubis anmelden und mit anderen Betrieben lernen.</span></li>
             <li><div><b>Ausbildungsdialog</b> ${TAG_INKL}</div><span>Fachthemen rund um Ausbildung, mit Input von Expert:innen.</span></li>
             <li><div><b>Netzwerktreffen</b> ${TAG_INKL}</div><span>Viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.</span></li>
+            <li><div><b>Offene Workshops</b> ${TAG_ZU}</div><span>Einzelne Azubis anmelden und mit anderen Betrieben lernen.</span></li>
           </ul>
           <div class="np-station-links"><a class="bb-link" href="/veranstaltungen">Nächste Veranstaltungen</a></div>
         </article>

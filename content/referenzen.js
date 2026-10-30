@@ -147,6 +147,7 @@ const html = `
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/vorwerk-autotec.png" alt="Vorwerk Autotec" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/diakonische-altenhilfe-wuppertal.png" alt="Diakonische Altenhilfe Wuppertal" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/schulten.png" alt="Schulten Gebäudedienste" loading="lazy"></div>
+          <div class="bb-logo"><img src="/assets/img/referenzen/partner/jc-koenig.png" alt="J.C. König Präzisions-Tiefziehteile" loading="lazy"></div>
         </div>
       </div>
 

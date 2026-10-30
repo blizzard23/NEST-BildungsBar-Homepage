@@ -31,7 +31,12 @@ export const ICON = {
    waagerechte Leiste. */
 export function PortalNav({ isAdmin, firma, email, onLogout }) {
   const gruppen = [
-    { titel: null, punkte: [{ id: "abschnitt-dashboard", label: "Übersicht", icon: ICON.uebersicht }] },
+    {
+      titel: null, punkte: [
+        { id: "abschnitt-dashboard", label: "Übersicht", icon: ICON.uebersicht },
+        !isAdmin && { id: "abschnitt-netzwerk", label: "Netzwerk & Erfahrungen", icon: ICON.netzwerk },
+      ].filter(Boolean),
+    },
     {
       titel: "Azubis finden", art: "finden", punkte: [
         { id: "abschnitt-stellen", label: "Stellen", icon: ICON.stellen },
@@ -43,7 +48,6 @@ export function PortalNav({ isAdmin, firma, email, onLogout }) {
       titel: "Azubis halten", art: "halten", punkte: [
         { id: "abschnitt-workshops", label: "Workshops", icon: ICON.workshops },
         { id: "abschnitt-team", label: "Ansprechpartner", icon: ICON.ansprechpartner },
-        { id: "abschnitt-netzwerk", label: "Netzwerk", icon: ICON.netzwerk },
         { id: "abschnitt-veranstaltungen", label: "Veranstaltungen", icon: ICON.veranstaltungen },
       ],
     },
@@ -225,7 +229,7 @@ const BLICK = [
   {
     art: "halten", titel: "Azubis halten", karten: [
       { titel: "NEST AzubiConnect", text: "Workshops für Azubis und Ausbildende, z. B. Azubi-Knigge oder Generationen.", bild: "/assets/img/angebote/azubiconnect.jpg", link: "https://nest-azubiconnect.de/workshops.html", knopf: "Workshops ansehen" },
-      { titel: "Netzwerk & Veranstaltungen", text: "Ausbildungsdialog und Netzwerktreffen mit über 70 Ausbildungsbetrieben.", bild: "/assets/img/standort-wuppertal.jpg", link: "/veranstaltungen", knopf: "Termine ansehen" },
+      { titel: "Veranstaltungen", text: "Ausbildungsdialog und Netzwerktreffen mit über 70 Ausbildungsbetrieben.", bild: "/assets/img/standort-wuppertal.jpg", link: "/veranstaltungen", knopf: "Termine ansehen" },
       { titel: "Eure Partnerschaft", text: "Alle Leistungen der Partnerschaft und wie wir zusammenarbeiten.", bild: "/assets/img/broschueren/kooperation.jpg", link: "/broschueren/kooperation.html", knopf: "Broschüre öffnen" },
     ],
   },

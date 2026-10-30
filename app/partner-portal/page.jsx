@@ -845,6 +845,17 @@ export default function PartnerPortal() {
                 </div>
                 <div id="abschnitt-assistent" className="pd-assistent">
                   <Assistent onNetzwerkFrage={() => setNetzwerkStand((n) => n + 1)} />
+                  {/* Was der Assistent nicht weiß: Fragen ans Netzwerk und eigene Erfahrungen */}
+                  <div id="abschnitt-netzwerk" className="pd-assistent-netz">
+                    {!isAdmin ? (
+                      <>
+                        <div className="pd-assistent-spalte"><Netzwerk neuLaden={netzwerkStand} /></div>
+                        <div className="pd-assistent-spalte"><Erfahrungen userId={session.user.id} /></div>
+                      </>
+                    ) : (
+                      <p className="pd-leer">Fragen ans Netzwerk und Freigaben verwaltet ihr im Admin-Bereich unter „Assistent &amp; Netzwerk“.</p>
+                    )}
+                  </div>
                 </div>
                 {!isAdmin && (() => {
                   const aktive = stellen.filter((s) => { const r = tageRestStelle(s.aktiviert_am); return r != null && r >= 0; });
@@ -1092,8 +1103,8 @@ export default function PartnerPortal() {
                 <KernpunktBanner
                   id="abschnitt-halten" nr={2} art="halten"
                   titel="Azubis halten" unter="Eure Azubis bleiben"
-                  text="Mit Workshops für Azubis und Ausbildende, festen Ansprechpartnern und dem Austausch im Netzwerk begleiten wir euch durch die ganze Ausbildung."
-                  punkte={[{ href: "#abschnitt-workshops", label: "Workshops" }, { href: "#abschnitt-team", label: "Ansprechpartner" }, { href: "#abschnitt-netzwerk", label: "Netzwerk" }, { href: "#abschnitt-veranstaltungen", label: "Veranstaltungen" }]}
+                  text="Mit Workshops für Azubis und Ausbildende, festen Ansprechpartnern und Veranstaltungen im Netzwerk begleiten wir euch durch die ganze Ausbildung."
+                  punkte={[{ href: "#abschnitt-workshops", label: "Workshops" }, { href: "#abschnitt-team", label: "Ansprechpartner" }, { href: "#abschnitt-veranstaltungen", label: "Veranstaltungen" }]}
                   phoneTitel="Azubis halten"
                   zeilen={[
                     ["Workshops", "buchbar"],
@@ -1127,22 +1138,9 @@ export default function PartnerPortal() {
                   <AnsprechpartnerListe liste={ansprechpartner.length ? ansprechpartner : AP_DEFAULT} />
                 </div>
 
-                {/* Unterpunkt: Netzwerk */}
-                <div id="abschnitt-netzwerk" className="pd-unter">
-                  <UnterKopf icon={ICON.netzwerk} art="halten" titel="Fragen ans Netzwerk & Erfahrungen" text="Was der Assistent nicht beantworten kann, geben wir an passende Betriebe aus dem Netzwerk weiter. Und eure Erfahrungen helfen anderen." />
-                  {!isAdmin ? (
-                    <>
-                      <Netzwerk neuLaden={netzwerkStand} />
-                      <Erfahrungen userId={session.user.id} />
-                    </>
-                  ) : (
-                    <p className="pd-leer">Fragen ans Netzwerk und Freigaben verwaltet ihr im Admin-Bereich unter „Assistent &amp; Netzwerk“.</p>
-                  )}
-                </div>
-
                 {/* Unterpunkt: Veranstaltungen */}
                 <div id="abschnitt-veranstaltungen" className="pd-unter">
-                  <UnterKopf icon={ICON.veranstaltungen} art="halten" titel="Ausbildungsdialog & Netzwerktreffen" text="Fachthemen rund um Ausbildung und viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.">
+                  <UnterKopf icon={ICON.veranstaltungen} art="halten" titel="Veranstaltungen" text="Ausbildungsdialog zu Fachthemen rund um Ausbildung und viermal im Jahr Netzwerktreffen mit über 70 Ausbildungsbetrieben.">
                     <a className="btn btn-outline" href="/veranstaltungen" target="_blank" rel="noopener">Alle Termine ↗</a>
                   </UnterKopf>
               {events.length ? (
@@ -1482,7 +1480,7 @@ export default function PartnerPortal() {
                       {ansprechpartner.map((ap) => (
                         <div className="card" key={ap.id}>
                           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                            {ap.bild_url ? <img src={ap.bild_url} alt={ap.name} style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "50%", flexShrink: 0 }} /> : null}
+                            {ap.bild_url ? <img src={ap.bild_url} alt={ap.name} style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "50%", flexShrink: 0, filter: "grayscale(1)" }} /> : null}
                             <div>
                               <strong style={{ color: "var(--navy)" }}>{ap.name}</strong>
                               {ap.rolle ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>{ap.rolle}</p> : null}

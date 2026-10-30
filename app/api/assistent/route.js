@@ -55,6 +55,11 @@ function pruefeVerlauf(verlauf) {
   return out;
 }
 
+// Nur zur Kontrolle, ob der Assistent eingerichtet ist (verrät keine Werte).
+export function GET() {
+  return NextResponse.json({ eingerichtet: Boolean(process.env.ANTHROPIC_API_KEY) }, { headers: { "Cache-Control": "no-store" } });
+}
+
 export async function POST(req) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

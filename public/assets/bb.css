@@ -1076,6 +1076,16 @@ fieldset.bb-field { border: 0; margin: 0; padding: 0; min-width: 0; }
 .pd-txt-halten { color: #2f5fd6; }
 .pd-assistent { margin-bottom: 16px; }
 .pd-assistent .as-verlauf { min-height: 180px; max-height: 460px; }
+/* Fragen ans Netzwerk und Erfahrungen hängen direkt am Assistenten */
+.pd-assistent .as-chat { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.pd-assistent-netz { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; padding: 20px 22px 22px; background: #f8f9fc; border: 1px solid #e5e8ef; border-top: 0; border-radius: 0 0 20px 20px; }
+.pd-assistent-netz > .pd-leer { grid-column: 1 / -1; margin: 0; }
+.pd-assistent-spalte { min-width: 0; }
+.pd-assistent-spalte + .pd-assistent-spalte { padding-left: 28px; border-left: 1px solid #e5e8ef; }
+.pd-assistent-spalte > .as-block, .pd-assistent-spalte .as-netzwerk > .as-block:first-child { margin-top: 0; }
+.pd-assistent-spalte .as-h4 { margin: 0; font-size: 16px; }
+.pd-assistent-spalte .as-block-head { margin-bottom: 6px; }
+.pd-assistent-spalte .as-karte { background: #fff; }
 .pd-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .pd-kpi { display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; background: #fff; border: 1px solid #e5e8ef; border-radius: 18px; color: inherit; text-decoration: none; transition: border-color .15s ease; }
 .pd-kpi:hover { border-color: #c9d0dc; }
@@ -1139,7 +1149,7 @@ fieldset.bb-field { border: 0; margin: 0; padding: 0; min-width: 0; }
 .pd-ap-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
 .pd-ap { display: flex; flex-direction: column; gap: 12px; padding: 18px; background: #fff; border: 1px solid #e5e8ef; border-radius: 18px; }
 .pd-ap-kopf { display: flex; align-items: center; gap: 12px; }
-.pd-ap-foto { flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: #eef1f6; }
+.pd-ap-foto { flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: #eef1f6; filter: grayscale(1); }
 .pd-ap-foto--leer { display: grid; place-items: center; font-size: 17px; font-weight: 700; color: var(--bb-navy); }
 .pd-ap-name { display: block; font-size: 16px; color: var(--bb-navy); }
 .pd-ap-rolle { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 600; line-height: 1.35; color: #b07800; }
@@ -1189,6 +1199,8 @@ fieldset.bb-field { border: 0; margin: 0; padding: 0; min-width: 0; }
 }
 @media (max-width: 760px) {
   .pd-kpis { grid-template-columns: 1fr; gap: 10px; }
+  .pd-assistent-netz { grid-template-columns: 1fr; gap: 22px; padding: 18px 16px; }
+  .pd-assistent-spalte + .pd-assistent-spalte { padding: 22px 0 0; border-left: 0; border-top: 1px solid #e5e8ef; }
   .pd-kpi { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "kopf zahl" "fuss zahl"; align-items: center; gap: 2px 14px; padding: 14px 16px; }
   .pd-kpi-kopf { grid-area: kopf; }
   .pd-kpi-zahl { grid-area: zahl; font-size: 26px; text-align: right; }

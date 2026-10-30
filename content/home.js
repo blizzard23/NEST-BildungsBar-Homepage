@@ -9,7 +9,7 @@ const html = `
         <div class="hero-text">
           <span class="hero-badge">Gemeinsam für die Ausbildung</span>
           <h1>Die AusbildungsBar.<br /><em>Locker. Persönlich. Kostenfrei.</em></h1>
-          <p class="lead">In lockerer Atmosphäre über verschiedene Ausbildungsberufe und Unternehmen informieren – und den passenden Partner für deine Zukunft finden.</p>
+          <p class="lead">In lockerer Atmosphäre über verschiedene Ausbildungsberufe und Unternehmen informieren und den passenden Partner für deine Zukunft finden.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="/terminbuchung">Termin buchen →</a>
             <a class="btn btn-ghost" href="/berufswelt">Berufe entdecken</a>
@@ -54,8 +54,8 @@ const html = `
       <div class="bb-trust__row">
         <div class="bb-trust__item"><b>500+</b><span>Gäste pro Jahr in Wuppertal</span></div>
         <div class="bb-trust__item"><b>70+</b><span>Unternehmen im Netzwerk</span></div>
-        <div class="bb-trust__item"><b>150+</b><span>Ausbildungsberufe in der Beratung</span></div>
-        <div class="bb-trust__item"><b>4</b><span>Standorte von Essen bis Remscheid</span></div>
+        <div class="bb-trust__item"><b>150+</b><span>Ausbildungsberufe</span></div>
+        <div class="bb-trust__item"><b>4</b><span>Standorte</span></div>
       </div>
     </div>
   </div>

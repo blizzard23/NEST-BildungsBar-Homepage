@@ -110,9 +110,9 @@
   @keyframes np-draw { to { stroke-dashoffset: 0; } }
 }
 
-.np-stops { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: auto auto auto 1fr auto; column-gap: 32px; margin-top: 6px; }
-/* Subgrid: Kicker, Titel, Untertitel, Liste und Links stehen in allen Spalten auf gleicher Höhe */
-.np-stop { display: grid; grid-row: span 5; grid-template-rows: subgrid; align-content: start; min-width: 0; }
+.np-stops { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: auto auto auto 1fr; column-gap: 32px; margin-top: 6px; }
+/* Subgrid: Kicker, Titel, Untertitel und Liste stehen in allen Spalten auf gleicher Höhe */
+.np-stop { display: grid; grid-row: span 4; grid-template-rows: subgrid; align-content: start; min-width: 0; }
 .np-stop-kicker { font-size: 12px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: #EFA500; margin-bottom: 10px; }
 .np-stop--halten .np-stop-kicker { color: #9EC2FF; }
 .np-stop h3 { margin: 0 0 6px; font-size: clamp(21px, 1.9vw, 23px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: #fff; }
@@ -121,7 +121,6 @@
 .np-offers li { font-size: 14.5px; line-height: 1.5; color: var(--bb-text); padding-top: 12px; border-top: 1px solid var(--bb-line); }
 .np-offers li div { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-bottom: 3px; }
 .np-offers li b { color: var(--bb-ink); font-size: 15.5px; font-weight: 600; }
-.np-station-links { display: flex; flex-wrap: wrap; align-self: end; gap: 6px 20px; padding-top: 18px; font-size: 14.5px; }
 .np-curve-sec .np-tag--inkl { background: rgba(255,255,255,0.10); color: #fff; }
 .np-curve-sec .np-tag--zu { background: rgba(239,165,0,0.18); color: #FFC94A; }
 .np-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; margin-top: 36px; font-size: 13px; color: var(--bb-muted); }
@@ -133,7 +132,6 @@
   .np-curve { display: none; }
   .np-stops { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; gap: 40px 28px; margin-top: 44px; }
   .np-stop { position: relative; display: flex; flex-direction: column; grid-row: auto; padding-top: 30px; }
-  .np-station-links { margin-top: auto; align-self: flex-start; }
   .np-stop h3 { font-size: 24px; }
   .np-stop::before { content: ''; position: absolute; top: 0; left: 0; width: 16px; height: 16px; border-radius: 50%; background: #EFA500; box-shadow: 0 0 0 6px rgba(239,165,0,0.2); }
   .np-stop--halten::before { background: #8DB7FF; box-shadow: 0 0 0 6px rgba(141,183,255,0.2); }

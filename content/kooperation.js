@@ -99,7 +99,6 @@ const html = `
             <li><div><b>Schul-Workshops</b> ${TAG_INKL}</div><span>In Berufsfelderkundungen machen wir auf euch aufmerksam.</span></li>
             <li><div><b>NEST Explore</b> ${TAG_ZU}</div><span>Ihr trefft eine Schule, Ablauf und Moderation machen wir.</span></li>
           </ul>
-          <div class="np-station-links"><a class="bb-link" href="https://nest-explore.de" target="_blank" rel="noopener">nest-explore.de</a><a class="bb-link" href="https://nest-play.de" target="_blank" rel="noopener">nest-play.de</a></div>
         </article>
 
         <!-- 2 · In der BildungsBar -->
@@ -112,7 +111,6 @@ const html = `
             <li><div><b>Vernetzen</b> ${TAG_INKL}</div><span>Wir bringen passende Bewerbende mit euch zusammen.</span></li>
             <li><div><b>Stellenseite</b> ${TAG_INKL}</div><span>Euer Profil und eure Stellen in der NEST Berufswelt.</span></li>
           </ul>
-          <div class="np-station-links"><a class="bb-link" href="/berufswelt">Zur Berufswelt</a></div>
         </article>
 
         <!-- 3 · In eurer Ausbildung -->
@@ -125,7 +123,6 @@ const html = `
             <li><div><b>Chatbot</b> ${TAG_INKL}</div><span>Antworten aus unserer Erfahrung, jederzeit im Partner-Login.</span></li>
             <li><div><b>Workshops</b> ${TAG_ZU}</div><span>Für Azubis und Ausbildende, z. B. Resilienz oder Generation Z.</span></li>
           </ul>
-          <div class="np-station-links"><a class="bb-link" href="https://nest-azubiconnect.de" target="_blank" rel="noopener">nest-azubiconnect.de</a></div>
         </article>
 
         <!-- 4 · Im Netzwerk -->
@@ -138,7 +135,6 @@ const html = `
             <li><div><b>Netzwerktreffen</b> ${TAG_INKL}</div><span>Viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.</span></li>
             <li><div><b>Offene Workshops</b> ${TAG_ZU}</div><span>Einzelne Azubis anmelden und mit anderen Betrieben lernen.</span></li>
           </ul>
-          <div class="np-station-links"><a class="bb-link" href="/veranstaltungen">Nächste Veranstaltungen</a></div>
         </article>
       </div>
       <div class="np-legend"><span>${TAG_INKL} im Partnerbeitrag enthalten</span><span>${TAG_ZU} exklusiv für Partner zubuchbar</span></div>

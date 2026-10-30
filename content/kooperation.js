@@ -121,7 +121,7 @@ const html = `
           <ul class="np-offers">
             <li><div><b>Ansprechpartner</b> ${TAG_INKL}</div><span>Ein fester Kontakt für alle Fragen, direkt im Partner-Login.</span></li>
             <li><div><b>Chatbot</b> ${TAG_INKL}</div><span>Antworten aus unserer Erfahrung, jederzeit im Partner-Login.</span></li>
-            <li><div><b>Workshops</b> ${TAG_ZU}</div><span>Für Azubis und Ausbildende, z. B. Resilienz oder Generation Z.</span></li>
+            <li><div><b>Workshops</b> ${TAG_ZU}</div><span>Für Azubis und Ausbildende, z. B. Azubiknigge oder Generationen.</span></li>
           </ul>
         </article>
 

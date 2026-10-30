@@ -1,6 +1,5 @@
 -- =====================================================================
 -- NEST-Assistent im Partner-Login
--- - partner:              welche Konten als NEST-Partner freigeschaltet sind
 -- - assistent_wissen:     Wissensbasis des Assistenten (NEST, Partner-Erfahrungen,
 --                         Antworten aus dem Netzwerk); nur "freigegeben" geht in den Bot
 -- - netzwerk_fragen /
@@ -10,6 +9,7 @@
 -- - assistent_nutzung:    zählt Fragen pro Betrieb und Tag (Limit + Statistik);
 --                         Chatverläufe selbst werden nicht gespeichert.
 --
+-- Der Assistent steht allen Unternehmen im Partner-Login zur Verfügung.
 -- Partner greifen auf die Netzwerk-Tabellen nur über die Funktionen unten zu,
 -- damit der fragende Betrieb für die antwortenden Betriebe anonym bleibt.
 -- =====================================================================
@@ -26,30 +26,10 @@ language sql stable security definer set search_path = public as $$
 $$;
 revoke execute on function public.konto_firma(uuid) from public, anon, authenticated;
 
--- ---------------------------------------------------------------------
--- Partner-Freischaltung
--- ---------------------------------------------------------------------
-create table if not exists public.partner (
-  user_id uuid primary key references auth.users(id) on delete cascade,
-  freigeschaltet_am timestamptz not null default now()
-);
-alter table public.partner enable row level security;
-
-drop policy if exists partner_select on public.partner;
-create policy partner_select on public.partner
-  for select using (user_id = auth.uid() or public.ist_nest_admin());
-drop policy if exists partner_admin_insert on public.partner;
-create policy partner_admin_insert on public.partner
-  for insert with check (public.ist_nest_admin());
-drop policy if exists partner_admin_delete on public.partner;
-create policy partner_admin_delete on public.partner
-  for delete using (public.ist_nest_admin());
-
--- Admin zählt als Partner, damit NEST den Assistenten selbst nutzen kann.
+-- Jedes Konto im Partner-Login gilt als Partner (keine eigene Freischaltung).
 create or replace function public.ist_partner() returns boolean
 language sql stable security definer set search_path = public as $$
-  select public.ist_nest_admin()
-      or exists (select 1 from public.partner where user_id = auth.uid())
+  select auth.uid() is not null
 $$;
 revoke execute on function public.ist_partner() from public, anon;
 grant execute on function public.ist_partner() to authenticated;
@@ -250,7 +230,7 @@ begin
       insert into public.netzwerk_empfaenger (frage_id, partner_id, firma)
         select p_frage_id, u, public.konto_firma(u)
         from unnest(p_empfaenger) as u
-        where u <> v_fragender and exists (select 1 from public.partner p where p.user_id = u)
+        where u <> v_fragender and exists (select 1 from auth.users au where au.id = u)
       on conflict do nothing
       returning netzwerk_empfaenger.partner_id, netzwerk_empfaenger.firma
     )
@@ -321,15 +301,14 @@ end $$;
 revoke execute on function public.netzwerk_meine() from public, anon;
 grant execute on function public.netzwerk_meine() to authenticated;
 
--- Admin: alle registrierten Konten mit Partner-Status und Ausbildungsberufen
+-- Admin: alle Konten im Partner-Login mit ihren Ausbildungsberufen
 create or replace function public.admin_konten()
-returns table (user_id uuid, email text, firma text, registriert_am timestamptz, partner boolean, berufe text[])
+returns table (user_id uuid, email text, firma text, registriert_am timestamptz, berufe text[])
 language plpgsql stable security definer set search_path = public as $$
 begin
   if not public.ist_nest_admin() then raise exception 'kein_admin'; end if;
   return query
     select u.id, u.email::text, nullif(trim(u.raw_user_meta_data ->> 'firma'), ''), u.created_at,
-      exists (select 1 from public.partner p where p.user_id = u.id),
       coalesce((select array_agg(distinct s.beruf order by s.beruf) from public.stellen s
                 where s.partner_id = u.id and s.beruf is not null), '{}')
     from auth.users u

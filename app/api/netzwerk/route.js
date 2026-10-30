@@ -19,7 +19,7 @@ function clean(v, max) { return String(v == null ? "" : v).trim().slice(0, max);
 function antwort(status, daten) { return NextResponse.json(daten, { status }); }
 
 const MELDUNGEN = {
-  kein_partner: [403, "Diese Funktion ist exklusiv für NEST-Partner."],
+  kein_partner: [401, "Bitte melde dich an."],
   kein_admin: [403, "Nur für das NEST-Team."],
   limit_erreicht: [429, "Ihr habt heute schon viele Fragen ans Netzwerk gestellt. Bitte versucht es morgen wieder."],
   nicht_empfaenger: [403, "Diese Frage wurde nicht an euch weitergegeben."],

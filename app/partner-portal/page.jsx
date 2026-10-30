@@ -208,8 +208,7 @@ export default function PartnerPortal() {
   const [apForm, setApForm] = useState(AP_LEER);
   const [apMsg, setApMsg] = useState("");
   const [apUploading, setApUploading] = useState(false);
-  // NEST-Assistent: nur für freigeschaltete Partner (Tabelle `partner`)
-  const [istPartner, setIstPartner] = useState(false);
+  // NEST-Assistent
   const [netzwerkStand, setNetzwerkStand] = useState(0); // erhöht sich nach einer neuen Frage -> Liste neu laden
 
   // Berufsliste für das Stellen-Dropdown – aus der Berufswelt-Datenbank
@@ -283,12 +282,6 @@ export default function PartnerPortal() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
-
-  // Partner-Status für den Assistenten
-  useEffect(() => {
-    if (!supabase || !session) { setIstPartner(false); return; }
-    supabase.rpc("ist_partner").then(({ data }) => setIstPartner(data === true));
-  }, [session]);
 
   // Konto: Firmen-Combobox mit dem gespeicherten Namen/Ref vorbelegen
   useEffect(() => {
@@ -889,7 +882,7 @@ export default function PartnerPortal() {
                   { href: "#abschnitt-messe", label: "NEST Explore" },
                   { href: "#abschnitt-team", label: "Ansprechpartner" },
                   { href: "#abschnitt-assistent", label: "Assistent" },
-                  (istPartner && !isAdmin) && { href: "#abschnitt-netzwerk", label: "Netzwerk" },
+                  !isAdmin && { href: "#abschnitt-netzwerk", label: "Netzwerk" },
                   { href: "#abschnitt-veranstaltungen", label: "Veranstaltungen" },
                   { href: "#abschnitt-infos", label: "Infos" },
                   { href: "#abschnitt-konto", label: "Konto" },
@@ -1324,32 +1317,20 @@ export default function PartnerPortal() {
               </div>
 
               <div id="abschnitt-assistent" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* NEST-Assistent und Fragen ans Netzwerk (exklusiv für Partner) */}
+              {/* NEST-Assistent und Fragen ans Netzwerk */}
               <div style={{ marginBottom: "36px" }}>
-                <span className="section-label">Exklusiv für Partner</span>
+                <span className="section-label">Für euch da</span>
                 <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>NEST-Assistent</h3>
-                {istPartner ? (
+                <Assistent onNetzwerkFrage={() => setNetzwerkStand((n) => n + 1)} />
+                {!isAdmin ? (
                   <>
-                    <Assistent onNetzwerkFrage={() => setNetzwerkStand((n) => n + 1)} />
-                    {!isAdmin ? (
-                      <>
-                        <div id="abschnitt-netzwerk" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-                        <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "36px 0 6px" }}>Fragen ans Netzwerk</h3>
-                        <Netzwerk neuLaden={netzwerkStand} />
-                        <Erfahrungen userId={session.user.id} />
-                      </>
-                    ) : (
-                      <p className="as-klein" style={{ marginTop: "12px" }}>Fragen ans Netzwerk, Freigaben und Partner-Freischaltung verwaltet ihr unten im Admin-Bereich unter „NEST-Assistent &amp; Netzwerk“.</p>
-                    )}
+                    <div id="abschnitt-netzwerk" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
+                    <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "36px 0 6px" }}>Fragen ans Netzwerk</h3>
+                    <Netzwerk neuLaden={netzwerkStand} />
+                    <Erfahrungen userId={session.user.id} />
                   </>
                 ) : (
-                  <div className="card as-teaser">
-                    <div>
-                      <b>Euer Assistent für Ausbildungsfragen</b>
-                      <p>Als NEST-Partner stellt ihr hier Fragen rund um eure Ausbildung und bekommt Antworten aus den Erfahrungen von NEST und unserem Netzwerk. Weiß der Assistent nicht weiter, geben wir eure Frage an passende Betriebe weiter.</p>
-                    </div>
-                    <a className="btn btn-primary" href="/kooperation">Partner werden</a>
-                  </div>
+                  <p className="as-klein" style={{ marginTop: "12px" }}>Fragen ans Netzwerk und Freigaben verwaltet ihr unten im Admin-Bereich unter „NEST-Assistent &amp; Netzwerk“.</p>
                 )}
               </div>
 

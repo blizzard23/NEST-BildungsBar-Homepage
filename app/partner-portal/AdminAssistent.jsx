@@ -1,14 +1,13 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { KATEGORIEN, apiPost, datumKurz } from "./assistentShared";
 
 const WISSEN_LEER = { id: null, titel: "", kategorie: KATEGORIEN[0], inhalt: "", status: "freigegeben" };
 const HERKUNFT = { nest: "NEST", partner: "Partner", netzwerk: "Netzwerk" };
 
-/* Admin-Bereich für den Assistenten: Fragen ans Netzwerk weitergeben,
-   Wissensbasis pflegen (inkl. Freigabe eingereichter Erfahrungen) und
-   Unternehmen als Partner freischalten. */
+/* Admin-Bereich für den Assistenten: Fragen ans Netzwerk weitergeben und
+   Wissensbasis pflegen (inkl. Freigabe eingereichter Erfahrungen). */
 export default function AdminAssistent() {
   const [konten, setKonten] = useState([]);
   const [fragen, setFragen] = useState([]);
@@ -19,7 +18,7 @@ export default function AdminAssistent() {
   const [wForm, setWForm] = useState(WISSEN_LEER);
   const [wMsg, setWMsg] = useState("");
   const [weitergabe, setWeitergabe] = useState({}); // frage_id -> { text, auswahl: Set, busy, msg }
-  const [partnerSuche, setPartnerSuche] = useState("");
+  const [betriebSuche, setBetriebSuche] = useState({}); // frage_id -> Suchtext
 
   const laden = useCallback(async () => {
     const heute = new Date().toISOString().slice(0, 10);
@@ -45,20 +44,10 @@ export default function AdminAssistent() {
   }, []);
   useEffect(() => { laden(); }, [laden]);
 
-  const partner = useMemo(() => konten.filter((k) => k.partner), [konten]);
   const zurFreigabe = wissen.filter((w) => w.status === "eingereicht");
   const freigegeben = wissen.filter((w) => w.status === "freigegeben");
   const abgelehnt = wissen.filter((w) => w.status === "abgelehnt");
   const uebernommen = new Set(wissen.map((w) => w.netzwerk_antwort_id).filter(Boolean));
-
-  // ---------- Partner freischalten ----------
-  async function partnerUmschalten(k) {
-    const { error } = k.partner
-      ? await supabase.from("partner").delete().eq("user_id", k.user_id)
-      : await supabase.from("partner").insert({ user_id: k.user_id });
-    if (error) { window.alert("Das hat nicht geklappt: " + error.message); return; }
-    setKonten((liste) => liste.map((x) => (x.user_id === k.user_id ? { ...x, partner: !k.partner } : x)));
-  }
 
   // ---------- Wissen ----------
   const setW = (feld) => (e) => setWForm((f) => ({ ...f, [feld]: e.target.value }));
@@ -133,17 +122,15 @@ export default function AdminAssistent() {
     document.getElementById("abschnitt-admin-wissen")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  const kontenGefiltert = konten.filter((k) => {
-    const q = partnerSuche.trim().toLowerCase();
-    return !q || (k.firma || "").toLowerCase().includes(q) || (k.email || "").toLowerCase().includes(q);
-  });
+  const passt = (k, q) => !q || (k.firma || "").toLowerCase().includes(q) || (k.email || "").toLowerCase().includes(q)
+    || (k.berufe || []).some((b) => b.toLowerCase().includes(q));
 
   return (
     <div className="as-admin">
       <div id="abschnitt-admin-assistent" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
       <div className="as-admin-kopf">
         <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: 0 }}>NEST-Assistent &amp; Netzwerk</h3>
-        <span className="as-meta">Fragen an den Assistenten: heute {nutzung.heute} · letzte 30 Tage {nutzung.monat} · {freigegeben.length} Wissenseinträge aktiv · {partner.length} Partner freigeschaltet</span>
+        <span className="as-meta">Fragen an den Assistenten: heute {nutzung.heute} · letzte 30 Tage {nutzung.monat} · {freigegeben.length} Wissenseinträge aktiv · {konten.length} Unternehmen im Partner-Login</span>
       </div>
 
       {/* Fragen ans Netzwerk */}
@@ -155,7 +142,8 @@ export default function AdminAssistent() {
         const bisher = empfaenger.filter((e) => e.frage_id === f.id);
         const bisherIds = new Set(bisher.map((e) => e.partner_id));
         const ant = antworten.filter((a) => a.frage_id === f.id);
-        const waehlbar = partner.filter((p) => p.user_id !== f.partner_id && !bisherIds.has(p.user_id));
+        const suche = (betriebSuche[f.id] || "").trim().toLowerCase();
+        const waehlbar = konten.filter((p) => p.user_id !== f.partner_id && !bisherIds.has(p.user_id) && (passt(p, suche) || s.auswahl.includes(p.user_id)));
         return (
           <div key={f.id} className="card as-karte">
             <div className="as-eintrag-kopf">
@@ -170,13 +158,16 @@ export default function AdminAssistent() {
               <textarea rows={3} maxLength={4000} value={s.text} onChange={(e) => wgSet(f, { text: e.target.value, msg: "" })} />
             </div>
             {bisher.length ? <p className="as-klein">Bereits weitergegeben an: {bisher.map((e) => e.firma || "Betrieb").join(", ")}</p> : null}
+            <div className="field" style={{ maxWidth: "360px", marginBottom: "4px" }}>
+              <input value={betriebSuche[f.id] || ""} onChange={(e) => setBetriebSuche((x) => ({ ...x, [f.id]: e.target.value }))} placeholder="Betrieb oder Ausbildungsberuf suchen …" aria-label="Betriebe filtern" />
+            </div>
             <div className="as-auswahl">
               {waehlbar.length ? waehlbar.map((p) => (
                 <label key={p.user_id} className={"as-wahl" + (s.auswahl.includes(p.user_id) ? " is-on" : "")}>
                   <input type="checkbox" checked={s.auswahl.includes(p.user_id)} onChange={() => wgToggle(f, p.user_id)} />
                   <span><b>{p.firma || p.email}</b>{p.berufe && p.berufe.length ? <small>{p.berufe.slice(0, 3).join(", ")}{p.berufe.length > 3 ? " …" : ""}</small> : null}</span>
                 </label>
-              )) : <p className="as-klein">Keine weiteren freigeschalteten Partner. Schaltet Unternehmen unten unter „Partner freischalten“ frei.</p>}
+              )) : <p className="as-klein">Keine passenden Betriebe gefunden.</p>}
             </div>
             {s.msg ? <p className={s.msg.startsWith("An ") ? "as-ok" : "as-fehler"}>{s.msg}</p> : null}
             <div className="as-aktionen">
@@ -256,26 +247,6 @@ export default function AdminAssistent() {
         </details>
       ))}
 
-      {/* Partner freischalten */}
-      <div id="abschnitt-admin-partner" style={{ scrollMarginTop: "84px" }}></div>
-      <h4 className="as-h4" style={{ marginTop: "36px" }}>Partner freischalten ({partner.length} von {konten.length})</h4>
-      <p className="as-klein">Nur freigeschaltete Partner sehen den Assistenten, können Fragen ans Netzwerk stellen und Erfahrungen teilen. Registrierte Unternehmen ohne Freischaltung sehen einen Hinweis auf die Partnerschaft.</p>
-      <div className="field" style={{ maxWidth: "360px" }}>
-        <input value={partnerSuche} onChange={(e) => setPartnerSuche(e.target.value)} placeholder="Unternehmen oder E-Mail suchen …" aria-label="Unternehmen suchen" />
-      </div>
-      <div className="as-konten">
-        {kontenGefiltert.map((k) => (
-          <div key={k.user_id} className="as-konto">
-            <div>
-              <b>{k.firma || "(ohne Firmenname)"}</b>
-              <small>{k.email} · seit {datumKurz(k.registriert_am)}{k.berufe && k.berufe.length ? " · " + k.berufe.slice(0, 3).join(", ") : ""}</small>
-            </div>
-            <button type="button" className={"btn " + (k.partner ? "btn-outline" : "btn-primary")} onClick={() => partnerUmschalten(k)}>
-              {k.partner ? "Freischaltung entfernen" : "Als Partner freischalten"}
-            </button>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

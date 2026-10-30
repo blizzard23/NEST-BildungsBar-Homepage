@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 /* NEST-Assistent im Partner-Login.
-   - nur für freigeschaltete Partner (und den NEST-Admin), geprüft über das
-     Supabase-Login des Aufrufers; der API-Schlüssel bleibt auf dem Server
+   - für alle Unternehmen im Partner-Login, geprüft über das Supabase-Login
+     des Aufrufers; der API-Schlüssel bleibt auf dem Server
    - antwortet ausschließlich aus der freigegebenen Wissensbasis
      (Tabelle assistent_wissen). Jeder Eintrag geht als eigenes Dokument mit
      aktivierten Quellenangaben an Claude; die Seite zeigt die Quellen an.
@@ -83,7 +83,7 @@ export async function POST(req) {
 
   const { data: anzahl, error: zaehlFehler } = await sb.rpc("assistent_frage_zaehlen", { p_limit: TAGESLIMIT });
   if (zaehlFehler) {
-    if (/kein_partner/.test(zaehlFehler.message)) return fehler(403, "Der Assistent ist exklusiv für NEST-Partner.");
+    if (/kein_partner/.test(zaehlFehler.message)) return fehler(401, "Bitte melde dich an.");
     console.error("[assistent] zaehlen", zaehlFehler);
     return fehler(500, "Der Assistent ist gerade nicht erreichbar.");
   }

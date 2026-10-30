@@ -233,19 +233,6 @@ const html = `
         </div>
       </div>
 
-      <div class="bb-included">
-        <b>In jedem Paket enthalten</b>
-        <ul>
-          <li>Stellenseite in der NEST Berufswelt</li>
-          <li>NESTplay im Unterricht</li>
-          <li>Workshops an Schulen</li>
-          <li>Beratung und Vernetzung über die BildungsBar</li>
-          <li>Ausbildungsdialog und vier Netzwerktreffen</li>
-          <li>Partner-Login mit Ansprechpartnern</li>
-          <li>Social Media</li>
-        </ul>
-      </div>
-
       <div class="np-addons">
         <div class="np-addons-head"><b>Exklusiv für Partner zubuchbar</b></div>
         <div class="np-addon">

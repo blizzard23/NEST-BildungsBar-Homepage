@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { supabase, supabaseConfigured, istRecoveryLink, linkFehler } from "@/lib/supabaseClient";
-import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameEditUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
+import { fetchGamesForCompany, fetchNestplayCompanies, gameEditUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
 import { mapMesseTermin } from "@/lib/messeTermine";
 import { inhaltZuHtml } from "@/lib/blogFormat";
 import Assistent from "./Assistent";
 import Netzwerk from "./Netzwerk";
 import Erfahrungen from "./Erfahrungen";
 import AdminAssistent from "./AdminAssistent";
+import { PortalNav, KernpunktBanner, UnterKopf, AnsprechpartnerListe, AllesAufEinenBlick, ICON } from "./PortalBausteine";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "", keyword1: "", keyword2: "", keyword3: "" };
@@ -176,8 +177,6 @@ export default function PartnerPortal() {
   const [messeTermine, setMesseTermine] = useState([]); // kommende NEST-Explore-Termine (live aus Supabase)
   const [nestplaySpiele, setNestplaySpiele] = useState(0);
   const [nestplayGames, setNestplayGames] = useState([]);
-  const [netzStellen, setNetzStellen] = useState(0);
-  const [netzSpiele, setNetzSpiele] = useState(0);
   const [form, setForm] = useState(LEER);
   const [msg, setMsg] = useState("");
 
@@ -210,6 +209,8 @@ export default function PartnerPortal() {
   const [apUploading, setApUploading] = useState(false);
   // NEST-Assistent
   const [netzwerkStand, setNetzwerkStand] = useState(0); // erhöht sich nach einer neuen Frage -> Liste neu laden
+  const [stelleFormOffen, setStelleFormOffen] = useState(false); // Formular „Neue Stelle" aufgeklappt?
+  const [alleTermine, setAlleTermine] = useState(false);         // alle Explore-Termine statt der nächsten vier
 
   // Berufsliste für das Stellen-Dropdown – aus der Berufswelt-Datenbank
   // (window.BERUFE_KATEGORIEN, kommt über das global eingebundene nest-app.js).
@@ -234,6 +235,7 @@ export default function PartnerPortal() {
   const zeigeBerufFrei = berufFrei || (!!form.beruf && !berufImKatalog);
 
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
+  const firmaName = ((session?.user?.user_metadata?.firma || "").trim()) || form.firma || (stellen[0] && stellen[0].firma) || "";
 
   // Kurze Toast-Meldung (verschwindet nach ein paar Sekunden von selbst)
   const toast = useCallback((text) => setToastMsg(text), []);
@@ -244,29 +246,6 @@ export default function PartnerPortal() {
   }, [toastMsg]);
   // Sicherheitsabfrage vor dem Löschen
   const bestaetigeLoeschen = (was) => window.confirm(`„${was}" wirklich löschen? Das kann nicht rückgängig gemacht werden.`);
-
-  // Die drei Kernbereiche im Partner-Portal. Der Button öffnet die jeweilige
-  // Broschüre als eigenständige HTML-Seite (liegt unter /public/broschueren).
-  const BEREICHE = [
-    {
-      titel: "Kooperation",
-      bild: "/assets/img/broschueren/kooperation.jpg",
-      text: "Hier findet ihr alle Informationen zu unserer Zusammenarbeit und eurer Kooperation mit NEST.",
-      link: "/broschueren/kooperation.html",
-    },
-    {
-      titel: "NESTplay",
-      bild: "/assets/img/broschueren/nestplay.jpg",
-      text: "Hier findet ihr alle Informationen zu unserem interaktiven Quiz für Schulen und eure Möglichkeiten bei NESTplay.",
-      link: "/broschueren/nestplay.html",
-    },
-    {
-      titel: "NEST Explore",
-      bild: "/assets/img/broschueren/nest-explore.jpg",
-      text: "Hier findet ihr alle Informationen zu unserem Schulformat NEST Explore und wie ihr euch daran beteiligen könnt.",
-      link: "/broschueren/nest-explore.html",
-    },
-  ];
 
   useEffect(() => {
     if (!supabase) { setLoading(false); return; }
@@ -325,21 +304,10 @@ export default function PartnerPortal() {
       .order("sortierung", { ascending: true }).order("created_at", { ascending: true });
     setAnsprechpartner(ap || []);
 
-    // Vergleichswert: aktive Stellen im gesamten Netzwerk (RLS gibt nur aktive Stellen frei)
-    const grenze = new Date(Date.now() - STELLEN_TAGE * 86400000).toISOString().slice(0, 10);
-    const { count: netzCount } = await supabase
-      .from("stellen").select("*", { count: "exact", head: true })
-      .gte("aktiviert_am", grenze);
-    setNetzStellen(netzCount || 0);
-
-    // NESTplay-Anbindung: Live-Spiele des Unternehmens + Netzwerk-Gesamtzahl
-    const [spiele, gesamt] = await Promise.all([
-      fetchGamesForCompany(nestplayRef),
-      fetchLiveGamesTotal(),
-    ]);
+    // NESTplay-Anbindung: Live-Spiele des eigenen Unternehmens
+    const spiele = await fetchGamesForCompany(nestplayRef);
     setNestplayGames(spiele);
     setNestplaySpiele(spiele.length);
-    setNetzSpiele(gesamt);
   }, [session]); // eslint-disable-line
 
   const ladeAdmin = useCallback(async () => {
@@ -465,7 +433,7 @@ export default function PartnerPortal() {
     if (form.id) {
       const { error } = await supabase.from("stellen").update(werte).eq("id", form.id);
       if (error) { setMsg("Fehler: " + error.message); return; }
-      setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false);
+      setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false); setStelleFormOffen(false);
       toast("Stelle aktualisiert ✅");
       ladeDaten();
       return;
@@ -473,7 +441,7 @@ export default function PartnerPortal() {
     const eintrag = { ...werte, partner_id: session.user.id, aktiviert_am: new Date().toISOString().slice(0, 10) };
     const { error } = await supabase.from("stellen").insert(eintrag);
     if (error) { setMsg("Fehler: " + error.message); return; }
-    setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false);
+    setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false); setStelleFormOffen(false);
     toast("Stelle veröffentlicht ✅ (30 Tage sichtbar)");
     ladeDaten();
   }
@@ -482,7 +450,8 @@ export default function PartnerPortal() {
     setForm({ id: s.id, firma: s.firma || "", beruf: s.beruf || "", art: s.art || "Ausbildung", ort: s.ort || "Wuppertal", start: s.start || "", url: s.url || "", logo_url: s.logo_url || "", keyword1: kw[0] || "", keyword2: kw[1] || "", keyword3: kw[2] || "" });
     setBerufFrei(false); // steht der Beruf nicht im Katalog, zeigt die Ableitung automatisch Freitext
     setMsg("");
-    if (typeof document !== "undefined") { const el = document.getElementById("abschnitt-stellen"); if (el) el.scrollIntoView({ behavior: "smooth" }); }
+    setStelleFormOffen(true);
+    if (typeof document !== "undefined") setTimeout(() => { const el = document.getElementById("abschnitt-stellen-form"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 50);
   }
   async function verlaengern(id) {
     const { error } = await supabase.from("stellen").update({ aktiviert_am: new Date().toISOString().slice(0, 10) }).eq("id", id);
@@ -757,17 +726,19 @@ export default function PartnerPortal() {
 
   return (
     <div>
-      <section className="hero">
-        <div className="container"><div className="hero-inner"><div className="hero-text">
-          <span className="hero-badge">Partner-Portal</span>
-          <h1>Willkommen im<br /><em>Partner-Portal</em></h1>
-          <p className="lead">Verwalte deine Ausbildungsstellen, sieh dir kommende Veranstaltungen an – alles an einem Ort.</p>
-        </div></div></div>
-      </section>
+      {!session || recovery ? (
+        <section className="hero">
+          <div className="container"><div className="hero-inner"><div className="hero-text">
+            <span className="hero-badge">Partner-Login</span>
+            <h1>Willkommen im<br /><em>Partner-Login</em></h1>
+            <p className="lead">Stellen, NESTplay, NEST Explore, Workshops, Ansprechpartner und euer NEST-Assistent – alles an einem Ort.</p>
+          </div></div></div>
+        </section>
+      ) : null}
 
       {/* Portal · Kacheln, Pill-Buttons und Felder wie im Brilliant-System (bb.css, .bb-portal) */}
-      <section className="bg-light bb-portal">
-        <div className="container" style={{ maxWidth: "920px" }}>
+      <section className={"bg-light bb-portal" + (session && !recovery ? " pd-seite" : "")}>
+        <div className="container" style={{ maxWidth: session && !recovery ? "1280px" : "920px" }}>
 
           {!supabaseConfigured ? (
             <div className="card"><h3>Supabase noch nicht verbunden</h3>
@@ -861,165 +832,74 @@ export default function PartnerPortal() {
               })()}
             </div>
           ) : (
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "22px", flexWrap: "wrap", gap: "12px" }}>
-                <div>
-                  <span className="section-label">Eingeloggt{isAdmin ? " · Admin" : ""}</span>
-                  <strong style={{ color: "var(--navy)", fontSize: "18px" }}>{session.user.email}</strong>
+            <div className="pd-shell">
+              <PortalNav isAdmin={isAdmin} firma={isAdmin ? "NEST BildungsBar" : firmaName} email={session.user.email} onLogout={logout} />
+              <main className="pd-main">
+
+              {/* ============ ÜBERSICHT: Begrüßung, Assistent, eigene Zahlen ============ */}
+              <section id="abschnitt-dashboard" className="pd-sec">
+                <div className="pd-hallo">
+                  <span className="pd-datum">{new Date().toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" })}</span>
+                  <h1>Willkommen, <em>{isAdmin ? "NEST-Team" : (firmaName || "schön, dass ihr da seid")}</em></h1>
+                  <p>Euer Partner-Login nach unseren zwei Kernpunkten: <b className="pd-txt-finden">Azubis finden</b> und <b className="pd-txt-halten">Azubis halten</b>. Fragt den Assistenten oder springt direkt in einen Bereich.</p>
                 </div>
-                <button className="btn btn-outline" onClick={logout} style={{ borderColor: "var(--navy)", color: "var(--navy)", fontWeight: 800, display: "inline-flex", alignItems: "center", gap: "8px" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                  Abmelden
-                </button>
-              </div>
-
-              {/* Sektions-Navigation */}
-              <nav className="pp-nav">
-                {[
-                  !isAdmin && { href: "#abschnitt-dashboard", label: "Dashboard" },
-                  { href: "#abschnitt-stellen", label: "Stellen" },
-                  !isAdmin && { href: "#abschnitt-nestplay", label: "NESTplay" },
-                  { href: "#abschnitt-messe", label: "NEST Explore" },
-                  { href: "#abschnitt-team", label: "Ansprechpartner" },
-                  { href: "#abschnitt-assistent", label: "Assistent" },
-                  !isAdmin && { href: "#abschnitt-netzwerk", label: "Netzwerk" },
-                  { href: "#abschnitt-veranstaltungen", label: "Veranstaltungen" },
-                  { href: "#abschnitt-infos", label: "Infos" },
-                  { href: "#abschnitt-konto", label: "Konto" },
-                  isAdmin && { href: "#abschnitt-admin", label: "Admin" },
-                  isAdmin && { href: "#abschnitt-explore-buchungen", label: "Explore-Buchungen" },
-                  isAdmin && { href: "#abschnitt-admin-assistent", label: "Assistent-Admin" },
-                ].filter(Boolean).map((n) => (
-                  <a key={n.href} href={n.href} className="pp-nav-link">{n.label}</a>
-                ))}
-              </nav>
-
-              {/* Konto & Zugang */}
-              <div id="abschnitt-konto" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              <div style={{ marginBottom: "36px" }}>
-                <span className="section-label">Konto</span>
-                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 14px" }}>Konto &amp; Zugang</h3>
-                <div className="card-grid cols-2">
-                  <div className="card">
-                    <h3>Unternehmensname ändern</h3>
-                    <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "14px" }}>Wird für neue Stellen vorausgefüllt{!isAdmin ? " und in deinen veröffentlichten Stellen aktualisiert" : ""}.</p>
-                    <form onSubmit={firmaSpeichern} className="tb-form">
-                      {(() => {
-                        const f = firmaQuery.trim().toLowerCase();
-                        const treffer = companies.filter((c) => !f || c.name.toLowerCase().includes(f)).slice(0, 8);
-                        return (
-                          <div className="field combo-field">
-                            <label>Unternehmen</label>
-                            <input
-                              type="text" value={firmaQuery} autoComplete="off"
-                              placeholder={nestplayConfigured ? "Unternehmen suchen …" : "Unternehmensname eingeben"}
-                              onChange={(e) => setFirmaFreitext(e.target.value)}
-                              onFocus={() => setFirmaOpen(true)}
-                              onBlur={() => setTimeout(() => setFirmaOpen(false), 150)}
-                            />
-                            {firmaRef && firmaRef !== firmaQuery ? <span className="combo-ok">✓ aus NESTplay übernommen</span> : null}
-                            {firmaOpen && treffer.length ? (
-                              <div className="combo-list">
-                                {treffer.map((c) => (
-                                  <button type="button" className="combo-item" key={c.ref} onMouseDown={(e) => { e.preventDefault(); waehleFirma(c); }}>
-                                    <span>{c.name}</span>
-                                    <span className="combo-count">{c.count} {c.count === 1 ? "Spiel" : "Spiele"}</span>
-                                  </button>
-                                ))}
-                              </div>
-                            ) : null}
-                            {firmaOpen && nestplayConfigured && f && !treffer.length ? (
-                              <div className="combo-list"><div className="combo-empty">Kein Treffer – „{firmaQuery}" wird als Name verwendet.</div></div>
-                            ) : null}
-                          </div>
-                        );
-                      })()}
-                      {firmaMsg ? <p style={{ color: firmaMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{firmaMsg}</p> : null}
-                      <button className="btn btn-primary" type="submit">Speichern</button>
-                    </form>
-                  </div>
-                  <div className="card">
-                    <h3>Passwort ändern</h3>
-                    <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "14px" }}>Mindestens 8 Zeichen. Du bleibst danach eingeloggt.</p>
-                    <form onSubmit={passwortAendern} className="tb-form">
-                      <div className="field"><label>Neues Passwort</label><input type="password" value={pwNeu} onChange={(e) => setPwNeu(e.target.value)} placeholder="mindestens 8 Zeichen" autoComplete="new-password" /></div>
-                      {pwMsg ? <p style={{ color: pwMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{pwMsg}</p> : null}
-                      <button className="btn btn-primary" type="submit">Passwort ändern</button>
-                    </form>
-                  </div>
+                <div id="abschnitt-assistent" className="pd-assistent">
+                  <Assistent onNetzwerkFrage={() => setNetzwerkStand((n) => n + 1)} />
                 </div>
-              </div>
-
-              <div id="abschnitt-dashboard" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* Dashboard – Kennzahlen im Vergleich */}
-              {!isAdmin && (() => {
-                const aktive = stellen.filter((s) => { const r = tageRestStelle(s.aktiviert_am); return r != null && r >= 0; });
-                const restWerte = aktive.map((s) => tageRestStelle(s.aktiviert_am));
-                const minRest = restWerte.length ? Math.min(...restWerte) : null;
-                const a = ampelStatus(minRest);
-                const pct = (mine, total) => (total > 0 ? Math.min(100, Math.round((mine / total) * 100)) : 0);
-                return (
-                  <div style={{ marginBottom: "36px" }}>
-                    <span className="section-label">Übersicht</span>
-                    <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 4px" }}>Dein Dashboard im Vergleich</h3>
-                    <p style={{ color: "var(--text-soft)", fontSize: "14px", margin: "0 0 18px" }}>Deine wichtigsten Kennzahlen – direkt im Vergleich zum gesamten NEST-Netzwerk.</p>
-                    <div className="dash-grid">
-                      {/* NESTplay-Spiele */}
-                      <div className="dash-card">
-                        <div className="dash-card-top">
-                          <div className="dash-ic dash-ic--play">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="10" r="1"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
-                          </div>
-                          {nestplayConfigured
-                            ? <span className="dash-live"><i></i>NESTplay verbunden</span>
-                            : <span className="dash-off">nicht verbunden</span>}
-                        </div>
-                        <div className="dash-compare">
-                          <div><div className="dash-num">{nestplaySpiele}</div><div className="dash-sub">deine</div></div>
-                          <div className="dash-vs">/</div>
-                          <div><div className="dash-num dash-num--muted">{netzSpiele}</div><div className="dash-sub">Netzwerk</div></div>
-                        </div>
-                        <div className="dash-bar"><span style={{ width: pct(nestplaySpiele, netzSpiele) + "%" }}></span></div>
-                        <div className="dash-lbl">NESTplay-Spiele online</div>
-                      </div>
-                      {/* Aktuelle Stellen */}
-                      <div className="dash-card">
-                        <div className="dash-card-top">
-                          <div className="dash-ic dash-ic--job">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                          </div>
-                        </div>
-                        <div className="dash-compare">
-                          <div><div className="dash-num">{aktive.length}</div><div className="dash-sub">deine</div></div>
-                          <div className="dash-vs">/</div>
-                          <div><div className="dash-num dash-num--muted">{netzStellen}</div><div className="dash-sub">Netzwerk</div></div>
-                        </div>
-                        <div className="dash-bar dash-bar--gold"><span style={{ width: pct(aktive.length, netzStellen) + "%" }}></span></div>
-                        <div className="dash-lbl">Aktuelle Stellen online</div>
-                      </div>
-                      {/* Restlaufzeit + Ampelsystem */}
-                      <div className={"dash-card dash-card--ampel " + a.cls}>
-                        <div className="dash-card-top">
-                          <div className="dash-ic dash-ic--time">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                          </div>
-                          <span className={"ampel-badge " + a.cls}><i className="ampel-dot"></i>{a.text}</span>
-                        </div>
-                        <div className="dash-num">{minRest == null ? "–" : minRest + (minRest === 1 ? " Tag" : " Tage")}</div>
-                        <div className="dash-sub">Restlaufzeit deiner nächsten Stelle</div>
-                        <div className="ampel-legend" style={{ marginTop: "12px" }}>
-                          <span><i className="ampel-dot ampel-gruen"></i> mehr als 10 Tage</span>
-                          <span><i className="ampel-dot ampel-gelb"></i> 4–10 Tage</span>
-                          <span><i className="ampel-dot ampel-rot"></i> 3 Tage oder weniger</span>
-                        </div>
-                      </div>
+                {!isAdmin && (() => {
+                  const aktive = stellen.filter((s) => { const r = tageRestStelle(s.aktiviert_am); return r != null && r >= 0; });
+                  const restWerte = aktive.map((s) => tageRestStelle(s.aktiviert_am));
+                  const minRest = restWerte.length ? Math.min(...restWerte) : null;
+                  const a = ampelStatus(minRest);
+                  return (
+                    <div className="pd-kpis">
+                      <a className="pd-kpi" href="#abschnitt-stellen">
+                        <span className="pd-kpi-kopf"><span className="pd-kpi-ic pd-kpi-ic--finden">{ICON.stellen}</span>Eure Stellen online</span>
+                        <b className="pd-kpi-zahl">{aktive.length}</b>
+                        <span className="pd-kpi-fuss">{stellen.length ? `von ${stellen.length} veröffentlichten Stellen` : "noch keine Stelle veröffentlicht"}</span>
+                      </a>
+                      <a className="pd-kpi" href="#abschnitt-nestplay">
+                        <span className="pd-kpi-kopf"><span className="pd-kpi-ic pd-kpi-ic--finden">{ICON.nestplay}</span>Eure NESTplay-Spiele</span>
+                        <b className="pd-kpi-zahl">{nestplaySpiele}</b>
+                        <span className="pd-kpi-fuss">{nestplayConfigured ? "live im Unterricht" : "NESTplay nicht verbunden"}</span>
+                      </a>
+                      <a className={"pd-kpi pd-kpi--ampel " + (minRest == null ? "" : a.cls)} href="#abschnitt-stellen">
+                        <span className="pd-kpi-kopf"><span className="pd-kpi-ic pd-kpi-ic--zeit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Restlaufzeit nächste Stelle</span>
+                        <b className="pd-kpi-zahl">{minRest == null ? "–" : minRest + (minRest === 1 ? " Tag" : " Tage")}</b>
+                        <span className="pd-kpi-fuss">{minRest == null ? "keine aktive Stelle" : <span className={"ampel-badge " + a.cls}><i className="ampel-dot"></i>{a.text}</span>}</span>
+                      </a>
                     </div>
-                  </div>
-                );
-              })()}
+                  );
+                })()}
+              </section>
 
-              {/* Neue Stelle */}
-              <div className="card" style={{ marginBottom: "28px" }} id="abschnitt-stellen">
+              {/* ============ KERNPUNKT 1: AZUBIS FINDEN ============ */}
+              <section className="pd-sec">
+                <KernpunktBanner
+                  id="abschnitt-finden" nr={1} art="finden"
+                  titel="Azubis finden" unter="Junge Menschen lernen euch kennen"
+                  text="Mit euren Stellen in der Berufswelt, eurem Quiz bei NESTplay und NEST Explore an Schulen lernen Schüler:innen euch kennen, bevor sie sich bewerben."
+                  punkte={[{ href: "#abschnitt-stellen", label: "Stellen" }, !isAdmin && { href: "#abschnitt-nestplay", label: "NESTplay" }, { href: "#abschnitt-messe", label: "NEST Explore" }].filter(Boolean)}
+                  phoneTitel="Azubis finden"
+                  zeilen={[
+                    ["Stellen online", String(stellen.filter((s) => { const r = tageRestStelle(s.aktiviert_am); return r != null && r >= 0; }).length)],
+                    !isAdmin && ["NESTplay-Spiele", String(nestplaySpiele)],
+                    ["Explore-Termin", messeTermine[0] ? messeTermine[0].tag + ". " + messeTermine[0].monat_kurz : "–"],
+                  ].filter(Boolean)}
+                />
+
+                {/* Unterpunkt: Stellen */}
+                <div id="abschnitt-stellen" className="pd-unter">
+                  <UnterKopf icon={ICON.stellen} art="finden" titel="Stellen in der Berufswelt" text="Eure Ausbildungsplätze erscheinen 30 Tage lang in der NEST Berufswelt und auf der Startseite.">
+                    {stellen.length ? (
+                      <button type="button" className={"btn " + (stelleFormOffen || form.id ? "btn-outline" : "btn-primary")} onClick={() => {
+                        if (form.id) { setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false); setMsg(""); setStelleFormOffen(false); return; }
+                        setStelleFormOffen((v) => !v);
+                      }}>{stelleFormOffen || form.id ? "Formular schließen" : "Neue Stelle"}</button>
+                    ) : null}
+                  </UnterKopf>
+                  {stelleFormOffen || form.id || !stellen.length ? (
+                  <div className="card pd-karte" id="abschnitt-stellen-form">
                 <h3>{form.id ? "Stelle bearbeiten" : "Neue Ausbildungsstelle veröffentlichen"}</h3>
                 <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "16px" }}>{form.id ? "Änderungen werden sofort übernommen." : "Erscheint auf der Berufswelt – automatisch 30 Tage sichtbar."}</p>
                 <form onSubmit={speichern} className="tb-form">
@@ -1094,10 +974,8 @@ export default function PartnerPortal() {
                     {form.id ? <button type="button" className="btn btn-outline" onClick={() => { setForm((f) => ({ ...LEER, firma: f.firma })); setBerufFrei(false); setMsg(""); }}>Abbrechen</button> : null}
                   </div>
                 </form>
-              </div>
-
-              {/* Eigene Stellen */}
-              <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Deine Stellen ({stellen.length})</h3>
+                  </div>
+                  ) : null}
               {stellen.length ? (
                 <div className="card-grid cols-2" style={{ marginBottom: "28px" }}>
                   {stellen.map((s) => {
@@ -1127,21 +1005,18 @@ export default function PartnerPortal() {
                     );
                   })}
                 </div>
-              ) : <p style={{ color: "var(--text-soft)", marginBottom: "28px" }}>Du hast noch keine Stellen veröffentlicht.</p>}
+              ) : <p className="pd-leer">Ihr habt noch keine Stellen veröffentlicht. Über das Formular oben erscheint eure erste Stelle 30 Tage lang in der Berufswelt.</p>}
 
-              <div id="abschnitt-nestplay" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* Deine NESTplay-Spiele (Live-Anbindung an nest-play.de) */}
-              {!isAdmin && (() => {
-                const firma = (stellen[0] && stellen[0].firma) || form.firma || "";
-                return (
-                  <div style={{ marginBottom: "36px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px" }}>
-                      <div>
-                        <span className="section-label">NESTplay</span>
-                        <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 4px" }}>Deine NESTplay-Spiele</h3>
-                      </div>
-                      <a className="btn btn-outline" href={NESTPLAY_URL} target="_blank" rel="noopener">Zu NESTplay ↗</a>
-                    </div>
+                </div>
+
+                {/* Unterpunkt: NESTplay */}
+                {!isAdmin && (() => {
+                  const firma = (stellen[0] && stellen[0].firma) || form.firma || "";
+                  return (
+                    <div id="abschnitt-nestplay" className="pd-unter">
+                      <UnterKopf icon={ICON.nestplay} art="finden" titel="NESTplay im Unterricht" text="Euer Quiz läuft an den Partnerschulen, auch wenn ihr nicht vor Ort seid. Hier seht ihr eure Spiele, die gerade live sind.">
+                        <a className="btn btn-outline" href={NESTPLAY_URL} target="_blank" rel="noopener">Zu NESTplay ↗</a>
+                      </UnterKopf>
                     {!nestplayConfigured ? (
                       <div className="card" style={{ marginTop: "10px" }}>
                         <p style={{ margin: 0, color: "var(--text-soft)", fontSize: "14px" }}>
@@ -1171,89 +1046,18 @@ export default function PartnerPortal() {
                         </p>
                       </div>
                     )}
-                  </div>
-                );
-              })()}
-
-              {/* NESTplay Promo für Partner */}
-              {!isAdmin && (
-                <div className="np-promo" style={{ marginTop: "28px" }}>
-                  <div className="np-promo-text">
-                    <span className="np-promo-label">Für Unternehmen</span>
-                    <div className="np-promo-h">NESTplay. – dein Betrieb<br /><em>im Unterricht</em></div>
-                    <p className="np-promo-p">Präsentiere deinen Betrieb direkt in der Klasse als interaktives Live-Quiz. Schüler:innen spielen in Echtzeit – und erinnern sich nachhaltig an dein Unternehmen.</p>
-                    <a href={NESTPLAY_URL} target="_blank" rel="noopener" className="btn btn-primary" style={{ display: "inline-flex" }}>Zu NESTplay. →</a>
-                  </div>
-                  <div className="np-promo-phone">
-                    <div className="np-mini-phone">
-                      <div className="np-phone-screen">
-                        <div className="np-phone-head" style={{ padding: "22px 12px 12px" }}>
-                          <div className="np-phone-pl">NESTplay · Frage 3/5</div>
-                          <div className="np-phone-h4">Dein Unternehmen</div>
-                        </div>
-                        <div className="np-phone-body" style={{ padding: "10px" }}>
-                          <div className="np-phone-q">Wie viele Azubis startet euer Betrieb pro Jahr?</div>
-                          <div className="np-phone-opts">
-                            <div className="np-phone-opt np-o-a">2–3</div>
-                            <div className="np-phone-opt np-o-b">5–8</div>
-                            <div className="np-phone-opt np-o-c">10–15</div>
-                            <div className="np-phone-opt np-o-d">20+</div>
-                          </div>
-                          <div style={{ background: "var(--navy)", padding: "8px 10px", display: "flex", justifyContent: "space-between", marginTop: "8px", borderRadius: "6px" }}>
-                            <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)" }}>Team Adler</span>
-                            <b style={{ fontSize: "11px", color: "#EFA500", fontWeight: 900 }}>40 Pkt.</b>
-                          </div>
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
+                  );
+                })()}
 
-              <div id="abschnitt-messe" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* NEST Explore (Messe) – Promo-Mockup + kommende Termine */}
-              {!isAdmin && (
-                <div className="np-promo" style={{ marginTop: "36px" }}>
-                  <div className="np-promo-text">
-                    <span className="np-promo-label">Für Unternehmen</span>
-                    <div className="np-promo-h">NEST Explore<br /><em>kommt in die Schule</em></div>
-                    <p className="np-promo-p">Trefft motivierte Schüler:innen direkt vor Ort – NEST Explore bringt euch persönlich mit Schulklassen zusammen, komplett von NEST organisiert.</p>
-                    <a href="https://nest-explore.de" target="_blank" rel="noopener" className="btn btn-primary" style={{ display: "inline-flex" }}>Zu NEST Explore →</a>
-                  </div>
-                  <div className="np-promo-phone">
-                    <div className="np-mini-phone">
-                      <div className="np-phone-screen">
-                        <div className="np-phone-head" style={{ padding: "22px 12px 12px" }}>
-                          <div className="np-phone-pl">NEST Explore · Terminkalender</div>
-                          <div className="np-phone-h4">Schul-Termine</div>
-                        </div>
-                        <div className="np-phone-body" style={{ padding: "10px", display: "flex", flexDirection: "column", gap: "7px" }}>
-                          <div style={{ background: "#fff", borderRadius: "6px", padding: "7px 9px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontSize: "9.5px", fontWeight: 700, color: "var(--navy)" }}>Gesamtschule Barmen</span>
-                            <b style={{ fontSize: "9px", color: "var(--gold-dark)", fontWeight: 900 }}>08. Apr</b>
-                          </div>
-                          <div style={{ background: "#fff", borderRadius: "6px", padding: "7px 9px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontSize: "9.5px", fontWeight: 700, color: "var(--navy)" }}>Berufskolleg Elberfeld</span>
-                            <b style={{ fontSize: "9px", color: "var(--gold-dark)", fontWeight: 900 }}>22. Apr</b>
-                          </div>
-                          <div style={{ background: "var(--navy)", borderRadius: "6px", padding: "7px 10px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.6)" }}>Realschule Vohwinkel</span>
-                            <b style={{ fontSize: "9px", color: "#EFA500", fontWeight: 900 }}>13. Mai</b>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Kommende Messetermine (NEST Explore) */}
-              <div style={{ marginTop: "36px" }}>
-                <span className="section-label">NEST Explore</span>
-                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 14px" }}>Kommende Termine</h3>
+                {/* Unterpunkt: NEST Explore */}
+                <div id="abschnitt-messe" className="pd-unter">
+                  <UnterKopf icon={ICON.explore} art="finden" titel="NEST Explore an Schulen" text="In sechs Runden à 7 Minuten lernt ihr Schulklassen persönlich kennen. 290 € pro Termin, exklusiv für Partner zubuchbar.">
+                    <a className="btn btn-primary" href="https://nest-explore.de/terminkalender" target="_blank" rel="noopener">Termin buchen ↗</a>
+                  </UnterKopf>
                 {messeTermine.length ? (
                   <div className="messe-termine">
-                    {messeTermine.map((m) => (
+                    {(alleTermine ? messeTermine : messeTermine.slice(0, 4)).map((m) => (
                       <div
                         className="messe-termin"
                         key={m.id}
@@ -1276,67 +1080,71 @@ export default function PartnerPortal() {
                       </div>
                     ))}
                   </div>
-                ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Termine eingetragen.</p>}
-              </div>
-
-              <div id="abschnitt-team" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* Ansprechpartner */}
-              <div style={{ marginBottom: "36px" }}>
-                <span className="section-label">Für euch da</span>
-                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>Ansprechpartner</h3>
-                <div className="ap-grid">
-                  {(ansprechpartner.length ? ansprechpartner : AP_DEFAULT).map((ap) => (
-                    <div className="ap-card" key={ap.id || ap.email}>
-                      {ap.bild_url ? <img className="ap-photo" src={ap.bild_url} alt={ap.name} /> : null}
-                      <div className="ap-body">
-                        {ap.rolle ? <div className="ap-topic">{ap.rolle}</div> : null}
-                        <div className="ap-name">{ap.name}</div>
-                        {ap.beschreibung ? <p style={{ fontSize: "13px", color: "var(--text-soft)", margin: "0 0 8px" }}>{ap.beschreibung}</p> : null}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                          {ap.standort ? <span style={{ fontSize: "13px", color: "var(--text-soft)", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            {ap.standort}
-                          </span> : null}
-                          {ap.email ? <a href={`mailto:${ap.email}`} style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            {ap.email}
-                          </a> : null}
-                          {ap.telefon ? <a href={`tel:${ap.telefon.replace(/\s/g, "")}`} style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.63a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            {ap.telefon}
-                          </a> : null}
-                          {ap.website ? <a href={ap.website} target="_blank" rel="noopener" style={{ fontSize: "13px", color: "var(--navy)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            {ap.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                          </a> : null}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                ) : <p className="pd-leer">Aktuell sind keine Termine eingetragen.</p>}
+                {messeTermine.length > 4 ? (
+                  <button type="button" className="pd-mehr-btn" onClick={() => setAlleTermine((v) => !v)}>{alleTermine ? "Weniger Termine anzeigen" : `Alle ${messeTermine.length} Termine anzeigen`}</button>
+                ) : null}
                 </div>
-              </div>
+              </section>
 
-              <div id="abschnitt-assistent" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* NEST-Assistent und Fragen ans Netzwerk */}
-              <div style={{ marginBottom: "36px" }}>
-                <span className="section-label">Für euch da</span>
-                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>NEST-Assistent</h3>
-                <Assistent onNetzwerkFrage={() => setNetzwerkStand((n) => n + 1)} />
-                {!isAdmin ? (
-                  <>
-                    <div id="abschnitt-netzwerk" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-                    <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "36px 0 6px" }}>Fragen ans Netzwerk</h3>
-                    <Netzwerk neuLaden={netzwerkStand} />
-                    <Erfahrungen userId={session.user.id} />
-                  </>
-                ) : (
-                  <p className="as-klein" style={{ marginTop: "12px" }}>Fragen ans Netzwerk und Freigaben verwaltet ihr unten im Admin-Bereich unter „NEST-Assistent &amp; Netzwerk“.</p>
-                )}
-              </div>
+              {/* ============ KERNPUNKT 2: AZUBIS HALTEN ============ */}
+              <section className="pd-sec">
+                <KernpunktBanner
+                  id="abschnitt-halten" nr={2} art="halten"
+                  titel="Azubis halten" unter="Eure Azubis bleiben"
+                  text="Mit Workshops für Azubis und Ausbildende, festen Ansprechpartnern und dem Austausch im Netzwerk begleiten wir euch durch die ganze Ausbildung."
+                  punkte={[{ href: "#abschnitt-workshops", label: "Workshops" }, { href: "#abschnitt-team", label: "Ansprechpartner" }, { href: "#abschnitt-netzwerk", label: "Netzwerk" }, { href: "#abschnitt-veranstaltungen", label: "Veranstaltungen" }]}
+                  phoneTitel="Azubis halten"
+                  zeilen={[
+                    ["Workshops", "buchbar"],
+                    ["Ansprechpartner", String((ansprechpartner.length ? ansprechpartner : AP_DEFAULT).length)],
+                    ["Veranstaltung", events[0] && events[0].datum ? String(events[0].datum).slice(8, 10) + "." + String(events[0].datum).slice(5, 7) + "." : "–"],
+                  ]}
+                />
 
-              <div id="abschnitt-veranstaltungen" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* Kommende Veranstaltungen (für alle) */}
-              <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Kommende Veranstaltungen</h3>
+                {/* Unterpunkt: Workshops */}
+                <div id="abschnitt-workshops" className="pd-unter">
+                  <UnterKopf icon={ICON.workshops} art="halten" titel="Workshops von NEST AzubiConnect" text="Für Azubis und Ausbildende, z. B. Azubi-Knigge, Kommunikation oder Generationen. Exklusiv für Partner zubuchbar." />
+                  <div className="pd-optionen">
+                    <a className="pd-option" href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">
+                      <span className="pd-option-tag">ab 790 € pro Tag</span>
+                      <b>Workshop-Tag für euren Betrieb</b>
+                      <span>Ein ganzer Tag für eure Azubis oder Ausbildenden, zugeschnitten auf eure Branche.</span>
+                      <em>Workshops ansehen{ICON.extern}</em>
+                    </a>
+                    <a className="pd-option" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">
+                      <span className="pd-option-tag">pro Person</span>
+                      <b>Offene Workshops</b>
+                      <span>Einzelne Azubis oder Ausbildende anmelden und gemeinsam mit anderen Betrieben lernen.</span>
+                      <em>Termine &amp; Anmeldung{ICON.extern}</em>
+                    </a>
+                  </div>
+                </div>
+
+                {/* Unterpunkt: Ansprechpartner */}
+                <div id="abschnitt-team" className="pd-unter">
+                  <UnterKopf icon={ICON.ansprechpartner} art="halten" titel="Eure Ansprechpartner" text="Ein fester Kontakt für alle Fragen rund um eure Ausbildung, dazu Partner aus unserem Netzwerk." />
+                  <AnsprechpartnerListe liste={ansprechpartner.length ? ansprechpartner : AP_DEFAULT} />
+                </div>
+
+                {/* Unterpunkt: Netzwerk */}
+                <div id="abschnitt-netzwerk" className="pd-unter">
+                  <UnterKopf icon={ICON.netzwerk} art="halten" titel="Fragen ans Netzwerk & Erfahrungen" text="Was der Assistent nicht beantworten kann, geben wir an passende Betriebe aus dem Netzwerk weiter. Und eure Erfahrungen helfen anderen." />
+                  {!isAdmin ? (
+                    <>
+                      <Netzwerk neuLaden={netzwerkStand} />
+                      <Erfahrungen userId={session.user.id} />
+                    </>
+                  ) : (
+                    <p className="pd-leer">Fragen ans Netzwerk und Freigaben verwaltet ihr im Admin-Bereich unter „Assistent &amp; Netzwerk“.</p>
+                  )}
+                </div>
+
+                {/* Unterpunkt: Veranstaltungen */}
+                <div id="abschnitt-veranstaltungen" className="pd-unter">
+                  <UnterKopf icon={ICON.veranstaltungen} art="halten" titel="Ausbildungsdialog & Netzwerktreffen" text="Fachthemen rund um Ausbildung und viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.">
+                    <a className="btn btn-outline" href="/veranstaltungen" target="_blank" rel="noopener">Alle Termine ↗</a>
+                  </UnterKopf>
               {events.length ? (
                 <div className="va-grid">
                   {events.map((v) => (
@@ -1363,30 +1171,74 @@ export default function PartnerPortal() {
                   ))}
                 </div>
               ) : <p style={{ color: "var(--text-soft)" }}>Aktuell sind keine Veranstaltungen eingetragen.</p>}
-
-              <div id="abschnitt-infos" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
-              {/* Die drei Kernbereiche – jeweils mit Broschüre als HTML-Seite */}
-              <div style={{ marginTop: "36px", marginBottom: "12px" }}>
-                <span className="section-label">Infos für Partner</span>
-                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 16px" }}>Alles auf einen Blick</h3>
-                <div className="bereich-grid">
-                  {BEREICHE.map((b) => (
-                    <div className="bereich-card" key={b.titel}>
-                      <img className="bereich-card-img" src={b.bild} alt={b.titel} loading="lazy" />
-                      <div className="bereich-card-body">
-                        <h4 className="bereich-card-titel">{b.titel}</h4>
-                        <p className="bereich-card-text">{b.text}</p>
-                        <a
-                          className="btn btn-primary bereich-card-btn"
-                          href={b.link}
-                          target="_blank"
-                          rel="noopener"
-                        >Mehr erfahren</a>
-                      </div>
-                    </div>
-                  ))}
                 </div>
-              </div>
+              </section>
+
+              {/* ============ ALLES AUF EINEN BLICK ============ */}
+              <section id="abschnitt-infos" className="pd-sec">
+                <div className="pd-sec-kopf">
+                  <span className="section-label">Infos für Partner</span>
+                  <h2>Alles auf einen Blick</h2>
+                </div>
+                <AllesAufEinenBlick />
+              </section>
+
+              {/* ============ KONTO ============ */}
+              <section id="abschnitt-konto" className="pd-sec">
+                <div className="pd-sec-kopf">
+                  <span className="section-label">Konto</span>
+                  <h2>Konto &amp; Zugang</h2>
+                </div>
+                <div className="card-grid cols-2">
+                  <div className="card">
+                    <h3>Unternehmensname ändern</h3>
+                    <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "14px" }}>Wird für neue Stellen vorausgefüllt{!isAdmin ? " und in deinen veröffentlichten Stellen aktualisiert" : ""}.</p>
+                    <form onSubmit={firmaSpeichern} className="tb-form">
+                      {(() => {
+                        const f = firmaQuery.trim().toLowerCase();
+                        const treffer = companies.filter((c) => !f || c.name.toLowerCase().includes(f)).slice(0, 8);
+                        return (
+                          <div className="field combo-field">
+                            <label>Unternehmen</label>
+                            <input
+                              type="text" value={firmaQuery} autoComplete="off"
+                              placeholder={nestplayConfigured ? "Unternehmen suchen …" : "Unternehmensname eingeben"}
+                              onChange={(e) => setFirmaFreitext(e.target.value)}
+                              onFocus={() => setFirmaOpen(true)}
+                              onBlur={() => setTimeout(() => setFirmaOpen(false), 150)}
+                            />
+                            {firmaRef && firmaRef !== firmaQuery ? <span className="combo-ok">✓ aus NESTplay übernommen</span> : null}
+                            {firmaOpen && treffer.length ? (
+                              <div className="combo-list">
+                                {treffer.map((c) => (
+                                  <button type="button" className="combo-item" key={c.ref} onMouseDown={(e) => { e.preventDefault(); waehleFirma(c); }}>
+                                    <span>{c.name}</span>
+                                    <span className="combo-count">{c.count} {c.count === 1 ? "Spiel" : "Spiele"}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            ) : null}
+                            {firmaOpen && nestplayConfigured && f && !treffer.length ? (
+                              <div className="combo-list"><div className="combo-empty">Kein Treffer – „{firmaQuery}" wird als Name verwendet.</div></div>
+                            ) : null}
+                          </div>
+                        );
+                      })()}
+                      {firmaMsg ? <p style={{ color: firmaMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{firmaMsg}</p> : null}
+                      <button className="btn btn-primary" type="submit">Speichern</button>
+                    </form>
+                  </div>
+                  <div className="card">
+                    <h3>Passwort ändern</h3>
+                    <p style={{ color: "var(--text-soft)", fontSize: "14px", marginBottom: "14px" }}>Mindestens 8 Zeichen. Du bleibst danach eingeloggt.</p>
+                    <form onSubmit={passwortAendern} className="tb-form">
+                      <div className="field"><label>Neues Passwort</label><input type="password" value={pwNeu} onChange={(e) => setPwNeu(e.target.value)} placeholder="mindestens 8 Zeichen" autoComplete="new-password" /></div>
+                      {pwMsg ? <p style={{ color: pwMsg.startsWith("Fehler") ? "#c2415a" : "var(--gold-dark)", fontWeight: 700, fontSize: "14px" }}>{pwMsg}</p> : null}
+                      <button className="btn btn-primary" type="submit">Passwort ändern</button>
+                    </form>
+                  </div>
+                </div>
+              </section>
 
               <div id="abschnitt-admin" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* =================== ADMIN-BEREICH =================== */}
@@ -1825,6 +1677,7 @@ export default function PartnerPortal() {
                   ) : <p style={{ color: "var(--text-soft)" }}>Noch keine Beiträge.</p>}
                 </div>
               )}
+              </main>
             </div>
           )}
         </div>

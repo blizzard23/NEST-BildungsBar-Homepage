@@ -12,17 +12,6 @@
    Vorlagen (Mobbin): Beside (Phone mit schwebenden Hinweisen),
    American Airlines (2×2-Kacheln „Book with our partners"),
    Swiggy (Buchungskarte mit Status), Superpower (Assistent-Eingabe) */
-.np-hero-points { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 2.2rem; }
-.np-hero-point {
-  display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px;
-  border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; background: rgba(255,255,255,0.04);
-  color: #fff; text-decoration: none; transition: border-color .15s ease, background-color .15s ease;
-}
-.np-hero-point:hover { border-color: rgba(239,165,0,0.5); background: rgba(255,255,255,0.07); color: #fff; }
-.np-hero-point b { display: block; font-family: var(--font-alt); font-size: 15px; font-weight: 800; line-height: 1.2; }
-.np-hero-point small { display: block; font-size: 12.5px; color: rgba(255,255,255,0.55); line-height: 1.4; margin-top: 2px; }
-.np-hero-n { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 14px; background: var(--gold); color: var(--navy); }
-.np-hero-point--halten .np-hero-n { background: #fff; }
 
 .np-hero-visual { margin-right: 40px; }
 .np-hp { gap: 9px; }
@@ -65,8 +54,6 @@
   .np-float--bottom { right: 0; }
 }
 @media (max-width: 860px) {
-  .np-hero-points { flex-direction: column; align-items: center; }
-  .np-hero-point { width: 100%; max-width: 320px; }
   .np-float { display: none; }
 }
 
@@ -80,14 +67,30 @@
    des Containers, Spalten mit 32px Abstand. */
 /* Nahtloser Übergang: Der Hero dieser Seite hat keine Goldkante, der
    Abschnitt beginnt im selben Ton (--navy-deep) und hellt nach unten auf. */
-.np-hero { padding-bottom: 24px; min-height: 0; }
+/* Kompakter Hero: Beim Aufruf sollen Kurve und Stationen direkt sichtbar sein,
+   deshalb weniger Abstand und ein etwas kleineres Phone als auf den anderen Seiten. */
+.np-hero { padding: 32px 0 8px; min-height: 0; }
+@media (min-width: 861px) { .np-hero-visual { zoom: 0.8; } }
+/* Niedrige Fenster (Laptops): noch etwas kompakter */
+@media (min-width: 861px) and (max-height: 820px) {
+  .np-hero { padding-top: 20px; }
+  .np-hero-visual { zoom: 0.7; }
+  .np-hero h1 { font-size: clamp(2rem, 3.4vw, 2.6rem); }
+  .np-hero p.lead { margin-bottom: 22px; }
+}
+@media (min-width: 861px) and (max-height: 760px) {
+  .np-hero { padding-top: 12px; }
+  .np-hero .hero-badge { margin-bottom: 12px; }
+  .np-hero-visual { zoom: 0.62; }
+  .np-hero h1 { font-size: clamp(2rem, 3vw, 2.3rem); }
+  .np-curve { margin-top: -64px; }
+}
 .np-hero::after { display: none; }
-.np-curve-sec { position: relative; overflow: hidden; padding-top: 72px; background: radial-gradient(ellipse 55% 40% at 18% 62%, rgba(77,110,190,0.22), rgba(77,110,190,0) 70%), radial-gradient(ellipse 45% 35% at 88% 48%, rgba(239,165,0,0.07), rgba(239,165,0,0) 70%), linear-gradient(180deg, #0c1829 0%, #0e1d3a 45%, #0F2145 100%); }
+.np-curve-sec { position: relative; overflow: hidden; padding-top: 24px; background: radial-gradient(ellipse 55% 40% at 18% 62%, rgba(77,110,190,0.22), rgba(77,110,190,0) 70%), radial-gradient(ellipse 45% 35% at 88% 48%, rgba(239,165,0,0.07), rgba(239,165,0,0) 70%), linear-gradient(180deg, #0c1829 0%, #0e1d3a 45%, #0F2145 100%); }
+/* Das auslaufende Kurvenende darf auf breiten Fenstern nach oben über den Abschnitt hinausragen */
+@supports (overflow-x: clip) { .np-curve-sec { overflow-x: clip; overflow-y: visible; } }
 .np-curve-sec::before { content: ''; position: absolute; top: 0; left: 50%; width: min(1052px, 90%); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.10), rgba(255,255,255,0)); }
-.np-curve-head { max-width: 760px; margin: 0 auto; text-align: center; }
-.np-curve-head .bb-lead { margin: 18px auto 0; }
-.np-curve { position: relative; z-index: 0; margin-top: -84px; pointer-events: none; }
-.np-curve-head { position: relative; z-index: 1; }
+.np-curve { position: relative; z-index: 0; margin-top: -56px; pointer-events: none; }
 .np-curve-svg { display: block; width: 100%; height: auto; overflow: visible; }
 .np-curve-line, .np-curve-glow { fill: none; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
 .np-curve-glow { stroke-width: 14; opacity: 0.45; }

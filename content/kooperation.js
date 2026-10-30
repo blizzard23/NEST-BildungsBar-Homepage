@@ -21,10 +21,6 @@ const html = `
           <a class="btn btn-primary" href="/kontakt#termin">Gespräch vereinbaren →</a>
           <a class="btn btn-ghost" href="#kreislauf">So greift alles ineinander</a>
         </div>
-        <div class="np-hero-points">
-          <a class="np-hero-point" href="#kreislauf"><span class="np-hero-n">1</span><span><b>Azubis finden</b><small>Schulen · Explore · NESTplay</small></span></a>
-          <a class="np-hero-point np-hero-point--halten" href="#kreislauf"><span class="np-hero-n">2</span><span><b>Azubis halten</b><small>Workshops · Dialog · Netzwerk</small></span></a>
-        </div>
       </div>
       <div class="hero-visual hero-visual--phone np-hero-visual">
         <a class="hero-phone" href="#partner-login" aria-label="Partner-Login: alle Angebote, Buchungen und Ansprechpartner auf einen Blick">
@@ -61,12 +57,6 @@ const html = `
   <!-- WEG DER PARTNERSCHAFT: ansteigende Kurve mit vier Stationen (Vorlage: Circle) -->
   <section class="bb-sec bb-sec--dark np-curve-sec" id="kreislauf">
     <div class="container">
-      <div class="np-curve-head">
-        <span class="bb-kicker">Zwei Kernpunkte, ein Weg</span>
-        <h2 class="bb-h2">Vom Klassenzimmer bis in eure <span class="bb-hl">Ausbildung</span></h2>
-        <p class="bb-lead">An den Schulen lernen euch Schüler:innen kennen, in der BildungsBar wird daraus eine Bewerbung, und in eurer Ausbildung sorgen wir mit euch dafür, dass die Azubis bleiben. Wir kümmern uns um die Wege dazwischen.</p>
-      </div>
-
       <div class="np-curve" aria-hidden="true">
         <svg class="np-curve-svg" viewBox="0 0 1052 280" preserveAspectRatio="xMidYMid meet" focusable="false">
           <defs>

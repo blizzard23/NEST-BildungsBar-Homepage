@@ -4,6 +4,10 @@ import { supabase, supabaseConfigured, istRecoveryLink, linkFehler } from "@/lib
 import { fetchGamesForCompany, fetchLiveGamesTotal, fetchNestplayCompanies, gameEditUrl, nestplayConfigured, NESTPLAY_URL } from "@/lib/nestplayClient";
 import { mapMesseTermin } from "@/lib/messeTermine";
 import { inhaltZuHtml } from "@/lib/blogFormat";
+import Assistent from "./Assistent";
+import Netzwerk from "./Netzwerk";
+import Erfahrungen from "./Erfahrungen";
+import AdminAssistent from "./AdminAssistent";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "", keyword1: "", keyword2: "", keyword3: "" };
@@ -204,6 +208,9 @@ export default function PartnerPortal() {
   const [apForm, setApForm] = useState(AP_LEER);
   const [apMsg, setApMsg] = useState("");
   const [apUploading, setApUploading] = useState(false);
+  // NEST-Assistent: nur für freigeschaltete Partner (Tabelle `partner`)
+  const [istPartner, setIstPartner] = useState(false);
+  const [netzwerkStand, setNetzwerkStand] = useState(0); // erhöht sich nach einer neuen Frage -> Liste neu laden
 
   // Berufsliste für das Stellen-Dropdown – aus der Berufswelt-Datenbank
   // (window.BERUFE_KATEGORIEN, kommt über das global eingebundene nest-app.js).
@@ -276,6 +283,12 @@ export default function PartnerPortal() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // Partner-Status für den Assistenten
+  useEffect(() => {
+    if (!supabase || !session) { setIstPartner(false); return; }
+    supabase.rpc("ist_partner").then(({ data }) => setIstPartner(data === true));
+  }, [session]);
 
   // Konto: Firmen-Combobox mit dem gespeicherten Namen/Ref vorbelegen
   useEffect(() => {
@@ -875,11 +888,14 @@ export default function PartnerPortal() {
                   !isAdmin && { href: "#abschnitt-nestplay", label: "NESTplay" },
                   { href: "#abschnitt-messe", label: "NEST Explore" },
                   { href: "#abschnitt-team", label: "Ansprechpartner" },
+                  { href: "#abschnitt-assistent", label: "Assistent" },
+                  (istPartner && !isAdmin) && { href: "#abschnitt-netzwerk", label: "Netzwerk" },
                   { href: "#abschnitt-veranstaltungen", label: "Veranstaltungen" },
                   { href: "#abschnitt-infos", label: "Infos" },
                   { href: "#abschnitt-konto", label: "Konto" },
                   isAdmin && { href: "#abschnitt-admin", label: "Admin" },
                   isAdmin && { href: "#abschnitt-explore-buchungen", label: "Explore-Buchungen" },
+                  isAdmin && { href: "#abschnitt-admin-assistent", label: "Assistent-Admin" },
                 ].filter(Boolean).map((n) => (
                   <a key={n.href} href={n.href} className="pp-nav-link">{n.label}</a>
                 ))}
@@ -1307,6 +1323,36 @@ export default function PartnerPortal() {
                 </div>
               </div>
 
+              <div id="abschnitt-assistent" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
+              {/* NEST-Assistent und Fragen ans Netzwerk (exklusiv für Partner) */}
+              <div style={{ marginBottom: "36px" }}>
+                <span className="section-label">Exklusiv für Partner</span>
+                <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 18px" }}>NEST-Assistent</h3>
+                {istPartner ? (
+                  <>
+                    <Assistent onNetzwerkFrage={() => setNetzwerkStand((n) => n + 1)} />
+                    {!isAdmin ? (
+                      <>
+                        <div id="abschnitt-netzwerk" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
+                        <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--navy)", margin: "36px 0 6px" }}>Fragen ans Netzwerk</h3>
+                        <Netzwerk neuLaden={netzwerkStand} />
+                        <Erfahrungen userId={session.user.id} />
+                      </>
+                    ) : (
+                      <p className="as-klein" style={{ marginTop: "12px" }}>Fragen ans Netzwerk, Freigaben und Partner-Freischaltung verwaltet ihr unten im Admin-Bereich unter „NEST-Assistent &amp; Netzwerk“.</p>
+                    )}
+                  </>
+                ) : (
+                  <div className="card as-teaser">
+                    <div>
+                      <b>Euer Assistent für Ausbildungsfragen</b>
+                      <p>Als NEST-Partner stellt ihr hier Fragen rund um eure Ausbildung und bekommt Antworten aus den Erfahrungen von NEST und unserem Netzwerk. Weiß der Assistent nicht weiter, geben wir eure Frage an passende Betriebe weiter.</p>
+                    </div>
+                    <a className="btn btn-primary" href="/kooperation">Partner werden</a>
+                  </div>
+                )}
+              </div>
+
               <div id="abschnitt-veranstaltungen" style={{ scrollMarginTop: "84px" }} aria-hidden="true"></div>
               {/* Kommende Veranstaltungen (für alle) */}
               <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Kommende Veranstaltungen</h3>
@@ -1367,6 +1413,9 @@ export default function PartnerPortal() {
                 <div style={{ marginTop: "44px", borderTop: "2px solid var(--line)", paddingTop: "32px" }}>
                   <span className="section-label">Nur für Admins</span>
                   <h2 style={{ fontSize: "26px", fontWeight: 800, color: "var(--navy)", margin: "4px 0 22px" }}>Admin-Bereich</h2>
+
+                  {/* NEST-Assistent: Netzwerk-Fragen, Wissen, Partner-Freischaltung */}
+                  <AdminAssistent />
 
                   {/* Auslastung der nächsten Termine */}
                   <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--navy)", margin: "0 0 14px" }}>Auslastung der nächsten Termine</h3>

@@ -235,12 +235,10 @@ a.bb-tile:hover, .bb-tile--link:hover { border-color: var(--bb-line-2); }
   position: absolute; top: 30px; right: 40px; font-family: var(--font); font-size: clamp(88px, 10vw, 136px); font-weight: 700;
   line-height: 1; letter-spacing: -0.05em; color: transparent; -webkit-text-stroke: 1.5px rgba(239,165,0,0.55); pointer-events: none;
 }
-.bb-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; padding: 0; }
-.bb-chips a {
-  display: inline-block; padding: 8px 15px; border-radius: 9999px; border: 1px solid var(--bb-line-2);
-  font-size: 14px; font-weight: 500; color: var(--bb-ink); text-decoration: none; transition: border-color .15s, color .15s;
-}
-.bb-chips a:hover { border-color: var(--bb-gold); color: var(--bb-gold); }
+.bb-bento__points { list-style: none; display: grid; gap: 12px; margin: 26px 0 0; padding: 0; }
+.bb-bento__points li { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 500; line-height: 1.4; color: var(--bb-ink); }
+.bb-bento__points svg { flex-shrink: 0; width: 24px; height: 24px; padding: 5px; border-radius: 50%; background: rgba(239,165,0,0.16); color: var(--bb-gold); stroke-width: 3; }
+.bb-bento__points i { font-style: normal; white-space: nowrap; }
 .bb-bento__main .bb-actions { margin-top: 30px; }
 .bb-bento__free {
   flex-direction: row; align-items: center; justify-content: space-between; gap: 28px;

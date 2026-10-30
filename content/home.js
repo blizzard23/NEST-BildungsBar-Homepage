@@ -64,7 +64,7 @@ const html = `
   <section class="bb-sec">
     <div class="container">
       <div class="bb-head bb-head--split">
-        <h2 class="bb-h2">Deine Berufsorientierung auf Augenhöhe</h2>
+        <h2 class="bb-h2">Berufsorientierung auf Augenhöhe</h2>
         <p class="bb-lead">In der BildungsBar bekommst du kostenfreie Unterstützung rund um Ausbildung und Karriereplanung. Wir nehmen uns Zeit für dich – ganz ohne Druck.</p>
       </div>
       <div class="bb-bento">
@@ -73,13 +73,10 @@ const html = `
           <span class="bb-kicker">Für Schüler:innen und junge Menschen</span>
           <h3>Wir zeigen dir, was möglich ist</h3>
           <p>Über 150 Ausbildungsberufe und duale Studiengänge – von Gesundheit über Handwerk bis IT. Wir helfen dir, im Dschungel der Möglichkeiten den richtigen Weg zu finden.</p>
-          <ul class="bb-chips" aria-label="Berufsfelder">
-            <li><a href="/berufswelt?feld=Gesundheitswesen">Gesundheit</a></li>
-            <li><a href="/berufswelt?feld=Handwerk">Handwerk</a></li>
-            <li><a href="/berufswelt?feld=Technische%20Berufe">Technik &amp; IT</a></li>
-            <li><a href="/berufswelt?feld=Sozialer%20Bereich">Soziales</a></li>
-            <li><a href="/berufswelt?feld=Verkauf%20und%20Vertrieb">Verkauf</a></li>
-            <li><a href="/berufswelt?feld=Wirtschaft%20%26%20Verwaltung">Wirtschaft &amp; Verwaltung</a></li>
+          <ul class="bb-bento__points">
+            <li>${IC.check}<span>Ausbildung und duales Studium im Überblick</span></li>
+            <li>${IC.check}<span>Persönliche Beratung statt <i>Online-Test</i></span></li>
+            <li>${IC.check}<span>Unternehmen aus deiner Region kennenlernen</span></li>
           </ul>
           <div class="bb-actions"><a class="bb-btn bb-btn--gold" href="/berufswelt">Berufe entdecken</a></div>
         </div>
@@ -100,7 +97,7 @@ const html = `
         </div>
         <div class="bb-bento__tile bb-bento__free">
           <div>
-            <h3>Komplett kostenfrei – ohne Hintergedanken.</h3>
+            <h3>Komplett kostenfrei ohne Hintergedanken.</h3>
             <p>Wir bringen dich mit regionalen Unternehmen aus unserem Netzwerk zusammen – für Praktikum oder Ausbildung.</p>
           </div>
           <div class="bb-bento__price" aria-hidden="true"><b>0 €</b><span>für dich</span></div>

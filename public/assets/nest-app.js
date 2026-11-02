@@ -369,6 +369,7 @@ window.BERUF_BILDER = {
   "mechatroniker-kaeltetechnik": "assets/img/berufe/mechatroniker-kaeltetechnik.png",
   "orthopaedieschuhmacher": "assets/img/berufe/orthopaedieschuhmacher.webp",
   "orthopaedietechnik-mechaniker": "assets/img/berufe/orthopaedietechnik-mechaniker.webp",
+  "stanz-und-umformmechaniker": "assets/img/berufe/stanz-und-umformmechaniker.webp",
   "tischler": "assets/img/berufe/tischler.png",
   "werkzeugmechaniker": "assets/img/berufe/werkzeugmechaniker.png",
   "zerspanungsmechaniker": "assets/img/berufe/zerspanungsmechaniker.png",

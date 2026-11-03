@@ -76,7 +76,7 @@ const html = `
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_07.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_08.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_09.png" alt="Partnerunternehmen" loading="lazy"></div>
-          <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_10.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="bb-logo"><img src="/assets/img/referenzen/partner/malteser.png" alt="Malteser" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_11.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_12.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_13.png" alt="Partnerunternehmen" loading="lazy"></div>

@@ -1,0 +1,154 @@
+/* =========================================================
+   Jahresplanungsgespräch (/jahresgespraech)
+   Ergänzt bb.css (Redesign: flache Karten, 1px-Rand, keine
+   Schatten, große Typografie). Vorlagen (Mobbin):
+   - Calendly / Zoom Scheduler / Shade: Buchungskarte mit
+     Termindetails links (Dauer, Beschreibung) und Kalender rechts
+   - Kooperation-Hero (Beside): Phone mit schwebenden Hinweisen
+   ========================================================= */
+
+/* ---------- Hero: wie die anderen Seiten, Phone-Mockup rechts ---------- */
+.jg-hero-visual { margin-right: 40px; }
+.jg-hp { gap: 9px; }
+.jg-hp svg { width: 100%; height: 100%; display: block; }
+
+.jg-hp-service { display: flex; align-items: center; gap: 9px; background: var(--navy); border-radius: 12px; padding: 9px 10px; color: #fff; }
+.jg-hp-service-ic { flex-shrink: 0; width: 28px; height: 28px; padding: 7px; border-radius: 9px; background: var(--gold); color: var(--navy); }
+.jg-hp-service b { display: block; font-size: 11px; font-weight: 800; line-height: 1.2; }
+.jg-hp-service small { display: block; font-size: 8.5px; color: rgba(255,255,255,0.65); margin-top: 1px; }
+
+.jg-hp-cal { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 9px 9px 8px; }
+.jg-hp-cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.jg-hp-cal-head b { font-size: 10px; font-weight: 800; color: var(--navy); }
+.jg-hp-cal-head span { font-size: 11px; letter-spacing: 3px; color: var(--text-mute); }
+.jg-hp-cal-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; text-align: center; }
+.jg-hp-cal-grid span { font-size: 9.5px; font-weight: 600; line-height: 21px; border-radius: 6px; color: #b4bccb; }
+.jg-hp-cal-grid .jg-hp-wd { font-size: 7.5px; font-weight: 800; line-height: 14px; letter-spacing: .4px; text-transform: uppercase; color: var(--text-mute); }
+.jg-hp-cal-grid .is-free { color: var(--navy); font-weight: 800; background: var(--gold-soft); }
+.jg-hp-cal-grid .is-sel { color: var(--gold); font-weight: 900; background: var(--navy); }
+
+.jg-hp-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.jg-hp-slots span { text-align: center; font-size: 9.5px; font-weight: 700; color: var(--navy); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px 0; }
+.jg-hp-slots .is-sel { background: var(--navy); border-color: var(--navy); color: #fff; }
+.jg-hp-btn { margin-top: auto; text-align: center; font-size: 10.5px; font-weight: 800; color: var(--navy); background: var(--gold); border-radius: 9999px; padding: 8px 0; }
+
+/* schwebende Hinweise neben dem Phone */
+.jg-float {
+  position: absolute; z-index: 2; display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px 10px 10px; border-radius: 14px; background: #fff; color: var(--navy);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.35); white-space: nowrap; pointer-events: none;
+}
+.jg-float b { display: block; font-family: var(--font-alt); font-size: 13px; font-weight: 800; line-height: 1.2; }
+.jg-float small { display: block; font-size: 11.5px; color: var(--text-mute); line-height: 1.3; }
+.jg-float-ic { flex-shrink: 0; width: 32px; height: 32px; padding: 8px; border-radius: 10px; background: var(--gold); color: var(--navy); }
+.jg-float-ic svg { width: 100%; height: 100%; display: block; }
+.jg-float-ic--navy { background: var(--navy); color: var(--gold); }
+/* oben rechts und unten links, damit die lange Überschrift frei bleibt */
+.jg-float--top { top: -6px; right: -70px; }
+.jg-float--bottom { bottom: -4px; left: -120px; }
+
+@media (max-width: 1240px) { .jg-float--top { right: -24px; } }
+@media (max-width: 1100px) {
+  .jg-hero-visual { margin-right: 0; }
+  .jg-float--top { right: 0; }
+}
+@media (max-width: 860px) {
+  .jg-float { display: none; }
+}
+
+/* ---------- Themen ---------- */
+.jg-themen .bb-col .bb-link { margin-top: 12px; }
+
+/* ---------- Buchungskarte: Details links, Kalender rechts ---------- */
+/* etwas breiter als die übrigen Abschnitte, damit der Bookings-Kalender Platz hat */
+.jg-container { max-width: 1240px; }
+.jg-book {
+  display: grid; grid-template-columns: 340px minmax(0, 1fr); align-items: stretch;
+  background: #fff; border: 1px solid var(--bb-line); border-radius: 28px; overflow: hidden;
+}
+
+.jg-details {
+  position: relative; display: flex; flex-direction: column; gap: 22px;
+  padding: 36px 32px; background: var(--bb-navy); color: #fff;
+  --bb-ink: #fff; --bb-text: rgba(255,255,255,0.74); --bb-muted: rgba(255,255,255,0.54);
+  --bb-line: rgba(255,255,255,0.12); --bb-line-2: rgba(255,255,255,0.24); --bb-hl: #EFA500;
+}
+.jg-details::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--bb-gold); }
+.jg-details-badge {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 12px; border-radius: 9999px; background: rgba(239,165,0,0.16); color: var(--bb-gold);
+  font-size: 13.5px; font-weight: 600; line-height: 1.2;
+}
+.jg-details-badge svg { width: 15px; height: 15px; }
+.jg-details-h { -webkit-hyphens: manual !important; hyphens: manual !important; margin: 0; font-family: var(--font); font-size: clamp(24px, 2.4vw, 28px); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; color: #fff; }
+.jg-details-p { margin: 0; font-size: 15.5px; line-height: 1.65; color: rgba(255,255,255,0.78); }
+
+.jg-steps { list-style: none; margin: 0; padding: 22px 0 0; display: grid; gap: 14px; border-top: 1px solid var(--bb-line); }
+.jg-steps li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; align-items: start; }
+.jg-steps-n {
+  display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); color: var(--bb-gold); font-size: 13px; font-weight: 700;
+}
+.jg-steps b { display: block; font-size: 15px; font-weight: 600; color: #fff; line-height: 1.35; }
+.jg-steps li > div > span { display: block; font-size: 13.5px; line-height: 1.5; color: var(--bb-muted); }
+
+.jg-help {
+  margin-top: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  padding: 18px 18px 20px; border-radius: 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--bb-line);
+}
+.jg-help b { font-size: 15px; font-weight: 600; color: #fff; }
+.jg-help span { font-size: 13.5px; line-height: 1.5; color: var(--bb-muted); margin-bottom: 6px; }
+.jg-help .bb-link { font-size: 14.5px; overflow-wrap: anywhere; }
+
+/* Kalender im Fenster mit Leiste (wie .bb-window) */
+.jg-cal { display: flex; flex-direction: column; min-width: 0; }
+.jg-cal-bar {
+  display: flex; align-items: center; gap: 14px; min-height: 52px; padding: 0 20px;
+  border-bottom: 1px solid var(--bb-line); background: #fff;
+}
+.jg-cal-dots { display: flex; gap: 6px; }
+.jg-cal-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--bb-line-2); }
+.jg-cal-title { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; color: var(--bb-ink); }
+.jg-cal-title svg { width: 16px; height: 16px; color: var(--bb-hl); }
+.jg-cal-ext { margin-left: auto; font-size: 13.5px; font-weight: 600; color: var(--bb-muted); text-decoration: none; white-space: nowrap; }
+.jg-cal-ext:hover { color: var(--bb-ink); }
+
+.jg-cal-frame { position: relative; flex: 1 0 auto; height: 900px; background: #fff; }
+.jg-cal-frame iframe { position: relative; z-index: 1; display: block; width: 100%; height: 100%; border: 0; }
+/* Platzhalter liegt hinter dem iframe und verschwindet, sobald der Kalender geladen ist */
+.jg-cal-loading {
+  position: absolute; inset: 0; z-index: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  font-size: 14.5px; color: var(--bb-muted);
+}
+.jg-spinner { width: 30px; height: 30px; border-radius: 50%; border: 3px solid var(--bb-line); border-top-color: var(--bb-gold); }
+@media (prefers-reduced-motion: no-preference) {
+  .jg-spinner { animation: jg-spin .9s linear infinite; }
+  @keyframes jg-spin { to { transform: rotate(360deg); } }
+}
+
+.jg-note { margin: 18px 0 0; text-align: center; font-size: 14px; line-height: 1.55; color: var(--bb-muted); }
+.jg-note .bb-link { white-space: nowrap; }
+
+/* Tablet: Details über dem Kalender, Schritte nebeneinander */
+@media (max-width: 980px) {
+  .jg-book { grid-template-columns: 1fr; }
+  .jg-details { padding: 32px 28px; }
+  .jg-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .jg-help { margin-top: 0; }
+  .jg-cal-frame { height: 960px; }
+}
+/* Handy: alles untereinander, Kalender etwas höher (Bookings stapelt dort Kalender und Uhrzeiten) */
+@media (max-width: 640px) {
+  .jg-container { padding: 0 12px; }
+  .jg-book { border-radius: 22px; }
+  .jg-details { padding: 28px 22px; gap: 18px; }
+  .jg-steps { grid-template-columns: 1fr; }
+  .jg-cal-bar { padding: 0 16px; }
+  .jg-cal-dots { display: none; }
+  .jg-cal-frame { height: 1080px; }
+}
+
+/* Langes Wort in der Überschrift: weiches Trennzeichen zulassen
+   (styles.css schaltet Trennungen in Überschriften sonst ab) */
+.jg-hero h1 { -webkit-hyphens: manual !important; hyphens: manual !important; }
+@media (min-width: 861px) { .jg-hero h1 { font-size: clamp(2rem, 3.4vw, 2.8rem); } }

@@ -76,7 +76,7 @@ const html = `
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_07.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_08.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_09.png" alt="Partnerunternehmen" loading="lazy"></div>
-          <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_10.png" alt="Partnerunternehmen" loading="lazy"></div>
+          <div class="bb-logo"><img src="/assets/img/referenzen/partner/malteser.png" alt="Malteser" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_11.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_12.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p2_13.png" alt="Partnerunternehmen" loading="lazy"></div>
@@ -147,6 +147,7 @@ const html = `
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/vorwerk-autotec.png" alt="Vorwerk Autotec" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/diakonische-altenhilfe-wuppertal.png" alt="Diakonische Altenhilfe Wuppertal" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/schulten.png" alt="Schulten Gebäudedienste" loading="lazy"></div>
+          <div class="bb-logo"><img src="/assets/img/referenzen/partner/jc-koenig.png" alt="J.C. König Präzisions-Tiefziehteile" loading="lazy"></div>
         </div>
       </div>
 

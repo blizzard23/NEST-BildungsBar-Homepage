@@ -160,35 +160,24 @@ export function KernpunktBanner({ id, nr, art, titel, unter, text, punkte, phone
   );
 }
 
-/* Erklärung über dem Chat, im Stil der Kernpunkt-Banner: was der Assistent ist
-   und wie er arbeitet, daneben ein Beispiel-Chat im Handy. */
-const ASSISTENT_SCHRITTE = [
-  ["Frage stellen", "einfach ins Chatfenster schreiben, so wie ihr es einer Kollegin erzählen würdet."],
-  ["Antwort mit Quellen", "der Assistent antwortet nur aus Wissen, das NEST geprüft hat, zeigt die Quellen und nennt passende Ansprechpartner."],
-  ["Netzwerk fragen", "weiß er nicht weiter, gebt ihr die Frage mit einem Klick an uns weiter. Wir holen Antworten von passenden Betrieben."],
-];
-
+/* Erklärung über dem Chat, aufgebaut wie die Kernpunkt-Banner (gleiche Höhe):
+   was der Assistent ist, die drei Schritte als Buttons, daneben ein Beispiel-Chat. */
 export function AssistentBanner() {
   const zumChat = (e) => {
     e.preventDefault();
     document.getElementById("abschnitt-assistent")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    setTimeout(() => document.querySelector(".pd-assistent .as-eingabe textarea")?.focus({ preventScroll: true }), 400);
+    setTimeout(() => document.querySelector(".pd-assistent .as-composer textarea")?.focus({ preventScroll: true }), 400);
   };
   return (
     <div className="np-promo pd-banner pd-banner--assistent">
       <div className="np-promo-text">
         <span className="np-promo-label">KI-Chatbot im Partner-Login</span>
-        <div className="np-promo-h">NEST-Assistent<br /><em>Fragen stellen, sofort Antworten bekommen</em></div>
-        <p className="np-promo-p">Der Assistent ist ein Chatbot für alle Fragen rund um eure Ausbildung. Er kennt die Erfahrungen von NEST und aus dem Partnernetzwerk, aktuelle Studien und die Angebote von NEST, und er lernt mit jeder geteilten Erfahrung dazu.</p>
-        <ol className="pd-assistent-schritte">
-          {ASSISTENT_SCHRITTE.map(([titel, text], i) => (
-            <li key={titel}><b>{i + 1}</b><span><strong>{titel}:</strong> {text}</span></li>
-          ))}
-        </ol>
+        <div className="np-promo-h">NEST-Assistent<br /><em>Euer Chatbot für Ausbildungsfragen</em></div>
+        <p className="np-promo-p">Er antwortet aus geprüftem Wissen von NEST und dem Netzwerk, zeigt seine Quellen und nennt passende Ansprechpartner. So funktioniert es:</p>
         <div className="pd-banner-punkte">
-          <a href="#abschnitt-assistent" className="pd-banner-punkt pd-banner-punkt--gold" onClick={zumChat}>Jetzt fragen</a>
-          <a href="#abschnitt-netzwerk" className="pd-banner-punkt">Fragen ans Netzwerk</a>
-          <a href="#abschnitt-netzwerk" className="pd-banner-punkt">Erfahrung teilen</a>
+          <a href="#abschnitt-assistent" className="pd-banner-punkt pd-banner-schritt pd-banner-punkt--gold" onClick={zumChat}><b>1</b>Frage stellen</a>
+          <span className="pd-banner-punkt pd-banner-schritt"><b>2</b>Antwort erhalten</span>
+          <a href="#abschnitt-netzwerk" className="pd-banner-punkt pd-banner-schritt"><b>3</b>Netzwerk fragen</a>
         </div>
       </div>
       <div className="np-promo-phone" aria-hidden="true">
@@ -199,12 +188,11 @@ export function AssistentBanner() {
               <div className="np-phone-h4">NEST-Assistent</div>
             </div>
             <div className="np-phone-body pd-chat-mini">
-              <div className="pd-chat-frage">Wie verhindern wir Abbrüche in der Probezeit?</div>
+              <div className="pd-chat-frage">Tipps für die Probezeit?</div>
               <div className="pd-chat-antwort">
-                Plant feste Gespräche nach dem ersten Monat und vor Ende der Probezeit und setzt Paten aus dem zweiten Lehrjahr ein.
+                Feste Gespräche und Paten aus dem 2. Lehrjahr.
                 <span className="pd-chat-quelle">Quelle · NEST BildungsBar</span>
               </div>
-              <div className="pd-chat-btn">An Netzwerk weitergeben</div>
             </div>
           </div>
         </div>

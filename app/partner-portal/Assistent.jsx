@@ -9,6 +9,21 @@ const BEISPIELE = [
   "Wie gestalten wir die ersten Tage für neue Azubis?",
 ];
 
+const svg = (kinder, w = 2) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{kinder}</svg>
+);
+const IC = {
+  funke: svg(<><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z" /><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" /></>),
+  senden: svg(<><line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" /></>, 2.4),
+  pfeil: svg(<><polyline points="15 10 20 15 15 20" /><path d="M4 4v7a4 4 0 0 0 4 4h12" /></>),
+  neu: svg(<><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z" /></>),
+  vergroessern: svg(<><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></>),
+  verkleinern: svg(<><polyline points="4 14 10 14 10 20" /><polyline points="20 10 14 10 14 4" /><line x1="14" y1="10" x2="21" y2="3" /><line x1="3" y1="21" x2="10" y2="14" /></>),
+  kopieren: svg(<><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></>),
+  haken: svg(<polyline points="20 6 9 17 4 12" />, 2.4),
+  netzwerk: svg(<><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></>),
+};
+
 /* Chat mit dem NEST-Assistenten. Der Verlauf lebt nur im Browser; jede Antwort
    kann über „An Netzwerk weitergeben" an das NEST-Team gehen. */
 export default function Assistent({ onNetzwerkFrage }) {
@@ -17,8 +32,17 @@ export default function Assistent({ onNetzwerkFrage }) {
   const [laeuft, setLaeuft] = useState(false);
   const [weitergabe, setWeitergabe] = useState(null); // { index, frage, ergaenzung, busy, msg, fertig }
   const [vollbild, setVollbild] = useState(false);
+  const [kopiert, setKopiert] = useState(null); // Index der zuletzt kopierten Antwort
   const listeRef = useRef(null);
   const eingabeRef = useRef(null);
+
+  // Eingabefeld wächst mit dem Text mit (bis zur CSS-Höchsthöhe).
+  useEffect(() => {
+    const el = eingabeRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
+  }, [eingabe, verlauf.length]);
 
   // Vollbild: Seite dahinter nicht scrollen, Escape schließt, Fokus ins Eingabefeld.
   useEffect(() => {
@@ -122,111 +146,149 @@ export default function Assistent({ onNetzwerkFrage }) {
     fragen(eingabe);
   }
 
+  function neuerChat() {
+    if (laeuft) return;
+    setVerlauf([]); setWeitergabe(null); setEingabe(""); setKopiert(null);
+    setTimeout(() => eingabeRef.current?.focus(), 0);
+  }
+
+  async function kopieren(i, text) {
+    try { await navigator.clipboard.writeText(text); setKopiert(i); setTimeout(() => setKopiert((k) => (k === i ? null : k)), 2000); }
+    catch { /* Zwischenablage nicht verfügbar */ }
+  }
+
+  const eingabeFeld = (
+    <form className="as-composer" onSubmit={absenden}>
+      <textarea
+        ref={eingabeRef}
+        value={eingabe}
+        onChange={(e) => setEingabe(e.target.value)}
+        onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); fragen(eingabe); } }}
+        placeholder={verlauf.length ? "Weitere Frage stellen …" : "Eure Frage an den Assistenten …"}
+        rows={1}
+        maxLength={2000}
+        aria-label="Frage an den Assistenten"
+      />
+      <div className="as-composer-leiste">
+        <span className="as-composer-hinweis">Enter zum Senden · Shift + Enter für eine neue Zeile</span>
+        <button type="submit" className="as-senden" disabled={laeuft || !eingabe.trim()} aria-label="Frage senden">
+          {IC.senden}
+        </button>
+      </div>
+    </form>
+  );
+
   return (
     <div className={"as-chat" + (vollbild ? " as-chat--vollbild" : "")} role={vollbild ? "dialog" : undefined} aria-modal={vollbild || undefined} aria-label={vollbild ? "NEST-Assistent im Vollbild" : undefined}>
       <div className="as-chat-head">
-        <span className="as-avatar" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z" /><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" /></svg>
-        </span>
+        <span className="as-avatar" aria-hidden="true">{IC.funke}</span>
         <div>
           <b>NEST-Assistent</b>
-          <small>Antworten aus den Erfahrungen von NEST und unserem Partnernetzwerk</small>
+          <small><i className="as-online" aria-hidden="true" />Antwortet aus geprüftem Wissen von NEST und dem Netzwerk</small>
         </div>
-        <button type="button" className="as-vollbild-btn" onClick={() => setVollbild((v) => !v)}
-          aria-label={vollbild ? "Vollbild schließen" : "Im Vollbild öffnen"} title={vollbild ? "Vollbild schließen (Esc)" : "Im Vollbild öffnen"}>
-          {vollbild ? (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="4 14 10 14 10 20" /><polyline points="20 10 14 10 14 4" /><line x1="14" y1="10" x2="21" y2="3" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
-          ) : (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></svg>
-          )}
-          <span>{vollbild ? "Schließen" : "Vollbild"}</span>
-        </button>
+        <div className="as-kopf-aktionen">
+          {verlauf.length ? (
+            <button type="button" className="as-kopf-btn" onClick={neuerChat} disabled={laeuft} title="Neuen Chat beginnen">
+              {IC.neu}<span>Neuer Chat</span>
+            </button>
+          ) : null}
+          <button type="button" className="as-kopf-btn" onClick={() => setVollbild((v) => !v)}
+            aria-label={vollbild ? "Vollbild schließen" : "Im Vollbild öffnen"} title={vollbild ? "Vollbild schließen (Esc)" : "Im Vollbild öffnen"}>
+            {vollbild ? IC.verkleinern : IC.vergroessern}
+            <span>{vollbild ? "Schließen" : "Vollbild"}</span>
+          </button>
+        </div>
       </div>
 
-      <div className="as-verlauf" ref={listeRef} aria-live="polite">
-        {!verlauf.length ? (
-          <div className="as-leer">
-            <p>Stellt eure Frage rund um eure Ausbildung. Wenn der Assistent nicht weiterweiß, gebt ihr die Frage mit einem Klick an unser Netzwerk weiter.</p>
-            <div className="as-beispiele">
+      {!verlauf.length ? (
+        <div className="as-start">
+          <span className="as-start-avatar" aria-hidden="true">{IC.funke}</span>
+          <h3 className="as-start-h">Wie können wir euch helfen?</h3>
+          <p className="as-start-p">Fragt alles rund um eure Ausbildung. Weiß der Assistent nicht weiter, gebt ihr die Frage mit einem Klick an unser Netzwerk weiter.</p>
+          {eingabeFeld}
+          <div className="as-vorschlaege">
+            <span className="as-vorschlaege-titel">Vorschläge</span>
+            <div className="as-vorschlaege-liste">
               {BEISPIELE.map((b) => (
-                <button key={b} type="button" className="as-beispiel" onClick={() => fragen(b)}>{b}</button>
+                <button key={b} type="button" className="as-vorschlag" onClick={() => fragen(b)}>{IC.pfeil}<span>{b}</span></button>
               ))}
             </div>
           </div>
-        ) : null}
-
-        {verlauf.map((m, i) => (
-          m.rolle === "frage" ? (
-            <div key={i} className="as-msg as-msg--frage"><div className="as-blase">{m.text}</div></div>
-          ) : (
-            <div key={i} className="as-msg as-msg--antwort">
-              <div className="as-blase">
-                {m.wartet ? <span className="as-tippt" aria-label="Der Assistent schreibt"><i /><i /><i /></span> : null}
-                {m.text ? <div className="as-text"><FormatierterText text={m.text} /></div> : null}
-                {m.hinweis ? <p className="as-hinweis">{m.hinweis}</p> : null}
-                {m.fehler ? <p className="as-fehler">{m.fehler}</p> : null}
-                {m.quellen && m.quellen.length ? (
-                  <div className="as-quellen">
-                    <span>Quellen</span>
-                    {m.quellen.map((q, j) => <span key={j} className="as-quelle" title={q.herkunft}>{q.titel}<em>{q.herkunft}</em></span>)}
+        </div>
+      ) : (
+        <>
+          <div className="as-verlauf" ref={listeRef} aria-live="polite">
+            {verlauf.map((m, i) => (
+              m.rolle === "frage" ? (
+                <div key={i} className="as-msg as-msg--frage"><div className="as-blase">{m.text}</div></div>
+              ) : (
+                <div key={i} className="as-msg as-msg--antwort">
+                  <span className="as-msg-avatar" aria-hidden="true">{IC.funke}</span>
+                  <div className="as-msg-inhalt">
+                    <div className="as-msg-name">NEST-Assistent</div>
+                    {m.wartet ? <span className="as-tippt" aria-label="Der Assistent schreibt"><i /><i /><i /></span> : null}
+                    {m.text ? <div className="as-text"><FormatierterText text={m.text} /></div> : null}
+                    {m.hinweis ? <p className="as-hinweis">{m.hinweis}</p> : null}
+                    {m.fehler ? <p className="as-fehler">{m.fehler}</p> : null}
+                    {m.quellen && m.quellen.length ? (
+                      <div className="as-quellen">
+                        <span className="as-quellen-titel">Quellen</span>
+                        <div className="as-quellen-liste">
+                          {m.quellen.map((q, j) => (
+                            <span key={j} className="as-quelle" title={q.herkunft}><b>{j + 1}</b><span>{q.titel}<em>{q.herkunft}</em></span></span>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+                    {!m.wartet && !(laeuft && i === verlauf.length - 1) && !(weitergabe && weitergabe.index === i) ? (
+                      <div className="as-msg-aktionen">
+                        {m.text ? (
+                          <button type="button" className="as-aktion" onClick={() => kopieren(i, m.text)}>
+                            {kopiert === i ? IC.haken : IC.kopieren}{kopiert === i ? "Kopiert" : "Kopieren"}
+                          </button>
+                        ) : null}
+                        <button type="button" className="as-aktion as-aktion--netz" onClick={() => weitergabeOeffnen(i)}>
+                          {IC.netzwerk}An Netzwerk weitergeben
+                        </button>
+                      </div>
+                    ) : null}
+                    {weitergabe && weitergabe.index === i ? (
+                      weitergabe.fertig ? (
+                        <div className="as-weitergabe as-weitergabe--ok">
+                          <b>Danke, eure Frage ist beim NEST-Team.</b>
+                          <span>Wir geben sie an passende Betriebe aus dem Netzwerk weiter. Die Antworten findet ihr direkt unter dem Assistenten bei „Eure Fragen ans Netzwerk“.</span>
+                        </div>
+                      ) : (
+                        <form className="as-weitergabe tb-form" onSubmit={weitergeben}>
+                          <b>Frage ans Netzwerk weitergeben</b>
+                          <div className="field">
+                            <label htmlFor={"as-wg-frage-" + i}>Eure Frage</label>
+                            <textarea id={"as-wg-frage-" + i} value={weitergabe.frage} maxLength={2000} rows={3} required
+                              onChange={(e) => setWeitergabe((w) => ({ ...w, frage: e.target.value }))} />
+                          </div>
+                          <div className="field">
+                            <label htmlFor={"as-wg-erg-" + i}>Ergänzung (optional)</label>
+                            <textarea id={"as-wg-erg-" + i} value={weitergabe.ergaenzung} maxLength={2000} rows={2}
+                              placeholder="Was sollen die Betriebe noch wissen, z. B. Branche oder Ausbildungsberuf?"
+                              onChange={(e) => setWeitergabe((w) => ({ ...w, ergaenzung: e.target.value }))} />
+                          </div>
+                          <p className="as-klein">Euer Betrieb bleibt für die anderen Betriebe anonym. Bitte keine Namen oder persönlichen Daten von Azubis eintragen.</p>
+                          {weitergabe.msg ? <p className="as-fehler">{weitergabe.msg}</p> : null}
+                          <div className="as-aktionen">
+                            <button className="btn btn-primary" type="submit" disabled={weitergabe.busy || weitergabe.frage.trim().length < 5}>{weitergabe.busy ? "Wird gesendet …" : "Weitergeben"}</button>
+                            <button className="btn btn-outline" type="button" onClick={() => setWeitergabe(null)}>Abbrechen</button>
+                          </div>
+                        </form>
+                      )
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-              {!m.wartet && !(laeuft && i === verlauf.length - 1) && !(weitergabe && weitergabe.index === i) ? (
-                <button type="button" className="as-netzwerk-btn" onClick={() => weitergabeOeffnen(i)}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></svg>
-                  An Netzwerk weitergeben
-                </button>
-              ) : null}
-              {weitergabe && weitergabe.index === i ? (
-                weitergabe.fertig ? (
-                  <div className="as-weitergabe as-weitergabe--ok">
-                    <b>Danke, eure Frage ist beim NEST-Team.</b>
-                    <span>Wir geben sie an passende Betriebe aus dem Netzwerk weiter. Die Antworten findet ihr weiter unten unter „Fragen ans Netzwerk“.</span>
-                  </div>
-                ) : (
-                  <form className="as-weitergabe tb-form" onSubmit={weitergeben}>
-                    <b>Frage ans Netzwerk weitergeben</b>
-                    <div className="field">
-                      <label htmlFor={"as-wg-frage-" + i}>Eure Frage</label>
-                      <textarea id={"as-wg-frage-" + i} value={weitergabe.frage} maxLength={2000} rows={3} required
-                        onChange={(e) => setWeitergabe((w) => ({ ...w, frage: e.target.value }))} />
-                    </div>
-                    <div className="field">
-                      <label htmlFor={"as-wg-erg-" + i}>Ergänzung (optional)</label>
-                      <textarea id={"as-wg-erg-" + i} value={weitergabe.ergaenzung} maxLength={2000} rows={2}
-                        placeholder="Was sollen die Betriebe noch wissen, z. B. Branche oder Ausbildungsberuf?"
-                        onChange={(e) => setWeitergabe((w) => ({ ...w, ergaenzung: e.target.value }))} />
-                    </div>
-                    <p className="as-klein">Euer Betrieb bleibt für die anderen Betriebe anonym. Bitte keine Namen oder persönlichen Daten von Azubis eintragen.</p>
-                    {weitergabe.msg ? <p className="as-fehler">{weitergabe.msg}</p> : null}
-                    <div className="as-aktionen">
-                      <button className="btn btn-primary" type="submit" disabled={weitergabe.busy || weitergabe.frage.trim().length < 5}>{weitergabe.busy ? "Wird gesendet …" : "Weitergeben"}</button>
-                      <button className="btn btn-outline" type="button" onClick={() => setWeitergabe(null)}>Abbrechen</button>
-                    </div>
-                  </form>
-                )
-              ) : null}
-            </div>
-          )
-        ))}
-      </div>
-
-      <form className="as-eingabe" onSubmit={absenden}>
-        <textarea
-          ref={eingabeRef}
-          value={eingabe}
-          onChange={(e) => setEingabe(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); fragen(eingabe); } }}
-          placeholder="Eure Frage an den Assistenten …"
-          rows={1}
-          maxLength={2000}
-          aria-label="Frage an den Assistenten"
-        />
-        <button type="submit" className="as-senden" disabled={laeuft || !eingabe.trim()} aria-label="Frage senden">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-        </button>
-      </form>
+                </div>
+              )
+            ))}
+          </div>
+          <div className="as-unten">{eingabeFeld}</div>
+        </>
+      )}
       <p className="as-fuss">Der Assistent antwortet nur aus Wissen, das NEST geprüft und freigegeben hat, und ersetzt keine Rechtsberatung. Chatverläufe speichern wir nicht.</p>
     </div>
   );

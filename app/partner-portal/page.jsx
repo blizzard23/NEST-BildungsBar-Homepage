@@ -8,7 +8,7 @@ import Assistent from "./Assistent";
 import Netzwerk from "./Netzwerk";
 import Erfahrungen from "./Erfahrungen";
 import AdminAssistent from "./AdminAssistent";
-import { PortalNav, KernpunktBanner, UnterKopf, AnsprechpartnerListe, AllesAufEinenBlick, ICON } from "./PortalBausteine";
+import { PortalNav, KernpunktBanner, AssistentBanner, UnterKopf, AnsprechpartnerListe, AllesAufEinenBlick, ICON } from "./PortalBausteine";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "", keyword1: "", keyword2: "", keyword3: "" };
@@ -843,6 +843,7 @@ export default function PartnerPortal() {
                   <h1>Willkommen, <em>{isAdmin ? "NEST-Team" : (firmaName || "schön, dass ihr da seid")}</em></h1>
                   <p>Euer Partner-Login nach unseren zwei Kernpunkten: <b className="pd-txt-finden">Azubis finden</b> und <b className="pd-txt-halten">Azubis halten</b>. Fragt den Assistenten oder springt direkt in einen Bereich.</p>
                 </div>
+                <AssistentBanner />
                 <div id="abschnitt-assistent" className="pd-assistent">
                   <Assistent onNetzwerkFrage={() => setNetzwerkStand((n) => n + 1)} />
                   {/* Was der Assistent nicht weiß: Fragen ans Netzwerk und eigene Erfahrungen */}

@@ -221,7 +221,9 @@ Jeder weitere `git push` deployt automatisch neu.
   Kapazität pro Tag: **Wuppertal 4 / Essen 2 / Solingen 2 / Remscheid 2**. Solingen und
   Remscheid sind bis **1. Oktober 2026** gesperrt (`buchbarAb` in `nest-app.js`,
   `BUCHBAR_AB` in `app/api/buchung/route.js`) – die Tage erscheinen im Kalender als
-  „Ab Okt.". Buchungen sind **verbindlich** – der Platz ist sofort vergeben
+  „Ab Okt.". Vom **24.12.2026 bis 01.01.2027** sind alle Standorte gesperrt
+  (Weihnachtspause, `GESPERRT_ALLE` in `nest-app.js` und `app/api/buchung/route.js`) –
+  die Tage erscheinen im Kalender als „Gesperrt". Buchungen sind **verbindlich** – der Platz ist sofort vergeben
   (kein Bestätigen nötig), volle Tage werden als „ausgebucht" gesperrt, freie Tage zeigen die
   Restplätze. Beim Buchen wird in `buchungen` gespeichert, das NEST-Team benachrichtigt **und**
   die buchende Person bekommt sofort eine **Bestätigungsmail**. Am Vortag folgt eine

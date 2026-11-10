@@ -57,6 +57,9 @@ export async function POST(req) {
   // Gesperrte Zeiträume an laufenden Standorten (von/bis einschließlich).
   // Muss zu STANDORTE.gesperrt in public/assets/nest-app.js passen.
   const GESPERRT = { Essen: [{ von: "2026-09-01", bis: "2026-09-30" }] };
+  // An ALLEN Standorten gesperrt (Weihnachtspause).
+  // Muss zu GESPERRT_ALLE in public/assets/nest-app.js passen.
+  const GESPERRT_ALLE = [{ von: "2026-12-24", bis: "2027-01-01" }];
   const cap = KAPAZITAET[buchung.standort] || 0;
   const sb = supabaseServer();
   const admin = supabaseAdmin();
@@ -66,7 +69,7 @@ export async function POST(req) {
     return NextResponse.json({ ok: false, error: "noch nicht buchbar" }, { status: 409 });
   }
 
-  const zeitraeume = GESPERRT[buchung.standort] || [];
+  const zeitraeume = GESPERRT_ALLE.concat(GESPERRT[buchung.standort] || []);
   if (buchung.datum && zeitraeume.some((z) => buchung.datum >= z.von && buchung.datum <= z.bis)) {
     return NextResponse.json({ ok: false, error: "Zeitraum gesperrt" }, { status: 409 });
   }

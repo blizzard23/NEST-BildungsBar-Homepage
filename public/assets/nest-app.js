@@ -1888,6 +1888,9 @@ if (!window.STELLEN || !window.STELLEN.length) {
     "Solingen":  { tage: [1],    kapazitaet: 2, buchbarAb: "2026-10-01" },
     "Remscheid": { tage: [3],    kapazitaet: 2, buchbarAb: "2026-10-01" }
   };
+  // Zeiträume, die an ALLEN Standorten gesperrt sind (von/bis einschließlich) –
+  // z. B. die Weihnachtspause. Muss zu GESPERRT_ALLE in app/api/buchung/route.js passen.
+  var GESPERRT_ALLE = [{ von: "2026-12-24", bis: "2027-01-01" }];
   var DEFAULT_TAGE = [2, 4];
   var ANZAHL = 8; // wie viele Beratungstermine angeboten werden
 
@@ -1939,12 +1942,13 @@ if (!window.STELLEN || !window.STELLEN.length) {
     var i = ortInfo();
     return !!(i && i.buchbarAb && key < i.buchbarAb);
   }
-  // Einzelner gesperrter Zeitraum an einem laufenden Standort
+  // Gesperrter Zeitraum – standortübergreifend (GESPERRT_ALLE) oder nur an
+  // einem laufenden Standort (STANDORTE[ort].gesperrt)
   function ortZeitraumGesperrt(key) {
     var i = ortInfo();
-    if (!i || !i.gesperrt) return false;
-    for (var k = 0; k < i.gesperrt.length; k++) {
-      var z = i.gesperrt[k];
+    var zeitraeume = GESPERRT_ALLE.concat((i && i.gesperrt) || []);
+    for (var k = 0; k < zeitraeume.length; k++) {
+      var z = zeitraeume[k];
       if (key >= z.von && key <= z.bis) return true;
     }
     return false;

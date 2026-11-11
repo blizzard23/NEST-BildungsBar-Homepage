@@ -223,7 +223,11 @@ Jeder weitere `git push` deployt automatisch neu.
   `BUCHBAR_AB` in `app/api/buchung/route.js`) – die Tage erscheinen im Kalender als
   „Ab Okt.". Vom **24.12.2026 bis 01.01.2027** sind alle Standorte gesperrt
   (Weihnachtspause, `GESPERRT_ALLE` in `nest-app.js` und `app/api/buchung/route.js`) –
-  die Tage erscheinen im Kalender als „Gesperrt". Buchungen sind **verbindlich** – der Platz ist sofort vergeben
+  die Tage erscheinen im Kalender als „Gesperrt". Sind in **Wuppertal** alle Beratungstage
+  der nächsten 7 Tage ausgebucht, zeigt der Kalender einen **Ausweich-Hinweis** mit dem
+  jeweils nächsten freien Termin in **Solingen** und **Remscheid** (Suche 14 Tage im Voraus);
+  ein Klick wechselt den Standort und wählt den Termin direkt aus (`AUSWEICH` in `nest-app.js`).
+  Buchungen sind **verbindlich** – der Platz ist sofort vergeben
   (kein Bestätigen nötig), volle Tage werden als „ausgebucht" gesperrt, freie Tage zeigen die
   Restplätze. Beim Buchen wird in `buchungen` gespeichert, das NEST-Team benachrichtigt **und**
   die buchende Person bekommt sofort eine **Bestätigungsmail**. Am Vortag folgt eine

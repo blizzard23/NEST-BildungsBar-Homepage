@@ -1891,6 +1891,13 @@ if (!window.STELLEN || !window.STELLEN.length) {
   // Zeiträume, die an ALLEN Standorten gesperrt sind (von/bis einschließlich) –
   // z. B. die Weihnachtspause. Muss zu GESPERRT_ALLE in app/api/buchung/route.js passen.
   var GESPERRT_ALLE = [{ von: "2026-12-24", bis: "2027-01-01" }];
+  // Kurzfristiger Ausweich-Hinweis: Sind an einem Standort alle Beratungstage
+  // der nächsten `fenster` Tage ausgebucht, zeigt der Kalender freie Termine
+  // an den `ziele`-Standorten (gesucht bis `suche` Tage im Voraus) – damit
+  // dort die Auslastung kurzfristig steigt.
+  var AUSWEICH = {
+    "Wuppertal": { fenster: 7, suche: 14, ziele: ["Solingen", "Remscheid"] }
+  };
   var DEFAULT_TAGE = [2, 4];
   var ANZAHL = 8; // wie viele Beratungstermine angeboten werden
 
@@ -1898,11 +1905,12 @@ if (!window.STELLEN || !window.STELLEN.length) {
   var belegung = {};   // { "YYYY-MM-DD": anzahl } für den gewählten Standort
   var kapazitaet = 0;  // max. Buchungen pro Tag am gewählten Standort
 
-  function ortInfo() { return STANDORTE[state.ort] || null; }
+  // Ohne ort gilt der gewählte Standort (state.ort).
+  function ortInfo(ort) { return STANDORTE[ort || state.ort] || null; }
   // Beratungstage, die am Datum key ("YYYY-MM-DD") gelten. tageAb verlegt sie
   // ab dem Stichtag; ohne key gelten die Basistage.
-  function ortTage(key) {
-    var i = ortInfo();
+  function ortTage(key, ort) {
+    var i = ortInfo(ort);
     var tage = (i && i.tage) || DEFAULT_TAGE;
     if (key && i && i.tageAb) {
       for (var k = 0; k < i.tageAb.length; k++) {
@@ -1938,14 +1946,14 @@ if (!window.STELLEN || !window.STELLEN.length) {
     }
     return txt;
   }
-  function ortGesperrtBis(key) {
-    var i = ortInfo();
+  function ortGesperrtBis(key, ort) {
+    var i = ortInfo(ort);
     return !!(i && i.buchbarAb && key < i.buchbarAb);
   }
   // Gesperrter Zeitraum – standortübergreifend (GESPERRT_ALLE) oder nur an
   // einem laufenden Standort (STANDORTE[ort].gesperrt)
-  function ortZeitraumGesperrt(key) {
-    var i = ortInfo();
+  function ortZeitraumGesperrt(key, ort) {
+    var i = ortInfo(ort);
     var zeitraeume = GESPERRT_ALLE.concat((i && i.gesperrt) || []);
     for (var k = 0; k < zeitraeume.length; k++) {
       var z = zeitraeume[k];
@@ -2145,19 +2153,135 @@ if (!window.STELLEN || !window.STELLEN.length) {
   }
 
   /* ---------- Belegung des Standorts laden (für „ausgebucht") ---------- */
-  function ladeVerfuegbarkeit(ort, cb) {
-    belegung = {};
-    kapazitaet = (STANDORTE[ort] && STANDORTE[ort].kapazitaet) || 0;
+  // Belegung eines beliebigen Standorts holen, ohne den gewählten Standort
+  // anzufassen -> Promise mit { belegung, kapazitaet } oder null (kein API/Fehler)
+  function holeBelegung(ort) {
     var api = window.NEST_VERFUEGBARKEIT_API;
-    if (!api || !window.fetch) { if (cb) cb(); return; }
-    fetch(api + "?standort=" + encodeURIComponent(ort) + "&t=" + Date.now(), { cache: "no-store" })
+    if (!api || !window.fetch) return Promise.resolve(null);
+    return fetch(api + "?standort=" + encodeURIComponent(ort) + "&t=" + Date.now(), { cache: "no-store" })
       .then(function (r) { return r.json(); })
       .then(function (d) {
-        if (d && d.belegung) belegung = d.belegung;
-        if (d && typeof d.kapazitaet === "number") kapazitaet = d.kapazitaet;
-        if (cb) cb();
+        return {
+          belegung: (d && d.belegung) || {},
+          kapazitaet: (d && typeof d.kapazitaet === "number") ? d.kapazitaet
+            : ((STANDORTE[ort] && STANDORTE[ort].kapazitaet) || 0)
+        };
       })
-      .catch(function () { if (cb) cb(); });
+      .catch(function () { return null; });
+  }
+  var ladeLauf = 0; // nur die Antwort zur letzten Standortwahl übernehmen
+  function ladeVerfuegbarkeit(ort, cb) {
+    var lauf = ++ladeLauf;
+    belegung = {};
+    kapazitaet = (STANDORTE[ort] && STANDORTE[ort].kapazitaet) || 0;
+    holeBelegung(ort).then(function (d) {
+      if (lauf !== ladeLauf) return; // inzwischen anderer Standort gewählt
+      if (d) { belegung = d.belegung; kapazitaet = d.kapazitaet; }
+      if (cb) cb();
+    });
+  }
+
+  /* ---------- Ausweich-Hinweis (z. B. Wuppertal voll -> Solingen/Remscheid) ---------- */
+  var ausweichBox = document.getElementById("tb-ausweich");
+  var ausweichBody = document.getElementById("tb-ausweich-body");
+  var ausweichLauf = 0;   // verwirft Antworten, wenn inzwischen ein anderer Standort gewählt wurde
+  var vorgemerkt = null;  // { ort, key } – Termin, der nach dem Standortwechsel ausgewählt wird
+
+  function freiePlaetze(key, bel, kap) { return kap > 0 ? Math.max(0, kap - (bel[key] || 0)) : -1; }
+  // Buchbare Beratungstage eines Standorts von morgen an für `tage` Tage
+  // (ohne „ab Okt."- und gesperrte Tage)
+  function buchbareTage(ort, tage) {
+    var out = [];
+    var d = new Date(); d.setHours(0, 0, 0, 0);
+    for (var i = 1; i <= tage; i++) {
+      d.setDate(d.getDate() + 1);
+      var key = iso(d);
+      if (ortTage(key, ort).indexOf(d.getDay()) > -1 &&
+          !ortGesperrtBis(key, ort) && !ortZeitraumGesperrt(key, ort)) out.push(new Date(d));
+    }
+    return out;
+  }
+  function kurzDatum(d) { return WDAYS[d.getDay()] + ", " + d.getDate() + ". " + MONS_LANG[d.getMonth()]; }
+  function aufzaehlung(namen) {
+    return namen.length > 1 ? namen.slice(0, -1).join(", ") + " und " + namen[namen.length - 1] : (namen[0] || "");
+  }
+
+  function versteckeAusweich() {
+    if (ausweichBox) ausweichBox.hidden = true;
+    if (ausweichBody) ausweichBody.innerHTML = "";
+  }
+  function zeigeAusweich(ort, treffer) {
+    if (!ausweichBox || !ausweichBody || !treffer.length) { versteckeAusweich(); return; }
+    var namen = treffer.map(function (t) { return t.ort; });
+    var html =
+      '<p class="tb-ausweich__titel">In ' + ort + ' ist die nächste Woche ausgebucht</p>' +
+      '<p class="tb-ausweich__text">Kurzfristig ' + (treffer.length > 1 ? 'sind' : 'ist') +
+      ' aber noch ' + (treffer.length > 1 ? 'Termine' : 'ein Termin') + ' in ' + aufzaehlung(namen) +
+      ' frei – dort kannst du genauso einfach buchen:</p>' +
+      '<div class="tb-ausweich__opts">';
+    treffer.forEach(function (t) {
+      html += '<button type="button" class="tb-ausweich__opt" data-ort="' + t.ort + '" data-key="' + iso(t.datum) + '">' +
+                '<span class="tb-ausweich__ort">' + t.ort + '</span>' +
+                '<span class="tb-ausweich__tag">' + kurzDatum(t.datum) + ' · ' + UHRZEIT.replace(" ", "&nbsp;") + ' · ' +
+                  (t.frei === 1 ? '1 Platz frei' : t.frei + ' Plätze frei') + '</span>' +
+                '<span class="tb-ausweich__go" aria-hidden="true">→</span>' +
+              '</button>';
+    });
+    html += '</div><p class="tb-ausweich__note">Lieber ' + ort + '? Dann wähl unten einfach einen späteren Tag.</p>';
+    ausweichBody.innerHTML = html;
+    ausweichBox.hidden = false;
+
+    ausweichBody.querySelectorAll(".tb-ausweich__opt").forEach(function (el) {
+      el.addEventListener("click", function () {
+        var ziel = app.querySelector('.tb-ort[data-ort="' + el.getAttribute("data-ort") + '"]');
+        if (!ziel) return;
+        vorgemerkt = { ort: el.getAttribute("data-ort"), key: el.getAttribute("data-key") };
+        ziel.click();
+      });
+    });
+  }
+
+  // Prüft nach dem Laden der Belegung, ob der gewählte Standort in den nächsten
+  // Tagen komplett voll ist, und sucht dann freie Termine an den Ausweich-Standorten.
+  function pruefeAusweich(ort) {
+    var lauf = ++ausweichLauf;
+    versteckeAusweich();
+    var cfg = AUSWEICH[ort];
+    if (!cfg || !ausweichBox || kapazitaet <= 0) return;
+    var tage = buchbareTage(ort, cfg.fenster);
+    var allesVoll = tage.length > 0 && tage.every(function (d) {
+      return freiePlaetze(iso(d), belegung, kapazitaet) === 0;
+    });
+    if (!allesVoll) return;
+
+    Promise.all(cfg.ziele.map(function (ziel) {
+      return holeBelegung(ziel).then(function (res) {
+        if (!res) return null;
+        var kandidaten = buchbareTage(ziel, cfg.suche);
+        for (var i = 0; i < kandidaten.length; i++) {
+          var frei = freiePlaetze(iso(kandidaten[i]), res.belegung, res.kapazitaet);
+          if (frei > 0) return { ort: ziel, datum: kandidaten[i], frei: frei };
+        }
+        return null;
+      });
+    })).then(function (treffer) {
+      if (lauf !== ausweichLauf || state.ort !== ort) return;
+      treffer = treffer.filter(Boolean).sort(function (a, b) { return a.datum - b.datum; });
+      zeigeAusweich(ort, treffer);
+    });
+  }
+
+  // Nach einem Klick im Ausweich-Hinweis: vorgemerkten Termin am neuen Standort
+  // auswählen, sofern er laut frisch geladener Belegung noch frei ist.
+  function waehleVorgemerktenTag(v) {
+    if (!v || v.ort !== state.ort) return;
+    if (freiePlaetze(v.key, belegung, kapazitaet) === 0) return;
+    var teile = v.key.split("-");
+    var d = new Date(+teile[0], +teile[1] - 1, +teile[2]);
+    state.datum = v.key;
+    state.datumText = langText(d);
+    calJahr = d.getFullYear();
+    calMonat = d.getMonth();
   }
 
   /* ---------- Standort ---------- */
@@ -2172,7 +2296,16 @@ if (!window.STELLEN || !window.STELLEN.length) {
       var dayHint = document.getElementById("tb-day-hint");
       if (dayHint) dayHint.textContent = tageHinweis();
       renderZeit();
-      ladeVerfuegbarkeit(state.ort, function () { renderDates(); renderKalender(); update(); });
+      ausweichLauf++;
+      versteckeAusweich();
+      // nur gesetzt, wenn der Klick aus dem Ausweich-Hinweis kommt
+      var vm = vorgemerkt;
+      vorgemerkt = null;
+      ladeVerfuegbarkeit(state.ort, function () {
+        waehleVorgemerktenTag(vm);
+        renderDates(); renderKalender(); update();
+        pruefeAusweich(state.ort);
+      });
       renderKalender();
       update();
     });
@@ -2332,7 +2465,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
         // Tag ausgebucht (Kapazität erreicht) -> Formular bleibt, Hinweis + neu laden
         if (res.status === 409) {
           zeigeFehler("Dieser Termin ist leider nicht verfügbar. Bitte wähle einen anderen Tag.");
-          ladeVerfuegbarkeit(state.ort, function () { renderDates(); update(); });
+          ladeVerfuegbarkeit(state.ort, function () { renderDates(); renderKalender(); update(); pruefeAusweich(state.ort); });
           return;
         }
 

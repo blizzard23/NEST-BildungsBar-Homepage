@@ -158,6 +158,14 @@ const html = `
                 <div class="tb-step tb-locked" id="step-date">
                   <div class="tb-step-head"><span class="tb-step-n">2</span><div class="tb-step-title"><span class="tb-step-kicker">Schritt 2</span><h3>Welcher Tag passt?</h3></div><span class="tb-hint" id="tb-day-hint">je nach Standort</span></div>
 
+                  <!-- Ausweich-Hinweis: erscheint, wenn Wuppertal in den nächsten
+                       7 Tagen ausgebucht ist und in Solingen/Remscheid noch
+                       kurzfristig Plätze frei sind (Logik: AUSWEICH in nest-app.js) -->
+                  <div class="tb-ausweich" id="tb-ausweich" role="status" aria-live="polite" hidden>
+                    <span class="tb-ausweich__ic">${IC.pin}</span>
+                    <div class="tb-ausweich__body" id="tb-ausweich-body"></div>
+                  </div>
+
                   <!-- Monatskalender -->
                   <div class="tb-cal-wrap">
                     <div class="tb-cal-nav" id="tb-cal-nav">

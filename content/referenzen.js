@@ -103,7 +103,6 @@ const html = `
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p1_19.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p1_20.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p1_21.png" alt="Partnerunternehmen" loading="lazy"></div>
-          <div class="bb-logo"><img src="/assets/img/referenzen/partner/p1_22.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p1_23.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p1_24.png" alt="Partnerunternehmen" loading="lazy"></div>
           <div class="bb-logo"><img src="/assets/img/referenzen/partner/p1_25.png" alt="Partnerunternehmen" loading="lazy"></div>

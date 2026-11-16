@@ -110,8 +110,8 @@ git push -u origin main
 
 `vercel.json` enthält einen **täglichen Cron** (`/api/cron/erinnerungen`, 16:00 UTC).
 Er sucht alle Buchungen für **morgen** und schickt eine freundliche Erinnerung per
-**E-Mail** (Resend bzw. SMTP) und – falls konfiguriert – per **WhatsApp**. Damit nichts doppelt
-verschickt wird, wird je Buchung `erinnert_am` gesetzt.
+**E-Mail** (Resend bzw. SMTP) und – wenn die Person das bei der Buchung angehakt hat – zusätzlich
+per **WhatsApp**. Damit nichts doppelt verschickt wird, wird je Buchung `erinnert_am` gesetzt.
 
 - Pflicht dafür: `SUPABASE_SERVICE_ROLE_KEY` (Cron liest ohne Login) und `CRON_SECRET`.
 - **WhatsApp** läuft über die **WhatsApp Cloud API (Meta)**. Du brauchst: ein WhatsApp-
@@ -120,6 +120,14 @@ verschickt wird, wird je Buchung `erinnert_am` gesetzt.
   eingesetzt), z. B. Template `terminerinnerung`:
   *„Hallo! Erinnerung: Dein Termin bei der NEST BildungsBar ist morgen, {{1}}. Wir freuen uns auf dich!"*
   Ohne diese WhatsApp-Variablen wird nur die E-Mail-Erinnerung verschickt.
+- **WhatsApp nur mit Einwilligung:** Im Buchungsformular (`/terminbuchung`) gibt es die Checkbox
+  „Erinnere mich zusätzlich per WhatsApp“. Ist sie angehakt, wird die Telefonnummer Pflicht und
+  die Buchung bekommt `whatsapp_erinnerung = true`. Nur an diese Buchungen schickt der Cron eine
+  WhatsApp. Dafür muss die Spalte in Supabase existieren (`supabase/buchungen.sql` ausführen).
+- Die Checkbox erscheint **erst, wenn `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_ID` und
+  `WHATSAPP_TEMPLATE` gesetzt sind** (Seite wird beim Build gerendert → nach dem Setzen der
+  Variablen einmal neu deployen). Versandlogik: `lib/whatsapp.js`; Fehler stehen in den
+  Vercel-Logs („WhatsApp-Erinnerung fehlgeschlagen …“).
 - Cron testen: den Endpoint manuell aufrufen mit Header `Authorization: Bearer <CRON_SECRET>`.
 
 ### Mailversand (Resend, sonst lima-city SMTP)

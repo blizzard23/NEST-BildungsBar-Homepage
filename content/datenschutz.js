@@ -99,6 +99,7 @@ const html = `
         <li><a href="#verantwortliche">Verantwortliche Stelle</a></li>
         <li><a href="#datenerfassung">Erfassung und Verarbeitung personenbezogener Daten</a></li>
         <li><a href="#kontaktformular">Kontaktformular</a></li>
+        <li><a href="#whatsapp">Terminerinnerung per WhatsApp</a></li>
         <li><a href="#cookies">Cookies und Tracking</a></li>
         <li><a href="#weitergabe">Weitergabe von Daten</a></li>
         <li><a href="#speicherdauer">Speicherdauer</a></li>
@@ -158,8 +159,25 @@ const html = `
       </div>
     </div>
 
+    <div class="dse-section" id="whatsapp">
+      <h2 class="section-heading"><span class="num">4</span> Terminerinnerung per WhatsApp</h2>
+      <div class="card">
+        <p>Bei der Buchung eines Beratungstermins können Sie freiwillig ankreuzen, dass wir Sie am Tag vor Ihrem Termin zusätzlich per WhatsApp erinnern. Nur wenn Sie das ausdrücklich auswählen, verarbeiten wir dafür:</p>
+        <ul>
+          <li>Ihre Telefonnummer</li>
+          <li>Datum, Uhrzeit und Standort Ihres Termins</li>
+        </ul>
+        <p>Die Nachricht wird über die WhatsApp Business Platform (Cloud API) der Meta Platforms Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland, zugestellt. Meta verarbeitet die Daten dabei in unserem Auftrag (Art. 28 DSGVO). Eine Übermittlung in die USA kann nicht ausgeschlossen werden; sie erfolgt auf Grundlage des EU-US Data Privacy Framework bzw. der EU-Standardvertragsklauseln. Weitere Informationen: <a href="https://www.whatsapp.com/legal/privacy-policy-eea" target="_blank" rel="noopener">whatsapp.com/legal/privacy-policy-eea</a>.</p>
+        <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 Buchst. a DSGVO (Einwilligung)<br>
+          <strong>Zweck:</strong> Erinnerung an Ihren gebuchten Termin
+        </p>
+        <p>Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen, z.&nbsp;B. per E-Mail an <a href="mailto:info@nest-bildungsbar.de">info@nest-bildungsbar.de</a>. Die Erinnerung per E-Mail bleibt davon unberührt. Ohne Ihre Auswahl erhalten Sie keine WhatsApp-Nachrichten von uns.</p>
+      </div>
+    </div>
+
     <div class="dse-section" id="cookies">
-      <h2 class="section-heading"><span class="num">4</span> Cookies und Tracking</h2>
+      <h2 class="section-heading"><span class="num">5</span> Cookies und Tracking</h2>
       <div class="card">
         <p>Diese Website verwendet Cookies, um Ihr Nutzungserlebnis zu verbessern. Cookies sind kleine Dateien, die auf Ihrem Gerät gespeichert werden.</p>
         <p><strong>Notwendige Cookies:</strong> Diese sind erforderlich für die Funktionalität der Website und können ohne Einwilligung gesetzt werden.</p>
@@ -170,7 +188,7 @@ const html = `
     </div>
 
     <div class="dse-section" id="weitergabe">
-      <h2 class="section-heading"><span class="num">5</span> Weitergabe von Daten</h2>
+      <h2 class="section-heading"><span class="num">6</span> Weitergabe von Daten</h2>
       <div class="card">
         <p>Eine Weitergabe Ihrer personenbezogenen Daten an Dritte erfolgt nicht, es sei denn:</p>
         <ul>
@@ -183,7 +201,7 @@ const html = `
     </div>
 
     <div class="dse-section" id="speicherdauer">
-      <h2 class="section-heading"><span class="num">6</span> Speicherdauer</h2>
+      <h2 class="section-heading"><span class="num">7</span> Speicherdauer</h2>
       <div class="card">
         <p>Personenbezogene Daten, die Sie uns im Kontaktformular übermitteln, werden so lange gespeichert, wie es für die Bearbeitung Ihrer Anfrage notwendig ist. Danach werden diese gelöscht.</p>
         <p><strong>Ausnahmen:</strong> Sollten gesetzliche Aufbewahrungsfristen (z.&nbsp;B. Steuerrecht, Handelsgesetzbuch) Anwendung finden, werden Ihre Daten entsprechend diesen Fristen gespeichert.</p>
@@ -191,7 +209,7 @@ const html = `
     </div>
 
     <div class="dse-section" id="rechte">
-      <h2 class="section-heading"><span class="num">7</span> Ihre Rechte</h2>
+      <h2 class="section-heading"><span class="num">8</span> Ihre Rechte</h2>
       <div class="card">
         <p>Gemäß DSGVO haben Sie folgende Rechte:</p>
         <div class="rights-grid">
@@ -229,7 +247,7 @@ const html = `
     </div>
 
     <div class="dse-section" id="sicherheit">
-      <h2 class="section-heading"><span class="num">8</span> Datensicherheit</h2>
+      <h2 class="section-heading"><span class="num">9</span> Datensicherheit</h2>
       <div class="card">
         <p>Wir setzen technische und organisatorische Maßnahmen ein, um Ihre Daten vor Verlust, Zerstörung, unberechtigtem Zugriff, Veränderung oder Verbreitung zu schützen.</p>
         <p><strong>Sichere Übertragung:</strong> Diese Website verwendet SSL/TLS-Verschlüsselung (erkennbar am „https://" in der Adresszeile).</p>

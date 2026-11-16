@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { sendeMail, mailKonfiguriert, absender } from "@/lib/mailer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { sendeWhatsAppErinnerung } from "@/lib/whatsapp";
 
 /* Täglicher Cron (siehe vercel.json): schickt allen, die MORGEN einen Termin
-   haben, eine freundliche Erinnerung per E-Mail und (optional) WhatsApp.
+   haben, eine freundliche Erinnerung per E-Mail – und zusätzlich per WhatsApp,
+   wenn die Person das bei der Buchung angehakt hat (Spalte whatsapp_erinnerung,
+   Opt-in) und WhatsApp konfiguriert ist (siehe lib/whatsapp.js).
    Schutz: Vercel sendet bei gesetztem CRON_SECRET den Header
    "Authorization: Bearer <CRON_SECRET>". */
 export const runtime = "nodejs";
@@ -13,43 +16,6 @@ function morgenISO() {
   const d = new Date();
   d.setDate(d.getDate() + 1);
   return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
-}
-
-/* Telefonnummer grob nach E.164 (für WhatsApp Cloud API, ohne führendes +). */
-function normTel(t) {
-  let n = String(t || "").replace(/[^\d+]/g, "");
-  if (!n) return "";
-  if (n.startsWith("+")) n = n.slice(1);
-  else if (n.startsWith("00")) n = n.slice(2);
-  else if (n.startsWith("0")) n = "49" + n.slice(1);
-  return /^\d{8,15}$/.test(n) ? n : "";
-}
-
-async function sendWhatsApp(tel, wann, name) {
-  const token = process.env.WHATSAPP_TOKEN;
-  const phoneId = process.env.WHATSAPP_PHONE_ID;
-  const template = process.env.WHATSAPP_TEMPLATE;
-  const lang = process.env.WHATSAPP_LANG || "de";
-  const to = normTel(tel);
-  if (!token || !phoneId || !template || !to) return false;
-  try {
-    const res = await fetch(`https://graph.facebook.com/v20.0/${phoneId}/messages`, {
-      method: "POST",
-      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messaging_product: "whatsapp",
-        to,
-        type: "template",
-        template: {
-          name: template,
-          language: { code: lang },
-          // Template-Body sollte genau eine Variable {{1}} enthalten (z. B. den Termin)
-          components: [{ type: "body", parameters: [{ type: "text", text: wann }] }],
-        },
-      }),
-    });
-    return res.ok;
-  } catch (e) { return false; }
 }
 
 export async function POST(req) { return handle(req); }
@@ -98,7 +64,8 @@ async function handle(req) {
       } catch (e) {}
     }
 
-    if (await sendWhatsApp(t.telefon, wann, t.name)) whatsapps++;
+    // Nur mit ausdrücklicher Einwilligung aus dem Buchungsformular
+    if (t.whatsapp_erinnerung === true && (await sendeWhatsAppErinnerung(t.telefon, wann))) whatsapps++;
 
     await sb.from("buchungen").update({ erinnert_am: new Date().toISOString().slice(0, 10) }).eq("id", t.id);
   }

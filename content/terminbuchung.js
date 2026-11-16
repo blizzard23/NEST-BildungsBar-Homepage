@@ -212,6 +212,14 @@ const html = `
                       <div class="bb-field"><label for="tb-phone">Telefon</label><input type="tel" id="tb-phone" placeholder="optional" autocomplete="tel"></div>
                       <div class="bb-field"><label for="tb-schule">Schule &amp; Klasse</label><input type="text" id="tb-schule" placeholder="optional"></div>
                     </div>
+                    <!-- Freiwillige WhatsApp-Erinnerung (Opt-in). Nur wenn angehakt,
+                         schickt der Erinnerungs-Cron am Vortag zusätzlich eine WhatsApp.
+                         Alles zwischen den WA-Markern blendet app/terminbuchung/page.jsx
+                         aus, solange WhatsApp nicht konfiguriert ist (lib/whatsapp.js). -->
+                    <!--WA-->
+                    <label class="bb-check"><input type="checkbox" id="tb-whatsapp"> <span>Erinnere mich am Tag vorher <b>zusätzlich per WhatsApp</b> an meinen Termin. Dafür wird meine Telefonnummer mit Datum, Uhrzeit und Standort an WhatsApp (Meta) übermittelt (<a href="/datenschutz#whatsapp" target="_blank" rel="noopener">Datenschutz</a>). Freiwillig und jederzeit widerrufbar.</span></label>
+                    <p class="tb-err" id="tb-whatsapp-hinweis" style="display:none;">Bitte trag oben deine Handynummer ein, damit wir dich per WhatsApp erinnern können.</p>
+                    <!--/WA-->
                     <fieldset class="bb-field">
                       <legend>Was möchtest du machen?</legend>
                       <div class="bb-pills">
@@ -258,7 +266,7 @@ const html = `
                     <div class="tb-sum-row"><span class="k">Name</span><span class="v empty" id="sum-name">noch offen</span></div>
                     <button type="submit" class="bb-btn bb-btn--ink bb-btn--block" id="tb-submit" disabled>Jetzt verbindlich buchen</button>
                     <p class="tb-err" id="tb-fehler" style="display:none;"></p>
-                    <p class="tb-summary__note">Kostenfrei. Du bekommst eine Bestätigung per E-Mail und am Tag vorher eine Erinnerung.</p>
+                    <p class="tb-summary__note">Kostenfrei. Du bekommst eine Bestätigung per E-Mail und am Tag vorher eine Erinnerung<!--WA--> – auf Wunsch auch per WhatsApp<!--/WA-->.</p>
                   </div>
                 </div>
               </aside>

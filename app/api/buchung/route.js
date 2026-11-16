@@ -3,6 +3,7 @@ import { sendeMail, mailKonfiguriert, absender, empfaengerTeam } from "@/lib/mai
 import { supabaseServer } from "@/lib/supabaseServer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { clientIp, rateLimitErreicht, spamGrund } from "@/lib/spamSchutz";
+import { whatsappKonfiguriert } from "@/lib/whatsapp";
 
 /* Terminbuchung: speichert die Anfrage in Supabase (Tabelle "buchungen")
    UND verschickt eine E-Mail über SMTP (lima-city).
@@ -29,6 +30,11 @@ export async function POST(req) {
     schule: clean(b.schule, 160),
     nachricht: clean(b.nachricht, 2000),
   };
+  // Freiwillige WhatsApp-Erinnerung (Opt-in im Formular). Nur speichern, wenn
+  // eine brauchbare Telefonnummer da ist und WhatsApp überhaupt eingerichtet ist –
+  // sonst würden wir in der Bestätigungsmail etwas versprechen, das nicht kommt.
+  buchung.whatsapp_erinnerung = b.whatsapp === true && whatsappKonfiguriert() &&
+    buchung.telefon.replace(/\D/g, "").length >= 10;
   if (!buchung.name || !buchung.standort || !buchung.uhrzeit) {
     return NextResponse.json({ ok: false, error: "Pflichtfelder fehlen" }, { status: 400 });
   }
@@ -97,7 +103,14 @@ export async function POST(req) {
 
   // 1) In Supabase speichern (RLS erlaubt öffentliches INSERT)
   if (sb) {
-    const { error } = await sb.from("buchungen").insert(buchung);
+    let { error } = await sb.from("buchungen").insert(buchung);
+    // Spalte whatsapp_erinnerung noch nicht angelegt (supabase/buchungen.sql)?
+    // Dann die Buchung ohne das Feld speichern, statt sie zu verlieren.
+    if (error && /whatsapp_erinnerung/.test(error.message || "")) {
+      console.warn("Spalte buchungen.whatsapp_erinnerung fehlt – Buchung ohne WhatsApp-Wunsch gespeichert.");
+      const { whatsapp_erinnerung, ...ohneWa } = buchung; // eslint-disable-line no-unused-vars
+      ({ error } = await sb.from("buchungen").insert(ohneWa));
+    }
     stored = !error;
   }
 
@@ -112,6 +125,7 @@ export async function POST(req) {
         "Name: " + buchung.name,
         "E-Mail: " + (buchung.email || "—"),
         "Telefon: " + (buchung.telefon || "—"),
+        "WhatsApp-Erinnerung: " + (buchung.whatsapp_erinnerung ? "ja" : "nein"),
         "Schule/Klasse: " + (buchung.schule || "—"), "",
         "Nachricht: " + (buchung.nachricht || "—"),
       ].join("\n");
@@ -135,7 +149,9 @@ export async function POST(req) {
           "📍 Standort: " + buchung.standort + (b.adresse ? " (" + clean(b.adresse, 120) + ")" : ""),
           "📅 Datum: " + (buchung.datum_text || buchung.datum),
           "🕔 Uhrzeit: " + buchung.uhrzeit, "",
-          "Am Tag vor deinem Termin schicken wir dir eine kurze Erinnerung.",
+          buchung.whatsapp_erinnerung
+            ? "Am Tag vor deinem Termin schicken wir dir eine kurze Erinnerung per E-Mail und per WhatsApp an " + buchung.telefon + "."
+            : "Am Tag vor deinem Termin schicken wir dir eine kurze Erinnerung.",
           "Falls dir doch etwas dazwischenkommt, antworte einfach auf diese E-Mail.", "",
           "Wir freuen uns auf dich!",
           "Dein NEST-Team",

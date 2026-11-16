@@ -2319,10 +2319,13 @@ if (!window.STELLEN || !window.STELLEN.length) {
   var fSchule = document.getElementById("tb-schule");
   var fMsg = document.getElementById("tb-msg");
   var fPriv = document.getElementById("tb-privacy");
+  var fWa = document.getElementById("tb-whatsapp");
+  var waHinweis = document.getElementById("tb-whatsapp-hinweis");
   [fName, fMail, fPhone, fSchule, fMsg].forEach(function (el) {
     if (el) el.addEventListener("input", update);
   });
   if (fPriv) fPriv.addEventListener("change", update);
+  if (fWa) fWa.addEventListener("change", update);
 
   /* ---------- Zusammenfassung + Validierung ---------- */
   var sumOrt = document.getElementById("sum-ort");
@@ -2362,6 +2365,9 @@ if (!window.STELLEN || !window.STELLEN.length) {
     else { el.textContent = "noch offen"; el.classList.add("empty"); }
   }
   function mailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  // Grobe Prüfung für die WhatsApp-Erinnerung: Handynummer mit mindestens 10 Ziffern
+  function telOk(v) { return String(v || "").replace(/\D/g, "").length >= 10; }
+  function willWhatsApp() { return !!(fWa && fWa.checked); }
 
   function update() {
     setVal(sumOrt, state.ort);
@@ -2373,9 +2379,14 @@ if (!window.STELLEN || !window.STELLEN.length) {
     if (stepDate) stepDate.classList.toggle("tb-locked", !state.ort);
     if (stepTime) stepTime.classList.toggle("tb-locked", !state.datum);
 
+    // WhatsApp-Erinnerung gewünscht -> Telefonnummer wird Pflicht
+    var waFehlt = willWhatsApp() && !(fPhone && telOk(fPhone.value));
+    if (waHinweis) waHinweis.style.display = waFehlt ? "block" : "none";
+    if (fPhone) fPhone.required = willWhatsApp();
+
     var ready = state.ort && state.datum && state.zeit &&
       fName && fName.value.trim() && fMail && mailOk(fMail.value.trim()) &&
-      fPriv && fPriv.checked;
+      fPriv && fPriv.checked && !waFehlt;
     if (btn) btn.disabled = !ready;
     if (btnUnten) btnUnten.disabled = !ready;
     // Button unter dem Formular erst zeigen, wenn wirklich alles steht
@@ -2405,6 +2416,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
       "Name: " + (fName ? fName.value.trim() : ""),
       "E-Mail: " + (fMail ? fMail.value.trim() : ""),
       "Telefon: " + (fPhone && fPhone.value.trim() ? fPhone.value.trim() : "—"),
+      "WhatsApp-Erinnerung: " + (willWhatsApp() ? "ja" : "nein"),
       "Schule/Klasse: " + (fSchule && fSchule.value.trim() ? fSchule.value.trim() : "—"),
       "Möchte: " + (tbZiel() || "—"),
       "Unterstützung: " + (tbSupport() || "—"), "",
@@ -2436,6 +2448,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
       name: fName ? fName.value.trim() : "",
       email: fMail ? fMail.value.trim() : "",
       telefon: fPhone ? fPhone.value.trim() : "",
+      whatsapp: willWhatsApp(),
       schule: fSchule ? fSchule.value.trim() : "",
       nachricht: tbNachricht(),
       hp: (function () { var el = document.getElementById("tb-website"); return el ? el.value : ""; })(),
@@ -2488,7 +2501,7 @@ if (!window.STELLEN || !window.STELLEN.length) {
 
         var statusP = box ? box.querySelector("p") : null;
         if (res.ok) {
-          if (statusP) statusP.textContent = "Dein Termin ist gebucht ✅ – du bekommst gleich eine Bestätigung per E-Mail. Am Tag vorher erinnern wir dich nochmal.";
+          if (statusP) statusP.textContent = "Dein Termin ist gebucht ✅ – du bekommst gleich eine Bestätigung per E-Mail. Am Tag vorher erinnern wir dich nochmal" + (willWhatsApp() ? " per E-Mail und WhatsApp." : ".");
           if (sendBtn) sendBtn.style.display = "none";
           if (state.datum) { belegung[state.datum] = (belegung[state.datum] || 0) + 1; renderDates(); }
         } else {

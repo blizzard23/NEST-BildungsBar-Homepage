@@ -16,11 +16,14 @@ create table if not exists public.buchungen (
   schule      text,
   nachricht   text,
   erinnert_am date,
+  whatsapp_erinnerung boolean not null default false, -- Opt-in aus dem Buchungsformular
   created_at  timestamptz not null default now()
 );
 
 -- Falls die Tabelle schon ohne diese Spalte existiert:
 alter table public.buchungen add column if not exists erinnert_am date;
+-- WhatsApp-Erinnerung nur mit Einwilligung (Checkbox im Buchungsformular)
+alter table public.buchungen add column if not exists whatsapp_erinnerung boolean not null default false;
 
 alter table public.buchungen enable row level security;
 

@@ -1332,6 +1332,7 @@ export default function PartnerPortal() {
                                           <p style={{ margin: 0, fontSize: "14px", color: "var(--text-soft)" }}>
                                             {bu.email ? <a href={`mailto:${bu.email}`}>{bu.email}</a> : "—"}
                                             {bu.telefon ? <> · <a href={`tel:${bu.telefon}`}>{bu.telefon}</a></> : ""}
+                                            {bu.whatsapp_erinnerung ? <span style={{ color: "#1a8550", fontWeight: 600 }}> · WhatsApp-Erinnerung</span> : ""}
                                           </p>
                                           {bu.schule ? <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--text-mute)" }}>{bu.schule}</p> : null}
                                           {bu.nachricht ? <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-soft)" }}>„{bu.nachricht}"</p> : null}

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>NEST-Partnerschaft – Flyer für Unternehmen</title>
+<!--
+  Flyer für potenzielle Partnerunternehmen (DIN A4, Vorder- und Rückseite).
+  Inhalte aus content/kooperation.js, content/ueber-uns.js und content/home.js.
+  PDF erzeugen (aus dem Projektordner): node flyer/build-pdf.js
+  Ergebnis: public/broschueren/nest-partnerschaft-flyer.pdf
+-->
+<style>
+@font-face { font-family: 'Jost'; font-weight: 400; src: url(fonts/Jost-400.ttf) format('truetype'); }
+@font-face { font-family: 'Jost'; font-weight: 500; src: url(fonts/Jost-500.ttf) format('truetype'); }
+@font-face { font-family: 'Jost'; font-weight: 600; src: url(fonts/Jost-600.ttf) format('truetype'); }
+@font-face { font-family: 'Jost'; font-weight: 700; src: url(fonts/Jost-700.ttf) format('truetype'); }
+@font-face { font-family: 'Jost'; font-weight: 800; src: url(fonts/Jost-800.ttf) format('truetype'); }
+
+@page { size: A4; margin: 0; }
+:root {
+  --navy: #0F2145; --gold: #EFA500; --hl: #b07800;
+  --ink: #0F2145; --text: #4a536a; --muted: #7c849a;
+  --line: #e5e8ef; --line-2: #d3d9e3; --band: #f4f6fa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #fff; }
+body { font-family: 'Jost', sans-serif; color: var(--text); font-size: 9pt; line-height: 1.42;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+a { color: inherit; text-decoration: none; }
+.page { width: 210mm; height: 297mm; position: relative; overflow: hidden; break-after: page; }
+.page:last-child { break-after: auto; }
+.wrap { padding: 0 14mm; }
+b, strong { color: var(--ink); font-weight: 600; }
+.ic { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+.kicker { display: inline-block; font-size: 7.4pt; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--hl); }
+.h2 { font-size: 19pt; font-weight: 700; line-height: 1.12; color: var(--ink); letter-spacing: -.01em; margin-top: 1mm; }
+.h2 em { font-style: normal; color: var(--hl); }
+.lead { font-size: 9.2pt; line-height: 1.5; color: var(--text); }
+
+.tag { display: inline-flex; align-items: center; font-size: 6.6pt; font-weight: 600; padding: .45mm 2mm; border-radius: 99px; white-space: nowrap; line-height: 1.3; }
+.tag--inkl { background: #e9edf4; color: var(--navy); }
+.tag--zu { background: rgba(239,165,0,.18); color: #8a5e00; }
+.ibox { width: 7mm; height: 7mm; border-radius: 2mm; background: rgba(239,165,0,.16); color: var(--hl); display: inline-flex; align-items: center; justify-content: center; font-size: 10pt; flex: none; }
+
+/* Marker: im Beitrag (Haken) / zubuchbar (Plus) */
+.mk { width: 3.7mm; height: 3.7mm; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.5mm; flex: none; }
+.mk .ic { stroke-width: 3.4; }
+.mk--inkl { background: #dfe4ee; color: var(--navy); }
+.mk--zu { background: var(--gold); color: var(--navy); }
+
+/* ───────── SEITE 1 · HERO ───────── */
+.hero { position: relative; height: 106mm; background: var(--navy); color: #fff; padding: 11mm 14mm 0; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -45mm; right: -45mm; width: 150mm; height: 150mm; border-radius: 50%;
+  background: radial-gradient(circle, rgba(239,165,0,.14) 0%, rgba(239,165,0,0) 68%); }
+.hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 19mm; background: var(--gold);
+  clip-path: polygon(0 100%, 100% 28%, 100% 100%); }
+.hero-top { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; }
+.hero-top img { height: 14mm; display: block; }
+.pill { font-size: 7.2pt; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold);
+  border: .3mm solid rgba(239,165,0,.55); border-radius: 99px; padding: 1.1mm 3.6mm; }
+.hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 68mm; gap: 8mm; margin-top: 8mm; }
+.hero .kicker { color: var(--gold); }
+.hero h1 { font-size: 26pt; font-weight: 800; line-height: 1.06; letter-spacing: -.015em; color: #fff; margin-top: 2mm; }
+.hero h1 em { font-style: normal; color: var(--gold); display: block; }
+.hero .lead { color: rgba(255,255,255,.82); font-size: 9.8pt; margin-top: 4mm; }
+.hero-photo { position: relative; }
+.hero-photo img { width: 68mm; height: 53mm; object-fit: cover; object-position: 40% 50%; border-radius: 4.5mm; display: block;
+  box-shadow: 0 3mm 9mm rgba(0,0,0,.35); }
+.hero-photo .cap { position: absolute; left: 2.6mm; bottom: 2.6mm; background: rgba(15,33,69,.88); color: #fff; font-size: 6.6pt; font-weight: 500;
+  padding: .9mm 2.5mm; border-radius: 99px; }
+.hero-photo .cap b { color: var(--gold); }
+
+/* Kennzahlen */
+.stats { position: relative; z-index: 3; margin: -16mm 14mm 0; background: #fff; border-radius: 4.5mm; box-shadow: 0 2.5mm 8mm rgba(15,33,69,.16);
+  display: grid; grid-template-columns: repeat(4, 1fr); padding: 4mm 2mm; }
+.stat { text-align: center; padding: 0 2mm; }
+.stat + .stat { border-left: .3mm solid var(--line); }
+.stat .n { display: block; font-size: 18.5pt; font-weight: 700; color: var(--ink); line-height: 1; }
+.stat .n em { font-style: normal; color: var(--gold); }
+.stat .l { display: block; font-size: 7.3pt; color: var(--muted); margin-top: 1.2mm; line-height: 1.25; }
+
+/* Stationen */
+.stations { padding-top: 8mm; }
+.st-head { display: grid; grid-template-columns: 1fr 74mm; gap: 8mm; align-items: end; }
+.st-head .lead { font-size: 8.6pt; }
+.phases { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin-top: 5mm; }
+.phase { display: flex; align-items: center; gap: 2.2mm; font-size: 7.3pt; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+.phase::after { content: ''; flex: 1; height: .35mm; border-radius: 1mm; }
+.phase .ic { font-size: 9pt; }
+.phase--find { color: var(--hl); } .phase--find::after { background: linear-gradient(90deg, var(--gold), rgba(239,165,0,.12)); }
+.phase--keep { color: var(--navy); } .phase--keep::after { background: linear-gradient(90deg, var(--navy), rgba(15,33,69,.10)); }
+.st-grid { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 3mm; row-gap: 0; margin-top: 2.6mm;
+  grid-template-rows: repeat(6, auto); }
+.st { grid-row: span 6; display: grid; grid-template-rows: subgrid; row-gap: 0;
+  background: var(--band); border-radius: 4mm; padding: 4mm 3.2mm 4.2mm; }
+.st--keep { background: var(--navy); color: rgba(255,255,255,.76); }
+.st-num { width: 7mm; height: 7mm; border-radius: 50%; background: var(--gold); color: var(--navy); font-weight: 700; font-size: 9.5pt;
+  display: flex; align-items: center; justify-content: center; }
+.st h3 { font-size: 10.6pt; font-weight: 700; color: var(--ink); margin-top: 2.4mm; line-height: 1.15; letter-spacing: -.005em; }
+.st--keep h3 { color: #fff; }
+.st .sub { font-size: 7.7pt; color: var(--hl); font-weight: 600; margin-top: .5mm; line-height: 1.3; }
+.st--keep .sub { color: var(--gold); }
+.it { border-top: .25mm solid rgba(15,33,69,.10); padding-top: 2.3mm; margin-top: 2.6mm; }
+.st--keep .it { border-top-color: rgba(255,255,255,.14); }
+.it .nm { display: flex; align-items: center; gap: 1.6mm; font-size: 8.3pt; font-weight: 600; color: var(--ink); line-height: 1.2; }
+.st--keep .it .nm { color: #fff; }
+.st--keep .mk--inkl { background: rgba(255,255,255,.16); color: #fff; }
+.it p { font-size: 7.8pt; line-height: 1.38; margin-top: .9mm; }
+.legend { display: flex; gap: 6mm; align-items: center; margin-top: 3.2mm; font-size: 7.3pt; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 1.6mm; }
+
+/* Partner-Login-Band */
+.login { position: absolute; left: 14mm; right: 14mm; bottom: 11mm; border: .3mm solid var(--line); border-radius: 4.5mm; padding: 4mm 5mm;
+  display: grid; grid-template-columns: 60mm 1fr; gap: 6mm; align-items: center; }
+.login h4 { font-size: 10.8pt; color: var(--ink); font-weight: 700; line-height: 1.2; margin-top: .6mm; }
+.login p { font-size: 7.7pt; margin-top: 1mm; line-height: 1.38; }
+.login ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 2mm 4mm; }
+.login li { display: flex; align-items: center; gap: 2.2mm; font-size: 7.7pt; color: var(--ink); font-weight: 500; line-height: 1.25; }
+.pageno { position: absolute; bottom: 4.5mm; left: 14mm; right: 14mm; display: flex; justify-content: space-between; align-items: center; font-size: 6.6pt; color: #a3aabb; }
+.pageno span { display: inline-flex; align-items: center; gap: 1.2mm; }
+
+/* ───────── SEITE 2 ───────── */
+.p2-top { padding-top: 10.5mm; }
+.offers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.5mm; margin-top: 4mm; }
+.offer { border: .3mm solid var(--line); border-radius: 4mm; padding: 3.8mm 4mm; display: flex; flex-direction: column; }
+.offer-top { display: flex; justify-content: space-between; align-items: center; }
+.offer .ibox { width: 8.5mm; height: 8.5mm; border-radius: 2.4mm; font-size: 12pt; background: var(--navy); color: var(--gold); }
+.offer h3 { font-size: 11.2pt; font-weight: 700; color: var(--ink); margin-top: 2.6mm; }
+.offer p { font-size: 7.9pt; line-height: 1.4; margin-top: .8mm; flex: 1; }
+.offer .url { font-size: 7.6pt; font-weight: 600; color: var(--hl); margin-top: 2mm; }
+
+.plans-sec { margin-top: 6.5mm; }
+.plans-sec .lead { margin-top: 1.4mm; font-size: 8.8pt; }
+.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin-top: 4mm; }
+.plan { border-radius: 4mm; background: var(--band); padding: 3.4mm 3.6mm 3.6mm; }
+.plan .top { display: flex; justify-content: space-between; align-items: center; gap: 2mm; }
+.plan .pn { font-size: 7.8pt; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.plan .pr { font-size: 18pt; font-weight: 700; color: var(--ink); margin-top: 2.2mm; line-height: 1; white-space: nowrap; }
+.plan .pr small { font-size: 7.6pt; font-weight: 500; color: var(--muted); }
+.plan .seats { background: #fff; color: var(--navy); font-size: 7.3pt; font-weight: 600; padding: .5mm 2mm; border-radius: 99px; white-space: nowrap; }
+.count { display: flex; align-items: center; gap: 2.4mm; margin-top: 2.4mm; font-size: 7.6pt; color: var(--text); }
+.count .ibox { width: 5.6mm; height: 5.6mm; font-size: 8pt; border-radius: 1.6mm; }
+
+.addons { display: grid; grid-template-columns: 30mm 1fr 1fr; gap: 3mm; margin-top: 3.4mm; }
+.addons-label { background: var(--navy); color: #fff; border-radius: 4mm; padding: 3mm 3.6mm; font-size: 8pt; font-weight: 600; line-height: 1.25; display: flex; flex-direction: column; justify-content: center; }
+.addons-label span { color: var(--gold); display: block; font-size: 6.6pt; letter-spacing: .16em; text-transform: uppercase; margin-bottom: .6mm; }
+.addon { border: .3mm solid var(--line); border-radius: 4mm; padding: 2.6mm 4mm; }
+.addon .an { font-size: 9.2pt; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.addon .ap { font-size: 10pt; font-weight: 700; color: var(--hl); margin-top: .6mm; line-height: 1.2; }
+.addon .ap small { font-size: 7pt; font-weight: 500; color: var(--muted); }
+.addon p { font-size: 7.4pt; margin-top: .8mm; line-height: 1.35; }
+
+.double { margin-top: 3.4mm; display: grid; grid-template-columns: auto 1fr; gap: 4mm; align-items: center; background: rgba(239,165,0,.12);
+  border-radius: 4mm; padding: 3.4mm 5mm; }
+.double .ibox { width: 8.5mm; height: 8.5mm; font-size: 11.5pt; background: var(--gold); color: var(--navy); border-radius: 50%; }
+.double p { font-size: 8.5pt; color: var(--ink); line-height: 1.42; }
+.double p b { font-weight: 700; }
+
+.trust { margin-top: 6mm; display: grid; grid-template-columns: 72mm 1fr; gap: 6mm; align-items: stretch; }
+.founders { position: relative; border-radius: 4.5mm; overflow: hidden; min-height: 54mm; }
+.founders img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 32% 58%; display: block; }
+.founders .ov { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,23,48,0) 28%, rgba(10,23,48,.94) 100%); }
+.founders blockquote { position: absolute; left: 4mm; right: 4mm; bottom: 3.4mm; color: #fff; font-size: 8.3pt; line-height: 1.36; font-weight: 500; }
+.founders blockquote cite { display: block; font-style: normal; font-size: 6.9pt; color: var(--gold); font-weight: 600; margin-top: 1.2mm; }
+.founders .credit { position: absolute; top: 2.2mm; right: 3mm; font-size: 5.6pt; color: rgba(255,255,255,.85); text-shadow: 0 0 2px rgba(0,0,0,.5); }
+.about h3 { font-size: 12pt; font-weight: 700; color: var(--ink); line-height: 1.2; margin-top: .8mm; }
+.about > p { font-size: 8pt; margin-top: 1.2mm; line-height: 1.42; }
+.logos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2mm; margin-top: 3mm; }
+.logo { height: 10mm; border: .25mm solid var(--line); border-radius: 2.2mm; display: flex; align-items: center; justify-content: center; padding: 1.3mm 2mm; background: #fff; }
+.logo img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.logos-note { font-size: 7pt; color: var(--muted); margin-top: 1.8mm; }
+
+/* Abschluss */
+.cta { position: absolute; left: 0; right: 0; bottom: 0; height: 57mm; background: var(--navy); color: #fff; padding: 12mm 14mm 0; overflow: hidden; }
+.cta::before { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 7mm; background: #fff; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.cta::after { content: ''; position: absolute; bottom: -35mm; left: -25mm; width: 95mm; height: 95mm; border-radius: 50%;
+  background: radial-gradient(circle, rgba(239,165,0,.12) 0%, rgba(239,165,0,0) 68%); }
+.cta-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 59mm 31mm; gap: 6mm; align-items: center; }
+.cta h2 { font-size: 19pt; font-weight: 800; line-height: 1.08; color: #fff; }
+.cta h2 em { font-style: normal; color: var(--gold); }
+.cta .lead { color: rgba(255,255,255,.80); font-size: 8.7pt; margin-top: 2.2mm; }
+.contact { list-style: none; display: grid; gap: 2.4mm; }
+.contact a { display: flex; align-items: center; gap: 2.4mm; }
+.contact .ibox { background: rgba(255,255,255,.08); color: var(--gold); width: 7mm; height: 7mm; font-size: 9.5pt; }
+.contact small { display: block; font-size: 6.3pt; color: rgba(255,255,255,.55); letter-spacing: .08em; text-transform: uppercase; line-height: 1.15; }
+.contact b { color: #fff; font-size: 8.5pt; font-weight: 600; line-height: 1.2; }
+.qr { display: block; background: #fff; border-radius: 3.5mm; padding: 2.4mm 2.4mm 1.8mm; text-align: center; }
+.qr svg { width: 26.2mm; height: 26.2mm; display: block; }
+.qr span { display: block; font-size: 6.1pt; color: var(--navy); font-weight: 600; margin-top: 1.2mm; line-height: 1.2; }
+.cta-foot { position: absolute; left: 14mm; right: 14mm; bottom: 4.2mm; z-index: 2; display: flex; justify-content: space-between; align-items: center;
+  font-size: 6.8pt; color: rgba(255,255,255,.55); border-top: .25mm solid rgba(255,255,255,.12); padding-top: 2.4mm; }
+</style>
+</head>
+<body>
+
+<!-- ═════════════════════ SEITE 1 ═════════════════════ -->
+<section class="page">
+  <header class="hero">
+    <div class="hero-top">
+      <img src="../public/assets/img/Logo/nest-bildungsbar-logo-weiss.png" alt="NEST BildungsBar">
+      <span class="pill">Für Unternehmen</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <span class="kicker">Die NEST-Partnerschaft</span>
+        <h1>Ihr bildet aus.<em>Wir machen den Rest.</em></h1>
+        <p class="lead">Als NEST-Partner findet ihr passende Azubis und haltet sie im Betrieb. Wir nehmen euch die Arbeit dabei ab: von der Schule über die Bewerbung bis in eure Ausbildung.</p>
+      </div>
+      <div class="hero-photo">
+        <img src="../public/assets/img/broschueren/nest-explore.jpg" alt="Schüler:innen im Gespräch bei NEST Explore">
+        <span class="cap"><b>NEST Explore</b> · Ausbildung live an der Schule</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><span class="n">70<em>+</em></span><span class="l">Unternehmen<br>im Netzwerk</span></div>
+    <div class="stat"><span class="n">500<em>+</em></span><span class="l">junge Menschen<br>pro Jahr</span></div>
+    <div class="stat"><span class="n">150<em>+</em></span><span class="l">Ausbildungsberufe<br>&amp; duale Studiengänge</span></div>
+    <div class="stat"><span class="n">4</span><span class="l">Standorte: Wuppertal, Essen,<br>Solingen &amp; Remscheid</span></div>
+  </div>
+
+  <section class="wrap stations">
+    <div class="st-head">
+      <div>
+        <span class="kicker">So greift alles ineinander</span>
+        <h2 class="h2">Azubis finden. <em>Azubis halten.</em></h2>
+      </div>
+      <p class="lead">Vier Stationen, ein Partner: Wir begleiten junge Menschen von der Schule bis in euren Betrieb – und sind auch danach für euch da.</p>
+    </div>
+
+    <div class="phases">
+      <span class="phase phase--find"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Azubis finden</span>
+      <span class="phase phase--keep"><svg class="ic" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Azubis halten</span>
+    </div>
+
+    <div class="st-grid">
+      <article class="st">
+        <span class="st-num">1</span>
+        <h3>An Schulen</h3>
+        <div class="sub">Schüler:innen lernen euch kennen.</div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>NESTplay</div><p>Euer Quiz läuft im Unterricht, auch ohne euch vor Ort.</p></div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Schul-Workshops</div><p>In Berufsfelderkundungen machen wir auf euch aufmerksam.</p></div>
+        <div class="it"><div class="nm"><span class="mk mk--zu"><svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>NEST Explore</div><p>Ihr trefft eine Schule, Ablauf und Moderation machen wir.</p></div>
+      </article>
+      <article class="st">
+        <span class="st-num">2</span>
+        <h3>In der BildungsBar</h3>
+        <div class="sub">Beratung fürs Gemeinwohl.</div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Beratung</div><p>Wir beraten junge Menschen und bereiten Bewerbungen vor.</p></div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Vernetzen</div><p>Wir bringen passende Bewerbende mit euch zusammen.</p></div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Stellenseite</div><p>Euer Profil und eure Stellen in der NEST Berufswelt.</p></div>
+      </article>
+      <article class="st st--keep">
+        <span class="st-num">3</span>
+        <h3>In eurer Ausbildung</h3>
+        <div class="sub">Eure Azubis bleiben.</div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Ansprechpartner</div><p>Ein fester Kontakt für alle Fragen, direkt im Partner-Login.</p></div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Chatbot</div><p>Antworten aus unserer Erfahrung, jederzeit im Partner-Login.</p></div>
+        <div class="it"><div class="nm"><span class="mk mk--zu"><svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>Workshops</div><p>Für Azubis und Ausbildende, z.&nbsp;B. Azubiknigge oder Generationen.</p></div>
+      </article>
+      <article class="st st--keep">
+        <span class="st-num">4</span>
+        <h3>Im Netzwerk</h3>
+        <div class="sub">Ihr seid nicht allein.</div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Ausbildungsdialog</div><p>Fachthemen rund um Ausbildung, mit Input von Expert:innen.</p></div>
+        <div class="it"><div class="nm"><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Netzwerktreffen</div><p>Viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.</p></div>
+        <div class="it"><div class="nm"><span class="mk mk--zu"><svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>Offene Workshops</div><p>Einzelne Azubis anmelden und mit anderen Betrieben lernen.</p></div>
+      </article>
+    </div>
+    <div class="legend">
+      <span><span class="mk mk--inkl"><svg class="ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>im Partnerbeitrag enthalten</span>
+      <span><span class="mk mk--zu"><svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>exklusiv für Partner zubuchbar</span>
+    </div>
+  </section>
+
+  <aside class="login">
+    <div>
+      <span class="kicker">Euer Partner-Login</span>
+      <h4>Alles auf einen Blick</h4>
+      <p>Alle Angebote der Partnerschaft als Übersicht. Dort bucht ihr sie direkt und findet eure Ansprechpartner.</p>
+    </div>
+    <ul>
+      <li><span class="ibox"><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>Alle Angebote im Überblick</li>
+      <li><span class="ibox"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Explore-Termine, Workshops und Veranstaltungen buchen</li>
+      <li><span class="ibox"><svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Ansprechpartner und Chatbot mit unseren Erfahrungen</li>
+      <li><span class="ibox"><svg class="ic" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Eure Stellen und NESTplay-Quizze verwalten</li>
+    </ul>
+  </aside>
+  <div class="pageno"><span>NEST GmbH · Gemeinsam für die Ausbildung</span><span>Preise &amp; Kontakt auf der Rückseite <svg class="ic" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</section>
+
+<!-- ═════════════════════ SEITE 2 ═════════════════════ -->
+<section class="page">
+  <section class="wrap p2-top">
+    <span class="kicker">Drei Angebote, ein Partner</span>
+    <h2 class="h2">Alles aus <em>einer Hand</em></h2>
+    <div class="offers">
+      <article class="offer">
+        <div class="offer-top">
+          <span class="ibox"><svg class="ic" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15.5" cy="11" r="0.5"/><circle cx="17.5" cy="13" r="0.5"/></svg></span>
+          <span class="tag tag--inkl">Im Partnerbeitrag</span>
+        </div>
+        <h3>NESTplay</h3>
+        <p>Euer Betrieb als Live-Quiz im Unterricht: einmal erstellen, Lehrkräfte setzen es immer wieder ein.</p>
+        <a class="url" href="https://nest-play.de">nest-play.de</a>
+      </article>
+      <article class="offer">
+        <div class="offer-top">
+          <span class="ibox"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+          <span class="tag tag--zu">Exklusiv · zubuchbar</span>
+        </div>
+        <h3>NEST Explore</h3>
+        <p>Ausbildung live an der Schule: sechs Betriebe, bis zu 150 Schüler:innen, komplett von uns organisiert.</p>
+        <a class="url" href="https://nest-explore.de">nest-explore.de</a>
+      </article>
+      <article class="offer">
+        <div class="offer-top">
+          <span class="ibox"><svg class="ic" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <span class="tag tag--zu">Exklusiv · zubuchbar</span>
+        </div>
+        <h3>NEST AzubiConnect</h3>
+        <p>Praxisnahe Workshops für Azubis und Ausbildende: inhouse, in der BildungsBar oder als offener Workshop.</p>
+        <a class="url" href="https://nest-azubiconnect.de">nest-azubiconnect.de</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap plans-sec">
+    <span class="kicker">Partnerpakete</span>
+    <h2 class="h2">Ein Paket für jede <em>Betriebsgröße</em></h2>
+    <p class="lead">Monatliche Preise, alle Pakete enthalten dieselben Leistungen. Es zählt nur, wie viele Azubis bei euch beschäftigt sind.</p>
+    <div class="plans">
+      <div class="plan"><div class="top"><span class="pn">Kleine Partnerschaft</span><span class="seats">bis 5 Azubis</span></div><div class="pr">79,90 € <small>/ Monat</small></div></div>
+      <div class="plan"><div class="top"><span class="pn">Mittlere Partnerschaft</span><span class="seats">6 bis 10 Azubis</span></div><div class="pr">139,90 € <small>/ Monat</small></div></div>
+      <div class="plan"><div class="top"><span class="pn">Große Partnerschaft</span><span class="seats">ab 11 Azubis</span></div><div class="pr">199,90 € <small>/ Monat</small></div></div>
+    </div>
+    <div class="count">
+      <span class="ibox"><svg class="ic" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      <span><b>So zählen wir:</b> Maßgeblich sind die Auszubildenden, die bereits in eurem Betrieb beschäftigt sind, nicht die Ausbildungsplätze, die ihr sucht.</span>
+    </div>
+    <div class="addons">
+      <div class="addons-label"><span>Exklusiv</span>für Partner zubuchbar</div>
+      <div class="addon">
+        <div class="an">NEST Explore</div>
+        <div class="ap">290 € <small>pro Termin zzgl. MwSt.</small></div>
+        <p>Neue Partner erhalten von uns einen Gutscheincode für ihren ersten Termin.</p>
+      </div>
+      <div class="addon">
+        <div class="an">NEST AzubiConnect</div>
+        <div class="ap">ab 790 € <small>pro Workshop-Tag zzgl. MwSt.</small></div>
+        <p>Offene Workshops ab 176 € pro Person.</p>
+      </div>
+    </div>
+    <div class="double">
+      <span class="ibox"><svg class="ic" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
+      <p><b>Euer Beitrag wirkt doppelt:</b> Er finanziert die kostenfreie Berufsorientierung in der BildungsBar und an Schulen. Genau aus diesen jungen Menschen kommen eure Bewerbenden.</p>
+    </div>
+  </section>
+
+  <section class="wrap trust">
+    <figure class="founders">
+      <img src="../public/assets/img/team/story-patrick-mike.jpg" alt="Patrick Nekola-Ossé und Mike Stoeck in der BildungsBar">
+      <span class="ov"></span>
+      <span class="credit">© Foto: Wolf Sondermann</span>
+      <blockquote>„Gute Ausbildung lebt von Menschen, die sich verstehen, unterstützen und gemeinsam wachsen.“
+        <cite>Patrick Nekola-Ossé &amp; Mike Stoeck · Gründer NEST</cite></blockquote>
+    </figure>
+    <div class="about">
+      <span class="kicker">Wer dahintersteht</span>
+      <h3>Zwei, die selbst als Azubis gestartet sind.</h3>
+      <p>Seit 2021 begleiten wir aus Wuppertal heraus junge Menschen bei der Berufswahl – kostenfrei, unabhängig und auf Augenhöhe. Dabei verbinden wir Einrichtungen, Unternehmen und Schüler:innen zu einem starken Netzwerk.</p>
+      <div class="logos">
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_04.png" alt="Vorwerk"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_11.png" alt="Knipex"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_09.png" alt="Vaillant"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_01.png" alt="Stadtsparkasse Wuppertal"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_35.png" alt="WSW"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_12.png" alt="Helios"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_18.png" alt="Schmersal"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_08.png" alt="Barmenia"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/p1_25.png" alt="Coroplast"></div>
+        <div class="logo"><img src="../public/assets/img/referenzen/partner/malteser.png" alt="Malteser"></div>
+      </div>
+      <div class="logos-note">Diese und viele weitere: über 70 Unternehmen sind im NEST-Netzwerk.</div>
+    </div>
+  </section>
+
+  <footer class="cta">
+    <div class="cta-grid">
+      <div>
+        <h2>Azubis finden.<br><em>Azubis halten.</em></h2>
+        <p class="lead">Lernt uns in einem kurzen, unverbindlichen Gespräch kennen. Wir zeigen euch, was die Partnerschaft für euren Betrieb bringt.</p>
+      </div>
+      <ul class="contact">
+        <li><a href="tel:+4917641933496"><span class="ibox"><svg class="ic" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><span><small>Telefon</small><b>0176 419 334 96</b></span></a></li>
+        <li><a href="mailto:info@nest-bildungsbar.de"><span class="ibox"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span><span><small>E-Mail</small><b>info@nest-bildungsbar.de</b></span></a></li>
+        <li><a href="https://nest-bildungsbar.de/kooperation"><span class="ibox"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span><small>Web</small><b>nest-bildungsbar.de/kooperation</b></span></a></li>
+      </ul>
+      <a class="qr" href="https://nest-bildungsbar.de/kooperation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges" class="segno"><path class="qrline" stroke="#0f2145" d="M0 0.5h7m2 0h2m3 0h1m2 0h2m3 0h7m-29 1h1m5 0h1m1 0h1m1 0h1m1 0h1m5 0h1m3 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h3m2 0h1m2 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m3 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h5m2 0h1m2 0h2m1 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h1m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h2m4 0h1m3 0h2m-20 1h1m5 0h1m1 0h1m4 0h3m1 0h2m1 0h3m2 0h3m-27 1h1m3 0h1m1 0h1m1 0h1m1 0h5m1 0h3m4 0h1m1 0h2m-28 1h1m2 0h4m1 0h2m2 0h4m1 0h1m2 0h1m1 0h1m1 0h1m-23 1h3m4 0h1m2 0h1m2 0h1m2 0h4m1 0h3m-26 1h5m1 0h1m1 0h2m1 0h1m1 0h3m3 0h2m1 0h1m5 0h1m-29 1h3m2 0h1m4 0h1m4 0h2m1 0h3m1 0h3m2 0h2m-27 1h2m2 0h1m2 0h2m4 0h2m4 0h1m1 0h1m1 0h2m-27 1h1m3 0h1m2 0h2m1 0h1m3 0h1m3 0h2m4 0h1m1 0h1m1 0h1m-28 1h3m1 0h2m2 0h1m1 0h1m3 0h1m1 0h1m1 0h1m3 0h1m1 0h2m-27 1h1m1 0h1m4 0h2m2 0h3m1 0h2m1 0h3m1 0h3m1 0h3m-29 1h2m4 0h3m1 0h1m1 0h1m2 0h3m1 0h1m1 0h1m2 0h2m2 0h1m-29 1h1m1 0h1m10 0h1m6 0h2m1 0h2m-25 1h1m1 0h5m1 0h4m2 0h5m1 0h5m1 0h3m-21 1h1m1 0h1m1 0h1m1 0h2m1 0h4m3 0h2m-26 1h7m2 0h1m2 0h1m2 0h3m1 0h2m1 0h1m1 0h3m-27 1h1m5 0h1m3 0h1m1 0h1m1 0h3m2 0h2m3 0h1m2 0h2m-29 1h1m1 0h3m1 0h1m2 0h2m2 0h2m1 0h1m2 0h7m2 0h1m-29 1h1m1 0h3m1 0h1m3 0h3m1 0h5m2 0h1m3 0h2m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h5m1 0h5m1 0h7m-28 1h1m5 0h1m3 0h3m2 0h1m5 0h1m3 0h2m1 0h1m-29 1h7m1 0h1m1 0h1m3 0h1m2 0h1m1 0h1m1 0h1m1 0h1m2 0h1"/></svg><span>Scannen &amp; Gespräch<br>vereinbaren</span></a>
+    </div>
+    <div class="cta-foot">
+      <span>NEST GmbH · Hochstraße 65 · 42105 Wuppertal</span>
+      <span>Wuppertal · Essen · Solingen · Remscheid</span>
+    </div>
+  </footer>
+</section>
+
+</body>
+</html>

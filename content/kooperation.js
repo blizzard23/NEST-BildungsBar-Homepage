@@ -1,5 +1,6 @@
 // Partnerseite für Unternehmen: ansteigende Kurve mit drei Stationen (An Schulen,
-// In der BildungsBar, In eurer Ausbildung), Partner-Login, die drei Angebote, Pakete und FAQ.
+// In der BildungsBar, In eurer Ausbildung), Partner-Login, Workshops von NEST AzubiConnect,
+// Pakete und FAQ. Preise für weitere Explore-Termine und AzubiConnect stehen auf deren Websites.
 // Gestaltung nach dem Redesign (public/assets/bb.css) plus partner.css.
 // NEST Explore und NEST AzubiConnect sind exklusiv für Partner. Ein Explore-Termin
 // pro Jahr ist im Partnerbeitrag enthalten, weitere Termine und AzubiConnect werden
@@ -136,35 +137,79 @@ const html = `
     </div>
   </section>
 
-  <!-- DIE DREI ANGEBOTE -->
-  <section class="bb-sec" id="angebote">
+  <!-- WORKSHOPS · NEST AzubiConnect: Themen nach Zielgruppe, Formate und drei offene Workshops -->
+  <section class="bb-sec" id="workshops">
     <div class="container">
       <div class="bb-head bb-head--split">
         <div>
-          <span class="bb-kicker">Drei Angebote, ein Partner</span>
-          <h2 class="bb-h2">Alles aus einer <span class="bb-hl">Hand</span></h2>
+          <span class="bb-kicker">Workshops von NEST AzubiConnect</span>
+          <h2 class="bb-h2">Workshops für Azubis und <span class="bb-hl">Ausbildende</span></h2>
         </div>
-        <p class="bb-lead">Jedes Angebot hat seine eigene Website. Gebucht wird alles über eure Partnerschaft.</p>
+        <p class="bb-lead">Praxisnah und auf Augenhöhe: bei euch im Betrieb, in der BildungsBar oder als offener Workshop zusammen mit anderen Betrieben.</p>
       </div>
-      <div class="bb-cards bb-cards--3">
-        <a class="bb-card" href="https://nest-play.de" target="_blank" rel="noopener">
-          <span class="bb-card__tile"><img src="/assets/img/broschueren/nestplay.jpg" alt="Schülerin spielt das NESTplay-Quiz auf dem Smartphone" loading="lazy"></span>
-          <span class="bb-card__title">NESTplay</span>
-          <span class="bb-card__meta">Euer Betrieb als Live-Quiz im Unterricht: einmal erstellen, Lehrkräfte setzen es immer wieder ein.</span>
-          <span class="bb-card__link bb-link">nest-play.de</span>
-        </a>
-        <a class="bb-card" href="https://nest-explore.de" target="_blank" rel="noopener">
-          <span class="bb-card__tile"><img src="/assets/img/broschueren/nest-explore.jpg" alt="Schüler:innen im Gespräch mit einem Unternehmen bei NEST Explore" loading="lazy"><span class="bb-badge bb-badge--soft">1× im Jahr inklusive</span></span>
-          <span class="bb-card__title">NEST Explore</span>
-          <span class="bb-card__meta">Ausbildung live an der Schule: sechs Betriebe, bis zu 150 Schüler:innen, komplett von uns organisiert.</span>
-          <span class="bb-card__link bb-link">nest-explore.de</span>
-        </a>
-        <a class="bb-card" href="https://nest-azubiconnect.de" target="_blank" rel="noopener">
-          <span class="bb-card__tile"><img src="/assets/img/angebote/azubiconnect.jpg" alt="Azubis in einem Workshop von NEST AzubiConnect" loading="lazy"></span>
-          <span class="bb-card__title">NEST AzubiConnect</span>
-          <span class="bb-card__meta">Praxisnahe Workshops für Azubis und Ausbildende: inhouse, in der BildungsBar oder als offener Workshop.</span>
-          <span class="bb-card__link bb-link">nest-azubiconnect.de</span>
-        </a>
+
+      <div class="np-ws">
+        <div class="np-ws-media">
+          <img src="/assets/img/angebote/azubiconnect.jpg" alt="Azubis in einem Workshop von NEST AzubiConnect" loading="lazy">
+          <span class="np-ws-media-badge">${IC.people} Praxisnah &amp; auf Augenhöhe</span>
+        </div>
+        <div class="np-ws-body">
+          <div class="np-ws-group">
+            <h3 class="np-ws-group-h"><span class="np-ws-group-ic">${IC.cap}</span>Für Azubis</h3>
+            <ul class="np-ws-chips">
+              <li>Azubi-Knigge</li>
+              <li>Kommunikation &amp; Gesprächsführung</li>
+              <li>Resilienz</li>
+              <li>Lernmotivation</li>
+              <li>Zeit- &amp; Selbstmanagement</li>
+              <li>Interkulturelle Kompetenz</li>
+            </ul>
+          </div>
+          <div class="np-ws-group np-ws-group--aus">
+            <h3 class="np-ws-group-h"><span class="np-ws-group-ic">${IC.briefcase}</span>Für Ausbildende</h3>
+            <ul class="np-ws-chips">
+              <li>Azubi-Bindung</li>
+              <li>Generationen: Herausforderungen und Chancen</li>
+            </ul>
+          </div>
+          <div class="np-ws-formats">
+            <div class="np-ws-format"><span class="np-ws-format-ic">${IC.building}</span><b>Inhouse</b><span>Ein Workshop-Tag bei euch, zugeschnitten auf eure Branche.</span></div>
+            <div class="np-ws-format"><span class="np-ws-format-ic">${IC.coffee}</span><b>In der BildungsBar</b><span>Raus aus dem Betrieb, rein in lockere Atmosphäre.</span></div>
+            <div class="np-ws-format"><span class="np-ws-format-ic">${IC.network}</span><b>Offen</b><span>Einzelne Azubis anmelden und mit anderen Betrieben lernen.</span></div>
+          </div>
+          <div class="bb-actions np-ws-actions"><a class="bb-btn bb-btn--ink" href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Alle Workshops ansehen</a></div>
+        </div>
+      </div>
+
+      <div class="np-ws-open" id="offene-workshops">
+        <div class="np-ws-open-head">
+          <div>
+            <span class="bb-kicker">Offene Workshops</span>
+            <h3 class="np-ws-open-h">Nur ein oder zwei Azubis? Kein Problem.</h3>
+            <p class="np-ws-open-p">Meldet einzelne Azubis oder Ausbildende an. Sie lernen gemeinsam mit Teilnehmenden aus anderen Betrieben.</p>
+          </div>
+          <a class="bb-btn bb-btn--gold" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">Termine &amp; Anmeldung</a>
+        </div>
+        <div class="np-ws-open-grid">
+          <a class="np-ws-card" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">
+            <span class="np-ws-card-top"><span class="np-ws-card-ic">${IC.people}</span><span class="np-ws-tag">Für Azubis</span></span>
+            <b>Azubi-Knigge</b>
+            <span class="np-ws-card-p">Souverän auftreten im Betrieb, gerade am Anfang der Ausbildung.</span>
+            <span class="np-ws-card-go">Termin finden ${IC.arrow}</span>
+          </a>
+          <a class="np-ws-card" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">
+            <span class="np-ws-card-top"><span class="np-ws-card-ic">${IC.heart}</span><span class="np-ws-tag">Für Azubis</span></span>
+            <b>Resilienz</b>
+            <span class="np-ws-card-p">Gelassener mit Druck und Stress umgehen, im Betrieb und in der Berufsschule.</span>
+            <span class="np-ws-card-go">Termin finden ${IC.arrow}</span>
+          </a>
+          <a class="np-ws-card np-ws-card--aus" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">
+            <span class="np-ws-card-top"><span class="np-ws-card-ic">${IC.target}</span><span class="np-ws-tag">Für Ausbildende</span></span>
+            <b>Azubi-Bindung</b>
+            <span class="np-ws-card-p">Motivierendes Arbeitsumfeld, Wertschätzung, Feedback und moderne Führung.</span>
+            <span class="np-ws-card-go">Termin finden ${IC.arrow}</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -211,20 +256,6 @@ const html = `
           </div>
         </div>
       </div>
-
-      <div class="np-addons">
-        <div class="np-addons-head"><b>Exklusiv für Partner zubuchbar</b></div>
-        <div class="np-addon">
-          <span class="np-addon-name">NEST Explore</span>
-          <span class="np-addon-price">290 € <small>pro weiterem Termin zzgl. MwSt.</small></span>
-          <span class="np-addon-note">Ein Termin pro Jahr ist im Partnerbeitrag enthalten.</span>
-        </div>
-        <div class="np-addon">
-          <span class="np-addon-name">NEST AzubiConnect</span>
-          <span class="np-addon-price">ab 790 € <small>pro Workshop-Tag zzgl. MwSt.</small></span>
-          <span class="np-addon-note">Offene Workshops ab 176 € pro Person.</span>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -248,7 +279,7 @@ const html = `
         <h2 class="bb-h2">Häufig gestellte Fragen</h2>
       </div>
       <div class="faq-list">
-        <div class="faq-item"><button class="faq-question"><span>Was kostet eine Partnerschaft?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Die Partnerschaft kostet 79,90 € pro Monat bis 5 Azubis, 139,90 € bis 10 und 199,90 € ab 11 Azubis. Gezählt werden die Auszubildenden, die bei euch beschäftigt sind. Ein Termin NEST Explore pro Jahr ist enthalten. Weitere Explore-Termine und die Workshops von NEST AzubiConnect bucht ihr bei Bedarf dazu.</div></div></div>
+        <div class="faq-item"><button class="faq-question"><span>Was kostet eine Partnerschaft?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Die Partnerschaft kostet 79,90 € pro Monat bis 5 Azubis, 139,90 € bis 10 und 199,90 € ab 11 Azubis. Gezählt werden die Auszubildenden, die bei euch beschäftigt sind. Ein Termin NEST Explore pro Jahr ist enthalten. Weitere Explore-Termine und die Workshops von NEST AzubiConnect bucht ihr bei Bedarf dazu. Die Preise dafür findet ihr auf <a href="https://nest-explore.de" target="_blank" rel="noopener">nest-explore.de</a> und <a href="https://nest-azubiconnect.de" target="_blank" rel="noopener">nest-azubiconnect.de</a>.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Können wir NEST Explore oder AzubiConnect auch ohne Partnerschaft buchen?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Nein. Beide Angebote sind exklusiv für NEST-Partner. Die Websites könnt ihr euch jederzeit ansehen, buchen können nur Partner.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Wie lösen wir einen Gutscheincode ein?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Neue Partner erhalten von uns einen Gutscheincode für NEST Explore. Wählt im <a href="https://nest-explore.de/terminkalender" target="_blank" rel="noopener">Terminkalender</a> einen Termin und gebt den Code im Buchungsformular ein. Der Rabatt wird sofort abgezogen.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Was finden wir im Partner-Login?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Alle Angebote der Partnerschaft als Übersicht. Dort bucht ihr sie, verwaltet eure Stellen und NESTplay-Quizze und findet eure Ansprechpartner.</div></div></div>

@@ -1,8 +1,9 @@
 // Partnerseite für Unternehmen: zwei Kernpunkte (Azubis finden / Azubis halten)
 // als ansteigende Kurve mit vier Stationen, Partner-Login, die drei Angebote, Pakete und FAQ.
 // Gestaltung nach dem Redesign (public/assets/bb.css) plus partner.css.
-// NEST Explore und NEST AzubiConnect sind exklusiv für Partner und werden
-// zusätzlich zum Partnerbeitrag gebucht.
+// NEST Explore und NEST AzubiConnect sind exklusiv für Partner. Ein Explore-Termin
+// pro Jahr ist im Partnerbeitrag enthalten, weitere Termine und AzubiConnect werden
+// zusätzlich gebucht.
 import IC from "./icons";
 
 const TAG_INKL = `<span class="np-tag np-tag--inkl">im Beitrag</span>`;
@@ -95,9 +96,9 @@ const html = `
           <h3>An Schulen</h3>
           <p class="np-stop-lead">Schüler:innen lernen euch kennen.</p>
           <ul class="np-offers">
-            <li><div><b>NESTplay</b> ${TAG_INKL}</div><span>Euer Quiz läuft im Unterricht, auch ohne euch vor Ort.</span></li>
             <li><div><b>Schul-Workshops</b> ${TAG_INKL}</div><span>In Berufsfelderkundungen machen wir auf euch aufmerksam.</span></li>
-            <li><div><b>NEST Explore</b> ${TAG_ZU}</div><span>Ihr trefft eine Schule, Ablauf und Moderation machen wir.</span></li>
+            <li><div><b>NESTplay</b> ${TAG_INKL}</div><span>Euer Quiz läuft im Unterricht, auch ohne euch vor Ort.</span></li>
+            <li><div><b>NEST Explore</b> ${TAG_INKL}</div><span>Einmal im Jahr kostenfrei: Ihr trefft eine Schule, Ablauf und Moderation machen wir.</span></li>
           </ul>
         </article>
 
@@ -109,7 +110,7 @@ const html = `
           <ul class="np-offers">
             <li><div><b>Beratung</b> ${TAG_INKL}</div><span>Wir beraten junge Menschen und bereiten Bewerbungen vor.</span></li>
             <li><div><b>Vernetzen</b> ${TAG_INKL}</div><span>Wir bringen passende Bewerbende mit euch zusammen.</span></li>
-            <li><div><b>Stellenseite</b> ${TAG_INKL}</div><span>Euer Profil und eure Stellen in der NEST Berufswelt.</span></li>
+            <li><div><b>Berufswelt</b> ${TAG_INKL}</div><span>Euer Profil und eure Stellen in der NEST Berufswelt.</span></li>
           </ul>
         </article>
 
@@ -175,7 +176,7 @@ const html = `
           <span class="bb-card__link bb-link">nest-play.de</span>
         </a>
         <a class="bb-card" href="https://nest-explore.de" target="_blank" rel="noopener">
-          <span class="bb-card__tile"><img src="/assets/img/broschueren/nest-explore.jpg" alt="Schüler:innen im Gespräch mit einem Unternehmen bei NEST Explore" loading="lazy"><span class="bb-badge">Exklusiv · zubuchbar</span></span>
+          <span class="bb-card__tile"><img src="/assets/img/broschueren/nest-explore.jpg" alt="Schüler:innen im Gespräch mit einem Unternehmen bei NEST Explore" loading="lazy"><span class="bb-badge bb-badge--soft">1× im Jahr inklusive</span></span>
           <span class="bb-card__title">NEST Explore</span>
           <span class="bb-card__meta">Ausbildung live an der Schule: sechs Betriebe, bis zu 150 Schüler:innen, komplett von uns organisiert.</span>
           <span class="bb-card__link bb-link">nest-explore.de</span>
@@ -237,8 +238,8 @@ const html = `
         <div class="np-addons-head"><b>Exklusiv für Partner zubuchbar</b></div>
         <div class="np-addon">
           <span class="np-addon-name">NEST Explore</span>
-          <span class="np-addon-price">290 € <small>pro Termin zzgl. MwSt.</small></span>
-          <span class="np-addon-note">Neue Partner erhalten von uns einen Gutscheincode für ihren ersten Termin.</span>
+          <span class="np-addon-price">290 € <small>pro weiterem Termin zzgl. MwSt.</small></span>
+          <span class="np-addon-note">Ein Termin pro Jahr ist im Partnerbeitrag enthalten.</span>
         </div>
         <div class="np-addon">
           <span class="np-addon-name">NEST AzubiConnect</span>
@@ -269,7 +270,7 @@ const html = `
         <h2 class="bb-h2">Häufig gestellte Fragen</h2>
       </div>
       <div class="faq-list">
-        <div class="faq-item"><button class="faq-question"><span>Was kostet eine Partnerschaft?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Die Partnerschaft kostet 79,90 € pro Monat bis 5 Azubis, 139,90 € bis 10 und 199,90 € ab 11 Azubis. Gezählt werden die Auszubildenden, die bei euch beschäftigt sind. NEST Explore und die Workshops von NEST AzubiConnect bucht ihr bei Bedarf dazu.</div></div></div>
+        <div class="faq-item"><button class="faq-question"><span>Was kostet eine Partnerschaft?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Die Partnerschaft kostet 79,90 € pro Monat bis 5 Azubis, 139,90 € bis 10 und 199,90 € ab 11 Azubis. Gezählt werden die Auszubildenden, die bei euch beschäftigt sind. Ein Termin NEST Explore pro Jahr ist enthalten. Weitere Explore-Termine und die Workshops von NEST AzubiConnect bucht ihr bei Bedarf dazu.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Können wir NEST Explore oder AzubiConnect auch ohne Partnerschaft buchen?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Nein. Beide Angebote sind exklusiv für NEST-Partner. Die Websites könnt ihr euch jederzeit ansehen, buchen können nur Partner.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Wie lösen wir einen Gutscheincode ein?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Neue Partner erhalten von uns einen Gutscheincode für NEST Explore. Wählt im <a href="https://nest-explore.de/terminkalender" target="_blank" rel="noopener">Terminkalender</a> einen Termin und gebt den Code im Buchungsformular ein. Der Rabatt wird sofort abgezogen.</div></div></div>
         <div class="faq-item"><button class="faq-question"><span>Was finden wir im Partner-Login?</span><span class="faq-toggle">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Alle Angebote der Partnerschaft als Übersicht. Dort bucht ihr sie, verwaltet eure Stellen und NESTplay-Quizze und findet eure Ansprechpartner.</div></div></div>

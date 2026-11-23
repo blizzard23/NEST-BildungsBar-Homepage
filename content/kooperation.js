@@ -117,11 +117,12 @@ const html = `
         <article class="np-stop np-stop--halten">
           <span class="np-stop-kicker">3 · Azubis halten</span>
           <h3>In eurer Ausbildung</h3>
-          <p class="np-stop-lead">Eure Azubis bleiben.</p>
+          <p class="np-stop-lead">Probleme lösen, bevor jemand abbricht.</p>
           <ul class="np-offers">
-            <li><div><b>Ansprechpartner</b> ${TAG_INKL}</div><span>Ein fester Kontakt für alle Fragen, direkt im Partner-Login.</span></li>
-            <li><div><b>Chatbot</b> ${TAG_INKL}</div><span>Antworten aus unserer Erfahrung, jederzeit im Partner-Login.</span></li>
-            <li><div><b>Workshops</b> ${TAG_ZU}</div><span>Für Azubis und Ausbildende, z. B. Azubiknigge oder Generationen.</span></li>
+            <li><div><b>Ansprechpartner</b> ${TAG_INKL}</div><span>Fehlzeiten, Konflikte oder Abbruchgedanken: Ihr meldet euch, wir klären mit euch die Ursache und holen die passende Hilfe aus dem Netzwerk dazu.</span></li>
+            <li><div><b>Mentale Gesundheit</b> ${TAG_INKL}</div><span>Unsere Ansprechpartnerin hilft euren Azubis bei Stress, Überforderung oder Prüfungsangst und euch bei der Frage, wie ihr Belastungen ansprecht.</span></li>
+            <li><div><b>Chatbot</b> ${TAG_INKL}</div><span>Was gilt in der Probezeit? Wie führe ich ein Feedbackgespräch? Antworten aus unserer Erfahrung, rund um die Uhr im Partner-Login.</span></li>
+            <li><div><b>Workshops</b> ${TAG_ZU}</div><span>Für Azubis z. B. Resilienz, Lernmotivation oder Azubiknigge, für Ausbildende Azubi-Bindung und Generationen.</span></li>
           </ul>
         </article>
 

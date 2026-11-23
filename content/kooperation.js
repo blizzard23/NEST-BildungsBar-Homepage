@@ -1,13 +1,10 @@
-// Partnerseite für Unternehmen: zwei Kernpunkte (Azubis finden / Azubis halten)
-// als ansteigende Kurve mit vier Stationen, Partner-Login, die drei Angebote, Pakete und FAQ.
+// Partnerseite für Unternehmen: ansteigende Kurve mit drei Stationen (An Schulen,
+// In der BildungsBar, In eurer Ausbildung), Partner-Login, die drei Angebote, Pakete und FAQ.
 // Gestaltung nach dem Redesign (public/assets/bb.css) plus partner.css.
 // NEST Explore und NEST AzubiConnect sind exklusiv für Partner. Ein Explore-Termin
 // pro Jahr ist im Partnerbeitrag enthalten, weitere Termine und AzubiConnect werden
 // zusätzlich gebucht.
 import IC from "./icons";
-
-const TAG_INKL = `<span class="np-tag np-tag--inkl">im Beitrag</span>`;
-const TAG_ZU = `<span class="np-tag np-tag--zu">zubuchbar</span>`;
 
 const html = `
 
@@ -72,74 +69,52 @@ const html = `
           </defs>
           <path class="np-curve-glow" d="M-260 262.0 L-244 262.0 L-228 261.9 L-212 261.8 L-196 261.6 L-180 261.4 L-164 261.1 L-148 260.8 L-132 260.4 L-116 259.9 L-100 259.5 L-84 258.9 L-68 258.3 L-52 257.7 L-36 257.0 L-20 256.3 L-4 255.5 L12 254.6 L28 253.7 L44 252.8 L60 251.8 L76 250.8 L92 249.7 L108 248.5 L124 247.3 L140 246.1 L156 244.8 L172 243.4 L188 242.0 L204 240.6 L220 239.1 L236 237.5 L252 235.9 L268 234.2 L284 232.5 L300 230.8 L316 229.0 L332 227.1 L348 225.2 L364 223.2 L380 221.2 L396 219.2 L412 217.0 L428 214.9 L444 212.7 L460 210.4 L476 208.1 L492 205.7 L508 203.3 L524 200.8 L540 198.3 L556 195.7 L572 193.1 L588 190.4 L604 187.7 L620 184.9 L636 182.1 L652 179.2 L668 176.3 L684 173.3 L700 170.3 L716 167.2 L732 164.0 L748 160.9 L764 157.6 L780 154.3 L796 151.0 L812 147.6 L828 144.2 L844 140.7 L860 137.1 L876 133.5 L892 129.9 L908 126.2 L924 122.4 L940 118.7 L956 114.8 L972 110.9 L988 107.0 L1004 103.0 L1020 98.9 L1036 94.8 L1052 90.6 L1068 86.4 L1084 82.2 L1100 77.9 L1116 73.5 L1132 69.1 L1148 64.7 L1164 60.1 L1180 55.6 L1196 51.0 L1212 46.3 L1228 41.6 L1244 36.8 L1260 32.0 L1276 27.1 L1292 22.2 L1308 17.3" stroke="url(#npCurveGrad)" filter="url(#npCurveGlow)" />
           <path class="np-curve-line" d="M-260 262.0 L-244 262.0 L-228 261.9 L-212 261.8 L-196 261.6 L-180 261.4 L-164 261.1 L-148 260.8 L-132 260.4 L-116 259.9 L-100 259.5 L-84 258.9 L-68 258.3 L-52 257.7 L-36 257.0 L-20 256.3 L-4 255.5 L12 254.6 L28 253.7 L44 252.8 L60 251.8 L76 250.8 L92 249.7 L108 248.5 L124 247.3 L140 246.1 L156 244.8 L172 243.4 L188 242.0 L204 240.6 L220 239.1 L236 237.5 L252 235.9 L268 234.2 L284 232.5 L300 230.8 L316 229.0 L332 227.1 L348 225.2 L364 223.2 L380 221.2 L396 219.2 L412 217.0 L428 214.9 L444 212.7 L460 210.4 L476 208.1 L492 205.7 L508 203.3 L524 200.8 L540 198.3 L556 195.7 L572 193.1 L588 190.4 L604 187.7 L620 184.9 L636 182.1 L652 179.2 L668 176.3 L684 173.3 L700 170.3 L716 167.2 L732 164.0 L748 160.9 L764 157.6 L780 154.3 L796 151.0 L812 147.6 L828 144.2 L844 140.7 L860 137.1 L876 133.5 L892 129.9 L908 126.2 L924 122.4 L940 118.7 L956 114.8 L972 110.9 L988 107.0 L1004 103.0 L1020 98.9 L1036 94.8 L1052 90.6 L1068 86.4 L1084 82.2 L1100 77.9 L1116 73.5 L1132 69.1 L1148 64.7 L1164 60.1 L1180 55.6 L1196 51.0 L1212 46.3 L1228 41.6 L1244 36.8 L1260 32.0 L1276 27.1 L1292 22.2 L1308 17.3" stroke="url(#npCurveGrad)" />
-          <text class="np-curve-label np-curve-label--finden" x="145" y="221.7" text-anchor="middle">AZUBIS FINDEN</text>
-          <text class="np-curve-label np-curve-label--halten" x="687" y="148.7" text-anchor="middle">AZUBIS HALTEN</text>
-            <line class="np-drop" x1="10" y1="268.7" x2="10" y2="280" />
-            <circle class="np-dot-halo np-dot-halo--finden" cx="10" cy="254.7" r="16" />
-            <circle class="np-dot np-dot--finden" cx="10" cy="254.7" r="8" />
-            <line class="np-drop" x1="281" y1="246.9" x2="281" y2="280" />
-            <circle class="np-dot-halo np-dot-halo--finden" cx="281" cy="232.9" r="16" />
-            <circle class="np-dot np-dot--finden" cx="281" cy="232.9" r="8" />
-            <line class="np-drop" x1="552" y1="210.4" x2="552" y2="280" />
-            <circle class="np-dot-halo np-dot-halo--halten" cx="552" cy="196.4" r="16" />
-            <circle class="np-dot np-dot--halten" cx="552" cy="196.4" r="8" />
-            <line class="np-drop" x1="823" y1="159.2" x2="823" y2="280" />
-            <circle class="np-dot-halo np-dot-halo--halten" cx="823" cy="145.2" r="16" />
-            <circle class="np-dot np-dot--halten" cx="823" cy="145.2" r="8" />
+          <line class="np-drop" x1="10" y1="268.7" x2="10" y2="280" />
+          <circle class="np-dot-halo np-dot-halo--finden" cx="10" cy="254.7" r="16" />
+          <circle class="np-dot np-dot--finden" cx="10" cy="254.7" r="8" />
+          <line class="np-drop" x1="374" y1="235.9" x2="374" y2="280" />
+          <circle class="np-dot-halo np-dot-halo--finden" cx="374" cy="221.9" r="16" />
+          <circle class="np-dot np-dot--finden" cx="374" cy="221.9" r="8" />
+          <line class="np-drop" x1="738" y1="176.8" x2="738" y2="280" />
+          <circle class="np-dot-halo np-dot-halo--halten" cx="738" cy="162.8" r="16" />
+          <circle class="np-dot np-dot--halten" cx="738" cy="162.8" r="8" />
         </svg>
       </div>
 
       <div class="np-stops">
         <!-- 1 · An Schulen -->
         <article class="np-stop np-stop--finden">
-          <span class="np-stop-kicker">1 · Azubis finden</span>
           <h3>An Schulen</h3>
           <p class="np-stop-lead">Schüler:innen lernen euch kennen.</p>
           <ul class="np-offers">
-            <li><div><b>Schul-Workshops</b> ${TAG_INKL}</div><span>In Berufsfelderkundungen machen wir auf euch aufmerksam.</span></li>
-            <li><div><b>NESTplay</b> ${TAG_INKL}</div><span>Euer Quiz läuft im Unterricht, auch ohne euch vor Ort.</span></li>
-            <li><div><b>NEST Explore</b> ${TAG_INKL}</div><span>Einmal im Jahr kostenfrei: Ihr trefft eine Schule, Ablauf und Moderation machen wir.</span></li>
+            <li><b>Schul-Workshops</b><span>Bei Berufsfelderkundungen an Schulen stellen wir euren Betrieb und eure Ausbildungsberufe vor.</span></li>
+            <li><b>NESTplay</b><span>Euer Betrieb als Live-Quiz im Unterricht: einmal erstellt, setzen Lehrkräfte es immer wieder ein.</span></li>
+            <li><b>NEST Explore</b><span>Einmal im Jahr inklusive: Ihr trefft bis zu 150 Schüler:innen, Ablauf und Moderation machen wir.</span></li>
           </ul>
         </article>
 
         <!-- 2 · In der BildungsBar -->
         <article class="np-stop np-stop--finden">
-          <span class="np-stop-kicker">2 · Azubis finden</span>
           <h3>In der BildungsBar</h3>
           <p class="np-stop-lead">Beratung fürs Gemeinwohl.</p>
           <ul class="np-offers">
-            <li><div><b>Beratung</b> ${TAG_INKL}</div><span>Wir beraten junge Menschen und bereiten Bewerbungen vor.</span></li>
-            <li><div><b>Vernetzen</b> ${TAG_INKL}</div><span>Wir bringen passende Bewerbende mit euch zusammen.</span></li>
-            <li><div><b>Berufswelt</b> ${TAG_INKL}</div><span>Euer Profil und eure Stellen in der NEST Berufswelt.</span></li>
+            <li><b>Beratung</b><span>Wir beraten junge Menschen kostenfrei, schreiben mit ihnen Bewerbungen und üben Gespräche.</span></li>
+            <li><b>Vernetzen</b><span>Passt jemand zu eurem Betrieb, stellen wir den Kontakt direkt her, für Praktikum oder Ausbildung.</span></li>
+            <li><b>Berufswelt</b><span>Euer Profil und eure Stellen in der NEST Berufswelt, wo Jugendliche über 150 Berufe entdecken.</span></li>
           </ul>
         </article>
 
         <!-- 3 · In eurer Ausbildung -->
         <article class="np-stop np-stop--halten">
-          <span class="np-stop-kicker">3 · Azubis halten</span>
           <h3>In eurer Ausbildung</h3>
           <p class="np-stop-lead">Probleme lösen, bevor jemand abbricht.</p>
           <ul class="np-offers">
-            <li><div><b>Ansprechpartner</b> ${TAG_INKL}</div><span>Fehlzeiten, Konflikte oder Abbruchgedanken: Ihr meldet euch, wir klären mit euch die Ursache und holen die passende Hilfe aus dem Netzwerk dazu.</span></li>
-            <li><div><b>Mentale Gesundheit</b> ${TAG_INKL}</div><span>Unsere Ansprechpartnerin hilft euren Azubis bei Stress, Überforderung oder Prüfungsangst und euch bei der Frage, wie ihr Belastungen ansprecht.</span></li>
-            <li><div><b>Chatbot</b> ${TAG_INKL}</div><span>Was gilt in der Probezeit? Wie führe ich ein Feedbackgespräch? Antworten aus unserer Erfahrung, rund um die Uhr im Partner-Login.</span></li>
-            <li><div><b>Workshops</b> ${TAG_ZU}</div><span>Für Azubis z. B. Resilienz, Lernmotivation oder Azubiknigge, für Ausbildende Azubi-Bindung und Generationen.</span></li>
-          </ul>
-        </article>
-
-        <!-- 4 · Im Netzwerk -->
-        <article class="np-stop np-stop--halten">
-          <span class="np-stop-kicker">4 · Azubis halten</span>
-          <h3>Im Netzwerk</h3>
-          <p class="np-stop-lead">Ihr seid nicht allein.</p>
-          <ul class="np-offers">
-            <li><div><b>Ausbildungsdialog</b> ${TAG_INKL}</div><span>Fachthemen rund um Ausbildung, mit Input von Expert:innen.</span></li>
-            <li><div><b>Netzwerktreffen</b> ${TAG_INKL}</div><span>Viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.</span></li>
-            <li><div><b>Offene Workshops</b> ${TAG_ZU}</div><span>Einzelne Azubis anmelden und mit anderen Betrieben lernen.</span></li>
+            <li><b>Ansprechpartner</b><span>Bei Fehlzeiten, Konflikten oder Abbruchgedanken klären wir mit euch die Ursache und finden Hilfe.</span></li>
+            <li><b>Mentale Gesundheit</b><span>Unsere Ansprechpartnerin ist für eure Azubis bei Stress oder Prüfungsangst da und berät auch euch.</span></li>
+            <li><b>Veranstaltungen</b><span>Fachinput beim Ausbildungsdialog und viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.</span></li>
           </ul>
         </article>
       </div>
-      <div class="np-legend"><span>${TAG_INKL} im Partnerbeitrag enthalten</span><span>${TAG_ZU} exklusiv für Partner zubuchbar</span></div>
 
       <!-- PARTNER-LOGIN -->
       <div class="np-login" id="partner-login">
@@ -171,7 +146,7 @@ const html = `
       </div>
       <div class="bb-cards bb-cards--3">
         <a class="bb-card" href="https://nest-play.de" target="_blank" rel="noopener">
-          <span class="bb-card__tile"><img src="/assets/img/broschueren/nestplay.jpg" alt="Schülerin spielt das NESTplay-Quiz auf dem Smartphone" loading="lazy"><span class="bb-badge bb-badge--soft">Im Partnerbeitrag</span></span>
+          <span class="bb-card__tile"><img src="/assets/img/broschueren/nestplay.jpg" alt="Schülerin spielt das NESTplay-Quiz auf dem Smartphone" loading="lazy"></span>
           <span class="bb-card__title">NESTplay</span>
           <span class="bb-card__meta">Euer Betrieb als Live-Quiz im Unterricht: einmal erstellen, Lehrkräfte setzen es immer wieder ein.</span>
           <span class="bb-card__link bb-link">nest-play.de</span>
@@ -183,7 +158,7 @@ const html = `
           <span class="bb-card__link bb-link">nest-explore.de</span>
         </a>
         <a class="bb-card" href="https://nest-azubiconnect.de" target="_blank" rel="noopener">
-          <span class="bb-card__tile"><img src="/assets/img/angebote/azubiconnect.jpg" alt="Azubis in einem Workshop von NEST AzubiConnect" loading="lazy"><span class="bb-badge">Exklusiv · zubuchbar</span></span>
+          <span class="bb-card__tile"><img src="/assets/img/angebote/azubiconnect.jpg" alt="Azubis in einem Workshop von NEST AzubiConnect" loading="lazy"></span>
           <span class="bb-card__title">NEST AzubiConnect</span>
           <span class="bb-card__meta">Praxisnahe Workshops für Azubis und Ausbildende: inhouse, in der BildungsBar oder als offener Workshop.</span>
           <span class="bb-card__link bb-link">nest-azubiconnect.de</span>

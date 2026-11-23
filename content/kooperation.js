@@ -137,78 +137,41 @@ const html = `
     </div>
   </section>
 
-  <!-- WORKSHOPS · NEST AzubiConnect: Themen nach Zielgruppe, Formate und drei offene Workshops -->
+  <!-- WORKSHOPS · NEST AzubiConnect: links Einleitung, rechts Themenliste (Vorlage: Workable, Dovetail) -->
   <section class="bb-sec" id="workshops">
     <div class="container">
-      <div class="bb-head bb-head--split">
-        <div>
-          <span class="bb-kicker">Workshops von NEST AzubiConnect</span>
-          <h2 class="bb-h2">Workshops für Azubis und <span class="bb-hl">Ausbildende</span></h2>
-        </div>
-        <p class="bb-lead">Praxisnah und auf Augenhöhe: bei euch im Betrieb, in der BildungsBar oder als offener Workshop zusammen mit anderen Betrieben.</p>
-      </div>
-
       <div class="np-ws">
-        <div class="np-ws-media">
-          <img src="/assets/img/angebote/azubiconnect.jpg" alt="Azubis in einem Workshop von NEST AzubiConnect" loading="lazy">
-          <span class="np-ws-media-badge">${IC.people} Praxisnah &amp; auf Augenhöhe</span>
+        <div class="np-ws-intro">
+          <div class="np-ws-media"><img src="/assets/img/angebote/azubiconnect.jpg" alt="Azubis in einem Workshop von NEST AzubiConnect" loading="lazy"></div>
+          <span class="bb-kicker">NEST AzubiConnect</span>
+          <h2 class="bb-h2">Workshops für Azubis und <span class="bb-hl">Ausbildende</span></h2>
+          <p class="bb-lead np-ws-lead">Praxisnah, auf Augenhöhe und zugeschnitten auf euren Betrieb.</p>
+          <ul class="np-ws-formats">
+            <li>${IC.building}Inhouse</li>
+            <li>${IC.coffee}In der BildungsBar</li>
+            <li>${IC.network}Offene Workshops</li>
+          </ul>
+          <div class="bb-actions np-ws-actions"><a class="bb-btn bb-btn--ink" href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Alle Workshops ansehen</a></div>
         </div>
-        <div class="np-ws-body">
+        <div class="np-ws-list">
           <div class="np-ws-group">
-            <h3 class="np-ws-group-h"><span class="np-ws-group-ic">${IC.cap}</span>Für Azubis</h3>
-            <ul class="np-ws-chips">
-              <li>Azubi-Knigge</li>
-              <li>Kommunikation &amp; Gesprächsführung</li>
-              <li>Resilienz</li>
-              <li>Lernmotivation</li>
-              <li>Zeit- &amp; Selbstmanagement</li>
-              <li>Interkulturelle Kompetenz</li>
+            <h3 class="np-ws-group-h">Für Azubis</h3>
+            <ul>
+              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Azubi-Knigge${IC.arrow}</a></li>
+              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Kommunikation &amp; Gesprächsführung${IC.arrow}</a></li>
+              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Resilienz${IC.arrow}</a></li>
+              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Lernmotivation${IC.arrow}</a></li>
+              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Zeit- &amp; Selbstmanagement${IC.arrow}</a></li>
+              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Interkulturelle Kompetenz${IC.arrow}</a></li>
             </ul>
           </div>
           <div class="np-ws-group np-ws-group--aus">
-            <h3 class="np-ws-group-h"><span class="np-ws-group-ic">${IC.briefcase}</span>Für Ausbildende</h3>
-            <ul class="np-ws-chips">
-              <li>Azubi-Bindung</li>
-              <li>Generationen: Herausforderungen und Chancen</li>
+            <h3 class="np-ws-group-h">Für Ausbildende</h3>
+            <ul>
+              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Azubi-Bindung${IC.arrow}</a></li>
+              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Generationen: Herausforderungen und Chancen${IC.arrow}</a></li>
             </ul>
           </div>
-          <div class="np-ws-formats">
-            <div class="np-ws-format"><span class="np-ws-format-ic">${IC.building}</span><b>Inhouse</b><span>Ein Workshop-Tag bei euch, zugeschnitten auf eure Branche.</span></div>
-            <div class="np-ws-format"><span class="np-ws-format-ic">${IC.coffee}</span><b>In der BildungsBar</b><span>Raus aus dem Betrieb, rein in lockere Atmosphäre.</span></div>
-            <div class="np-ws-format"><span class="np-ws-format-ic">${IC.network}</span><b>Offen</b><span>Einzelne Azubis anmelden und mit anderen Betrieben lernen.</span></div>
-          </div>
-          <div class="bb-actions np-ws-actions"><a class="bb-btn bb-btn--ink" href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Alle Workshops ansehen</a></div>
-        </div>
-      </div>
-
-      <div class="np-ws-open" id="offene-workshops">
-        <div class="np-ws-open-head">
-          <div>
-            <span class="bb-kicker">Offene Workshops</span>
-            <h3 class="np-ws-open-h">Nur ein oder zwei Azubis? Kein Problem.</h3>
-            <p class="np-ws-open-p">Meldet einzelne Azubis oder Ausbildende an. Sie lernen gemeinsam mit Teilnehmenden aus anderen Betrieben.</p>
-          </div>
-          <a class="bb-btn bb-btn--gold" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">Termine &amp; Anmeldung</a>
-        </div>
-        <div class="np-ws-open-grid">
-          <a class="np-ws-card" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">
-            <span class="np-ws-card-top"><span class="np-ws-card-ic">${IC.people}</span><span class="np-ws-tag">Für Azubis</span></span>
-            <b>Azubi-Knigge</b>
-            <span class="np-ws-card-p">Souverän auftreten im Betrieb, gerade am Anfang der Ausbildung.</span>
-            <span class="np-ws-card-go">Termin finden ${IC.arrow}</span>
-          </a>
-          <a class="np-ws-card" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">
-            <span class="np-ws-card-top"><span class="np-ws-card-ic">${IC.heart}</span><span class="np-ws-tag">Für Azubis</span></span>
-            <b>Resilienz</b>
-            <span class="np-ws-card-p">Gelassener mit Druck und Stress umgehen, im Betrieb und in der Berufsschule.</span>
-            <span class="np-ws-card-go">Termin finden ${IC.arrow}</span>
-          </a>
-          <a class="np-ws-card np-ws-card--aus" href="https://nest-azubiconnect.de/offene-workshops.html" target="_blank" rel="noopener">
-            <span class="np-ws-card-top"><span class="np-ws-card-ic">${IC.target}</span><span class="np-ws-tag">Für Ausbildende</span></span>
-            <b>Azubi-Bindung</b>
-            <span class="np-ws-card-p">Motivierendes Arbeitsumfeld, Wertschätzung, Feedback und moderne Führung.</span>
-            <span class="np-ws-card-go">Termin finden ${IC.arrow}</span>
-          </a>
         </div>
       </div>
     </div>

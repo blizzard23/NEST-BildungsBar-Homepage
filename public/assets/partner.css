@@ -181,68 +181,31 @@
 .np-plan-seats { display: flex; align-items: baseline; gap: 6px; margin: 10px 0 28px; padding: 10px 14px; border-radius: 12px; background: rgba(255,255,255,0.06); font-size: 15px; color: var(--bb-muted); }
 .np-plan-seats b { font-size: 18px; font-weight: 700; color: #fff; }
 
-/* ---------- Workshops (NEST AzubiConnect) ---------- */
-.np-ws { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 56px; align-items: center; }
-.np-ws-media { position: relative; aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; background: var(--bb-band); box-shadow: 0 34px 60px -34px rgba(15,33,69,0.45); }
-.np-ws-media img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 62% center; }
-.np-ws-media::before { content: ''; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(180deg, rgba(15,33,69,0) 0%, rgba(15,33,69,0.55) 100%); }
-.np-ws-media-badge { position: absolute; left: 18px; bottom: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 9999px; background: #fff; color: var(--bb-navy); font-size: 14px; font-weight: 600; box-shadow: 0 10px 24px -10px rgba(15,33,69,0.5); }
-.np-ws-media-badge svg { width: 17px; height: 17px; color: var(--bb-gold); }
-.np-ws-group + .np-ws-group { margin-top: 26px; }
-.np-ws-group-h { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; color: var(--bb-ink); }
-.np-ws-group-ic { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--bb-gold); color: var(--bb-navy); }
-.np-ws-group--aus .np-ws-group-ic { background: #8DB7FF; }
-.np-ws-group-ic svg { width: 20px; height: 20px; }
-.np-ws-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.np-ws-chips li { padding: 8px 14px; border-radius: 9999px; background: rgba(239,165,0,0.10); border: 1px solid rgba(239,165,0,0.28); font-size: 14.5px; font-weight: 500; line-height: 1.3; color: var(--bb-ink); }
-.np-ws-group--aus .np-ws-chips li { background: rgba(141,183,255,0.16); border-color: rgba(77,110,190,0.28); }
-.np-ws-formats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--bb-line); }
-.np-ws-format { display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 1.5; color: var(--bb-text); }
-.np-ws-format b { margin-top: 6px; font-size: 15.5px; font-weight: 600; color: var(--bb-ink); }
-.np-ws-format-ic { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--bb-band); color: var(--bb-navy); }
-.np-ws-format-ic svg { width: 18px; height: 18px; }
+/* ---------- Workshops (NEST AzubiConnect) ----------
+   Schlank nach Vorlage Workable/Dovetail: links Bild, Überschrift, Formate und Button,
+   rechts die Themen als Liste mit Trennlinien und Pfeil. */
+.np-ws { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: start; }
+.np-ws-media { aspect-ratio: 1040 / 448; margin-bottom: 32px; border-radius: 20px; overflow: hidden; background: var(--bb-band); }
+.np-ws-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.np-ws .bb-h2 { font-size: clamp(30px, 3.2vw, 42px); }
+.np-ws-lead { margin-top: 16px; }
+.np-ws-formats { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.np-ws-formats li { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 9999px; background: var(--bb-band); font-size: 14.5px; font-weight: 500; color: var(--bb-ink); }
+.np-ws-formats svg { width: 16px; height: 16px; color: var(--bb-hl); }
 .np-ws-actions { margin-top: 28px; }
-
-.np-ws-open {
-  position: relative; overflow: hidden; margin-top: 72px; padding: 44px 44px 48px; border-radius: 28px; color: #fff;
-  background: radial-gradient(ellipse 60% 70% at 100% 0%, rgba(239,165,0,0.16), rgba(239,165,0,0) 70%), linear-gradient(160deg, #13284f 0%, #0F2145 100%);
-  --bb-hl: #EFA500;
-}
-.np-ws-open::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--bb-gold); }
-.np-ws-open-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 40px; align-items: end; margin-bottom: 32px; }
-.np-ws-open .bb-kicker { margin-bottom: 8px; }
-.np-ws-open-h { margin: 0 0 8px; font-size: clamp(24px, 2.6vw, 30px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: #fff; }
-.np-ws-open-p { margin: 0; max-width: 560px; font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.74); }
-.np-ws-open-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-.np-ws-card {
-  --np-acc: #EFA500; --np-acc-ic: #FFC94A;
-  display: flex; flex-direction: column; gap: 8px; padding: 24px; border-radius: 20px; text-decoration: none; color: inherit;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  transition: transform .2s ease, border-color .2s ease, background .2s ease;
-}
-.np-ws-card--aus { --np-acc: #8DB7FF; --np-acc-ic: #B9D1FF; }
-.np-ws-card:hover, .np-ws-card:focus-visible { transform: translateY(-3px); background: rgba(255,255,255,0.09); border-color: var(--np-acc); }
-.np-ws-card:focus-visible { outline: 2px solid var(--np-acc); outline-offset: 3px; }
-.np-ws-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-.np-ws-card-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: var(--np-acc); color: #0F2145; }
-.np-ws-card-ic svg { width: 21px; height: 21px; }
-.np-ws-tag { padding: 4px 11px; border-radius: 9999px; font-size: 12.5px; font-weight: 600; background: rgba(255,255,255,0.10); color: var(--np-acc-ic); white-space: nowrap; }
-.np-ws-card b { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; color: #fff; }
-.np-ws-card-p { flex: 1; font-size: 14.5px; line-height: 1.55; color: rgba(255,255,255,0.74); }
-.np-ws-card-go { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 14.5px; font-weight: 600; color: var(--np-acc-ic); }
-.np-ws-card-go svg { width: 16px; height: 16px; transition: transform .2s ease; }
-.np-ws-card:hover .np-ws-card-go svg, .np-ws-card:focus-visible .np-ws-card-go svg { transform: translateX(3px); }
+.np-ws-group + .np-ws-group { margin-top: 40px; }
+.np-ws-group-h { display: flex; align-items: center; gap: 12px; margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: var(--bb-hl); }
+.np-ws-group-h::before { content: ''; margin-left: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--bb-gold); box-shadow: 0 0 0 4px rgba(239,165,0,0.18); }
+.np-ws-group--aus .np-ws-group-h { color: #3557a6; }
+.np-ws-group--aus .np-ws-group-h::before { background: #8DB7FF; box-shadow: 0 0 0 4px rgba(141,183,255,0.3); }
+.np-ws-group ul { list-style: none; margin: 0; padding: 0; }
+.np-ws-group li a { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--bb-line-2); font-size: 17px; font-weight: 600; line-height: 1.35; color: var(--bb-ink); text-decoration: none; transition: color .2s ease; }
+.np-ws-group li a svg { flex-shrink: 0; width: 18px; height: 18px; color: var(--bb-hl); transition: transform .2s ease; }
+.np-ws-group--aus li a svg { color: #3557a6; }
+.np-ws-group li a:hover, .np-ws-group li a:focus-visible { color: var(--bb-hl); }
+.np-ws-group--aus li a:hover, .np-ws-group--aus li a:focus-visible { color: #3557a6; }
+.np-ws-group li a:hover svg, .np-ws-group li a:focus-visible svg { transform: translateX(4px); }
+.np-ws-group li a:focus-visible { outline: 2px solid var(--bb-gold); outline-offset: 2px; border-radius: 4px; }
 @media (max-width: 900px) {
-  .np-ws { grid-template-columns: 1fr; gap: 36px; }
-  .np-ws-media { aspect-ratio: 16 / 9; }
-  .np-ws-open { margin-top: 56px; padding: 32px 24px 36px; }
-  .np-ws-open-head { grid-template-columns: 1fr; }
-  .np-ws-open-head .bb-btn { justify-self: start; }
-  .np-ws-open-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-  .np-ws-formats { grid-template-columns: 1fr; gap: 16px; }
-  .np-ws-format { display: grid; grid-template-columns: 36px minmax(0, 1fr); column-gap: 14px; }
-  .np-ws-format-ic { grid-row: 1 / span 2; }
-  .np-ws-format b { margin-top: 0; }
+  .np-ws { grid-template-columns: 1fr; gap: 40px; }
 }

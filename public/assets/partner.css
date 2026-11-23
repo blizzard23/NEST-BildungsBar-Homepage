@@ -92,6 +92,9 @@
 .np-curve-line, .np-curve-glow { fill: none; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
 .np-curve-glow { stroke-width: 14; opacity: 0.45; }
 .np-drop { stroke: rgba(255,255,255,0.28); stroke-width: 1.5; stroke-dasharray: 2 7; stroke-linecap: round; }
+.np-curve-label { font-family: var(--font); font-size: 12px; font-weight: 700; letter-spacing: 3px; }
+.np-curve-label--finden { fill: #EFA500; }
+.np-curve-label--halten { fill: #9EC2FF; }
 .np-dot { stroke: #0F2145; stroke-width: 3; }
 .np-dot--finden { fill: #EFA500; }
 .np-dot--halten { fill: #8DB7FF; }
@@ -104,27 +107,45 @@
   @keyframes np-draw { to { stroke-dashoffset: 0; } }
 }
 
-.np-stops { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: 40px; margin-top: 6px; }
-/* Subgrid: Titel, Untertitel und jeder der drei Listenpunkte stehen in allen Spalten auf gleicher Höhe */
-.np-stop { display: grid; grid-row: span 5; grid-template-rows: subgrid; align-content: start; min-width: 0; }
-.np-stop h3 { margin: 0 0 6px; font-size: clamp(21px, 1.9vw, 23px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: #fff; }
-.np-stop-lead { margin: 0 0 20px; font-size: 16px; line-height: 1.5; color: rgba(255,255,255,0.72); }
-.np-offers { grid-row: span 3; display: grid; grid-template-rows: subgrid; row-gap: 0; list-style: none; margin: 0; padding: 0; }
-.np-offers li { font-size: 14.5px; line-height: 1.5; color: var(--bb-text); padding: 12px 0; border-top: 1px solid var(--bb-line); }
-.np-offers li b { display: block; margin-bottom: 3px; color: var(--bb-ink); font-size: 15.5px; font-weight: 600; }
+.np-stops { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); column-gap: 24px; margin-top: 6px; }
+/* Karten mit Akzentfarbe: Gold = Azubis gewinnen, Blau = Azubis halten.
+   Subgrid: Titel, Untertitel und jeder der drei Listenpunkte stehen in allen Karten auf gleicher Höhe. */
+.np-stop {
+  --np-acc: #EFA500; --np-acc-ic: #FFC94A; --np-acc-soft: rgba(239,165,0,0.15);
+  position: relative; display: grid; grid-row: span 5; grid-template-rows: subgrid; align-content: start; min-width: 0;
+  padding: 26px 22px 8px; border-radius: 22px; overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.025) 100%);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 30px 60px -36px rgba(0,0,0,0.7);
+}
+.np-stop--halten { --np-acc: #8DB7FF; --np-acc-ic: #B9D1FF; --np-acc-soft: rgba(141,183,255,0.15); }
+.np-stop::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--np-acc) 0%, rgba(255,255,255,0) 90%); }
+.np-stop::after { content: ''; position: absolute; top: -80px; right: -80px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, var(--np-acc-soft) 0%, rgba(0,0,0,0) 70%); pointer-events: none; }
+.np-stop h3 { position: relative; display: flex; align-items: center; gap: 14px; margin: 0 0 12px; font-size: clamp(20px, 1.8vw, 23px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: #fff; }
+.np-stop-ic { flex-shrink: 0; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--np-acc); color: #0F2145; box-shadow: 0 8px 20px -8px var(--np-acc); }
+.np-stop-ic svg { width: 22px; height: 22px; }
+.np-stop-lead { position: relative; margin: 0 0 18px; font-size: 16px; line-height: 1.5; color: rgba(255,255,255,0.72); }
+.np-offers { position: relative; grid-row: span 3; display: grid; grid-template-rows: subgrid; row-gap: 0; list-style: none; margin: 0; padding: 0; }
+.np-offers li { display: grid; grid-template-columns: 34px minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 12px; align-content: start; font-size: 14.5px; line-height: 1.5; color: var(--bb-text); padding: 14px 0; border-top: 1px solid rgba(255,255,255,0.09); }
+.np-offer-ic { grid-row: 1 / span 2; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--np-acc-soft); color: var(--np-acc-ic); }
+.np-offer-ic svg { width: 17px; height: 17px; }
+.np-offers li b { grid-column: 2; display: block; margin: 0 0 2px; color: var(--bb-ink); font-size: 15.5px; font-weight: 600; line-height: 1.4; }
+.np-offers li > span:last-child { grid-column: 2; }
+.np-offer-link { display: inline-flex; align-items: center; gap: 5px; color: inherit; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.28); text-underline-offset: 4px; text-decoration-thickness: 1px; transition: color .2s ease, text-decoration-color .2s ease; }
+.np-offer-link svg { width: 15px; height: 15px; color: var(--np-acc-ic); transition: transform .2s ease; }
+.np-offer-link:hover, .np-offer-link:focus-visible { color: var(--np-acc-ic); text-decoration-color: var(--np-acc-ic); }
+.np-offer-link:hover svg, .np-offer-link:focus-visible svg { transform: translate(2px, -2px); }
+.np-offer-link[href^="/"]:hover svg, .np-offer-link[href^="/"]:focus-visible svg { transform: translateX(3px); }
+.np-offer-link:focus-visible { outline: 2px solid var(--np-acc-ic); outline-offset: 3px; border-radius: 4px; }
 .np-curve-sec .np-login { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); }
 
-/* Tablet und Handy: Kurve ausblenden, Stationen mit Punkt und Linie */
+/* Tablet und Handy: Kurve ausblenden, Karten untereinander */
 @media (max-width: 900px) {
   .np-curve { display: none; }
-  .np-stops { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: 40px; max-width: 620px; margin-top: 44px; }
-  .np-stop { position: relative; display: flex; flex-direction: column; grid-row: auto; padding-top: 30px; }
+  .np-stops { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: 20px; max-width: 620px; margin: 44px auto 0; }
+  .np-stop { display: flex; flex-direction: column; grid-row: auto; }
   .np-offers { grid-row: auto; display: flex; flex-direction: column; }
-  .np-stop h3 { font-size: 24px; }
-  .np-stop::before { content: ''; position: absolute; top: 0; left: 0; width: 16px; height: 16px; border-radius: 50%; background: #EFA500; box-shadow: 0 0 0 6px rgba(239,165,0,0.2); }
-  .np-stop--halten::before { background: #8DB7FF; box-shadow: 0 0 0 6px rgba(141,183,255,0.2); }
-  .np-stop::after { content: ''; position: absolute; top: 7px; left: 28px; right: 0; height: 2px; background: linear-gradient(90deg, rgba(239,165,0,0.5), rgba(239,165,0,0)); }
-  .np-stop--halten::after { background: linear-gradient(90deg, rgba(141,183,255,0.5), rgba(141,183,255,0)); }
+  .np-stop h3 { font-size: 22px; }
 }
 
 /* ---------- Partner-Login ---------- */

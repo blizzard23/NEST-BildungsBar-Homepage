@@ -136,8 +136,8 @@ const html = `
     </div>
   </section>
 
-  <!-- PAKETE · Karten im selben Stil wie die Stationen darüber -->
-  <section class="bb-sec bb-sec--dark" id="preise">
+  <!-- PAKETE · heller Abschnitt zwischen Kurve (dunkel) und Gemeinwohl (gold); Karten in Form der Stationen -->
+  <section class="bb-sec" id="preise">
     <div class="container">
       <div class="bb-head bb-head--split">
         <div>

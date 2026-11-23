@@ -52,7 +52,7 @@ const html = `
     </div></div>
   </section>
 
-  <!-- WEG DER PARTNERSCHAFT: ansteigende Kurve mit vier Stationen (Vorlage: Circle) -->
+  <!-- WEG DER PARTNERSCHAFT: ansteigende Kurve mit drei Stationen (Vorlage: Circle) -->
   <section class="bb-sec bb-sec--dark np-curve-sec" id="kreislauf">
     <div class="container">
       <div class="np-curve" aria-hidden="true">
@@ -136,7 +136,19 @@ const html = `
     </div>
   </section>
 
-  <!-- PAKETE · heller Abschnitt zwischen Kurve (dunkel) und Gemeinwohl (gold); Karten in Form der Stationen -->
+  <!-- GEMEINWOHL -->
+  <section class="bb-trust">
+    <div class="container">
+      <p class="bb-trust__title">Euer Beitrag wirkt doppelt: Er finanziert die kostenfreie Berufsorientierung in der BildungsBar und an Schulen. Genau aus diesen jungen Menschen kommen eure Bewerbenden.</p>
+      <div class="bb-trust__row bb-trust__row--3">
+        <div class="bb-trust__item"><b>70+</b><span>Unternehmen im Netzwerk</span></div>
+        <div class="bb-trust__item"><b>500+</b><span>junge Menschen pro Jahr</span></div>
+        <div class="bb-trust__item"><b>4</b><span>Standorte</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAKETE · heller Abschnitt nach Kurve (dunkel) und Gemeinwohl (gold); Karten in Form der Stationen -->
   <section class="bb-sec" id="preise">
     <div class="container">
       <div class="bb-head bb-head--split">
@@ -177,18 +189,6 @@ const html = `
             <a class="bb-btn bb-btn--light" href="/kontakt#termin">Anfragen</a>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- GEMEINWOHL -->
-  <section class="bb-trust">
-    <div class="container">
-      <p class="bb-trust__title">Euer Beitrag wirkt doppelt: Er finanziert die kostenfreie Berufsorientierung in der BildungsBar und an Schulen. Genau aus diesen jungen Menschen kommen eure Bewerbenden.</p>
-      <div class="bb-trust__row bb-trust__row--3">
-        <div class="bb-trust__item"><b>70+</b><span>Unternehmen im Netzwerk</span></div>
-        <div class="bb-trust__item"><b>500+</b><span>junge Menschen pro Jahr</span></div>
-        <div class="bb-trust__item"><b>4</b><span>Standorte</span></div>
       </div>
     </div>
   </section>

@@ -167,45 +167,42 @@
   .np-login-btn { justify-self: start; }
 }
 
-/* ---------- Pakete ---------- */
+/* ---------- Pakete ----------
+   Folgen direkt auf die dunkle Kurven-Sektion: feine Trennlinie dazwischen,
+   Karten im selben Stil wie die drei Stationen (Glasfläche, Goldkante, Icon-Kachel). */
+.np-curve-sec { padding-bottom: 88px; }
+#preise { position: relative; padding-top: 88px; }
+#preise::before { content: ''; position: absolute; top: 0; left: 50%; width: min(1052px, 90%); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.14), rgba(255,255,255,0)); }
 .np-seat {
-  display: flex; align-items: center; gap: 16px; margin: -16px 0 28px; padding: 16px 20px;
-  border: 1px solid rgba(239,165,0,0.45); border-radius: 16px; background: rgba(239,165,0,0.08);
+  display: flex; align-items: center; gap: 16px; margin: -16px 0 24px; padding: 16px 20px;
+  border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
 }
-.np-seat-ic { flex-shrink: 0; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--bb-gold); color: var(--bb-navy); }
-.np-seat-ic svg { width: 20px; height: 20px; }
-.np-seat p { margin: 0; font-size: 15.5px; line-height: 1.55; color: rgba(255,255,255,0.86); }
+.np-seat-ic { flex-shrink: 0; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--bb-gold); color: var(--bb-navy); box-shadow: 0 8px 20px -8px var(--bb-gold); }
+.np-seat-ic svg { width: 22px; height: 22px; }
+.np-seat p { margin: 0; font-size: 15.5px; line-height: 1.55; color: rgba(255,255,255,0.80); }
 .np-seat b { color: #fff; }
+.np-plans { gap: 24px; }
 /* Kein Paket hervorgehoben: Welches passt, hängt nur von der Zahl der Azubis ab. */
-.np-plans .bb-plan:nth-child(2) { border-color: var(--bb-card-line); }
-.np-plan-seats { display: flex; align-items: baseline; gap: 6px; margin: 10px 0 28px; padding: 10px 14px; border-radius: 12px; background: rgba(255,255,255,0.06); font-size: 15px; color: var(--bb-muted); }
-.np-plan-seats b { font-size: 18px; font-weight: 700; color: #fff; }
-
-/* ---------- Workshops (NEST AzubiConnect) ----------
-   Schlank nach Vorlage Workable/Dovetail: links Bild, Überschrift, Formate und Button,
-   rechts die Themen als Liste mit Trennlinien und Pfeil. */
-.np-ws { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: start; }
-.np-ws-media { aspect-ratio: 1040 / 448; margin-bottom: 32px; border-radius: 20px; overflow: hidden; background: var(--bb-band); }
-.np-ws-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.np-ws .bb-h2 { font-size: clamp(30px, 3.2vw, 42px); }
-.np-ws-lead { margin-top: 16px; }
-.np-ws-formats { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.np-ws-formats li { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 9999px; background: var(--bb-band); font-size: 14.5px; font-weight: 500; color: var(--bb-ink); }
-.np-ws-formats svg { width: 16px; height: 16px; color: var(--bb-hl); }
-.np-ws-actions { margin-top: 28px; }
-.np-ws-group + .np-ws-group { margin-top: 40px; }
-.np-ws-group-h { display: flex; align-items: center; gap: 12px; margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: var(--bb-hl); }
-.np-ws-group-h::before { content: ''; margin-left: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--bb-gold); box-shadow: 0 0 0 4px rgba(239,165,0,0.18); }
-.np-ws-group--aus .np-ws-group-h { color: #3557a6; }
-.np-ws-group--aus .np-ws-group-h::before { background: #8DB7FF; box-shadow: 0 0 0 4px rgba(141,183,255,0.3); }
-.np-ws-group ul { list-style: none; margin: 0; padding: 0; }
-.np-ws-group li a { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--bb-line-2); font-size: 17px; font-weight: 600; line-height: 1.35; color: var(--bb-ink); text-decoration: none; transition: color .2s ease; }
-.np-ws-group li a svg { flex-shrink: 0; width: 18px; height: 18px; color: var(--bb-hl); transition: transform .2s ease; }
-.np-ws-group--aus li a svg { color: #3557a6; }
-.np-ws-group li a:hover, .np-ws-group li a:focus-visible { color: var(--bb-hl); }
-.np-ws-group--aus li a:hover, .np-ws-group--aus li a:focus-visible { color: #3557a6; }
-.np-ws-group li a:hover svg, .np-ws-group li a:focus-visible svg { transform: translateX(4px); }
-.np-ws-group li a:focus-visible { outline: 2px solid var(--bb-gold); outline-offset: 2px; border-radius: 4px; }
-@media (max-width: 900px) {
-  .np-ws { grid-template-columns: 1fr; gap: 40px; }
+.np-plans .bb-plan, .np-plans .bb-plan:nth-child(2) {
+  position: relative; overflow: hidden; border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.025) 100%);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 30px 60px -36px rgba(0,0,0,0.7);
 }
+.np-plans .bb-plan::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #EFA500 0%, rgba(255,255,255,0) 90%); }
+.np-plans .bb-plan::after { content: ''; position: absolute; top: -80px; right: -80px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(239,165,0,0.15) 0%, rgba(0,0,0,0) 70%); pointer-events: none; }
+.np-plans .bb-plan__head { position: relative; display: flex; align-items: center; gap: 14px; padding: 26px 22px 0; font-size: clamp(19px, 1.7vw, 21px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: #fff; }
+.np-plan-ic { flex-shrink: 0; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--bb-gold); color: var(--bb-navy); box-shadow: 0 8px 20px -8px var(--bb-gold); }
+.np-plan-ic svg { width: 22px; height: 22px; }
+.np-plans .bb-plan__body { position: relative; padding: 22px 22px 24px; }
+.np-plans .bb-plan__price { color: #fff; }
+.np-plan-seats { display: flex; align-items: baseline; gap: 6px; margin: 16px 0 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.09); font-size: 15px; color: rgba(255,255,255,0.72); }
+.np-plan-seats b { font-size: 18px; font-weight: 700; color: #fff; }
+@media (max-width: 900px) {
+  .np-plans { grid-template-columns: 1fr; max-width: 620px; margin: 0 auto; }
+}
+@media (max-width: 760px) {
+  .np-curve-sec { padding-bottom: 64px; }
+  #preise { padding-top: 64px; }
+}
+

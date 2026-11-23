@@ -1,6 +1,5 @@
 // Partnerseite für Unternehmen: ansteigende Kurve mit drei Stationen (An Schulen,
-// In der BildungsBar, In eurer Ausbildung), Partner-Login, Workshops von NEST AzubiConnect,
-// Pakete und FAQ. Preise für weitere Explore-Termine und AzubiConnect stehen auf deren Websites.
+// In der BildungsBar, In eurer Ausbildung), Partner-Login, Pakete und FAQ. Preise für weitere Explore-Termine und AzubiConnect stehen auf deren Websites.
 // Gestaltung nach dem Redesign (public/assets/bb.css) plus partner.css.
 // NEST Explore und NEST AzubiConnect sind exklusiv für Partner. Ein Explore-Termin
 // pro Jahr ist im Partnerbeitrag enthalten, weitere Termine und AzubiConnect werden
@@ -137,47 +136,7 @@ const html = `
     </div>
   </section>
 
-  <!-- WORKSHOPS · NEST AzubiConnect: links Einleitung, rechts Themenliste (Vorlage: Workable, Dovetail) -->
-  <section class="bb-sec" id="workshops">
-    <div class="container">
-      <div class="np-ws">
-        <div class="np-ws-intro">
-          <div class="np-ws-media"><img src="/assets/img/angebote/azubiconnect.jpg" alt="Azubis in einem Workshop von NEST AzubiConnect" loading="lazy"></div>
-          <span class="bb-kicker">NEST AzubiConnect</span>
-          <h2 class="bb-h2">Workshops für Azubis und <span class="bb-hl">Ausbildende</span></h2>
-          <p class="bb-lead np-ws-lead">Praxisnah, auf Augenhöhe und zugeschnitten auf euren Betrieb.</p>
-          <ul class="np-ws-formats">
-            <li>${IC.building}Inhouse</li>
-            <li>${IC.coffee}In der BildungsBar</li>
-            <li>${IC.network}Offene Workshops</li>
-          </ul>
-          <div class="bb-actions np-ws-actions"><a class="bb-btn bb-btn--ink" href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Alle Workshops ansehen</a></div>
-        </div>
-        <div class="np-ws-list">
-          <div class="np-ws-group">
-            <h3 class="np-ws-group-h">Für Azubis</h3>
-            <ul>
-              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Azubi-Knigge${IC.arrow}</a></li>
-              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Kommunikation &amp; Gesprächsführung${IC.arrow}</a></li>
-              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Resilienz${IC.arrow}</a></li>
-              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Lernmotivation${IC.arrow}</a></li>
-              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Zeit- &amp; Selbstmanagement${IC.arrow}</a></li>
-              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Interkulturelle Kompetenz${IC.arrow}</a></li>
-            </ul>
-          </div>
-          <div class="np-ws-group np-ws-group--aus">
-            <h3 class="np-ws-group-h">Für Ausbildende</h3>
-            <ul>
-              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Azubi-Bindung${IC.arrow}</a></li>
-              <li><a href="https://nest-azubiconnect.de/workshops.html" target="_blank" rel="noopener">Generationen: Herausforderungen und Chancen${IC.arrow}</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PAKETE -->
+  <!-- PAKETE · Karten im selben Stil wie die Stationen darüber -->
   <section class="bb-sec bb-sec--dark" id="preise">
     <div class="container">
       <div class="bb-head bb-head--split">
@@ -195,7 +154,7 @@ const html = `
 
       <div class="bb-plans np-plans">
         <div class="bb-plan">
-          <div class="bb-plan__head">Kleine Partnerschaft</div>
+          <div class="bb-plan__head"><span class="np-plan-ic">${IC.user}</span>Kleine Partnerschaft</div>
           <div class="bb-plan__body">
             <div class="bb-plan__price">79,90 € <small>/ Monat</small></div>
             <div class="np-plan-seats"><b>bis 5</b> Azubis im Betrieb</div>
@@ -203,7 +162,7 @@ const html = `
           </div>
         </div>
         <div class="bb-plan">
-          <div class="bb-plan__head">Mittlere Partnerschaft</div>
+          <div class="bb-plan__head"><span class="np-plan-ic">${IC.people}</span>Mittlere Partnerschaft</div>
           <div class="bb-plan__body">
             <div class="bb-plan__price">139,90 € <small>/ Monat</small></div>
             <div class="np-plan-seats"><b>6 bis 10</b> Azubis im Betrieb</div>
@@ -211,7 +170,7 @@ const html = `
           </div>
         </div>
         <div class="bb-plan">
-          <div class="bb-plan__head">Große Partnerschaft</div>
+          <div class="bb-plan__head"><span class="np-plan-ic">${IC.building}</span>Große Partnerschaft</div>
           <div class="bb-plan__body">
             <div class="bb-plan__price">199,90 € <small>/ Monat</small></div>
             <div class="np-plan-seats"><b>ab 11</b> Azubis im Betrieb</div>

@@ -461,6 +461,7 @@ window.BERUF_BILDER = {
   "fachkraft-fuer-restaurant-und-veranstaltungsgastronomie": "assets/img/berufe/fachkraft-fuer-restaurant-und-veranstaltungsgastronomie.png",
   "fachkraft-fuer-veranstaltungstechnik": "assets/img/berufe/fachkraft-fuer-veranstaltungstechnik.webp",
   "fachkraft-im-fahrbetrieb": "assets/img/berufe/fachkraft-im-fahrbetrieb.webp",
+  "berufskraftfahrer": "assets/img/berufe/berufskraftfahrer.webp",
   "fachkraft-leistungsgewaehrung": "assets/img/berufe/fachkraft-leistungsgewaehrung.png",
   "fachlagerist": "assets/img/berufe/fachlagerist.png",
   "forstwirt": "assets/img/berufe/forstwirt.png",

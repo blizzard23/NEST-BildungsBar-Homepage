@@ -241,6 +241,37 @@ Jeder weitere `git push` deployt automatisch neu.
 
 ---
 
+## 6. Azubi-Chat für Workshops (Leon & Lisa)
+
+Digitale Workshop-Begleitung: Die Azubi-Personas **Leon** (17, Mechatroniker) und
+**Lisa** (21, Industriekauffrau) aus den Profil-Handouts stehen als KI-Chat bereit.
+Teilnehmende scannen den QR-Code auf dem jeweiligen Profil und landen direkt im Chat
+mit dieser Persona. Sie können Fragen stellen, Situationen durchspielen oder eine
+Stellenanzeige einfügen und bekommen eine ehrliche Reaktion aus Sicht der Persona.
+
+- **Nur über den Link erreichbar:** `/azubi-chat/<zugangscode>?mit=leon` bzw. `?mit=lisa`.
+  Die Seite ist nirgends verlinkt und auf `noindex` gesetzt; ein falscher Code ergibt 404,
+  die API antwortet mit 403. Weil dieses Repository öffentlich ist, steht im Code nur der
+  **SHA-256-Hash** des Zugangscodes (`lib/azubiChat.js`). Der Code selbst steht nur im
+  QR-Code der Profil-PDFs.
+- **Code ändern** (z. B. nach dem Workshop, damit alte Links nicht mehr gehen): neuen Code
+  wählen (6–40 Zeichen, a–z und 0–9), Hash erzeugen und in `lib/azubiChat.js` eintragen,
+  danach neue QR-Codes erstellen:
+  ```bash
+  node -e "console.log(require('crypto').createHash('sha256').update('NEUERCODE').digest('hex'))"
+  ```
+- **Vorgaben für den Chatbot:** Profil, Tonfall und Grenzen beider Personas stehen in
+  `lib/azubiChat.js` (`systemPrompt`). Begrüßung, Vorschläge und Steckbrief auf der Seite
+  ebenfalls dort.
+- **Technik:** `app/azubi-chat/[zugang]/` (Seite), `app/api/azubi-chat/route.js`
+  (Claude, Antwort wird gestreamt). Nutzt denselben `ANTHROPIC_API_KEY` wie der
+  NEST-Assistent im Partner-Login, es ist also nichts zusätzlich einzurichten.
+  Rate-Limit: 80 Nachrichten pro IP in 10 Minuten (großzügig, weil ein Workshop-Raum oft
+  über dieselbe IP ins Netz geht). Chatverläufe werden nicht gespeichert, nur im
+  Browser-Tab.
+
+---
+
 ## Projektstruktur
 
 ```

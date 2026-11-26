@@ -1,0 +1,107 @@
+/* =========================================================
+   Azubi-Chat (Workshop): Leon und Lisa als KI-Personas.
+   Der Chat selbst nutzt die .as-*-Klassen des NEST-Assistenten
+   aus bb.css; hier nur Seitenaufbau, Personas und Fotos.
+   ========================================================= */
+
+.ac-seite { padding: 44px 0 80px; background: #f4f6fa; }
+
+/* Kopf */
+.ac-kopf { max-width: 720px; }
+.ac-eyebrow { display: inline-block; margin-bottom: 8px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #b07800; }
+.ac-h1 { margin: 0 0 10px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; line-height: 1.12; letter-spacing: -0.02em; color: var(--bb-navy); }
+.ac-lead { margin: 0; font-size: 16px; line-height: 1.6; color: #4a536a; }
+
+/* Umschalter Leon / Lisa */
+.ac-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 18px; }
+.ac-tab { position: relative; display: inline-flex; align-items: center; gap: 12px; padding: 7px 20px 7px 7px; border: 1px solid #e5e8ef; border-radius: 9999px; background: #fff; font: inherit; text-align: left; cursor: pointer; transition: border-color .15s ease, background-color .15s ease; }
+.ac-tab:hover { border-color: #c9d0dc; }
+.ac-tab img { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+.ac-tab b { display: block; font-size: 16px; line-height: 1.2; color: var(--bb-navy); }
+.ac-tab small { display: block; font-size: 12.5px; line-height: 1.3; color: #7c849a; }
+.ac-tab.is-aktiv { border-color: var(--bb-navy); background: var(--bb-navy); cursor: default; }
+.ac-tab.is-aktiv img { box-shadow: 0 0 0 2px var(--bb-gold); }
+.ac-tab.is-aktiv b { color: #fff; }
+.ac-tab.is-aktiv small { color: rgba(255,255,255,0.7); }
+.ac-tab-tippt { position: absolute; top: 6px; left: 40px; width: 10px; height: 10px; border: 2px solid #fff; border-radius: 50%; background: var(--bb-gold); animation: ac-puls 1.2s infinite ease-in-out; }
+@keyframes ac-puls { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+
+/* Steckbrief links, Chat rechts */
+.ac-grid { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 24px; align-items: start; }
+
+.ac-profil { position: sticky; top: 96px; padding: 18px; background: #fff; border: 1px solid #e5e8ef; border-radius: 20px; }
+.ac-profil-kopf { display: flex; flex-direction: column; gap: 12px; }
+.ac-profil-foto { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 14px; background: #eef1f6; }
+.ac-profil-name { display: block; font-size: 22px; font-weight: 800; line-height: 1.2; color: var(--bb-navy); }
+.ac-profil-rolle { display: block; margin-top: 2px; font-size: 13.5px; font-weight: 600; color: #b07800; }
+.ac-profil-toggle { display: none; }
+.ac-fakten { margin: 14px 0 0; }
+.ac-fakten > div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid #eef0f4; }
+.ac-fakten dt { font-size: 13px; color: #7c849a; }
+.ac-fakten dd { margin: 0; font-size: 13.5px; font-weight: 600; text-align: right; color: var(--bb-navy); }
+.ac-liste { margin-top: 14px; }
+.ac-liste-titel { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #7c849a; }
+.ac-liste-titel::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--bb-gold); }
+.ac-liste--nervt .ac-liste-titel::before { background: #d9485f; }
+.ac-liste--motiviert .ac-liste-titel::before { background: #22a06b; }
+.ac-liste ul { margin: 0; padding: 0; list-style: none; }
+.ac-liste li { position: relative; padding: 3px 0 3px 14px; font-size: 13.5px; line-height: 1.45; color: #3a4459; }
+.ac-liste li::before { content: ''; position: absolute; left: 2px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: #b8bfcc; }
+
+/* Chat: feste Höhe, damit die Karte beim Schreiben nicht springt */
+.ac-chat .as-verlauf { height: clamp(360px, 56vh, 580px); max-height: none; }
+.ac-kopf-foto { flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px; object-fit: cover; }
+.ac-msg-foto { flex-shrink: 0; width: 30px; height: 30px; border-radius: 10px; object-fit: cover; }
+.as-aktion[disabled] { opacity: .5; cursor: not-allowed; }
+
+/* Vorschläge über dem Eingabefeld, solange noch nichts gefragt wurde */
+.ac-vorschlaege { padding: 12px 16px 0; background: #fff; border-top: 1px solid #eef0f4; }
+.ac-vorschlaege + .as-unten { border-top: 0; }
+.ac-vorschlaege-liste { display: flex; flex-wrap: wrap; gap: 8px; }
+.ac-vorschlag { display: inline-flex; align-items: center; gap: 8px; padding: 8px 13px; border: 1px solid #e5e8ef; border-radius: 9999px; background: #fff; font: inherit; font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--bb-navy); text-align: left; cursor: pointer; transition: border-color .15s ease, background-color .15s ease; }
+.ac-vorschlag svg { flex-shrink: 0; width: 15px; height: 15px; color: #b07800; }
+.ac-vorschlag:hover { border-color: var(--bb-gold); background: #fffaf0; }
+.ac-vorschlag[disabled] { opacity: .5; cursor: not-allowed; }
+.ac-vorschlag--vorlage { border-color: rgba(239,165,0,0.55); background: #fff6e0; font-weight: 600; }
+
+/* Vollbild (Klassen aus bb.css) */
+.ac-chat.as-chat--vollbild .as-verlauf { height: auto; flex: 1; min-height: 0; }
+.as-chat--vollbild .ac-vorschlaege { padding-left: max(20px, calc((100% - 880px) / 2)); padding-right: max(20px, calc((100% - 880px) / 2)); }
+
+/* Schmale Bildschirme (meist über den QR-Code geöffnet): Der Chat steht im
+   Vordergrund. Kopf kompakt, Steckbrief als schmale Leiste zum Aufklappen,
+   Chat so hoch, dass Eingabefeld und Vorschläge ohne Scrollen sichtbar sind. */
+@media (max-width: 900px) {
+  .ac-seite { padding: 12px 0 40px; }
+  .ac-eyebrow, .ac-lead { display: none; }
+  .ac-h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ac-tabs { flex-wrap: nowrap; gap: 8px; margin: 0 0 10px; }
+  .ac-tab { flex: 1; min-width: 0; padding-right: 12px; }
+  .ac-tab span { min-width: 0; }
+  .ac-tab small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ac-grid { grid-template-columns: 1fr; gap: 10px; }
+  .ac-profil { position: static; padding: 0; border-radius: 14px; }
+  .ac-profil-kopf > img, .ac-profil-kopf > div { display: none; }
+  .ac-profil-toggle { display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; padding: 10px 14px; border: 0; border-radius: 14px; background: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--bb-navy); cursor: pointer; }
+  .ac-profil-toggle svg { width: 16px; height: 16px; transition: transform .2s ease; }
+  .ac-profil.is-offen .ac-profil-toggle svg { transform: rotate(180deg); }
+  .ac-profil-body { display: none; padding: 0 14px 12px; }
+  .ac-profil.is-offen .ac-profil-body { display: block; }
+  .ac-fakten { margin-top: 0; }
+  .ac-chat .as-chat-head { padding: 10px 14px; }
+  .ac-chat .as-verlauf { height: calc(100vh - 428px); height: calc(100dvh - 428px); min-height: 128px; }
+  /* Vorschläge in einer Zeile zum Wischen */
+  .ac-vorschlaege { padding: 10px 0 0; }
+  .ac-vorschlaege .as-vorschlaege-titel { display: none; }
+  .ac-vorschlaege-liste { flex-wrap: nowrap; overflow-x: auto; padding: 0 14px 2px; scrollbar-width: none; }
+  .ac-vorschlaege-liste::-webkit-scrollbar { display: none; }
+  .ac-vorschlag { flex-shrink: 0; white-space: nowrap; }
+  .ac-chat .as-fuss { font-size: 11px; line-height: 1.45; padding-top: 4px; padding-bottom: 10px; }
+}
+@media (max-width: 420px) {
+  .ac-tab { gap: 9px; padding: 5px 10px 5px 5px; }
+  .ac-tab img { width: 38px; height: 38px; }
+  .ac-tab b { font-size: 15px; }
+  .ac-tab small { font-size: 11.5px; }
+  .ac-tab-tippt { left: 32px; }
+}

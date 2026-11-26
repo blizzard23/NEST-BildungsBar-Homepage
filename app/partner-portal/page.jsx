@@ -8,6 +8,8 @@ import Assistent from "./Assistent";
 import Netzwerk from "./Netzwerk";
 import Erfahrungen from "./Erfahrungen";
 import AdminAssistent from "./AdminAssistent";
+import ExploreGutschein from "./ExploreGutschein";
+import AdminExploreGutscheine from "./AdminExploreGutscheine";
 import { PortalNav, KernpunktBanner, AssistentBanner, UnterKopf, AnsprechpartnerListe, AllesAufEinenBlick, ICON } from "./PortalBausteine";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
@@ -1064,9 +1066,11 @@ export default function PartnerPortal() {
 
                 {/* Unterpunkt: NEST Explore */}
                 <div id="abschnitt-messe" className="pd-unter">
-                  <UnterKopf icon={ICON.explore} art="finden" titel="NEST Explore an Schulen" text="In sechs Runden à 7 Minuten lernt ihr Schulklassen persönlich kennen. 290 € pro Termin, exklusiv für Partner zubuchbar.">
+                  <UnterKopf icon={ICON.explore} art="finden" titel="NEST Explore an Schulen" text="In sechs Runden à 7 Minuten lernt ihr Schulklassen persönlich kennen. Ein Termin pro Jahr ist in eurer Partnerschaft enthalten, weitere bucht ihr für 290 € dazu.">
                     <a className="btn btn-primary" href="https://nest-explore.de/terminkalender" target="_blank" rel="noopener">Termin buchen ↗</a>
                   </UnterKopf>
+                {/* Jahresgutschein: ein kostenfreier Explore-Platz pro Jahr */}
+                {!isAdmin ? <ExploreGutschein /> : null}
                 {messeTermine.length ? (
                   <div className="messe-termine">
                     {(alleTermine ? messeTermine : messeTermine.slice(0, 4)).map((m) => (
@@ -1436,6 +1440,9 @@ export default function PartnerPortal() {
                       ) : null}
                     </>);
                   })()}
+
+                  {/* NEST Explore: Jahresgutscheine – wer hat schon eingelöst? */}
+                  <AdminExploreGutscheine />
 
                   {/* Ansprechpartner verwalten */}
                   <div className="card" style={{ marginBottom: "24px" }} id="abschnitt-ap-form">

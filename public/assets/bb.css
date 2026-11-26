@@ -1280,3 +1280,85 @@ span.pd-banner-schritt:hover { border-color: rgba(255,255,255,0.22); color: #fff
   .pd-unter-aktionen { width: 100%; }
   .pd-banner .np-promo-phone { display: none; }
 }
+
+/* ===== NEST Explore: Jahresgutschein im Partner-Login ===== */
+.ex-gs-liste { display: grid; gap: 14px; margin-bottom: 22px; }
+.ex-gs { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px 32px; padding: 24px 28px; overflow: hidden; border-radius: 20px; background: linear-gradient(135deg, #0F2145 0%, #172c5c 100%); color: #fff; }
+/* Ticket-Kerben am Rand (nur beim offenen Gutschein) */
+.ex-gs:not(.ex-gs--eingeloest):not(.ex-gs--aus)::before, .ex-gs:not(.ex-gs--eingeloest):not(.ex-gs--aus)::after { content: ""; position: absolute; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; background: #f4f6fa; }
+.ex-gs::before { left: -11px; }
+.ex-gs::after { right: -11px; }
+.ex-gs--eingeloest, .ex-gs--aus { background: #fff; color: var(--bb-navy); border: 1px solid #e5e8ef; }
+.ex-gs--aus { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.ex-gs-links { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
+.ex-gs-rechts { display: flex; flex-direction: column; align-items: stretch; gap: 10px; min-width: 250px; padding-left: 32px; border-left: 2px dashed rgba(255,255,255,0.18); }
+.ex-gs--eingeloest .ex-gs-rechts { border-left-color: #e5e8ef; }
+.ex-gs-kopf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.ex-gs-label { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--bb-gold); }
+.ex-gs--eingeloest .ex-gs-label, .ex-gs--aus .ex-gs-label { color: #b07800; }
+.ex-gs-status { padding: 3px 10px; border-radius: 9999px; background: rgba(239,165,0,0.18); color: var(--bb-gold); font-size: 12px; font-weight: 700; }
+.ex-gs-status--ok { background: #e3f4ea; color: #1f7a4d; }
+.ex-gs-titel { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -0.01em; color: inherit; }
+.ex-gs-text { margin: 0; max-width: 620px; font-size: 14.5px; line-height: 1.55; color: rgba(255,255,255,0.78); }
+.ex-gs--eingeloest .ex-gs-text, .ex-gs--aus .ex-gs-text { color: #4a536a; }
+.ex-gs-text b { color: inherit; }
+.ex-gs-code-label { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+.ex-gs--eingeloest .ex-gs-code-label { color: #7c849a; }
+.ex-gs-code { padding: 12px 16px; border: 2px dashed rgba(239,165,0,0.75); border-radius: 12px; background: rgba(255,255,255,0.06); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 20px; font-weight: 700; letter-spacing: .08em; text-align: center; color: #fff; white-space: nowrap; user-select: all; }
+.ex-gs-code--alt { border-color: #d3d9e3; background: #f4f6fa; color: #7c849a; text-decoration: line-through; font-size: 15px; }
+.bb-portal .ex-gs .ex-gs-kopieren { background: transparent; color: #fff; border-color: rgba(255,255,255,0.35); }
+.bb-portal .ex-gs .ex-gs-kopieren:hover { border-color: var(--bb-gold); color: var(--bb-gold); }
+.ex-gs-regeln { margin: 2px 0 0; padding-left: 18px; font-size: 13.5px; line-height: 1.6; color: rgba(255,255,255,0.72); }
+.ex-gs-regeln b { color: #fff; font-weight: 700; overflow-wrap: anywhere; }
+.ex-gs a:not(.btn) { color: inherit; }
+@media (max-width: 860px) {
+  .ex-gs { grid-template-columns: 1fr; padding: 22px 20px; }
+  .ex-gs-rechts { min-width: 0; padding: 18px 0 0; border-left: 0; border-top: 2px dashed rgba(255,255,255,0.18); }
+  .ex-gs--eingeloest .ex-gs-rechts { border-top-color: #e5e8ef; }
+  .ex-gs-code { font-size: 17px; }
+  .ex-gs::before, .ex-gs::after { display: none; }
+}
+
+/* Admin-Übersicht */
+.ex-adm { margin: 8px 0 40px; padding-top: 4px; }
+.ex-adm-jahre, .ex-adm-filter { display: flex; flex-wrap: wrap; gap: 6px; }
+.ex-adm-chip { padding: 7px 14px; border: 1px solid #d3d9e3; border-radius: 9999px; background: #fff; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--bb-navy); cursor: pointer; }
+.ex-adm-chip span { margin-left: 4px; color: #7c849a; font-weight: 700; }
+.ex-adm-chip:hover { border-color: var(--bb-navy); }
+.ex-adm-chip.is-on { background: var(--bb-navy); border-color: var(--bb-navy); color: #fff; }
+.ex-adm-chip.is-on span { color: var(--bb-gold); }
+.ex-adm-zahlen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0 16px; }
+.ex-adm-zahl { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; background: #fff; border: 1px solid #e5e8ef; border-radius: 16px; }
+.ex-adm-zahl > span { font-size: 13px; font-weight: 600; color: #4a536a; }
+.ex-adm-zahl b { font-size: 30px; font-weight: 800; line-height: 1.1; color: var(--bb-navy); }
+.ex-adm-zahl b small { font-size: 16px; font-weight: 700; color: #7c849a; }
+.ex-adm-zahl > small { font-size: 12.5px; color: #7c849a; }
+.ex-adm-balken { height: 6px; margin-top: 6px; border-radius: 9999px; background: #eef1f6; overflow: hidden; }
+.ex-adm-balken i { display: block; height: 100%; border-radius: inherit; background: #1f8f5a; }
+.ex-adm-leiste { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.ex-adm-werkzeuge { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ex-adm-werkzeuge .btn { padding: 8px 16px; }
+.bb-portal .ex-adm-suche { width: 240px; max-width: 100%; padding: 9px 14px; border: 1px solid #d3d9e3; border-radius: 9999px; font: inherit; font-size: 14px; }
+.ex-adm-tabelle { background: #fff; border: 1px solid #e5e8ef; border-radius: 16px; overflow: hidden; }
+.ex-adm-zeile { display: grid; grid-template-columns: minmax(0, 1.2fr) 180px minmax(0, 1.6fr) 160px; align-items: center; gap: 14px; padding: 13px 18px; border-top: 1px solid #eef0f4; }
+.ex-adm-zeile:first-child { border-top: 0; }
+.ex-adm-firma, .ex-adm-status { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ex-adm-firma b { font-size: 15px; color: var(--bb-navy); overflow-wrap: anywhere; }
+.ex-adm-firma small, .ex-adm-status small, .ex-adm-leise { font-size: 12.5px; line-height: 1.45; color: #7c849a; overflow-wrap: anywhere; }
+.ex-adm-status .as-badge { align-self: flex-start; }
+.ex-adm-warn { color: #8a5e00 !important; font-weight: 600; }
+.ex-adm-codebtn { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 0; border: 0; background: none; cursor: pointer; text-align: left; }
+.ex-adm-codebtn code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px; font-weight: 700; letter-spacing: .04em; color: var(--bb-navy); }
+.ex-adm-codebtn span { font-size: 11.5px; font-weight: 600; color: #b07800; }
+.ex-adm-aktionen { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.ex-adm-aktionen .btn { padding: 7px 14px; font-size: 13px; }
+@media (max-width: 860px) {
+  .ex-adm-zahlen { grid-template-columns: 1fr; }
+  .ex-adm-zeile { grid-template-columns: minmax(0, 1fr) auto; }
+  .ex-adm-status { grid-column: 1 / -1; }
+  .ex-adm-aktionen { grid-column: 1 / -1; justify-content: flex-start; }
+  .ex-adm-aktionen:empty { display: none; }
+}
+@media (max-width: 520px) {
+  .bb-portal .ex-adm-suche { width: 100%; }
+}

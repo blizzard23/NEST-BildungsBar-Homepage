@@ -15,7 +15,7 @@ Live-Stellen) · `/beruf?b=<slug>` (Detailseiten für ~150 Berufe) · `/fuer-sch
 
 **Dynamisch (Supabase):**
 - `/partner-portal` – Login für Partnerunternehmen, eigene **Stellen** anlegen/löschen,
-  **Veranstaltungen** sehen.
+  **Veranstaltungen** sehen, **Explore-Jahresgutschein** abrufen.
 - `/api/stellen` – liefert aktive Stellen (30 Tage) an die „Aktuelle Stellen"-Leiste.
 - `/blog` + `/blog/<slug>` – Blogbeiträge aus Supabase.
 
@@ -68,6 +68,8 @@ git push -u origin main
      `supabase/buchungen.sql` ausführen, um Admin-Rechte und die Buchungstabelle nachzurüsten.)*
    - Danach `supabase/portal-fixes.sql` ausführen → Website-Feld für Ansprechpartner,
      Standard-Ansprechpartner in der DB (bearbeitbar) und sprechende Veranstaltungs-Links (Slugs).
+   - `supabase/explore-jahresgutscheine.sql` → Jahresgutscheine für NEST Explore
+     (im Projekt bereits als Migration `messe_jahresgutscheine` eingespielt, siehe Abschnitt 5).
 3. **Project Settings → API** → kopiere:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` Key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -235,6 +237,16 @@ Jeder weitere `git push` deployt automatisch neu.
   pro Tag, **wer** gebucht hat (Name + Kontaktdaten) sowie die Auslastung. Beratungstage &
   Kapazität einstellbar in `nest-app.js` (`STANDORTE`), `app/api/buchung/route.js`,
   `app/api/verfuegbarkeit/route.js` und `app/partner-portal/page.jsx` (`KAPAZITAET`/`TERMIN_TAGE`).
+- **NEST-Explore-Jahresgutschein:** Jedes Konto im Partner-Login bekommt einmal im Jahr
+  einen Code für einen kostenfreien Explore-Platz (Karte unter „NEST Explore"). Er gilt nur
+  für Termine im Gutscheinjahr, ist bis 31.12. einlösbar (den Code fürs Folgejahr gibt es ab
+  1. Dezember, Start ist 2027) und nicht übertragbar: Gebucht werden muss auf nest-explore.de
+  mit der Login-Adresse oder einer anderen Adresse derselben Firmen-Domain (bei Freemail nur
+  genau mit der Login-Adresse). Im **Admin-Bereich → „Explore-Gutscheine"** siehst du pro Jahr,
+  wer eingelöst hat und wer nicht, kannst Codes sperren, nach Stornos wieder freigeben, die
+  Liste als CSV laden und allen Offenen eine Erinnerung schicken. Logik und Regeln stehen in
+  `supabase/explore-jahresgutscheine.sql` (Komponenten: `app/partner-portal/ExploreGutschein.jsx`,
+  `AdminExploreGutscheine.jsx`).
 - **Kontakt / Sonderanfrage:** werden per SMTP (`/api/kontakt`) gemailt, mit mailto-Fallback.
 - **Berufe / Texte / Bilder:** in `public/assets/` (`berufe-data` & Co. stecken im
   Bundle `nest-app.js`; Bilder unter `public/assets/img/berufe/`).

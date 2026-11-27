@@ -1,4 +1,5 @@
 import html from "@/content/kooperation";
+import ErklaervideoSteuerung from "@/components/ErklaervideoSteuerung";
 
 export const metadata = {
   title: "Für Unternehmen – NEST-Partner werden | NEST BildungsBar",
@@ -15,6 +16,7 @@ export default function Page() {
       {/* bb.css lädt das Root-Layout; hier nur die seitenspezifischen Ergänzungen */}
       <link rel="stylesheet" href={`/assets/partner.css?v=${V}`} />
       <div dangerouslySetInnerHTML={{ __html: html }} />
+      <ErklaervideoSteuerung />
     </>
   );
 }

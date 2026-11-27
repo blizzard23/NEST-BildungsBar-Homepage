@@ -24,6 +24,8 @@ export const ICON = {
   abmelden: svg(<><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></>),
   pfeil: svg(<polyline points="6 9 12 15 18 9" />),
   extern: svg(<><path d="M7 17L17 7" /><polyline points="7 7 17 7 17 17" /></>),
+  video: svg(<><rect x="2" y="5" width="20" height="14" rx="2.5" /><path d="M10 9.5v5l4.5-2.5z" /></>),
+  play: <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>,
 };
 
 /* Seitenleiste: Überpunkte (Kernpunkte) mit ihren Unterpunkten. Der Abschnitt,
@@ -54,6 +56,7 @@ export function PortalNav({ isAdmin, firma, email, onLogout }) {
     {
       titel: "Mehr", punkte: [
         { id: "abschnitt-infos", label: "Alles auf einen Blick", icon: ICON.infos },
+        { id: "abschnitt-video", label: "Erklärvideo", icon: ICON.video },
         { id: "abschnitt-konto", label: "Konto", icon: ICON.konto },
       ],
     },

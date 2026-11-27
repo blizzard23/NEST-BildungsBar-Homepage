@@ -236,6 +236,12 @@ Jeder weitere `git push` deployt automatisch neu.
   Kapazität einstellbar in `nest-app.js` (`STANDORTE`), `app/api/buchung/route.js`,
   `app/api/verfuegbarkeit/route.js` und `app/partner-portal/page.jsx` (`KAPAZITAET`/`TERMIN_TAGE`).
 - **Kontakt / Sonderanfrage:** werden per SMTP (`/api/kontakt`) gemailt, mit mailto-Fallback.
+- **Erklärvideo Partnerschaft:** `public/assets/video/nest-partnerschaft-erklaervideo.mp4`
+  (Vorschaubild daneben als `.jpg`). Läuft auf `/kooperation` unter den drei Stationen
+  (`#erklaervideo`, Button im Hero springt hin und startet es) und im Partner-Login als
+  Abschnitt „Erklärvideo" (Button in der Begrüßung). Kapitel (Startsekunde + Titel) und
+  Pfade stehen in `lib/erklaervideo.js`, die Steuerung in `components/ErklaervideoSteuerung.jsx`.
+  Neues Video: Datei unter gleichem Namen ersetzen (MP4/H.264, „faststart"), Kapitelzeiten anpassen.
 - **Berufe / Texte / Bilder:** in `public/assets/` (`berufe-data` & Co. stecken im
   Bundle `nest-app.js`; Bilder unter `public/assets/img/berufe/`).
 

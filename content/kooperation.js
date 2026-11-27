@@ -4,7 +4,11 @@
 // NEST Explore und NEST AzubiConnect sind exklusiv für Partner. Ein Explore-Termin
 // pro Jahr ist im Partnerbeitrag enthalten, weitere Termine und AzubiConnect werden
 // zusätzlich gebucht.
+// Erklärvideo: unter den drei Stationen (#erklaervideo), Button im Hero springt hin und startet es.
 import IC from "./icons";
+import { erklaervideoHtml } from "@/lib/erklaervideo";
+
+const PLAY = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>`;
 
 const html = `
 
@@ -17,7 +21,7 @@ const html = `
         <p class="lead">Als NEST-Partner findet ihr passende Azubis und haltet sie im Betrieb. Wir nehmen euch die Arbeit dabei ab: von der Schule über die Bewerbung bis in eure Ausbildung.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/kontakt#termin">Gespräch vereinbaren →</a>
-          <a class="btn btn-ghost" href="#kreislauf">So greift alles ineinander</a>
+          <a class="btn btn-ghost np-video-btn" href="#erklaervideo" data-ev-sprung="erklaervideo"><span class="np-video-btn-ic">${PLAY}</span>Erklärvideo ansehen <small>3 Min.</small></a>
         </div>
       </div>
       <div class="hero-visual hero-visual--phone np-hero-visual">
@@ -116,6 +120,19 @@ const html = `
             <li><span class="np-offer-ic">${IC.calendar}</span><b>Veranstaltungen</b><span>Fachinput beim Ausbildungsdialog und viermal im Jahr Austausch mit über 70 Ausbildungsbetrieben.</span></li>
           </ul>
         </article>
+      </div>
+
+      <!-- ERKLÄRVIDEO: alle Angebote in drei Minuten, direkt unter den Stationen.
+           Kapitel springen zum jeweiligen Angebot (Steuerung: components/ErklaervideoSteuerung.jsx). -->
+      <div class="np-video" id="erklaervideo">
+        <div class="np-video-head">
+          <div>
+            <span class="bb-kicker">Erklärvideo · 3 Min.</span>
+            <h3 class="np-video-h">Die Partnerschaft im Schnelldurchlauf</h3>
+          </div>
+          <p class="bb-p">Alle Angebote in drei Minuten erklärt. Über die Kapitel springt ihr direkt zu dem Angebot, das euch interessiert.</p>
+        </div>
+        ${erklaervideoHtml()}
       </div>
 
       <!-- PARTNER-LOGIN -->

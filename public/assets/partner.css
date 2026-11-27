@@ -148,6 +148,27 @@
   .np-stop h3 { font-size: 22px; }
 }
 
+/* ---------- Erklärvideo (unter den Stationen, Player/Kapitel in bb.css) ---------- */
+.np-video { margin-top: 40px; padding: 32px 32px 28px; border-radius: 24px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10); scroll-margin-top: 96px; }
+.np-video-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 48px; align-items: end; margin-bottom: 24px; }
+.np-video-head .bb-kicker { margin-bottom: 8px; }
+.np-video-head .bb-p { max-width: 480px; justify-self: end; }
+.np-video-h { font-size: clamp(24px, 2.6vw, 30px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin: 0; color: #fff; }
+@media (max-width: 900px) {
+  .np-video { max-width: 620px; margin-left: auto; margin-right: auto; padding: 26px 22px 22px; }
+  .np-video-head { grid-template-columns: 1fr; }
+  .np-video-head .bb-p { justify-self: start; }
+}
+@media (max-width: 520px) {
+  .np-video { padding: 22px 14px 16px; border-radius: 20px; }
+}
+
+/* Hero: Button „Erklärvideo ansehen" (springt zum Video und startet es) */
+.np-video-btn { gap: 10px; padding-left: 10px; }
+.np-video-btn-ic { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--gold); color: var(--navy); }
+.np-video-btn-ic svg { width: 12px; height: 12px; margin-left: 2px; }
+.np-video-btn small { font-size: 13px; font-weight: 600; opacity: 0.7; }
+
 /* ---------- Partner-Login ---------- */
 .np-login {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) auto; gap: 24px 48px; align-items: center;

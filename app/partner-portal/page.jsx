@@ -9,6 +9,8 @@ import Netzwerk from "./Netzwerk";
 import Erfahrungen from "./Erfahrungen";
 import AdminAssistent from "./AdminAssistent";
 import { PortalNav, KernpunktBanner, AssistentBanner, UnterKopf, AnsprechpartnerListe, AllesAufEinenBlick, ICON } from "./PortalBausteine";
+import ErklaervideoSteuerung from "@/components/ErklaervideoSteuerung";
+import { erklaervideoHtml, ERKLAERVIDEO_DAUER } from "@/lib/erklaervideo";
 
 const ADMIN_EMAIL = "info@nest-bildungsbar.de";
 const LEER = { firma: "", beruf: "", art: "Ausbildung", ort: "Wuppertal", start: "", url: "", logo_url: "", keyword1: "", keyword2: "", keyword3: "" };
@@ -30,6 +32,9 @@ const AP_DEFAULT = [
   { id: "d6", name: "Marc Longjaloux", rolle: "Designbüro Longjaloux", standort: "Wuppertal", bild_url: "/assets/img/team/marc.jpg", sortierung: 6, beschreibung: "Büro Longjaloux macht Corporate Design für kleine und mittelständische Unternehmen – seit 1980. Wir finden den Kern von Marken und machen ihn sichtbar. Für alle, die wissen, was sie tun, aber noch nicht, wie sie das erfolgreich kommunizieren sollen: Mit Strategie-Workshops, Corporate Design und gezielter Markenführung schaffen wir Auftritte, die nicht nur gut aussehen, sondern wirken. Geiler Scheiß für geile Leute." },
   { id: "d7", name: "Roman Scholz", rolle: "Foto- & Videograf | Drohnenpilot", standort: "Wuppertal", email: "rmn.fpv@gmail.com", telefon: "+49 160 94729483", website: "https://www.rmnfpv.com/", bild_url: "/assets/img/team/roman.jpg", sortierung: 7, beschreibung: "Roman Scholz ist Foto- und Videograf und Drohnenpilot. Er produziert Imagefilme, Drohnenaufnahmen, Event-Reportagen und vieles mehr – von der Idee über den Dreh bis zum fertigen Schnitt." },
 ];
+
+// Erklärvideo-Player einmal erzeugen (gleicher String bei jedem Rendern)
+const VIDEO_HTML = erklaervideoHtml();
 
 const IST_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -842,6 +847,11 @@ export default function PartnerPortal() {
                   <span className="pd-datum">{new Date().toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" })}</span>
                   <h1>Willkommen, <em>{isAdmin ? "NEST-Team" : (firmaName || "schön, dass ihr da seid")}</em></h1>
                   <p>Euer Partner-Login nach unseren zwei Kernpunkten: <b className="pd-txt-finden">Azubis finden</b> und <b className="pd-txt-halten">Azubis halten</b>. Fragt den Assistenten oder springt direkt in einen Bereich.</p>
+                  {/* Springt zum Erklärvideo weiter unten und startet es */}
+                  <a className="pd-video-sprung" href="#abschnitt-video" data-ev-sprung="abschnitt-video">
+                    <span className="pd-video-sprung-ic">{ICON.play}</span>
+                    Erklärvideo zur Partnerschaft <small>{ERKLAERVIDEO_DAUER}</small>
+                  </a>
                 </div>
                 <AssistentBanner />
                 <div id="abschnitt-assistent" className="pd-assistent">
@@ -1180,6 +1190,17 @@ export default function PartnerPortal() {
                   <h2>Alles auf einen Blick</h2>
                 </div>
                 <AllesAufEinenBlick />
+              </section>
+
+              {/* ============ ERKLÄRVIDEO (Sprung-Button oben in der Begrüßung) ============ */}
+              <section id="abschnitt-video" className="pd-sec">
+                <div className="pd-sec-kopf">
+                  <span className="section-label">Erklärvideo · {ERKLAERVIDEO_DAUER}</span>
+                  <h2>Die Partnerschaft im Schnelldurchlauf</h2>
+                  <p className="pd-sec-text">Alle Angebote in drei Minuten, zum Nachschauen oder Weiterleiten an Kolleg:innen. Über die Kapitel springt ihr direkt zu einem Angebot.</p>
+                </div>
+                {/* Fester HTML-String: React rendert ihn nicht neu, das Video läuft beim Aktualisieren des Portals weiter. */}
+                <div dangerouslySetInnerHTML={{ __html: VIDEO_HTML }} />
               </section>
 
               {/* ============ KONTO ============ */}
@@ -1682,6 +1703,7 @@ export default function PartnerPortal() {
         </div>
       </section>
       {toastMsg ? <div className="pp-toast" role="status">{toastMsg}</div> : null}
+      <ErklaervideoSteuerung />
     </div>
   );
 }

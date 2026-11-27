@@ -1280,3 +1280,81 @@ span.pd-banner-schritt:hover { border-color: rgba(255,255,255,0.22); color: #fff
   .pd-unter-aktionen { width: 100%; }
   .pd-banner .np-promo-phone { display: none; }
 }
+
+/* ---------- Erklärvideo (lib/erklaervideo.js) ----------
+   Auf /kooperation (dunkle Sektion) und im Partner-Login (hell). Player links,
+   Kapitel rechts wie bei YouTube-Kapiteln; Farben wie die Stationen:
+   Gold = Azubis gewinnen, Blau = Azubis halten. */
+.ev { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 20px; align-items: start; }
+.ev-player { position: relative; container-type: inline-size; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 18px; background: #0c1829; box-shadow: 0 30px 60px -36px rgba(0,0,0,0.6); }
+.ev-video { display: block; width: 100%; height: 100%; background: #0c1829; }
+/* Play-Button auf dem Vorschaubild: links unter dem Text des Vorschaubilds (bündig
+   mit dessen Textkante), damit er nichts verdeckt. Die Steuerleiste unten bleibt frei.
+   Auf Touch-Geräten zeigt der Browser selbst einen Play-Button, dort entfällt er. */
+/* Größe wächst mit der Breite des Players (Container-Einheit cqi) */
+.ev-start {
+  position: absolute; left: 5.9%; top: 63%; display: inline-flex; align-items: center; gap: .8em;
+  padding: .45em 1.3em .45em .45em; border: 0; border-radius: 9999px; cursor: pointer;
+  background: var(--bb-gold); color: var(--bb-navy); font: inherit; font-size: clamp(11px, 2.2cqi, 15px); font-weight: 700; line-height: 1;
+  box-shadow: 0 0 0 .4em rgba(239,165,0,0.2), 0 1em 2.2em rgba(0,0,0,0.45);
+  transition: transform .2s ease, background .2s ease;
+}
+.ev-start small { font-size: .87em; font-weight: 600; opacity: 0.7; font-variant-numeric: tabular-nums; }
+.ev-start-ic { display: grid; place-items: center; width: 2.3em; height: 2.3em; border-radius: 50%; background: var(--bb-navy); color: var(--bb-gold); }
+.ev-start-ic svg { width: .95em; height: .95em; margin-left: .12em; }
+@container (max-width: 420px) { .ev-start small { display: none; } }
+/* Sehr schmaler Player: Platz reicht nicht neben der Steuerleiste, dort startet man über die Leiste */
+@container (max-width: 380px) { .ev-start { display: none; } }
+.ev-start:hover { transform: translateY(-2px); background: var(--bb-gold-hover); }
+.ev-start:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.ev-player.is-gestartet .ev-start { display: none; }
+@media (hover: none) { .ev-start { display: none; } }
+.ev-kapitel { min-width: 0; }
+.ev-kapitel-titel { display: block; margin: 2px 0 10px 12px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--bb-muted); }
+.ev-kapitel ol { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.ev-k {
+  --ev-acc: #b07800; --ev-soft: rgba(239,165,0,0.15); --ev-tx: #8a5e00;
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 12px;
+  border: 1px solid transparent; border-radius: 12px; background: none; cursor: pointer;
+  font: inherit; text-align: left; color: var(--bb-ink); transition: background .15s ease, border-color .15s ease;
+}
+.ev-k--halten { --ev-acc: #2f5fd6; --ev-soft: rgba(47,95,214,0.12); --ev-tx: #2f5fd6; }
+.ev-k--partner { --ev-acc: var(--bb-navy); --ev-soft: #e9edf5; --ev-tx: var(--bb-navy); }
+.ev-k:hover { background: #fff; border-color: #e5e8ef; }
+.ev-k:focus-visible { outline: 2px solid var(--ev-acc); outline-offset: 2px; }
+.ev-k.is-aktiv { background: #fff; border-color: var(--ev-acc); }
+.ev-k-zeit { flex-shrink: 0; min-width: 46px; padding: 4px 0; border-radius: 8px; background: var(--ev-soft); color: var(--ev-tx); font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; }
+.ev-k-name { min-width: 0; font-size: 14.5px; font-weight: 600; line-height: 1.3; }
+/* dunkle Fläche */
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .ev-k--finden { --ev-acc: #EFA500; --ev-soft: rgba(239,165,0,0.16); --ev-tx: #FFC94A; }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .ev-k--halten { --ev-acc: #8DB7FF; --ev-soft: rgba(141,183,255,0.16); --ev-tx: #B9D1FF; }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .ev-k--partner { --ev-acc: rgba(255,255,255,0.6); --ev-soft: rgba(255,255,255,0.10); --ev-tx: #fff; }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .ev-k:hover,
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .ev-k.is-aktiv { background: rgba(255,255,255,0.06); }
+:is(.bb-sec--dark, .bb-sec--ink, .bb-dark) .ev-k:hover:not(.is-aktiv) { border-color: rgba(255,255,255,0.12); }
+@media (max-width: 1100px) {
+  .ev { grid-template-columns: minmax(0, 1fr) 250px; }
+}
+@media (max-width: 900px) {
+  .ev { grid-template-columns: minmax(0, 1fr); }
+  .ev-kapitel ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .ev-player { border-radius: 14px; }
+  .ev-kapitel-titel { margin-left: 0; }
+  .ev-kapitel ol { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .ev-k { padding: 7px 8px; }
+}
+
+/* Partner-Login: Sprung zum Erklärvideo in der Begrüßung */
+.pd-video-sprung {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; padding: 6px 16px 6px 6px;
+  border: 1px solid #e5e8ef; border-radius: 9999px; background: #fff; color: var(--bb-navy);
+  font-size: 14.5px; font-weight: 700; text-decoration: none; transition: border-color .15s ease;
+}
+.pd-video-sprung:hover { border-color: #b07800; color: var(--bb-navy); }
+.pd-video-sprung:focus-visible { outline: 2px solid #b07800; outline-offset: 2px; }
+.pd-video-sprung-ic { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--bb-gold); color: var(--bb-navy); }
+.pd-video-sprung-ic svg { width: 13px; height: 13px; margin-left: 2px; }
+.pd-video-sprung small { font-size: 13px; font-weight: 600; color: #7c849a; }
+.pd-sec-text { margin: 6px 0 0; max-width: 720px; font-size: 15px; line-height: 1.6; color: #4a536a; }
